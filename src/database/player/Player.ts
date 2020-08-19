@@ -1,9 +1,10 @@
-import { User } from "../../entities/User";
+import { User } from "../../entities/player/User";
 import { Card } from "../../entities/card/Card";
 import { Card as CardStruct } from "../../structures/card/Card";
 import { CardTag } from "../../entities/card/CardTag";
 import { UserCard } from "../../entities/card/UserCard";
 import * as error from "../../structures/Error";
+import { GuildMember } from "discord.js";
 
 export class PlayerService {
   private static cleanMention(m: string): string {
@@ -82,5 +83,27 @@ export class PlayerService {
       cardList.push(new CardStruct(card, meta!, tags));
     }
     return cardList;
+  }
+
+  public static async hugUser(
+    m: string,
+    v: string | undefined
+  ): Promise<number> {
+    if (!v) throw new error.NobodyToHugError();
+    let discord_user = this.cleanMention(v);
+    if (discord_user == m) throw new error.CantHugYourselfError();
+    if (!(await this.userExists(m))) {
+      return 0;
+    }
+    if (!(await this.userExists(v))) {
+      return 1;
+    }
+    let user = await this.getProfileFromUser(discord_user, false);
+    let sender = await this.getProfileFromUser(m, true);
+    user!.hearts = +user!.hearts + 3;
+    sender!.hearts = +user!.hearts + 3;
+    await user!.save();
+    await sender!.save();
+    return 2;
   }
 }

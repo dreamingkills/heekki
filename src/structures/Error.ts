@@ -34,3 +34,17 @@ export class PageOutOfBoundsError extends ClientError {
     );
   }
 }
+export class NobodyToHugError extends ClientError {
+  name = "NobodyToHugError";
+  constructor() {
+    super(
+      "You can't hug nobody! (*hint: you may have typed an invalid mention*)"
+    );
+  }
+}
+export class CantHugYourselfError extends ClientError {
+  name = "CantHugYourselfError";
+  constructor() {
+    super("You can't hug yourself!");
+  }
+}
