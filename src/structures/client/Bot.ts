@@ -1,7 +1,7 @@
 import { CommandManager } from "../../helpers/Command";
 import config from "../../../config.json";
 import { Client, Message } from "discord.js";
-import { User } from "../../entities/User";
+import { User } from "../../entities/player/User";
 
 export class Bot extends Client {
   public config: Object = config;
