@@ -42,7 +42,7 @@ export class ShopService {
     user_card.card_id = card.id;
     user_card.discord_id = u.discord_id;
     user_card.hearts = 0;
-    user_card.level = 1;
+
     user_card.stars = chance.weighted([1, 2, 3, 4, 5, 6], [6, 5, 4, 3, 2, 1]);
     user_card.save();
     return user_card;

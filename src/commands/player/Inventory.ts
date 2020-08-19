@@ -9,6 +9,7 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
+    this.heartsToLevel(6969);
     let id = msg.author.id;
     let page = this.prm[0] ? parseInt(this.prm[0]) : 1;
     let user = await PlayerService.getProfileFromUser(id, true);
@@ -22,8 +23,9 @@ export class Command extends GameCommand {
     let desc = `${member?.user.tag} has **${cards.total}** cards!\n\n`;
 
     for (let card of cards.cards) {
+      let lvl = (await this.heartsToLevel(card.hearts)).level;
       desc += `**${card.collection}** - ${card.member}\nLevel ${
-        card.level
+        lvl == 99 ? "**MAX**" : lvl
       } - **${card.hearts}** :heart:\n${"⭐".repeat(card.stars)}\n`;
     }
     let embed = new MessageEmbed()

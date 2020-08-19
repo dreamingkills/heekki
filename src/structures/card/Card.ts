@@ -7,7 +7,6 @@ export class Card {
   card_id: number;
   serial: number;
   owner: string;
-  level: number;
   hearts: number;
   stars: number;
 
@@ -28,7 +27,6 @@ export class Card {
     this.card_id = uc.card_id;
     this.serial = uc.serial;
     this.owner = uc.discord_id;
-    this.level = uc.level;
     this.hearts = uc.hearts;
     this.image_url = card.image_url;
     this.member = card.member;

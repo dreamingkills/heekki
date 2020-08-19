@@ -5,6 +5,7 @@ import { CardTag } from "../../entities/card/CardTag";
 import { UserCard } from "../../entities/card/UserCard";
 import * as error from "../../structures/Error";
 import { Collection } from "../../entities/card/Collection";
+import { Hug } from "../../entities/player/Hug";
 
 export class PlayerService {
   private static cleanMention(m: string): string {
@@ -89,6 +90,16 @@ export class PlayerService {
     return { cards: cardList, total: count };
   }
 
+  public static async findLastHug(m: User, v: User): Promise<number> {
+    let hug = await Hug.findOne({
+      where: { hugger: m.discord_id, victim: v.discord_id },
+      order: { date: "DESC" },
+    });
+
+    if (!hug) return 0;
+    return hug.date;
+  }
+
   public static async hugUser(
     m: string,
     v: string | undefined
@@ -102,12 +113,28 @@ export class PlayerService {
     if (!(await this.userExists(v))) {
       return 1;
     }
-    let user = await this.getProfileFromUser(discord_user, false);
+    let victim = await this.getProfileFromUser(discord_user, false);
     let sender = await this.getProfileFromUser(m, true);
-    user!.hearts = +user!.hearts + 3;
-    sender!.hearts = +user!.hearts + 3;
-    await user!.save();
+
+    let lastHug = await this.findLastHug(sender!, victim!);
+    let eligible = Date.now() - 14400000;
+    if (eligible < lastHug) {
+      return +lastHug + 14400000;
+    }
+
+    victim!.hearts = +victim!.hearts + 3;
+    victim!.hugs_received = +victim!.hugs_received + 1;
+    sender!.hearts = +sender!.hearts + 3;
+    sender!.hugs_given = +sender!.hugs_given + 1;
+    await victim!.save();
     await sender!.save();
+    let hug = Hug.create();
+    hug.hugger = sender!.discord_id;
+    hug.victim = victim!.discord_id;
+    hug.date = Date.now();
+    hug.save();
     return 2;
   }
+
+  public static async feedCard(m: string, c: number, a: number) {}
 }

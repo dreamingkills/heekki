@@ -1,13 +1,16 @@
-import { Entity, Column, BaseEntity, PrimaryColumn } from "typeorm";
+import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Hug extends BaseEntity {
-  @PrimaryColumn({ nullable: false })
+  @PrimaryGeneratedColumn()
+  hugid!: number;
+
+  @Column({ nullable: false })
   hugger!: string;
 
-  @Column({ type: "varchar" })
+  @Column({ type: "varchar", nullable: false })
   victim!: string;
 
-  @Column({ type: "varchar" })
-  date!: string;
+  @Column({ type: "bigint", nullable: false })
+  date!: number;
 }

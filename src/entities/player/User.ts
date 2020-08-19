@@ -19,4 +19,10 @@ export class User extends BaseEntity {
 
   @Column({ default: "No description set.", type: "varchar" })
   desc!: string;
+
+  @Column({ default: 0, type: "int" })
+  hugs_given!: number;
+
+  @Column({ default: 0, type: "int" })
+  hugs_received!: number;
 }

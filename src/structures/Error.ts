@@ -84,3 +84,9 @@ export class NoPackIDError extends ClientError {
     super("Please specify a valid Pack ID (shown in the !shop).");
   }
 }
+export class NotANumberError extends ClientError {
+  name = "NotANumberError";
+  constructor() {
+    super("Please use a valid number!");
+  }
+}

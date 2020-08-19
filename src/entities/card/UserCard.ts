@@ -2,6 +2,8 @@ import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class UserCard extends BaseEntity {
+  public static async heartsToLevel(hearts: number) {}
+
   @PrimaryGeneratedColumn()
   serial!: number;
 
@@ -13,9 +15,6 @@ export class UserCard extends BaseEntity {
 
   @Column({ type: "int" })
   stars!: number;
-
-  @Column({ type: "int" })
-  level!: number;
 
   @Column({ type: "int" })
   hearts!: number;
