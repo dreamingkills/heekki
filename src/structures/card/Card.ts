@@ -9,6 +9,7 @@ export class Card {
   owner: string;
   level: number;
   hearts: number;
+  stars: number;
 
   image_url: string;
   member: string;
@@ -31,6 +32,7 @@ export class Card {
     this.hearts = uc.hearts;
     this.image_url = card.image_url;
     this.member = card.member;
+    this.stars = uc.stars;
 
     this.collection = coll.name;
     this.rarity = card.rarity;

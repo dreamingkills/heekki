@@ -17,13 +17,17 @@ export class Command extends GameCommand {
       true,
       page
     );
-    let desc = "";
 
-    for (let card of cards) {
-      desc += `**${card.collection}** - ${card.member}\nLevel ${card.level} - **${card.hearts}** :heart:\n`;
+    let member = msg.guild?.member(id);
+    let desc = `${member?.user.tag} has **${cards.total}** cards!\n\n`;
+
+    for (let card of cards.cards) {
+      desc += `**${card.collection}** - ${card.member}\nLevel ${
+        card.level
+      } - **${card.hearts}** :heart:\n${"⭐".repeat(card.stars)}\n`;
     }
     let embed = new MessageEmbed()
-      .setAuthor(`${msg.author.tag}'s inventory`)
+      .setAuthor(`${msg.author.tag}'s inventory (page ${page})`)
       .setDescription(desc)
       .setThumbnail(msg.author.displayAvatarURL())
       .setColor("#40BD66");

@@ -62,15 +62,18 @@ export class PlayerService {
     m: string,
     p: boolean,
     page: number
-  ): Promise<CardStruct[]> {
+  ): Promise<{ cards: CardStruct[]; total: number }> {
     if (page <= 0) throw new error.PageOutOfBoundsError();
     let discord_id = this.cleanMention(m);
     if (!(await this.userExists(discord_id))) {
       if (p) throw new error.NoProfileOtherError();
       throw new error.NoProfileError();
     }
-    let cards = await UserCard.getRepository()
+    let cardQB = UserCard.getRepository()
       .createQueryBuilder("user_card")
+      .where(`discord_id = ${discord_id}`);
+    let count = await cardQB.getCount();
+    let cards = await cardQB
       .skip(page * 10 - 10)
       .take(10)
       .getMany();
@@ -83,7 +86,7 @@ export class PlayerService {
 
       cardList.push(new CardStruct(card, meta!, tags, coll!));
     }
-    return cardList;
+    return { cards: cardList, total: count };
   }
 
   public static async hugUser(

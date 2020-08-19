@@ -60,3 +60,21 @@ export class ExpiredPackError extends ClientError {
     super("That pack is no longer available for purchase!");
   }
 }
+export class InvalidShopItemError extends ClientError {
+  name = "InvalidShopItemError";
+  constructor() {
+    super("That pack does not have a collection attached to it!");
+  }
+}
+export class NotEnoughCoinsError extends ClientError {
+  name = "NotEnoughCoinsError";
+  constructor() {
+    super("You don't have enough coins to buy that!");
+  }
+}
+export class EmptyPackError extends ClientError {
+  name = " EmptyPackError";
+  constructor() {
+    super("That pack is empty!");
+  }
+}

@@ -12,6 +12,9 @@ export class UserCard extends BaseEntity {
   card_id!: number;
 
   @Column({ type: "int" })
+  stars!: number;
+
+  @Column({ type: "int" })
   level!: number;
 
   @Column({ type: "int" })
