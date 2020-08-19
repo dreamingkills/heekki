@@ -4,7 +4,7 @@ import { Card as CardStruct } from "../../structures/card/Card";
 import { CardTag } from "../../entities/card/CardTag";
 import { UserCard } from "../../entities/card/UserCard";
 import * as error from "../../structures/Error";
-import { GuildMember } from "discord.js";
+import { Collection } from "../../entities/card/Collection";
 
 export class PlayerService {
   private static cleanMention(m: string): string {
@@ -79,8 +79,9 @@ export class PlayerService {
     for (let card of cards) {
       let meta = await Card.findOne({ id: card.card_id });
       let tags = await CardTag.find({ where: { card_id: card.card_id } });
+      let coll = await Collection.findOne({ id: meta!.collection });
 
-      cardList.push(new CardStruct(card, meta!, tags));
+      cardList.push(new CardStruct(card, meta!, tags, coll!));
     }
     return cardList;
   }

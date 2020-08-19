@@ -11,8 +11,8 @@ export class Card extends BaseEntity {
   @Column({ type: "varchar" })
   member!: string;
 
-  @Column({ type: "varchar" })
-  collection!: string;
+  @Column({ type: "int" })
+  collection!: number;
 
   @Column({ default: 0, type: "int" })
   rarity!: number;

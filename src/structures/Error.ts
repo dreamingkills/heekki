@@ -48,3 +48,15 @@ export class CantHugYourselfError extends ClientError {
     super("You can't hug yourself!");
   }
 }
+export class InvalidPackError extends ClientError {
+  name = "InvalidPackError";
+  constructor() {
+    super("That pack does not exist!");
+  }
+}
+export class ExpiredPackError extends ClientError {
+  name = "ExpiredPackError";
+  constructor() {
+    super("That pack is no longer available for purchase!");
+  }
+}
