@@ -1,5 +1,4 @@
-import { RoleResolvable, Snowflake, Role, Message } from "discord.js";
-import { Bot } from "../client/Bot";
+import { Message } from "discord.js";
 
 export interface Command {
   names: string[];
@@ -27,11 +26,11 @@ export abstract class BaseCommand implements Command {
   prm: string[] = [];
 
   abstract async exec(msg: Message): Promise<void>;
-
-  async run(msg: Message): Promise<void> {
-    await msg.channel.startTyping();
+  run: (msg: Message) => Promise<void> = async (msg: Message) => {
+    msg.channel.startTyping();
     this.prm = msg.content.split(" ").slice(1);
+
     await this.exec(msg);
     return msg.channel.stopTyping();
-  }
+  };
 }

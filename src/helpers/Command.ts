@@ -53,7 +53,7 @@ export class CommandManager {
       }
     }
     try {
-      return await cmd.exec(msg);
+      return await cmd.run(msg);
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
       return console.log(`${e.message}\n${e.stack}`);

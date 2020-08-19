@@ -9,6 +9,7 @@ export class Command extends BaseCommand {
   hidden: boolean = true;
 
   exec = async function (msg: Message) {
-    console.log("Hi");
+    msg.channel.send("Hello!");
+    return;
   };
 }
