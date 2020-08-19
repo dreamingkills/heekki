@@ -78,3 +78,9 @@ export class EmptyPackError extends ClientError {
     super("That pack is empty!");
   }
 }
+export class NoPackIDError extends ClientError {
+  name = "NoPackIDError";
+  constructor() {
+    super("Please specify a valid Pack ID (shown in the !shop).");
+  }
+}

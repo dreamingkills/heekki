@@ -12,22 +12,20 @@ export class Command extends GameCommand {
     let v = msg.mentions.users.first();
     let user = await PlayerService.hugUser(msg.author.id, v?.id);
 
+    let userString = msg.guild?.member(v!)?.displayName || v?.username;
     if (user === 0) {
       await msg.channel.send(
-        `:heart: **You gave a hug to ${
-          v!.tag
-        }**!\nYou haven't set up a profile, so they did not gain hearts from this.`
+        `:heart: **You gave a hug to ${userString}**!\nYou haven't set up a profile, so they did not gain hearts from this.`
       );
       return;
     } else if (user === 1) {
       await msg.channel.send(
-        `:heart: **You gave a hug to ${
-          v!.tag
-        }**!\nThey haven't set up a profile, so they did not gain hearts from this.`
+        `:heart: **You gave a hug to ${userString}**!\nThey haven't set up a profile, so they did not gain hearts from this.`
       );
       return;
     } else if (user === 2) {
-      await msg.channel.send(`:heart: **You gave a hug to ${v!.tag}**!`);
+      console.log(v);
+      await msg.channel.send(`:heart: **You gave a hug to ${userString}**!`);
       return;
     }
     await msg.channel.send(`Something went wrong.`);

@@ -51,6 +51,7 @@ export class ShopService {
     pack_id: number,
     m: string
   ): Promise<{ card: Card; usercard: UserCard; user: User; coll: Collection }> {
+    if (isNaN(pack_id)) throw new error.NoPackIDError();
     let user = await User.findOne({ where: { discord_id: m } });
 
     let pack = await Pack.findOne({ where: { id: pack_id } });
