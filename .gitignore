@@ -1,0 +1,7 @@
+# .gitignore
+node_modules
+dist
+config.json
+ormconfig.json
+.prettierrc
+.prettierrc.json
