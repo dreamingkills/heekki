@@ -1,5 +1,5 @@
 import { Bot } from "./structures/client/Bot";
-import { DB } from "./sql/index";
+import { DB } from "./database/index";
 import "reflect-metadata";
 
 Promise.all([DB.connect()]).then(() => {

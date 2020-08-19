@@ -5,6 +5,9 @@ export class UserCard extends BaseEntity {
   @PrimaryGeneratedColumn()
   serial!: number;
 
+  @Column({ type: "varchar" })
+  discord_id!: string;
+
   @Column({ type: "int" })
   card_id!: number;
 

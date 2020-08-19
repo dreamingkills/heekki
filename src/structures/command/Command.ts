@@ -27,10 +27,7 @@ export abstract class BaseCommand implements Command {
 
   abstract async exec(msg: Message): Promise<void>;
   run: (msg: Message) => Promise<void> = async (msg: Message) => {
-    msg.channel.startTyping();
     this.prm = msg.content.split(" ").slice(1);
-
-    await this.exec(msg);
-    return msg.channel.stopTyping();
+    return this.exec(msg);
   };
 }
