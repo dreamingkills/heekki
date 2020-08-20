@@ -1,22 +1,38 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  OneToMany,
+  ManyToMany,
+  ManyToOne,
+} from "typeorm";
+import { Collection } from "./Collection";
+import { CardTag } from "./CardTag";
+import { UserCard } from "./UserCard";
 
 @Entity()
 export class Card extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ default: null, type: "varchar" })
+  @Column({ type: "varchar" })
   image_url!: string;
 
   @Column({ type: "varchar" })
   member!: string;
 
-  @Column({ type: "int" })
-  collection!: number;
+  @ManyToOne((type) => Collection)
+  collection!: Collection;
 
-  @Column({ default: 0, type: "int" })
+  @Column({ type: "int" })
   rarity!: number;
 
-  @Column({ default: 0, type: "varchar" })
+  @Column({ type: "varchar" })
   description!: string;
+
+  @OneToMany((type) => CardTag, (tags) => tags.card)
+  tags!: CardTag;
 }

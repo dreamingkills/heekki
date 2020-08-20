@@ -1,17 +1,30 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  OneToOne,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from "typeorm";
+import { Card } from "./Card";
 
 @Entity()
 export class UserCard extends BaseEntity {
-  public static async heartsToLevel(hearts: number) {}
-
   @PrimaryGeneratedColumn()
-  serial!: number;
+  id!: number;
+
+  @Column()
+  serialNumber!: number;
 
   @Column({ type: "varchar" })
   discord_id!: string;
 
-  @Column({ type: "int" })
-  card_id!: number;
+  @ManyToOne((type) => Card)
+  card!: Card;
 
   @Column({ type: "int" })
   stars!: number;

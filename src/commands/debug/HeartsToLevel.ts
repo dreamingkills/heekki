@@ -7,6 +7,7 @@ export class Command extends GameCommand {
   usage: string[] = ["%c <hearts>"];
   desc: string = "Translates hearts to level.";
   category: string = "player";
+  hidden: boolean = true;
 
   exec = async (msg: Message) => {
     let level = await this.heartsToLevel(parseInt(this.prm[0]));

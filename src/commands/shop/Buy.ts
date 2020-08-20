@@ -15,7 +15,7 @@ export class Command extends GameCommand {
     let pack = await ShopService.rollPack(pack_id, msg.author.id);
 
     let embed = new MessageEmbed()
-      .setAuthor(`You rolled ${pack.coll.name} and got...`)
+      .setAuthor(`You rolled ${pack.pack.collection.name} and got...`)
       .setDescription(
         `**${pack.card.member}** ${"⭐".repeat(pack.usercard.stars)}\n*"${
           pack.card.description

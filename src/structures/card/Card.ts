@@ -16,16 +16,11 @@ export class Card {
   rarity: number;
   description: string;
 
-  tags: string[];
+  //tags: string[];
 
-  constructor(
-    uc: UserCard,
-    card: CardEntity,
-    tags: CardTag[],
-    coll: Collection
-  ) {
-    this.card_id = uc.card_id;
-    this.serial = uc.serial;
+  constructor(uc: UserCard, card: CardEntity, tags: CardTag, coll: Collection) {
+    this.card_id = uc.card.id;
+    this.serial = uc.card.collection.serialNumber.serialNumber + 1;
     this.owner = uc.discord_id;
     this.hearts = uc.hearts;
     this.image_url = card.image_url;
@@ -35,6 +30,7 @@ export class Card {
     this.collection = coll.name;
     this.rarity = card.rarity;
     this.description = card.description;
-    this.tags = tags.map((tag) => tag.tag);
+    console.log(tags);
+    //this.tags = tags;
   }
 }

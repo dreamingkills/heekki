@@ -90,3 +90,15 @@ export class NotANumberError extends ClientError {
     super("Please use a valid number!");
   }
 }
+export class InvalidCardError extends ClientError {
+  name = "InvalidCardError";
+  constructor() {
+    super("Please enter a valid card ID!");
+  }
+}
+export class NotEnoughHeartsError extends ClientError {
+  name = "NotEnoughHeartsError";
+  constructor() {
+    super("You don't have enough hearts to do that!");
+  }
+}

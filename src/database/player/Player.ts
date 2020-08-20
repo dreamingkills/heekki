@@ -63,31 +63,28 @@ export class PlayerService {
     m: string,
     p: boolean,
     page: number
-  ): Promise<{ cards: CardStruct[]; total: number }> {
+  ): Promise<{ cards: UserCard[]; total: number }> {
     if (page <= 0) throw new error.PageOutOfBoundsError();
     let discord_id = this.cleanMention(m);
     if (!(await this.userExists(discord_id))) {
       if (p) throw new error.NoProfileOtherError();
       throw new error.NoProfileError();
     }
-    let cardQB = UserCard.getRepository()
-      .createQueryBuilder("user_card")
-      .where(`discord_id = ${discord_id}`);
-    let count = await cardQB.getCount();
-    let cards = await cardQB
-      .skip(page * 10 - 10)
-      .take(10)
-      .getMany();
+    let cardQB = await UserCard.getRepository().find({
+      relations: [
+        "card",
+        "card.collection",
+        "card.tags",
+        "card.collection.serialNumber",
+      ],
+      where: { discord_id },
+      order: { stars: "DESC", hearts: "DESC" },
+    });
 
-    let cardList = [];
-    for (let card of cards) {
-      let meta = await Card.findOne({ id: card.card_id });
-      let tags = await CardTag.find({ where: { card_id: card.card_id } });
-      let coll = await Collection.findOne({ id: meta!.collection });
-
-      cardList.push(new CardStruct(card, meta!, tags, coll!));
-    }
-    return { cards: cardList, total: count };
+    return {
+      cards: cardQB.slice(page * 5 - 5, page * 5),
+      total: cardQB.length,
+    };
   }
 
   public static async findLastHug(m: User, v: User): Promise<number> {
@@ -136,5 +133,47 @@ export class PlayerService {
     return 2;
   }
 
-  public static async feedCard(m: string, c: number, a: number) {}
+  public static async getUserCard(
+    collection: string,
+    serial: number,
+    discord_id: string
+  ): Promise<UserCard> {
+    let userCards = await UserCard.getRepository().find({
+      where: { serialNumber: serial, discord_id },
+      relations: [
+        "card",
+        "card.collection",
+        "card.tags",
+        "card.collection.serialNumber",
+      ],
+    });
+    for (let card of userCards) {
+      if (card.card.collection.name == collection) return card;
+    }
+    throw new error.InvalidCardError();
+  }
+
+  public static async feedCard(
+    member: string,
+    card: string,
+    amount: number
+  ): Promise<{ card: UserCard; user: User; before: number }> {
+    if (isNaN(amount)) throw new error.NotANumberError();
+    let user = await this.getProfileFromUser(member, true);
+
+    //Resolve Format#0000 to user card
+    let [col, ser] = [card.split("#")[0], parseInt(card.split("#")[1])];
+    let userCard = await this.getUserCard(col, ser, user!.discord_id);
+
+    if (amount > user!.hearts) throw new error.NotEnoughHeartsError();
+    const before = userCard.hearts;
+
+    const clean = Math.floor(amount);
+    user!.hearts = +user!.hearts - +clean;
+    userCard.hearts = +userCard.hearts + +clean;
+    await user!.save();
+    await userCard.save();
+
+    return { card: userCard, user: user!, before };
+  }
 }

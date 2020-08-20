@@ -17,7 +17,7 @@ export class Command extends GameCommand {
     for (let pack of packs) {
       desc.push({
         name: `${pack.name}`,
-        value: `\`!shop buy ${pack.pack_id}\`\n<:coin:745447920072917093> ${pack.price}`,
+        value: `\`!buy ${pack.id}\`\n<:coin:745447920072917093> ${pack.price}`,
         inline: true,
       });
     }

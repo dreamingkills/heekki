@@ -1,12 +1,19 @@
-import { Entity, Column, BaseEntity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  PrimaryGeneratedColumn,
+  ManyToOne,
+} from "typeorm";
+import { Card } from "./Card";
 
 @Entity()
 export class CardTag extends BaseEntity {
   @PrimaryGeneratedColumn()
-  tag_id!: number;
+  tagId!: number;
 
-  @Column()
-  card_id!: number;
+  @ManyToOne((type) => Card, (card) => card.tags)
+  card!: Card;
 
   @Column({ type: "varchar" })
   tag!: string;
