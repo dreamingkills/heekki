@@ -17,8 +17,8 @@ export class Command extends GameCommand {
     );
     let userCard = fedUserCardData.card;
     let cardEntity = userCard.card;
-    let beforeLevel = (await this.heartsToLevel(fedUserCardData.before)).level;
-    let afterLevel = (await this.heartsToLevel(userCard.hearts)).level;
+    let beforeLevel = PlayerService.heartsToLevel(fedUserCardData.before).level;
+    let afterLevel = PlayerService.heartsToLevel(userCard.hearts).level;
 
     let embed = new MessageEmbed()
       .setAuthor(`Successfully upgraded card!`, msg.author.displayAvatarURL())
@@ -30,7 +30,7 @@ export class Command extends GameCommand {
         } Successfully added **${
           this.prm[1]
         }** hearts to the following card:\n**${cardEntity.collection.name}#${
-          cardEntity.collection.serialNumber.serialNumber
+          userCard.serialNumber
         }** - ${cardEntity.member}\n${"⭐".repeat(
           userCard.stars
         )}\n\nCard heart count: **${userCard.hearts}**\nYou now have **${
@@ -38,7 +38,7 @@ export class Command extends GameCommand {
         }** hearts.`
       )
       .setColor("#40BD66")
-      .setThumbnail(cardEntity.image_url);
+      .setThumbnail(cardEntity.imageUrl);
     await msg.channel.send(embed);
     return;
   };

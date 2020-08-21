@@ -7,20 +7,21 @@ import {
   JoinColumn,
   ManyToOne,
   ManyToMany,
+  OneToMany,
 } from "typeorm";
-import { SerialNumber } from "./SerialNumber";
 import { Card } from "./Card";
+import { CardImageData } from "./ImageData";
 
 @Entity()
 export class Collection extends BaseEntity {
-  @ManyToMany((type) => Card)
+  @ManyToMany(() => Card)
   @PrimaryGeneratedColumn()
   id!: number;
 
   @Column()
   name!: string;
 
-  @OneToOne((type) => SerialNumber)
+  @OneToOne((type) => CardImageData)
   @JoinColumn()
-  serialNumber!: SerialNumber;
+  imageData!: CardImageData;
 }

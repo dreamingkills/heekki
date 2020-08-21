@@ -1,13 +1,37 @@
 import { User } from "../../entities/player/User";
 import { Card } from "../../entities/card/Card";
 import { Card as CardStruct } from "../../structures/card/Card";
-import { CardTag } from "../../entities/card/CardTag";
 import { UserCard } from "../../entities/card/UserCard";
 import * as error from "../../structures/Error";
-import { Collection } from "../../entities/card/Collection";
+//import { Collection } from "../../entities/card/Collection";
 import { Hug } from "../../entities/player/Hug";
+import canvas, { CanvasRenderingContext2D } from "canvas";
+import jimp from "jimp";
+import { CollectionText } from "../../entities/card/text/CollectionText";
+import { MemberText } from "../../entities/card/text/MemberText";
+import { SerialText } from "../../entities/card/text/SerialText";
+import { HeartText } from "../../entities/card/text/HeartText";
+import { LevelNum } from "../../entities/card/text/LevelNum";
+import { LevelText } from "../../entities/card/text/LevelText";
 
 export class PlayerService {
+  public static commafyNumber(num: number) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  public static heartsToLevel(hearts: number) {
+    let unrounded = hearts / 50;
+    let currentLevel = unrounded >= 1 ? Math.floor(unrounded) + 1 : 1;
+
+    let nextRequirement = currentLevel * 50;
+    let info = {
+      totalHearts: hearts,
+      level: currentLevel >= 99 ? 99 : currentLevel,
+      next: currentLevel >= 99 ? -1 : nextRequirement,
+      toNext: currentLevel >= 99 ? -1 : nextRequirement - hearts,
+    };
+    return info;
+  }
+
   private static cleanMention(m: string): string {
     return m.replace(/[\\<>@#&!]/g, "");
   }
@@ -74,8 +98,14 @@ export class PlayerService {
       relations: [
         "card",
         "card.collection",
-        "card.tags",
-        "card.collection.serialNumber",
+        "card.collection.imageData",
+        "card.collection.imageData.collectionText",
+        "card.collection.imageData.memberText",
+        "card.collection.imageData.serialText",
+        "card.collection.imageData.levelText",
+        "card.collection.imageData.levelNum",
+        "card.collection.imageData.heartText",
+        "card.serialNumber",
       ],
       where: { discord_id },
       order: { stars: "DESC", hearts: "DESC" },
@@ -143,8 +173,14 @@ export class PlayerService {
       relations: [
         "card",
         "card.collection",
-        "card.tags",
-        "card.collection.serialNumber",
+        "card.collection.imageData",
+        "card.collection.imageData.collectionText",
+        "card.collection.imageData.memberText",
+        "card.collection.imageData.serialText",
+        "card.collection.imageData.levelText",
+        "card.collection.imageData.levelNum",
+        "card.collection.imageData.heartText",
+        "card.serialNumber",
       ],
     });
     for (let card of userCards) {
@@ -175,5 +211,106 @@ export class PlayerService {
     await userCard.save();
 
     return { card: userCard, user: user!, before };
+  }
+
+  public static async generateText(
+    ctx: CanvasRenderingContext2D,
+    part:
+      | CollectionText
+      | MemberText
+      | HeartText
+      | LevelNum
+      | LevelText
+      | SerialText,
+    font: string,
+    text: string
+  ) {
+    ctx.font = `${part.size}px ${font}`;
+    ctx.fillStyle = part.color;
+    ctx.textAlign = part.align;
+    ctx.fillText(text, part.x, part.y);
+    return ctx;
+  }
+
+  public static async generateCardImage(
+    member: string,
+    card: string | UserCard
+  ): Promise<Buffer> {
+    let userCard;
+    if (typeof card == "string") {
+      userCard = await this.getUserCard(
+        card.split("#")[0],
+        parseInt(card.split("#")[1]),
+        member
+      );
+    } else {
+      userCard = card;
+    }
+    let read = await jimp.read(userCard.card.imageUrl);
+    let size = { width: read.getWidth(), height: read.getHeight() };
+    let buffer = await read.getBufferAsync(jimp.MIME_PNG);
+
+    let cv = canvas.createCanvas(size.width, size.height);
+    let ctx = cv.getContext("2d");
+    let background = await canvas.loadImage(buffer);
+
+    ctx.drawImage(background, 0, 0, size.width, size.height);
+
+    let d = userCard.card.collection.imageData;
+    //Collection name e.g. ViViD
+    await this.generateText(
+      ctx,
+      d.collectionText,
+      d.fontName,
+      userCard.card.collection.name
+    );
+    //Member name e.g. HeeJin
+    await this.generateText(
+      ctx,
+      d.memberText,
+      d.fontName,
+      userCard.card.member
+    );
+    //Serial Number e.g. #420
+    await this.generateText(
+      ctx,
+      d.serialText,
+      d.fontName,
+      `#${this.commafyNumber(userCard.serialNumber)}`
+    );
+    //Level text
+    await this.generateText(ctx, d.levelText, d.fontName, `Level`);
+    //Level number
+    await this.generateText(
+      ctx,
+      d.levelNum,
+      d.fontName,
+      this.heartsToLevel(userCard.hearts).level.toString()
+    );
+    //Heart count e.g. 99
+    await this.generateText(
+      ctx,
+      d.heartText,
+      d.fontName,
+      this.commafyNumber(userCard.hearts)
+    );
+
+    let starData = await jimp.read(d.starImageURL);
+    let star = await canvas.loadImage(
+      await starData.getBufferAsync(jimp.MIME_PNG)
+    );
+    for (let i = 0; i < userCard.stars; i++) {
+      ctx.drawImage(
+        star,
+        d.starStartingX + i * d.starXIncrement,
+        d.starStartingY + i * d.starYIncrement,
+        d.starSideLength,
+        d.starSideLength
+      );
+    }
+
+    let buf = cv.toBuffer("image/png");
+    let final = Buffer.alloc(buf.length, buf, "base64");
+    return final;
   }
 }

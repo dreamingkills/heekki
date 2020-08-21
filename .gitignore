@@ -5,3 +5,5 @@ config.json
 ormconfig.json
 .prettierrc
 .prettierrc.json
+.VSCodeCounter
+example_textless.png

@@ -16,8 +16,8 @@ export class Command extends GameCommand {
     let desc: EmbedFieldData[] = [];
     for (let pack of packs) {
       desc.push({
-        name: `${pack.name}`,
-        value: `\`!buy ${pack.id}\`\n<:coin:745447920072917093> ${pack.price}`,
+        name: `${pack.name} Pack`,
+        value: `\`!buy ${pack.name}\`\n<:coin:745447920072917093> ${pack.price}`,
         inline: true,
       });
     }

@@ -10,29 +10,32 @@ import {
   ManyToOne,
 } from "typeorm";
 import { Collection } from "./Collection";
-import { CardTag } from "./CardTag";
-import { UserCard } from "./UserCard";
+import { SerialNumber } from "./SerialNumber";
 
 @Entity()
 export class Card extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ type: "varchar" })
-  image_url!: string;
+  @Column()
+  imageUrl!: string;
 
-  @Column({ type: "varchar" })
+  @Column()
   member!: string;
 
   @ManyToOne((type) => Collection)
   collection!: Collection;
 
-  @Column({ type: "int" })
+  @Column()
   rarity!: number;
 
-  @Column({ type: "varchar" })
+  @Column()
   description!: string;
 
-  @OneToMany((type) => CardTag, (tags) => tags.card)
-  tags!: CardTag;
+  @Column()
+  credit!: string;
+
+  @OneToOne((type) => SerialNumber)
+  @JoinColumn()
+  serialNumber!: SerialNumber;
 }

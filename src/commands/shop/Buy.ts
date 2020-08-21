@@ -1,6 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed, EmbedFieldData } from "discord.js";
 import { ShopService } from "../../database/shop/Shop";
+import { PlayerService } from "../../database/player/Player";
 
 export class Command extends GameCommand {
   names: string[] = ["buy"];
@@ -10,19 +11,24 @@ export class Command extends GameCommand {
   category: string = "shop";
 
   exec = async (msg: Message) => {
-    let pack_id = parseInt(this.prm[0]);
+    let packName = this.prm.join(" ");
 
-    let pack = await ShopService.rollPack(pack_id, msg.author.id);
+    let pack = await ShopService.rollPack(packName, msg.author.id);
+
+    let cardImage = await PlayerService.generateCardImage(
+      msg.author.id,
+      pack.usercard
+    );
 
     let embed = new MessageEmbed()
-      .setAuthor(`You rolled ${pack.pack.collection.name} and got...`)
+      .setAuthor(`You rolled the ${pack.pack.name} pack and got...`)
       .setDescription(
         `**${pack.card.member}** ${"⭐".repeat(pack.usercard.stars)}\n*"${
           pack.card.description
         }"*`
       )
-      .setImage(pack.card.image_url)
-      .setColor("#40BD66");
+      .setColor("#40BD66")
+      .attachFiles([{ name: "card.png", attachment: cardImage }]);
     await msg.channel.send(embed);
     return;
   };

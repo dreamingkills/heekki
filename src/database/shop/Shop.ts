@@ -1,7 +1,5 @@
-import { Pack as PackStruct } from "../../structures/shop/Pack";
 import { Pack } from "../../entities/shop/Pack";
 import * as error from "../../structures/Error";
-import { Collection } from "../../entities/card/Collection";
 import { Card } from "../../entities/card/Card";
 import { User } from "../../entities/player/User";
 import Chance from "chance";
@@ -21,7 +19,7 @@ export class ShopService {
       where: { active: true },
       skip: page * 10 - 10,
       take: 9,
-      relations: ["collection", "collection.serialNumber"],
+      relations: ["collection"],
     });
     let packList = [];
     for (let p of pack) {
@@ -45,23 +43,22 @@ export class ShopService {
       [1, 2, 3, 4, 5, 6],
       [70, 30, 20, 5, 2, 0.15]
     );
-    user_card.serialNumber = card.collection.serialNumber.serialNumber + 1;
+    user_card.serialNumber = card.serialNumber.serialNumber + 1;
     user_card.save();
-    card.collection.serialNumber.serialNumber += 1;
-    card.collection.serialNumber.save();
+    card.serialNumber.serialNumber += 1;
+    card.serialNumber.save();
     return user_card;
   }
 
   public static async rollPack(
-    pack_id: number,
+    packName: string,
     m: string
   ): Promise<{ card: Card; usercard: UserCard; user: User; pack: Pack }> {
-    if (isNaN(pack_id)) throw new error.NoPackIDError();
     let user = await User.findOne({ where: { discord_id: m } });
 
     let pack = await Pack.findOne({
-      relations: ["collection", "collection.serialNumber"],
-      where: { id: pack_id },
+      relations: ["collection"],
+      where: { name: packName },
     });
     if (!pack) throw new error.InvalidPackError();
     if (!pack.active) throw new error.ExpiredPackError();
@@ -69,7 +66,17 @@ export class ShopService {
     if (pack.price > user!.coins) throw new error.NotEnoughCoinsError();
 
     let cardListRepo = await Card.getRepository().find({
-      relations: ["collection", "collection.serialNumber"],
+      relations: [
+        "collection",
+        "collection.imageData",
+        "collection.imageData.memberText",
+        "collection.imageData.collectionText",
+        "collection.imageData.levelNum",
+        "collection.imageData.levelText",
+        "collection.imageData.serialText",
+        "collection.imageData.heartText",
+        "serialNumber",
+      ],
       where: { collection: { id: pack.collection.id } },
     });
 
@@ -90,6 +97,7 @@ export class ShopService {
 
     user!.coins = +user!.coins - +pack.price;
     user?.save();
+
     return { card: randomCard, usercard: newCard, user: user!, pack };
   }
 }

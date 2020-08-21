@@ -1,11 +1,18 @@
-import { Entity, Column, BaseEntity, PrimaryColumn, OneToOne } from "typeorm";
+import {
+  Entity,
+  Column,
+  BaseEntity,
+  PrimaryColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Collection } from "./Collection";
 
 @Entity()
 export class SerialNumber extends BaseEntity {
-  @PrimaryColumn()
-  collection!: number;
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-  @Column()
+  @Column({ default: 0 })
   serialNumber!: number;
 }

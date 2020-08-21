@@ -1,20 +1,24 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
+import canvas from "canvas";
+import jimp from "jimp";
 import { PlayerService } from "../../database/player/Player";
 
 export class Command extends GameCommand {
-  names: string[] = ["h2l"];
+  names: string[] = ["canvas"];
   usage: string[] = ["%c <hearts>"];
   desc: string = "Translates hearts to level.";
   category: string = "player";
   hidden: boolean = true;
 
   exec = async (msg: Message) => {
-    let level = await PlayerService.heartsToLevel(parseInt(this.prm[0]));
-
-    await msg.channel.send(
-      `**${level.totalHearts} hearts** is equal to **level ${level.level}**. **${level.toNext} hearts** to the next level (${level.next}).`
+    let final = await PlayerService.generateCardImage(
+      msg.author.id,
+      this.prm[0]
     );
+    await msg.channel.send("generated image", {
+      files: [final],
+    });
     return;
   };
 }
