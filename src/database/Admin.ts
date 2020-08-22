@@ -1,13 +1,13 @@
-import { Collection } from "../../entities/card/Collection";
-import { SerialNumber } from "../../entities/card/SerialNumber";
-import { Card } from "../../entities/card/Card";
-import { CardImageData } from "../../entities/card/ImageData";
-import { CollectionText } from "../../entities/card/text/CollectionText";
-import { MemberText } from "../../entities/card/text/MemberText";
-import { SerialText } from "../../entities/card/text/SerialText";
-import { LevelText } from "../../entities/card/text/LevelText";
-import { LevelNum } from "../../entities/card/text/LevelNum";
-import { HeartText } from "../../entities/card/text/HeartText";
+import { Collection } from "../entities/card/Collection";
+import { SerialNumber } from "../entities/card/SerialNumber";
+import { Card } from "../entities/card/Card";
+import { CardImageData } from "../entities/card/ImageData";
+import { CollectionText } from "../entities/card/text/CollectionText";
+import { MemberText } from "../entities/card/text/MemberText";
+import { SerialText } from "../entities/card/text/SerialText";
+import { LevelText } from "../entities/card/text/LevelText";
+import { LevelNum } from "../entities/card/text/LevelNum";
+import { HeartText } from "../entities/card/text/HeartText";
 
 export class AdminService {
   public static async createNewCollection(

@@ -1,6 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { PlayerService } from "../../database/player/Player";
+import { PlayerService } from "../../database/Player";
+import { CardService } from "../../database/Card";
 
 export class Command extends GameCommand {
   names: string[] = ["inventory", "inv"];
@@ -23,7 +24,7 @@ export class Command extends GameCommand {
     let desc = `${member?.user.tag} has **${cardsData.total}** cards!\n\n`;
 
     for (let card of cards) {
-      let lvl = (await PlayerService.heartsToLevel(card.hearts)).level;
+      let lvl = CardService.heartsToLevel(card.hearts).level;
       desc += `__**${card.card.collection.name}#${card.serialNumber}**__ - ${
         card.card.member
       }\nLevel **${lvl}** / ${":star:".repeat(card.stars)}\n`;

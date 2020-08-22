@@ -1,7 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed, EmbedFieldData } from "discord.js";
-import { ShopService } from "../../database/shop/Shop";
-import { PlayerService } from "../../database/player/Player";
+import { ShopService } from "../../database/Shop";
+import { CardService } from "../../database/Card";
 
 export class Command extends GameCommand {
   names: string[] = ["buy"];
@@ -15,7 +15,7 @@ export class Command extends GameCommand {
 
     let pack = await ShopService.rollPack(packName, msg.author.id);
 
-    let cardImage = await PlayerService.generateCardImage(
+    let cardImage = await CardService.generateCardImage(
       msg.author.id,
       pack.usercard
     );

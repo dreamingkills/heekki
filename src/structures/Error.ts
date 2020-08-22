@@ -102,3 +102,9 @@ export class NotEnoughHeartsError extends ClientError {
     super("You don't have enough hearts to do that!");
   }
 }
+export class InvalidUserCardError extends ClientError {
+  name = "InvalidUserCardError";
+  constructor() {
+    super("Please enter a valid card reference (e.g. `favOriTe#HJ39`)");
+  }
+}

@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { PlayerService } from "../../database/player/Player";
+import { CardService } from "../../database/Card";
 
 export class Command extends GameCommand {
   names: string[] = ["upgrade"];
@@ -10,15 +10,15 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let id = msg.author.id;
-    let fedUserCardData = await PlayerService.feedCard(
+    let fedUserCardData = await CardService.upgradeCard(
       id,
       this.prm[0],
       parseInt(this.prm[1])
     );
     let userCard = fedUserCardData.card;
     let cardEntity = userCard.card;
-    let beforeLevel = PlayerService.heartsToLevel(fedUserCardData.before).level;
-    let afterLevel = PlayerService.heartsToLevel(userCard.hearts).level;
+    let beforeLevel = CardService.heartsToLevel(fedUserCardData.before).level;
+    let afterLevel = CardService.heartsToLevel(userCard.hearts).level;
 
     let embed = new MessageEmbed()
       .setAuthor(`Successfully upgraded card!`, msg.author.displayAvatarURL())

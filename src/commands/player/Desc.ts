@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { PlayerService } from "../../database/player/Player";
+import { PlayerService } from "../../database/Player";
 
 export class Command extends GameCommand {
   names: string[] = ["desc"];

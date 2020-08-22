@@ -1,15 +1,11 @@
-import { Pack } from "../../entities/shop/Pack";
-import * as error from "../../structures/Error";
-import { Card } from "../../entities/card/Card";
-import { User } from "../../entities/player/User";
+import { Pack } from "../entities/shop/Pack";
+import * as error from "../structures/Error";
+import { Card } from "../entities/card/Card";
+import { User } from "../entities/player/User";
 import Chance from "chance";
-import { UserCard } from "../../entities/card/UserCard";
+import { UserCard } from "../entities/card/UserCard";
 
 export class ShopService {
-  private static cleanMention(m: string): string {
-    return m.replace(/[\\<>@#&!]/g, "");
-  }
-
   public static async getPackByID(id: number) {
     let pack = Pack.findOne({ id });
   }
