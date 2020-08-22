@@ -2,6 +2,7 @@ import { User } from "../entities/player/User";
 import { UserCard } from "../entities/card/UserCard";
 import * as error from "../structures/Error";
 import { Hug } from "../entities/player/Hug";
+import { CardService } from "./Card";
 
 export class PlayerService {
   private static cleanMention(m: string): string {
@@ -130,5 +131,16 @@ export class PlayerService {
     hug.date = Date.now();
     hug.save();
     return 2;
+  }
+
+  public static async giftCard(
+    cardRef: string,
+    recipient: string
+  ): Promise<UserCard> {
+    let clean = this.cleanMention(recipient);
+    let card = await CardService.parseCardDetails(cardRef, clean);
+    card.discord_id = clean;
+    await card.save();
+    return card;
   }
 }
