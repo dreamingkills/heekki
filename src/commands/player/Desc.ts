@@ -14,7 +14,7 @@ export class Command extends GameCommand {
     let user = await PlayerService.changeProfileDescription(id, desc);
 
     await msg.channel.send(
-      `:white_check_mark: Your description was updated to:\n\`${desc}\``
+      `:white_check_mark: Your description was updated to:\n\`${user.blurb}\``
     );
     return;
   };

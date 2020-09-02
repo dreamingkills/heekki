@@ -108,3 +108,41 @@ export class InvalidUserCardError extends ClientError {
     super("Please enter a valid card reference (e.g. `favOriTe#HJ39`)");
   }
 }
+export class InvalidCollectionError extends ClientError {
+  name = "InvalidCollectionError";
+  constructor() {
+    super("That collection does not exist!");
+  }
+}
+export class InvalidImageDataError extends ClientError {
+  name = "InvalidImageDataError";
+  constructor() {
+    super(
+      "That card has no image data attached to it. Contact RTFL#8058 to get this fixed!"
+    );
+  }
+}
+export class CannotAddYourselfError extends ClientError {
+  name = "CannotAddYourselfError";
+  constructor() {
+    super("You can't add yourself as a friend! :pensive:");
+  }
+}
+export class DuplicateRelationshipError extends ClientError {
+  name = "DuplicateRelationshipError";
+  constructor() {
+    super("You're already friends with that person!");
+  }
+}
+export class CannotRemoveYourselfError extends ClientError {
+  name = "CannotRemoveYourselfError";
+  constructor() {
+    super("Why would you want to do that? :broken_heart:");
+  }
+}
+export class NonexistentRelationshipError extends ClientError {
+  name = "NonexistentRelationshipError";
+  constructor() {
+    super("You aren't friends with that user anyway. :person_shrugging:");
+  }
+}

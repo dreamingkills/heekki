@@ -9,7 +9,7 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let id = msg.author.id;
+    /*let id = msg.author.id;
     let fedUserCardData = await CardService.upgradeCard(
       id,
       this.prm[0],
@@ -40,6 +40,6 @@ export class Command extends GameCommand {
       .setColor("#40BD66")
       .setThumbnail(cardEntity.imageUrl);
     await msg.channel.send(embed);
-    return;
+    return;*/
   };
 }

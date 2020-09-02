@@ -15,16 +15,16 @@ export class Command extends GameCommand {
 
     let pack = await ShopService.rollPack(packName, msg.author.id);
 
-    let cardImage = await CardService.generateCardImage(
-      msg.author.id,
-      pack.usercard
-    );
+    let cardImage = await CardService.generateCardImage({
+      userCard: pack.userCard,
+      imageData: pack.imageData,
+    });
 
     let embed = new MessageEmbed()
-      .setAuthor(`You rolled the ${pack.pack.name} pack and got...`)
+      .setAuthor(`You rolled the ${pack.userCard.title} pack and got...`)
       .setDescription(
-        `**${pack.card.member}** ${"⭐".repeat(pack.usercard.stars)}\n*"${
-          pack.card.description
+        `**${pack.userCard.member}** ${"⭐".repeat(pack.userCard.stars)}\n*"${
+          pack.userCard.blurb
         }"*`
       )
       .setColor("#40BD66")

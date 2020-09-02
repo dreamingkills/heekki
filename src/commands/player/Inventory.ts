@@ -13,20 +13,15 @@ export class Command extends GameCommand {
     let id = msg.author.id;
     let page = this.prm[0] ? parseInt(this.prm[0]) : 1;
     let user = await PlayerService.getProfileFromUser(id, true);
-    let cardsData = await PlayerService.getCardsByUser(
-      user!.discord_id,
-      true,
-      page
-    );
-    let cards = cardsData.cards;
+    let cardsData = await PlayerService.getCardsByUser(user.discord_id, true);
 
     let member = msg.guild?.member(id);
-    let desc = `${member?.user.tag} has **${cardsData.total}** cards!\n\n`;
+    let desc = `${member?.user.tag} has **${cardsData.length}** cards!\n\n`;
 
-    for (let card of cards) {
+    for (let card of cardsData) {
       let lvl = CardService.heartsToLevel(card.hearts).level;
-      desc += `__**${card.card.collection.name}#${card.serialNumber}**__ - ${
-        card.card.member
+      desc += `__**${card.abbreviation}#${card.serialNumber}**__ - ${
+        card.member
       }\nLevel **${lvl}** / ${":star:".repeat(card.stars)}\n`;
     }
     let embed = new MessageEmbed()

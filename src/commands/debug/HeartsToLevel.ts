@@ -10,7 +10,7 @@ export class Command extends GameCommand {
   hidden: boolean = true;
 
   exec = async (msg: Message) => {
-    let level = await CardService.heartsToLevel(parseInt(this.prm[0]));
+    let level = CardService.heartsToLevel(parseInt(this.prm[0]));
 
     await msg.channel.send(
       `**${level.totalHearts} hearts** is equal to **level ${level.level}**. **${level.toNext} hearts** to the next level (${level.next}).`

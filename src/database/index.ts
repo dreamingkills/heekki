@@ -1,9 +1,22 @@
-import { createConnection } from "typeorm";
+import mysql, { Pool } from "mysql";
+import config from "../../config.json";
+import { promisify } from "util";
+import sqlstring from "sqlstring";
 
 export class DB {
+  public static query: (arg1: string, params?: Array<any>) => Promise<any>;
+  public static connection: Pool;
   static async connect() {
-    let connection = await createConnection();
+    let pool = mysql.createPool(config.mysql);
+    let q = promisify(pool.query).bind(pool);
 
-    await connection.synchronize();
+    this.query = q;
+    this.connection = pool;
+  }
+}
+
+export class DBClass {
+  public static clean(data: string | number) {
+    return sqlstring.escape(data);
   }
 }

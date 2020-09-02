@@ -23,11 +23,9 @@ export class Command extends GameCommand {
       )
       .setThumbnail(discordUser ? discordUser.user.displayAvatarURL() : "")
       .setDescription(
-        `${user!.desc}\n\n<:coin:745447920072917093> ${user!.coins}\n:heart: ${
-          user!.hearts
-        }\n\nHugs Given: **${user!.hugs_given}**\nHugs Received: **${
-          user?.hugs_received
-        }**`
+        `${user.blurb || "No description set!"}\n\n<:coin:745447920072917093> ${
+          user.coins
+        }\n:heart: ${user.hearts}` //\n\nHugs Given: **${user.hugsGiven}**\nHugs Received: **${user.hugsReceived}**`
       )
       .setColor("#40BD66");
     await msg.channel.send(embed);

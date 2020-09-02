@@ -1,23 +1,25 @@
-import { User } from "../entities/player/User";
-import { UserCard } from "../entities/card/UserCard";
 import * as error from "../structures/Error";
-import { Hug } from "../entities/player/Hug";
-import { CardService } from "./Card";
+import { PlayerFetchSQL as Fetch } from "./sql/player/Fetch";
+import { Profile } from "../structures/player/Profile";
+import {
+  PlayerModifySQL as Modify,
+  PlayerModifySQL,
+} from "./sql/player/Modify";
+import { UserCard } from "../structures/player/UserCard";
+import { FriendFetchSQL as FriendFetch } from "./sql/friend/Fetch";
+import { FriendModifySQL as FriendModify } from "./sql/friend/Modify";
 
 export class PlayerService {
   private static cleanMention(m: string): string {
     return m.replace(/[\\<>@#&!]/g, "");
   }
 
-  private static async userExists(m: string): Promise<boolean> {
+  public static async getProfileFromUser(
+    m: string,
+    p: boolean
+  ): Promise<Profile> {
     let discord_id = this.cleanMention(m);
-    let user = await User.findOne({ discord_id });
-    return user ? true : false;
-  }
-
-  public static async getProfileFromUser(m: string, p: boolean): Promise<User> {
-    let discord_id = this.cleanMention(m);
-    let user = await User.findOne({ discord_id });
+    let user = await Fetch.getProfileFromDiscordId(discord_id);
     if (!user) {
       if (p) throw new error.NoProfileOtherError();
       throw new error.NoProfileError();
@@ -26,121 +28,97 @@ export class PlayerService {
     return user;
   }
 
-  public static async createNewUser(m: string): Promise<User> {
+  public static async createNewUser(m: string): Promise<Profile> {
     let discord_id = this.cleanMention(m);
-    if (await this.userExists(discord_id)) {
+    if (await Fetch.checkIfUserExists(discord_id)) {
       throw new error.DuplicateProfileError();
     }
 
-    let newUser = User.create();
-    newUser.discord_id = discord_id;
-    await newUser.save();
-    return newUser;
+    await Modify.createNewProfile(discord_id);
+    let profile = await Fetch.getProfileFromDiscordId(discord_id);
+    return profile;
   }
 
   public static async changeProfileDescription(
     m: string,
     desc: string
-  ): Promise<User> {
+  ): Promise<Profile> {
     let discord_id = this.cleanMention(m);
-    if (!(await this.userExists(m))) {
+    if (!(await Fetch.checkIfUserExists(m))) {
       throw new error.NoProfileError();
     }
 
-    let user = await User.findOne({ discord_id });
-    user!.desc = desc;
-    await user?.save();
-    return user!;
+    await Modify.changeDescription(discord_id, desc);
+    let profile = await Fetch.getProfileFromDiscordId(discord_id);
+    return profile;
   }
 
   public static async getCardsByUser(
     m: string,
-    p: boolean,
-    page: number
-  ): Promise<{ cards: UserCard[]; total: number }> {
-    if (page <= 0) throw new error.PageOutOfBoundsError();
-    let discord_id = this.cleanMention(m);
-    if (!(await this.userExists(discord_id))) {
-      if (p) throw new error.NoProfileOtherError();
-      throw new error.NoProfileError();
-    }
-    let cardQB = await UserCard.getRepository().find({
-      relations: [
-        "card",
-        "card.collection",
-        "card.collection.imageData",
-        "card.collection.imageData.collectionText",
-        "card.collection.imageData.memberText",
-        "card.collection.imageData.serialText",
-        "card.collection.imageData.levelText",
-        "card.collection.imageData.levelNum",
-        "card.collection.imageData.heartText",
-        "card.serialNumber",
-      ],
-      where: { discord_id },
-      order: { stars: "DESC", hearts: "DESC" },
+    p: boolean
+  ): Promise<UserCard[]> {
+    let user = await this.getProfileFromUser(this.cleanMention(m), false);
+    let cardList = await Fetch.getUserCardsByDiscordId(user.discord_id);
+
+    return cardList;
+  }
+
+  public static async getFriendsList(discord_id: string) {
+    let user = await this.getProfileFromUser(discord_id, false);
+    let friends = await FriendFetch.getFriendsByDiscordId(user.discord_id);
+    return friends;
+  }
+
+  public static async addFriend(
+    discord_id: string,
+    friend: string
+  ): Promise<Profile> {
+    let user = await this.getProfileFromUser(discord_id, false);
+    let friendProfile = await this.getProfileFromUser(friend, false);
+
+    if (user.discord_id == friendProfile.discord_id)
+      throw new error.CannotAddYourselfError();
+    let relationshipStatus = await FriendFetch.checkRelationshipExists(
+      user.discord_id,
+      friendProfile.discord_id
+    );
+    if (relationshipStatus) throw new error.DuplicateRelationshipError();
+
+    await FriendModify.addFriendByDiscordId(
+      user.discord_id,
+      friendProfile.discord_id
+    );
+    return friendProfile;
+  }
+  public static async removeFriend(
+    discord_id: string,
+    friend: string
+  ): Promise<Profile> {
+    let user = await this.getProfileFromUser(discord_id, false);
+    let friendProfile = await this.getProfileFromUser(friend, true);
+
+    if (user.discord_id == friendProfile.discord_id)
+      throw new error.CannotRemoveYourselfError();
+    let relationshipStatus = await FriendFetch.checkRelationshipExists(
+      user.discord_id,
+      friendProfile.discord_id
+    );
+    if (!relationshipStatus) throw new error.NonexistentRelationshipError();
+
+    await FriendModify.removeFriendByDiscordId(
+      user.discord_id,
+      friendProfile.discord_id
+    );
+    return friendProfile;
+  }
+  public static async sendHeartsToFriends(
+    discord_id: string
+  ): Promise<number[]> {
+    let user = await this.getProfileFromUser(discord_id, false);
+    let friends = await FriendFetch.getFriendsByDiscordId(user.discord_id);
+    friends.forEach(async (f) => {
+      await PlayerModifySQL.addHearts(f, 1);
     });
-
-    return {
-      cards: cardQB.slice(page * 5 - 5, page * 5),
-      total: cardQB.length,
-    };
-  }
-
-  public static async findLastHug(m: User, v: User): Promise<number> {
-    let hug = await Hug.findOne({
-      where: { hugger: m.discord_id, victim: v.discord_id },
-      order: { date: "DESC" },
-    });
-
-    if (!hug) return 0;
-    return hug.date;
-  }
-
-  public static async hugUser(
-    m: string,
-    v: string | undefined
-  ): Promise<number> {
-    if (!v) throw new error.NobodyToHugError();
-    let discord_user = this.cleanMention(v);
-    if (discord_user == m) throw new error.CantHugYourselfError();
-    if (!(await this.userExists(m))) {
-      return 0;
-    }
-    if (!(await this.userExists(v))) {
-      return 1;
-    }
-    let victim = await this.getProfileFromUser(discord_user, false);
-    let sender = await this.getProfileFromUser(m, true);
-
-    let lastHug = await this.findLastHug(sender!, victim!);
-    let eligible = Date.now() - 14400000;
-    if (eligible < lastHug) {
-      return +lastHug + 14400000;
-    }
-
-    victim!.hearts = +victim!.hearts + 3;
-    victim!.hugs_received = +victim!.hugs_received + 1;
-    sender!.hearts = +sender!.hearts + 3;
-    sender!.hugs_given = +sender!.hugs_given + 1;
-    await victim!.save();
-    await sender!.save();
-    let hug = Hug.create();
-    hug.hugger = sender!.discord_id;
-    hug.victim = victim!.discord_id;
-    hug.date = Date.now();
-    hug.save();
-    return 2;
-  }
-
-  public static async giftCard(
-    cardRef: string,
-    recipient: string
-  ): Promise<UserCard> {
-    let clean = this.cleanMention(recipient);
-    let card = await CardService.parseCardDetails(cardRef, clean);
-    card.discord_id = clean;
-    await card.save();
-    return card;
+    return friends;
   }
 }

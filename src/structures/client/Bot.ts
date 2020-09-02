@@ -1,7 +1,7 @@
 import { CommandManager } from "../../helpers/Command";
 import config from "../../../config.json";
 import { Client, Message } from "discord.js";
-import { User } from "../../entities/player/User";
+import { DB } from "../../database/index";
 
 export class Bot extends Client {
   public config: Object = config;
@@ -12,7 +12,12 @@ export class Bot extends Client {
 
     this.on("ready", async () => {
       if (!this.user) return console.error("I'm null!");
-      console.log(`Ready - ${await User.count()} users in database`);
+      let userCount = await DB.query(
+        `SELECT COUNT(discord_id) FROM user_profile;`
+      );
+      console.log(
+        `Ready - ${userCount[0]["COUNT(discord_id)"]} users in database`
+      );
     });
     this.on("message", async (msg: Message) => this.cmdMan.handle(msg));
 
