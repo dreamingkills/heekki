@@ -10,17 +10,28 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let friend;
-    if (isNaN(parseInt(this.prm[0]))) {
-      let un = this.prm[0].split("#")[0];
-      let ds = this.prm[0].split("#")[1];
-      let member = await msg.guild?.members.fetch({ query: un });
-      friend = member?.firstKey();
+    if (!this.prm[0]) {
+      await msg.channel.send(
+        `<:red_x:741454361007357993> Please specify a user to add!`
+      );
+      return;
     }
-    let newFriend = await PlayerService.removeFriend(
-      msg.author.id,
-      friend || this.prm[0]
-    );
+    let friend;
+    if (isNaN(parseInt(this.prm[0])) && !this.prm[0].includes("<@")) {
+      let member = await msg.guild?.members.fetch({ query: this.prm[0] });
+      friend = member?.firstKey();
+    } else {
+      friend = (await PlayerService.getProfileFromUser(this.prm[0], true))
+        .discord_id;
+    }
+
+    if (!friend) {
+      await msg.channel.send(
+        "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
+      );
+      return;
+    }
+    let newFriend = await PlayerService.removeFriend(msg.author.id, friend);
     let member = msg.guild?.member(newFriend.discord_id.toString());
     await msg.channel.send(
       `:white_check_mark: Removed **${member?.user.tag}** from your friends list!`
