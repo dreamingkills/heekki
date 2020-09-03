@@ -3,6 +3,7 @@ import { Profile } from "../../../structures/player/Profile";
 import { UserCard } from "../../../structures/player/UserCard";
 import { DBClass } from "../../index";
 import { Badge } from "../../../structures/player/Badge";
+import * as error from "../../../structures/Error";
 
 export class PlayerFetchSQL extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -13,13 +14,17 @@ export class PlayerFetchSQL extends DBClass {
   }
 
   public static async getProfileFromDiscordId(
-    discord_id: string
+    discord_id: string,
+    p: boolean
   ): Promise<Profile> {
     let user = await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=${this.clean(discord_id)}`
     );
+    if (!user[0]) {
+      if (p) throw new error.NoProfileOtherError();
+      throw new error.NoProfileError();
+    }
     let badges = await this.getBadgesByDiscordId(discord_id);
-    console.log(badges);
     return new Profile(user[0], badges);
   }
 
@@ -48,7 +53,8 @@ export class PlayerFetchSQL extends DBClass {
       LEFT JOIN
         pack ON
           card.pack_id=pack.id
-      WHERE user_card.owner_id=${discord_id}`
+      WHERE user_card.owner_id=${discord_id}
+      ORDER BY user_card.stars DESC;`
     );
     let cardList: UserCard[] = [];
     let cardIterator = cards.forEach(
@@ -69,7 +75,6 @@ export class PlayerFetchSQL extends DBClass {
         cardList.push(new UserCard(c));
       }
     );
-    console.log(cardList);
     return cardList;
   }
 

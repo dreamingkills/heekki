@@ -17,6 +17,13 @@ export class Command extends GameCommand {
       let member = await msg.guild?.members.fetch({ query: un });
       friend = member?.firstKey();
     }
+
+    if (!friend) {
+      await msg.channel.send(
+        "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
+      );
+      return;
+    }
     let newFriend = await PlayerService.addFriend(
       msg.author.id,
       friend || this.prm[0]

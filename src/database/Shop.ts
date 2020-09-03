@@ -14,7 +14,7 @@ export class ShopService {
     packName: string,
     discordId: string
   ): Promise<{ userCard: UserCard; imageData: ImageData }> {
-    let user = await PlayerFetch.getProfileFromDiscordId(discordId);
+    let user = await PlayerFetch.getProfileFromDiscordId(discordId, false);
     let shopItem = await ShopFetch.findShopItemByName(packName);
 
     if (shopItem.price > user.coins) throw new error.NotEnoughCoinsError();

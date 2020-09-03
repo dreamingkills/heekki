@@ -21,10 +21,10 @@ export class PlayerService {
   ): Promise<Profile> {
     let user: Profile;
     if (typeof m == "number") {
-      user = await Fetch.getProfileFromDiscordId(m);
+      user = await Fetch.getProfileFromDiscordId(m, true);
     } else {
       let discord_id = this.cleanMention(m);
-      user = await Fetch.getProfileFromDiscordId(discord_id);
+      user = await Fetch.getProfileFromDiscordId(discord_id, false);
     }
     if (!user) {
       if (p) throw new error.NoProfileOtherError();
@@ -41,7 +41,7 @@ export class PlayerService {
     }
 
     await Modify.createNewProfile(discord_id);
-    let profile = await Fetch.getProfileFromDiscordId(discord_id);
+    let profile = await Fetch.getProfileFromDiscordId(discord_id, false);
     return profile;
   }
 
@@ -55,7 +55,7 @@ export class PlayerService {
     }
 
     await Modify.changeDescription(discord_id, desc);
-    let profile = await Fetch.getProfileFromDiscordId(discord_id);
+    let profile = await Fetch.getProfileFromDiscordId(discord_id, false);
     return profile;
   }
 
@@ -77,7 +77,7 @@ export class PlayerService {
     friend: string
   ): Promise<Profile> {
     let user = await this.getProfileFromUser(discord_id, false);
-    let friendProfile = await this.getProfileFromUser(friend, false);
+    let friendProfile = await this.getProfileFromUser(friend, true);
 
     if (user.discord_id == friendProfile.discord_id)
       throw new error.CannotAddYourselfError();
@@ -86,13 +86,13 @@ export class PlayerService {
       friendProfile.discord_id
     );
     if (relationshipStatus) throw new error.DuplicateRelationshipError();
-
     await FriendModify.addFriendByDiscordId(
       user.discord_id,
       friendProfile.discord_id
     );
     return friendProfile;
   }
+
   public static async removeFriend(
     discord_id: string,
     friend: string
