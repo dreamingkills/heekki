@@ -3,7 +3,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { CardService } from "../../database/Card";
 
 export class Command extends GameCommand {
-  names: string[] = ["card"];
+  names: string[] = ["card", "show"];
   usage: string[] = ["%c [card reference]"];
   desc: string = "Generates an image of a card.";
   category: string = "card";
