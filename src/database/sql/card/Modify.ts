@@ -3,6 +3,7 @@ import { UserCard } from "../../../structures/player/UserCard";
 import * as error from "../../../structures/Error";
 import { CardFetchSQL as Fetch, CardFetchSQL } from "./Fetch";
 import { ImageData } from "../../../structures/card/ImageData";
+import { OkPacket } from "mysql";
 
 export class CardModifySQL extends DBClass {
   public static async createNewUserCard(
@@ -28,5 +29,16 @@ export class CardModifySQL extends DBClass {
       [serialNumber[0].id]
     );
     return newUserCard;
+  }
+  public static async addHeartsToCard(
+    card: UserCard,
+    amount: number
+  ): Promise<OkPacket> {
+    console.log(card.userCardId);
+    let query = await DB.query(
+      `UPDATE user_card SET hearts=hearts+? WHERE id=?;`,
+      [amount, card.userCardId]
+    );
+    return query;
   }
 }

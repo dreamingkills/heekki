@@ -170,3 +170,9 @@ export class HeartBoxCooldownError extends ClientError {
     );
   }
 }
+export class NotYourCardError extends ClientError {
+  name = "NotYourCardError";
+  constructor() {
+    super("That card doesn't belong to you!");
+  }
+}

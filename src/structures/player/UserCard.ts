@@ -1,4 +1,6 @@
 export class UserCard {
+  userCardId: number;
+
   serialNumber: number;
   ownerId: string;
   stars: number;
@@ -15,6 +17,7 @@ export class UserCard {
   imageDataId: number;
 
   constructor(data: {
+    id: number;
     owner_id: string;
     serial_number: number;
     stars: number;
@@ -30,6 +33,7 @@ export class UserCard {
     title: string;
     image_data_id: number;
   }) {
+    this.userCardId = data.id;
     this.serialNumber = data.serial_number;
     this.ownerId = data.owner_id;
     this.stars = data.stars;

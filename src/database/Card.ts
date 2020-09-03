@@ -5,6 +5,9 @@ import jimp from "jimp";
 import { UserCard } from "../structures/player/UserCard";
 import { CardFetchSQL as Fetch, CardFetchSQL } from "./sql/card/Fetch";
 import { ImageData } from "../structures/card/ImageData";
+import { Profile } from "../structures/player/Profile";
+import { CardModifySQL } from "./sql/card/Modify";
+import { PlayerModifySQL } from "./sql/player/Modify";
 
 export class CardService {
   public static memberShorthands: { [key: string]: string } = {
@@ -47,25 +50,24 @@ export class CardService {
     return userCard;
   }
 
-  /*public static async upgradeCard(
+  public static async upgradeCard(
     member: string,
     card: string,
     amount: number
-  ): Promise<{ card: UserCard; user: User; before: number }> {
+  ): Promise<{ card: UserCard; user: Profile; before: number }> {
     if (isNaN(amount)) throw new error.NotANumberError();
     let user = await PlayerService.getProfileFromUser(member, true);
     const rounded = Math.floor(amount);
     if (rounded > user.hearts) throw new error.NotEnoughHeartsError();
 
-    let userCard = await this.parseCardDetails(card, user.discord_id);
-    const before = userCard.hearts;
-    user.hearts = +user.hearts - +rounded;
-    userCard.hearts = +userCard.hearts + +rounded;
-    await user.save();
-    await userCard.save();
+    let userCard = await this.parseCardDetails(card);
+    if (userCard.card.ownerId != user.discord_id)
+      throw new error.NotYourCardError();
+    await CardModifySQL.addHeartsToCard(userCard.card, amount);
+    await PlayerModifySQL.removeHearts(user.discord_id, amount);
 
-    return { card: userCard, user: user, before };
-  }*/
+    return { card: userCard.card, user: user, before: userCard.card.hearts };
+  }
 
   public static async generateText(
     ctx: CanvasRenderingContext2D,

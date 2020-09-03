@@ -72,6 +72,7 @@ export class CardFetchSQL extends DBClass {
         card.abbreviation,
         card.rarity,
         card.image_url,
+        user_card.id,
         user_card.serial_number,
         user_card.owner_id,
         user_card.stars,
