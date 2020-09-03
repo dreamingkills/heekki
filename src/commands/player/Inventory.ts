@@ -13,19 +13,24 @@ export class Command extends GameCommand {
     let id = msg.author.id;
     let page = this.prm[0] ? parseInt(this.prm[0]) : 1;
     let user = await PlayerService.getProfileFromUser(id, true);
-    let cardsData = await PlayerService.getCardsByUser(user.discord_id, true);
+    let cardsRaw = await PlayerService.getCardsByUser(user.discord_id);
 
     let member = msg.guild?.member(id);
-    let desc = `${member?.user.tag} has **${cardsData.length}** cards!\n\n`;
+    let desc = `${member?.user.tag} has **${cardsRaw.length}** cards!\n\n`;
 
-    for (let card of cardsData) {
+    let cards = cardsRaw.slice(page * 10 - 10, page * 10);
+    for (let card of cards) {
       let lvl = CardService.heartsToLevel(card.hearts).level;
       desc += `__**${card.abbreviation}#${card.serialNumber}**__ - ${
         card.member
       }\nLevel **${lvl}** / ${":star:".repeat(card.stars)}\n`;
     }
     let embed = new MessageEmbed()
-      .setAuthor(`${msg.author.tag}'s inventory (page ${page})`)
+      .setAuthor(
+        `${msg.author.tag}'s inventory (page ${page}/${Math.ceil(
+          cardsRaw.length / 10
+        )})`
+      )
       .setDescription(desc)
       .setThumbnail(msg.author.displayAvatarURL())
       .setColor("#40BD66")

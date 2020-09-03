@@ -6,6 +6,8 @@ CREATE TABLE user_profile
     hearts          BIGINT(20) DEFAULT 0,
     daily_streak    INT(11) DEFAULT 0,
     daily_last      INT(11) DEFAULT 0,
+    hearts_last     BIGINT(20) DEFAULT 0,
+    heart_box_last  BIGINT(20) DEFAULT 0,
     PRIMARY KEY (discord_id)
 );
 
@@ -167,9 +169,28 @@ CREATE TABLE user_card
 CREATE TABLE friend
 (
     relationship_id INT(11) NOT NULL AUTO_INCREMENT,
-    user_id         INT(11),
-    friend_id       INT(11),
-    PRIMARY KEY (relationship-id),
+    user_id         VARCHAR(32),
+    friend_id       VARCHAR(32),
+    PRIMARY KEY (relationship_id),
     CONSTRAINT FriendUser FOREIGN KEY (user_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT Friend FOREIGN KEY (friend_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);
+
+CREATE TABLE badge
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    title           VARCHAR(255),
+    blurb           VARCHAR(255),
+    emoji           VARCHAR(255),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE user_badge
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      VARCHAR(255) NOT NULL,
+    badge_id        INT(11) NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT UserBadge FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT BadgeOnUser FOREIGN KEY (badge_id) REFERENCES badge (id) ON DELETE CASCADE
 );

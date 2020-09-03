@@ -86,14 +86,16 @@ export class CardService {
     return ctx;
   }
 
-  public static async generateCardImage(userCard: string): Promise<Buffer>;
+  public static async generateCardImage(
+    userCard: string
+  ): Promise<{ image: Buffer; card: UserCard }>;
   public static async generateCardImage(userCard: {
     userCard: UserCard;
     imageData: ImageData;
-  }): Promise<Buffer>;
+  }): Promise<{ image: Buffer; card: UserCard }>;
   public static async generateCardImage(
     userCard: string | { userCard: UserCard; imageData: ImageData }
-  ): Promise<Buffer> {
+  ): Promise<{ image: Buffer; card: UserCard }> {
     let cardData;
     if (typeof userCard == "string") {
       cardData = await this.parseCardDetails(userCard);
@@ -152,6 +154,6 @@ export class CardService {
 
     let buf = cv.toBuffer("image/png");
     let final = Buffer.alloc(buf.length, buf, "base64");
-    return final;
+    return { image: final, card: cardData.card };
   }
 }

@@ -10,6 +10,9 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let card = await CardService.generateCardImage(this.prm[0]);
-    msg.channel.send("ooga", { files: [card] });
+    let embed = new MessageEmbed()
+      .setDescription(`Owner: <@${card.card.ownerId}>\n*"${card.card.blurb}"*`)
+      .setColor("#40BD66");
+    msg.channel.send({ embed: embed, files: [card.image] });
   };
 }

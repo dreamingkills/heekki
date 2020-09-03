@@ -1,5 +1,5 @@
 import * as error from "../structures/Error";
-import { PlayerFetchSQL as Fetch } from "./sql/player/Fetch";
+import { PlayerFetchSQL as Fetch, PlayerFetchSQL } from "./sql/player/Fetch";
 import { Profile } from "../structures/player/Profile";
 import {
   PlayerModifySQL as Modify,
@@ -8,6 +8,7 @@ import {
 import { UserCard } from "../structures/player/UserCard";
 import { FriendFetchSQL as FriendFetch } from "./sql/friend/Fetch";
 import { FriendModifySQL as FriendModify } from "./sql/friend/Modify";
+import Chance from "chance";
 
 export class PlayerService {
   private static cleanMention(m: string): string {
@@ -18,8 +19,13 @@ export class PlayerService {
     m: string,
     p: boolean
   ): Promise<Profile> {
-    let discord_id = this.cleanMention(m);
-    let user = await Fetch.getProfileFromDiscordId(discord_id);
+    let user: Profile;
+    if (typeof m == "number") {
+      user = await Fetch.getProfileFromDiscordId(m);
+    } else {
+      let discord_id = this.cleanMention(m);
+      user = await Fetch.getProfileFromDiscordId(discord_id);
+    }
     if (!user) {
       if (p) throw new error.NoProfileOtherError();
       throw new error.NoProfileError();
@@ -44,7 +50,7 @@ export class PlayerService {
     desc: string
   ): Promise<Profile> {
     let discord_id = this.cleanMention(m);
-    if (!(await Fetch.checkIfUserExists(m))) {
+    if (!(await Fetch.checkIfUserExists(discord_id))) {
       throw new error.NoProfileError();
     }
 
@@ -53,11 +59,8 @@ export class PlayerService {
     return profile;
   }
 
-  public static async getCardsByUser(
-    m: string,
-    p: boolean
-  ): Promise<UserCard[]> {
-    let user = await this.getProfileFromUser(this.cleanMention(m), false);
+  public static async getCardsByUser(m: string): Promise<UserCard[]> {
+    let user = await this.getProfileFromUser(m, false);
     let cardList = await Fetch.getUserCardsByDiscordId(user.discord_id);
 
     return cardList;
@@ -115,10 +118,42 @@ export class PlayerService {
     discord_id: string
   ): Promise<number[]> {
     let user = await this.getProfileFromUser(discord_id, false);
+
+    let last = await PlayerFetchSQL.getLastHeartSendByDiscordId(
+      user.discord_id
+    );
+    let now = Date.now();
+    if (now < last + 10800000)
+      throw new error.SendHeartsCooldownError(last + 10800000, now);
     let friends = await FriendFetch.getFriendsByDiscordId(user.discord_id);
     friends.forEach(async (f) => {
-      await PlayerModifySQL.addHearts(f, 1);
+      await PlayerModifySQL.addHearts(f.toString(), 1);
     });
+    await PlayerModifySQL.setHeartSendTimestamp(user.discord_id);
     return friends;
+  }
+  public static async openHeartBoxes(
+    discord_id: string
+  ): Promise<{ added: number; total: number; individual: number[] }> {
+    let user = await this.getProfileFromUser(discord_id, false);
+
+    let last = await PlayerFetchSQL.getLastHeartBoxByDiscordId(user.discord_id);
+    let now = Date.now();
+    console.log(last);
+    console.log(now);
+    if (now < last + 14400000)
+      throw new error.HeartBoxCooldownError(last + 14400000, now);
+
+    let chance = new Chance();
+    let generated: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      generated.push(chance.weighted([7, 20, 100, 1000], [100, 25, 5, 0.1]));
+    }
+    let total = generated.reduce((a, b) => {
+      return a + b;
+    });
+    await PlayerModifySQL.addHearts(user.discord_id, total);
+    await PlayerModifySQL.setHeartBoxTimestamp(user.discord_id);
+    return { added: total, total: user.hearts + total, individual: generated };
   }
 }

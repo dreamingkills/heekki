@@ -28,7 +28,7 @@ export class Command extends GameCommand {
         }"*`
       )
       .setColor("#40BD66")
-      .attachFiles([{ name: "card.png", attachment: cardImage }]);
+      .attachFiles([{ name: "card.png", attachment: cardImage.image }]);
     await msg.channel.send(embed);
     return;
   };

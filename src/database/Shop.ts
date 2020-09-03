@@ -44,4 +44,8 @@ export class ShopService {
 
     return { userCard: newCard.card, imageData: newCard.imageData };
   }
+  public static async getAllShopItems(active?: boolean) {
+    let items = await ShopFetch.getAllShopItems(active);
+    return items;
+  }
 }

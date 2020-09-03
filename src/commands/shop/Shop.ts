@@ -11,18 +11,20 @@ export class Command extends GameCommand {
   exec = async (msg: Message) => {
     let page = this.prm[0] ? parseInt(this.prm[0]) : 1;
 
-    let packs = await ShopService.getAllPacks(page);
-
+    let packsRaw = await ShopService.getAllShopItems(true);
+    let packs = packsRaw.slice(page * 9 - 9, page * 9);
     let desc: EmbedFieldData[] = [];
     for (let pack of packs) {
       desc.push({
-        name: `${pack.name} Pack`,
-        value: `\`!buy ${pack.name}\`\n<:coin:745447920072917093> ${pack.price}`,
+        name: `${pack.title}`,
+        value: `\`!buy ${pack.title}\`\n<:coin:745447920072917093> ${pack.price}`,
         inline: true,
       });
     }
     let embed = new MessageEmbed()
-      .setAuthor(`Shop - Active collections (page ${page})`)
+      .setAuthor(
+        `Buyable packs (page ${page}/${Math.ceil(packsRaw.length / 9)})`
+      )
       .addFields(desc)
       .setColor("#40BD66")
       .setThumbnail(msg.author.displayAvatarURL());

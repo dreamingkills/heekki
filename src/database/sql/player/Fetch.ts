@@ -2,6 +2,7 @@ import { DB } from "../../index";
 import { Profile } from "../../../structures/player/Profile";
 import { UserCard } from "../../../structures/player/UserCard";
 import { DBClass } from "../../index";
+import { Badge } from "../../../structures/player/Badge";
 
 export class PlayerFetchSQL extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -17,7 +18,9 @@ export class PlayerFetchSQL extends DBClass {
     let user = await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=${this.clean(discord_id)}`
     );
-    return new Profile(user[0]);
+    let badges = await this.getBadgesByDiscordId(discord_id);
+    console.log(badges);
+    return new Profile(user[0], badges);
   }
 
   public static async getUserCardsByDiscordId(
@@ -68,5 +71,54 @@ export class PlayerFetchSQL extends DBClass {
     );
     console.log(cardList);
     return cardList;
+  }
+
+  public static async getLastHeartSendByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    let query = await DB.query(
+      `SELECT hearts_last FROM user_profile WHERE discord_id=?;`,
+      [discord_id]
+    );
+    return query[0].hearts_last;
+  }
+  public static async getLastHeartBoxByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    let query = await DB.query(
+      `SELECT heart_box_last FROM user_profile WHERE discord_id=?;`,
+      [discord_id]
+    );
+    return query[0].heart_box_last;
+  }
+
+  public static async getBadgesByDiscordId(
+    discord_id: string
+  ): Promise<Badge[]> {
+    let query = await DB.query(
+      `SELECT 
+        badge.title,
+        badge.blurb,
+        badge.emoji
+      FROM
+        badge
+      LEFT JOIN
+        user_badge
+      ON 
+        badge.id=user_badge.badge_id
+      WHERE
+        user_badge.discord_id=?;`,
+      [discord_id]
+    );
+    let bruh = query.map(
+      (b: { title: string; blurb: string; emoji: string }) => {
+        console.log(b);
+        return new Badge({ title: b.title, blurb: b.blurb, emoji: b.emoji });
+      }
+    );
+    console.log(bruh);
+    return query.map((b: { title: string; blurb: string; emoji: string }) => {
+      return new Badge(b);
+    });
   }
 }

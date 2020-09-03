@@ -15,7 +15,10 @@ export class Command extends GameCommand {
       this.prm[0] ? true : false
     );
 
-    let discordUser = await msg.guild?.members.fetch(user!.discord_id);
+    let discordUser = await msg.guild?.members.fetch(
+      user!.discord_id.toString()
+    );
+    console.log(user);
     let embed = new MessageEmbed()
       .setAuthor(
         (discordUser ? `${discordUser!.user.tag}` : `Unknown User`) +
@@ -28,6 +31,16 @@ export class Command extends GameCommand {
         }\n:heart: ${user.hearts}` //\n\nHugs Given: **${user.hugsGiven}**\nHugs Received: **${user.hugsReceived}**`
       )
       .setColor("#40BD66");
+    if (user.badges.length > 0) {
+      embed.addField(
+        `Badges`,
+        `:${user.badges
+          .map((b) => {
+            return b.emoji;
+          })
+          .join(": :")}:`
+      );
+    }
     await msg.channel.send(embed);
     return;
   };

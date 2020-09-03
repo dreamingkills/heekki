@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export abstract class ClientError extends Error {
   message: string;
   name = "ClientError";
@@ -144,5 +146,27 @@ export class NonexistentRelationshipError extends ClientError {
   name = "NonexistentRelationshipError";
   constructor() {
     super("You aren't friends with that user anyway. :person_shrugging:");
+  }
+}
+export class SendHeartsCooldownError extends ClientError {
+  name = "SendHeartsCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `You must wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before sending hearts again.`
+    );
+  }
+}
+export class HeartBoxCooldownError extends ClientError {
+  name = "HeartBoxCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `You must wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before opening your heart boxes again.`
+    );
   }
 }
