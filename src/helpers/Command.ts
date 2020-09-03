@@ -6,6 +6,7 @@ import { promisify } from "util";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
+  cooldown: Set<string> = new Set<string>();
 
   constructor() {}
   async init(): Promise<BaseCommand[]> {
@@ -48,12 +49,25 @@ export class CommandManager {
       if (!role)
         return console.log(`Command ${cmd.names[0]} has an invalid role set.`);
       if (!msg.member?.roles.cache.get(cmd.role)) {
-        await msg.channel.send(`:x: You need \`${role.name}\` to use that.`);
+        await msg.channel.send(
+          `<:red_x:741454361007357993> You need \`${role.name}\` to use that.`
+        );
         return;
       }
     }
+    if (this.cooldown.has(msg.author.id)) {
+      await msg.channel.send(
+        "<:red_x:741454361007357993> Please wait a couple seconds before using another command."
+      );
+      return;
+    }
     try {
-      return await cmd.run(msg);
+      await cmd.run(msg);
+      this.cooldown.add(msg.author.id);
+      setTimeout(() => {
+        this.cooldown.delete(msg.author.id);
+      }, 3000);
+      return;
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
       return console.log(`${e.message}\n${e.stack}`);

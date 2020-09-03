@@ -2,6 +2,7 @@ import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed, EmbedFieldData } from "discord.js";
 import { ShopService } from "../../database/Shop";
 import { CardService } from "../../database/Card";
+import moment from "moment";
 
 export class Command extends GameCommand {
   names: string[] = ["buy"];
@@ -28,7 +29,12 @@ export class Command extends GameCommand {
         }"*`
       )
       .setColor("#40BD66")
-      .attachFiles([{ name: "card.png", attachment: cardImage.image }]);
+      .attachFiles([{ name: "card.png", attachment: cardImage.image }])
+      .setFooter(
+        `Rolled by ${msg.author.tag} at ${moment().format(
+          "dddd, MMMM Do YYYY, HH:mm:ss"
+        )}`
+      );
     await msg.channel.send(embed);
     return;
   };

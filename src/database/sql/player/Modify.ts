@@ -86,7 +86,6 @@ export class PlayerModifySQL extends DBClass {
     discord_id: string,
     badge_id: number
   ): Promise<OkPacket> {
-    console.log(discord_id, badge_id);
     let query = await DB.query(
       `INSERT INTO user_badge (discord_id, badge_id) VALUES (?, ?);`,
       [discord_id, badge_id]

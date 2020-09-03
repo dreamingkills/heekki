@@ -15,7 +15,6 @@ export class CardModifySQL extends DBClass {
       `SELECT * FROM serial_number WHERE id=?;`,
       [card_id]
     );
-    console.log(serialNumber);
     if (!serialNumber[0]) throw new error.InvalidCardError();
     let insertQuery = await DB.query(
       `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,

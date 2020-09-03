@@ -21,7 +21,7 @@ export class PlayerFetchSQL extends DBClass {
       `SELECT * FROM user_profile WHERE discord_id=${this.clean(discord_id)}`
     );
     if (!user[0]) {
-      if (p) throw new error.NoProfileOtherError();
+      if (!p) throw new error.NoProfileOtherError();
       throw new error.NoProfileError();
     }
     let badges = await this.getBadgesByDiscordId(discord_id);
@@ -117,11 +117,9 @@ export class PlayerFetchSQL extends DBClass {
     );
     let bruh = query.map(
       (b: { title: string; blurb: string; emoji: string }) => {
-        console.log(b);
         return new Badge({ title: b.title, blurb: b.blurb, emoji: b.emoji });
       }
     );
-    console.log(bruh);
     return query.map((b: { title: string; blurb: string; emoji: string }) => {
       return new Badge(b);
     });

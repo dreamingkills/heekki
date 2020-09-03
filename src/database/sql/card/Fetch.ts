@@ -21,7 +21,6 @@ export class CardFetchSQL extends DBClass {
         serial_id: number;
       }) => cardIdList.push(new Card(c))
     );
-    console.log(cardIdList);
     return cardIdList;
   }
 
@@ -64,7 +63,6 @@ export class CardFetchSQL extends DBClass {
     abbr: string,
     sn: number
   ): Promise<{ card: UserCard; imageData: ImageData }> {
-    console.log(abbr, sn);
     let query = await DB.query(
       `SELECT
         card.id,

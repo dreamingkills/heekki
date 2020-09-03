@@ -139,8 +139,6 @@ export class PlayerService {
 
     let last = await PlayerFetchSQL.getLastHeartBoxByDiscordId(user.discord_id);
     let now = Date.now();
-    console.log(last);
-    console.log(now);
     if (now < last + 14400000)
       throw new error.HeartBoxCooldownError(last + 14400000, now);
 
