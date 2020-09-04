@@ -9,24 +9,18 @@ export class Command extends BaseCommand {
   category: string = "misc";
 
   exec = async function (msg: Message) {
-    let cardsTotal = await Stats.getNumberOfCards();
-    let cardsTotal6Stars = await Stats.getNumberOfCards(6);
-    let cardsTotal5Stars = await Stats.getNumberOfCards(5);
-    let profileTotal = await Stats.getNumberOfProfiles();
-    let richestUser = await Stats.findRichestUser();
-    let relationships = await Stats.getNumberOfRelationships();
-    let topCollector = await Stats.getTopCollector();
+    let stats = await Stats.getStats();
 
     let embed = new MessageEmbed()
       .setAuthor(`HaSeul Statistics`)
       .addField(
         `Card stats`,
-        `Total cards: **${cardsTotal}**\n6 :star:: **${cardsTotal6Stars}**\n5 :star:: **${cardsTotal5Stars}**`,
+        `Total cards: **${stats.totalCards.total}**\nForfeited cards: **${stats.totalOrphaned}**\n6 :star:: **${stats.totalCards.sixStars}**\n5 :star:: **${stats.totalCards.fiveStars}**\n4 :star:: **${stats.totalCards.fourStars}**\n3 :star:: **${stats.totalCards.threeStars}**\n2 :star:: **${stats.totalCards.twoStars}**\n1 :star:: **${stats.totalCards.oneStar}**`,
         true
       )
       .addField(
         `Profile stats`,
-        `Total profiles: **${profileTotal}**\nRelationship count: **${relationships}**\nRichest user: <@${richestUser}>\nTop collector: <@${topCollector.id}> (**${topCollector.count}** cards)`,
+        `Total profiles: **${stats.totalProfiles}**\nRelationship count: **${stats.totalRelationships}**\nRichest user: <@${stats.richestUser.id}> (**${stats.richestUser.coins}** coins)\nTop collector: <@${stats.topCollector.id}> (**${stats.topCollector.cards}** cards)`,
         true
       )
       .setColor("#40BD66");
