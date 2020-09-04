@@ -98,6 +98,7 @@ CREATE TABLE image_data
     heart_x         INT(11),
     heart_y         INT(11),
     heart_length    INT(11),
+    heart_height    INT(11),
     star_image_url  VARCHAR(255),
     star_starting_x INT(11),
     star_starting_y INT(11),
