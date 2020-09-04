@@ -9,31 +9,17 @@ import { UserCard } from "../structures/player/UserCard";
 import { FriendFetchSQL as FriendFetch } from "./sql/friend/Fetch";
 import { FriendModifySQL as FriendModify } from "./sql/friend/Modify";
 import Chance from "chance";
+import { CardFetchSQL } from "./sql/card/Fetch";
+import { CardService } from "./Card";
+import { CardModifySQL } from "./sql/card/Modify";
 
 export class PlayerService {
+  // Remove special characters from mention text (<@2395484958349234>)
   private static cleanMention(m: string): string {
     return m.replace(/[\\<>@#&!]/g, "");
   }
 
-  public static async getProfileFromUser(
-    m: string,
-    p: boolean
-  ): Promise<Profile> {
-    let user: Profile;
-    if (typeof m == "number") {
-      user = await Fetch.getProfileFromDiscordId(m, true);
-    } else {
-      let discord_id = this.cleanMention(m);
-      user = await Fetch.getProfileFromDiscordId(discord_id, false);
-    }
-    if (!user) {
-      if (p) throw new error.NoProfileOtherError();
-      throw new error.NoProfileError();
-    }
-
-    return user;
-  }
-
+  // New user profile setup
   public static async createNewUser(m: string): Promise<Profile> {
     let discord_id = this.cleanMention(m);
     if (await Fetch.checkIfUserExists(discord_id)) {
@@ -45,6 +31,24 @@ export class PlayerService {
     return profile;
   }
 
+  // Fetch profile object from database by user ID
+  public static async getProfileFromUser(
+    m: string,
+    p: boolean
+  ): Promise<Profile> {
+    let user: Profile;
+    let discord_id = this.cleanMention(m);
+    user = await Fetch.getProfileFromDiscordId(discord_id, false);
+
+    if (!user) {
+      if (p) throw new error.NoProfileOtherError();
+      throw new error.NoProfileError();
+    }
+
+    return user;
+  }
+
+  // Change the blurb of a user's profile
   public static async changeProfileDescription(
     m: string,
     desc: string
@@ -59,10 +63,17 @@ export class PlayerService {
     return profile;
   }
 
+  // Get all of a user's cards by user ID
   public static async getCardsByUser(m: string): Promise<UserCard[]> {
     let user = await this.getProfileFromUser(m, false);
     let cardList = await Fetch.getUserCardsByDiscordId(user.discord_id);
 
+    return cardList;
+  }
+
+  //Get all unclaimed cards
+  public static async getOrphanedCards(): Promise<UserCard[]> {
+    let cardList = await Fetch.getUserCardsByDiscordId("0");
     return cardList;
   }
 
@@ -153,5 +164,83 @@ export class PlayerService {
     await PlayerModifySQL.addHearts(user.discord_id, total);
     await PlayerModifySQL.setHeartBoxTimestamp(user.discord_id);
     return { added: total, total: user.hearts + total, individual: generated };
+  }
+
+  public static async giftCard(
+    user: string,
+    recipient: string,
+    reference: string
+  ): Promise<UserCard> {
+    let gifter = await this.getProfileFromUser(user, false);
+    let receiver = await this.getProfileFromUser(recipient, true);
+
+    let card = await CardFetchSQL.getFullCardDataFromReference(
+      reference.split("#")[0],
+      parseInt(reference.split("#")[1])
+    );
+    if (user != card.card.ownerId) throw new error.NotYourCardError();
+
+    let transfer = await PlayerModifySQL.transferCard(
+      receiver.discord_id,
+      card.card.userCardId
+    );
+    return transfer;
+  }
+
+  public static async forfeitCard(
+    user: string,
+    reference: string
+  ): Promise<UserCard> {
+    let owner = await this.getProfileFromUser(user, false);
+    let card = await CardFetchSQL.getFullCardDataFromReference(
+      reference.split("#")[0],
+      parseInt(reference.split("#")[1])
+    );
+
+    if (owner.discord_id != card.card.ownerId)
+      throw new error.NotYourCardError();
+
+    let forfeit = await CardModifySQL.forfeitCard(card.card);
+    return card.card;
+  }
+
+  public static async forfeitBulkUnderStars(
+    user: string,
+    stars: number
+  ): Promise<number> {
+    let owner = await this.getProfileFromUser(user, false);
+    let cardsToForfeit = await PlayerFetchSQL.getUserCardsByDiscordId(
+      owner.discord_id,
+      stars
+    );
+    let numberForfeited = 0;
+    for (let card of cardsToForfeit) {
+      await CardModifySQL.forfeitCard(card);
+      numberForfeited++;
+    }
+    return numberForfeited;
+  }
+
+  public static async claimOrphanedCard(
+    user: string,
+    reference: string
+  ): Promise<UserCard> {
+    let claimant = await this.getProfileFromUser(user, false);
+    let last = await PlayerFetchSQL.getLastOrphanClaimByDiscordId(
+      claimant.discord_id
+    );
+
+    let now = Date.now();
+    if (now < last + 10800000)
+      throw new error.OrphanCooldownError(last + 10800000, now);
+    let card = await CardService.parseCardDetails(reference);
+
+    if (card.card.ownerId != "0") throw new error.CardNotOrphanedError();
+    await PlayerModifySQL.transferCard(
+      claimant.discord_id,
+      card.card.userCardId
+    );
+    await PlayerModifySQL.setOrphanTimestamp(claimant.discord_id);
+    return card.card;
   }
 }

@@ -10,20 +10,6 @@ import { CardModifySQL } from "./sql/card/Modify";
 import { PlayerModifySQL } from "./sql/player/Modify";
 
 export class CardService {
-  public static memberShorthands: { [key: string]: string } = {
-    he: "HeeJin",
-    hj: "HyunJin",
-    ha: "HaSeul",
-    yj: "YeoJin",
-    vv: "ViVi",
-    kl: "Kim Lip",
-    js: "JinSoul",
-    cy: "Choerry",
-    yv: "Yves",
-    ch: "Chuu",
-    gw: "Go Won",
-    oh: "Olivia Hye",
-  };
   private static commafyNumber(num: number) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
@@ -120,7 +106,7 @@ export class CardService {
     let heart = await canvas.loadImage(
       await heartData.getBufferAsync(jimp.MIME_PNG)
     );
-    ctx.drawImage(heart, d.heartX, d.heartY, d.heartLength, d.heartLength);
+    ctx.drawImage(heart, d.heartX, d.heartY, d.heartLength, d.heartHeight);
     await this.generateText(ctx, { ...d.packText }, cardData.card.title);
     await this.generateText(ctx, { ...d.memberText }, cardData.card.member);
     await this.generateText(
@@ -150,7 +136,7 @@ export class CardService {
         d.starStartingX + i * d.starXInc,
         d.starStartingY + i * d.starYInc,
         d.starLength,
-        d.starLength
+        d.starHeight
       );
     }
 

@@ -8,6 +8,7 @@ CREATE TABLE user_profile
     daily_last      INT(11) DEFAULT 0,
     hearts_last     BIGINT(20) DEFAULT 0,
     heart_box_last  BIGINT(20) DEFAULT 0,
+    last_orphan     BIGINT(20 DEFAULT 0
     PRIMARY KEY (discord_id)
 );
 
@@ -100,6 +101,7 @@ CREATE TABLE image_data
     star_image_url  VARCHAR(255),
     star_starting_x INT(11),
     star_starting_y INT(11),
+    star_height     INT(11),
     star_length     INT(11),
     star_x_inc      INT(11),
     star_y_inc      INT(11),

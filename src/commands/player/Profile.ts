@@ -18,7 +18,6 @@ export class Command extends GameCommand {
     let discordUser = await msg.guild?.members.fetch(
       user!.discord_id.toString()
     );
-    console.log(user);
     let embed = new MessageEmbed()
       .setAuthor(
         (discordUser ? `${discordUser!.user.tag}` : `Unknown User`) +

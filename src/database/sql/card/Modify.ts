@@ -34,11 +34,25 @@ export class CardModifySQL extends DBClass {
     card: UserCard,
     amount: number
   ): Promise<OkPacket> {
-    console.log(card.userCardId);
     let query = await DB.query(
       `UPDATE user_card SET hearts=hearts+? WHERE id=?;`,
       [amount, card.userCardId]
     );
+    return query;
+  }
+
+  public static async forfeitCard(card: UserCard): Promise<OkPacket> {
+    let query = await DB.query(`UPDATE user_card SET owner_id=0 WHERE id=?;`, [
+      card.userCardId,
+    ]);
+    return query;
+  }
+
+  public static async bulkForfeit(
+    user: string,
+    stars: string
+  ): Promise<OkPacket> {
+    let query = await DB.query(`UPDA`);
     return query;
   }
 }

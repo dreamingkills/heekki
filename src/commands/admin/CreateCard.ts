@@ -11,6 +11,7 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     if (msg.author.id != "197186779843919877") return;
+
     /*let [url, member, rarity, collectionId, credit, abbr] = this.prm;
     let card = await AdminService.createNewCard(
       url,

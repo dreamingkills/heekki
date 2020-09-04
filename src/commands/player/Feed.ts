@@ -32,9 +32,13 @@ export class Command extends GameCommand {
           userCard.serialNumber
         }__** - ${userCard.member}\n${"⭐".repeat(
           userCard.stars
-        )}\n\nCard heart count: **${userCard.hearts + parseInt(this.prm[0])}**`
+        )}\n\nCard heart count: **${userCard.hearts + parseInt(this.prm[1])}**`
       )
-      .setFooter(`You now have ${fedUserCardData.user.hearts} hearts.`)
+      .setFooter(
+        `You now have ${
+          fedUserCardData.user.hearts - parseInt(this.prm[1])
+        } hearts.`
+      )
       .setColor("#40BD66");
     await msg.channel.send(embed);
     return;

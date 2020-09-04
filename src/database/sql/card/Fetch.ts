@@ -95,7 +95,6 @@ export class CardFetchSQL extends DBClass {
     );
     if (!query[0]) throw new error.InvalidUserCardError();
 
-    console.log(query[0]);
     let imageData = await this.getImageDataFromCardId(query[0].image_data_id);
     return { card: new UserCard(query[0]), imageData };
   }

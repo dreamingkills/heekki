@@ -29,7 +29,8 @@ export class PlayerFetchSQL extends DBClass {
   }
 
   public static async getUserCardsByDiscordId(
-    discord_id: string
+    discord_id: string,
+    stars?: number
   ): Promise<UserCard[]> {
     let cards = await DB.query(
       `SELECT 
@@ -54,8 +55,10 @@ export class PlayerFetchSQL extends DBClass {
       LEFT JOIN
         pack ON
           card.pack_id=pack.id
-      WHERE user_card.owner_id=${discord_id}
-      ORDER BY user_card.stars DESC;`
+      WHERE user_card.owner_id=?
+      AND user_card.stars<?
+      ORDER BY user_card.stars DESC;`,
+      [discord_id, stars || 7]
     );
     let cardList: UserCard[] = [];
     let cardIterator = cards.forEach(
@@ -98,7 +101,15 @@ export class PlayerFetchSQL extends DBClass {
     );
     return query[0].heart_box_last;
   }
-
+  public static async getLastOrphanClaimByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    let query = await DB.query(
+      `SELECT last_orphan FROM user_profile WHERE discord_id=?;`,
+      [discord_id]
+    );
+    return query[0].last_orphan;
+  }
   public static async getBadgesByDiscordId(
     discord_id: string
   ): Promise<Badge[]> {

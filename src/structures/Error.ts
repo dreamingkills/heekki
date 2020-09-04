@@ -107,7 +107,7 @@ export class NotEnoughHeartsError extends ClientError {
 export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
   constructor() {
-    super("Please enter a valid card reference (e.g. `favOriTe#HJ39`)");
+    super("Please enter a valid card reference (e.g. `DLHJ#32`)");
   }
 }
 export class InvalidCollectionError extends ClientError {
@@ -174,5 +174,22 @@ export class NotYourCardError extends ClientError {
   name = "NotYourCardError";
   constructor() {
     super("That card doesn't belong to you!");
+  }
+}
+export class OrphanCooldownError extends ClientError {
+  name = "OrphanCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `You must wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before claiming another forfeited card.`
+    );
+  }
+}
+export class CardNotOrphanedError extends ClientError {
+  name = "CardNotOrphanedError";
+  constructor() {
+    super(`That card belongs to someone already.`);
   }
 }

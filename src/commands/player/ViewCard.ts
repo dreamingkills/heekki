@@ -12,7 +12,8 @@ export class Command extends GameCommand {
     let card = await CardService.generateCardImage(this.prm[0]);
     let embed = new MessageEmbed()
       .setDescription(`Owner: <@${card.card.ownerId}>\n*"${card.card.blurb}"*`)
-      .setColor("#40BD66");
+      .setColor("#40BD66")
+      .setFooter(`Card designed by ${card.card.credit}`);
     msg.channel.send({ embed: embed, files: [card.image] });
   };
 }

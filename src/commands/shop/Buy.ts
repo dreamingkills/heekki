@@ -14,25 +14,27 @@ export class Command extends GameCommand {
   exec = async (msg: Message) => {
     let packName = this.prm.join(" ");
 
-    let pack = await ShopService.rollPack(packName, msg.author.id);
+    let card = await ShopService.rollPack(packName, msg.author.id);
 
     let cardImage = await CardService.generateCardImage({
-      userCard: pack.userCard,
-      imageData: pack.imageData,
+      userCard: card.userCard,
+      imageData: card.imageData,
     });
 
     let embed = new MessageEmbed()
-      .setAuthor(`You rolled the ${pack.userCard.title} pack and got...`)
+      .setAuthor(`You rolled the ${card.userCard.title} pack and got...`)
       .setDescription(
-        `**${pack.userCard.member}** ${"⭐".repeat(pack.userCard.stars)}\n*"${
-          pack.userCard.blurb
+        `**${card.userCard.member}** ${"⭐".repeat(card.userCard.stars)}\n*"${
+          card.userCard.blurb
         }"*`
       )
       .setColor("#40BD66")
       .attachFiles([{ name: "card.png", attachment: cardImage.image }])
       .setFooter(
-        `Rolled by ${msg.author.tag} at ${moment().format(
-          "dddd, MMMM Do YYYY, HH:mm:ss"
+        `${
+          card.userCard.abbreviation + "#" + card.userCard.serialNumber
+        } • Rolled by ${msg.author.tag} on ${moment().format(
+          "MMMM Do YYYY [@] HH:mm:ss"
         )}`
       );
     await msg.channel.send(embed);
