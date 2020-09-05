@@ -126,4 +126,21 @@ export class MarketService {
     await MarketUpdate.listCardOnMarketplace(card.card.userCardId, price);
     return card.card;
   }
+
+  public static async removeListing(
+    reference: string,
+    perpetrator: string
+  ): Promise<UserCard> {
+    const card = await CardService.parseCardDetails(reference);
+    if (!card) throw new error.InvalidUserCardError();
+    if (card.card.ownerId != perpetrator) throw new error.NotYourCardError();
+
+    const validateForSale = await this.cardIsOnMarketplace(
+      card.card.userCardId
+    );
+    if (!validateForSale.forSale) throw new error.CardNotForSaleError();
+
+    await MarketUpdate.removeCardFromMarketplace(card.card.userCardId);
+    return card.card;
+  }
 }

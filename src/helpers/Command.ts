@@ -62,11 +62,11 @@ export class CommandManager {
       return;
     }
     try {
-      await cmd.run(msg);
       this.cooldown.add(msg.author.id);
       setTimeout(() => {
         this.cooldown.delete(msg.author.id);
       }, 3000);
+      await cmd.run(msg);
       return;
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
