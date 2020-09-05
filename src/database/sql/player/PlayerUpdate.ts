@@ -115,4 +115,14 @@ export class PlayerUpdate extends DBClass {
     );
     return query;
   }
+  public static async setMissionTimestamp(
+    discord_id: string,
+    time: number
+  ): Promise<OkPacket> {
+    let query = await DB.query(
+      `UPDATE user_profile SET mission_last=? WHERE discord_id=?;`,
+      [time, discord_id]
+    );
+    return query;
+  }
 }

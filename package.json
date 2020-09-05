@@ -23,7 +23,7 @@
   },
   "scripts": {
     "start": "yarn node dist/src/main.js",
-    "build": "tsc && copyfiles src/assets/fonts/* dist",
+    "build": "tsc && copyfiles src/assets/* dist",
     "clean": "rm -rf dist/"
   }
 }

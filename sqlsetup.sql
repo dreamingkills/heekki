@@ -8,7 +8,8 @@ CREATE TABLE user_profile
     daily_last      INT(11) DEFAULT 0,
     hearts_last     BIGINT(20) DEFAULT 0,
     heart_box_last  BIGINT(20) DEFAULT 0,
-    last_orphan     BIGINT(20 DEFAULT 0
+    last_orphan     BIGINT(20) DEFAULT 0,
+    mission_last    BIGINT(20) DEFAULT 0,
     PRIMARY KEY (discord_id)
 );
 

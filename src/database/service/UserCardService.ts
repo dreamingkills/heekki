@@ -3,6 +3,7 @@ import { UserCard } from "../../structures/player/UserCard";
 import { ImageData } from "../../structures/card/ImageData";
 import { CardUpdate } from "../sql/card/CardUpdate";
 import { PlayerService } from "./PlayerService";
+import * as error from "../../structures/Error";
 
 export class UserCardService {
   public static async getCardByUserCardId(
@@ -37,6 +38,7 @@ export class UserCardService {
     user: string,
     card: UserCard
   ): Promise<UserCard> {
+    if (user != card.ownerId) throw new error.NotYourCardError();
     await CardUpdate.forfeitCard(card);
     return card;
   }
@@ -55,5 +57,9 @@ export class UserCardService {
       numberForfeited++;
     }
     return numberForfeited;
+  }
+
+  public static async incrementCardStars(card_id: number): Promise<UserCard> {
+    return await CardUpdate.incrementCardStars(card_id);
   }
 }

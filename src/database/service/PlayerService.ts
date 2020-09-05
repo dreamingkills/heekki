@@ -7,6 +7,7 @@ import Chance from "chance";
 import { CardService } from "./CardService";
 import { Badge } from "../../structures/player/Badge";
 import { UserCardService } from "./UserCardService";
+import missions from "../../assets/missions.json";
 
 export class PlayerService {
   public static async createNewUser(discord_id: string): Promise<Profile> {
@@ -131,6 +132,47 @@ export class PlayerService {
     return card;
   }
 
+  public static async doMission(
+    user: string,
+    reference: { abbreviation: string; serial: number }
+  ): Promise<{
+    result: string;
+    profit: number;
+    lucky: boolean;
+    card: UserCard;
+  }> {
+    const missionDoer = await this.getProfileByDiscordId(user, false);
+    const last = await this.getLastMissionByDiscordId(user);
+
+    let now = Date.now();
+    if (now < last + 1800000)
+      throw new error.MissionCooldownError(last + 1800000, now);
+    let card = (await CardService.getCardDataFromReference(reference)).userCard;
+
+    if (card.ownerId != user) throw new error.NotYourCardError();
+
+    const chance = new Chance();
+    const roll = chance.integer({ min: 1, max: 2500 });
+    if (roll === 1738 && card.stars < 6) {
+      await UserCardService.incrementCardStars(card.userCardId);
+    }
+
+    const profit = chance.integer({ min: 50, max: 350 });
+    await PlayerService.addCoinsToUserByDiscordId(
+      missionDoer.discord_id,
+      profit
+    );
+    await PlayerService.setLastMissionByDiscordId(missionDoer.discord_id, now);
+
+    const result = chance.pickone(missions.missions);
+    return {
+      result,
+      profit,
+      lucky: roll === 1738 && card.stars < 6 ? true : false,
+      card: card,
+    };
+  }
+
   public static async setLastHeartSendByDiscordId(
     discord_id: string,
     time: number
@@ -143,6 +185,20 @@ export class PlayerService {
     discord_id: string
   ): Promise<number> {
     return await PlayerFetch.getLastHeartSendByDiscordId(discord_id);
+  }
+
+  public static async setLastMissionByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<number> {
+    await PlayerUpdate.setMissionTimestamp(discord_id, time);
+    return time;
+  }
+
+  public static async getLastMissionByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastMissionByDiscordId(discord_id);
   }
 
   public static async addHeartsToUserByDiscordId(

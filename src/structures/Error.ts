@@ -215,3 +215,14 @@ export class InvalidPriceError extends ClientError {
     );
   }
 }
+export class MissionCooldownError extends ClientError {
+  name = "MissionCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `You must wait **${moment(until).diff(
+        now,
+        "minutes"
+      )} minutes** before embarking upon another mission.`
+    );
+  }
+}

@@ -64,4 +64,13 @@ export class CardUpdate extends DBClass {
     let newCard = await CardFetch.getCardByUserCardId(id);
     return newCard.userCard;
   }
+
+  public static async incrementCardStars(card_id: number): Promise<UserCard> {
+    let query = await DB.query(
+      `UPDATE user_card SET stars=stars+1 WHERE id=?;`,
+      [card_id]
+    );
+    let newCard = await CardFetch.getCardByUserCardId(card_id);
+    return newCard.userCard;
+  }
 }

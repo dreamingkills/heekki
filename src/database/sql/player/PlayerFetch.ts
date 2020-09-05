@@ -153,4 +153,13 @@ export class PlayerFetch extends DBClass {
       return new Badge(b);
     });
   }
+  public static async getLastMissionByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    let query = await DB.query(
+      `SELECT mission_last FROM user_profile WHERE discord_id=?;`,
+      [discord_id]
+    );
+    return query[0].mission_last;
+  }
 }
