@@ -121,7 +121,8 @@ export class MarketService {
     price: number,
     reference: { abbreviation: string; serial: number }
   ): Promise<UserCard> {
-    if (isNaN(price) || price < 1) throw new error.InvalidPriceError();
+    if (isNaN(price) || price < 1 || price > 2147483647)
+      throw new error.InvalidPriceError();
     const card = (await CardService.getCardDataFromReference(reference))
       .userCard;
     if (!card) throw new error.InvalidUserCardError();

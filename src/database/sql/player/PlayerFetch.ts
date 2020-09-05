@@ -22,13 +22,13 @@ export class PlayerFetch extends DBClass {
    */
   public static async getProfileFromDiscordId(
     discord_id: string
-  ): Promise<Profile> {
+  ): Promise<Profile | undefined> {
     let clean = this.cleanMention(discord_id);
     let user = await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=?;`,
       [clean]
     );
-    return new Profile(user[0]);
+    return user[0] ? new Profile(user[0]) : undefined;
   }
 
   public static async getUserCardsByDiscordId(
@@ -75,7 +75,6 @@ export class PlayerFetch extends DBClass {
       " ORDER BY user_card.stars DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
       (options?.page ? `OFFSET ${DB.connection.escape(options.page)}` : ``);
-    console.log(query);
     const cards = await DB.query(query + ";");
     let cardList: UserCard[] = [];
     let cardIterator = cards.forEach(

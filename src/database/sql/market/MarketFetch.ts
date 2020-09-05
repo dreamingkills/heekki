@@ -24,7 +24,7 @@ export class MarketFetch extends DBClass {
 
     const limit = (options?.page || 1) * 9;
     const offset = (options?.page || 1) * 9 - 9;
-    query += queryOptions.join(" AND") + " ORDER BY id ASC LIMIT ? OFFSET ?;";
+    query += queryOptions.join(" AND") + " ORDER BY id DESC LIMIT ? OFFSET ?;";
 
     let forSale = await DB.query(query, [
       (options?.page || 1) * 9,

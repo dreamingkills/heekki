@@ -10,10 +10,28 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let id = this.prm[0] || msg.author.id;
+    let userQuery;
+    if (this.prm[0]) {
+      if (isNaN(parseInt(this.prm[0])) && !this.prm[0].includes("<@")) {
+        const member = await msg.guild?.members.fetch({
+          query: this.prm.join(" "),
+        });
+        userQuery = member?.firstKey();
+        if (!userQuery) {
+          await msg.channel.send(
+            "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
+          );
+          return;
+        }
+      } else {
+        userQuery = this.parseMention(this.prm[0]);
+      }
+    } else {
+      userQuery = msg.author.id;
+    }
     let user = await PlayerService.getProfileByDiscordId(
-      id,
-      this.prm[0] ? true : false
+      userQuery,
+      userQuery ? true : false
     );
 
     const discordUser = await msg.client.users.fetch(user.discord_id);

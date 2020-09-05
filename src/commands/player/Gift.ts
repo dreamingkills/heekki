@@ -9,12 +9,13 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
+    console.log(this.prm);
     const gift = await PlayerService.giftCard(
       msg.author.id,
       this.parseMention(this.prm[0]),
       {
         abbreviation: this.prm[1].split("#")[0],
-        serial: parseInt(this.prm[1].split("#")[2]),
+        serial: parseInt(this.prm[1].split("#")[1]),
       }
     );
 

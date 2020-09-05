@@ -210,6 +210,8 @@ export class CardAlreadyForSaleError extends ClientError {
 export class InvalidPriceError extends ClientError {
   name = "InvalidPriceError";
   constructor() {
-    super(`Please enter a valid price, above 0 Coins.`);
+    super(
+      `Please enter a valid price, above 0 Coins and below 2,147,483,647 Coins.`
+    );
   }
 }

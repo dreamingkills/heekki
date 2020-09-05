@@ -18,7 +18,9 @@ export class Command extends GameCommand {
     let friend;
 
     if (isNaN(parseInt(this.prm[0])) && !this.prm[0].includes("<@")) {
-      const member = await msg.guild?.members.fetch({ query: this.prm[0] });
+      const member = await msg.guild?.members.fetch({
+        query: this.prm.join(" "),
+      });
       friend = member?.firstKey();
       if (!friend) {
         await msg.channel.send(
