@@ -2,6 +2,7 @@ import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { PlayerService } from "../../database/service/PlayerService";
+import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends GameCommand {
   names: string[] = ["forfeit", "ff"];
@@ -11,10 +12,14 @@ export class Command extends GameCommand {
   category: string = "card";
 
   exec = async (msg: Message) => {
-    let card = await CardService.parseCardDetails(this.prm[0]);
+    const reference = {
+      abbreviation: this.prm[0].split("#")[0],
+      serial: parseInt(this.prm[0].split("#")[1]),
+    };
+    let card = (await CardService.getCardDataFromReference(reference)).userCard;
 
     let conf = await msg.channel.send(
-      `:warning: Really forfeit **${card.card.abbreviation}#${card.card.serialNumber}**?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`
+      `:warning: Really forfeit **${card.abbreviation}#${card.serialNumber}**?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`
     );
     await conf.react("✅");
     let filter = (reaction: MessageReaction, user: User) => {
@@ -27,10 +32,10 @@ export class Command extends GameCommand {
     let rxn = reactions.first();
 
     if (rxn) {
-      await PlayerService.forfeitCard(msg.author.id, this.prm[0]);
+      await UserCardService.forfeitCard(msg.author.id, card);
 
       await msg.channel.send(
-        `:white_check_mark: You forfeited **${card.card.abbreviation}#${card.card.serialNumber}**.`
+        `:white_check_mark: You forfeited **${card.abbreviation}#${card.serialNumber}**.`
       );
       await conf.delete();
     } else {

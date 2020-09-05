@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
+import { FriendService } from "../../database/service/FriendService";
 
 export class Command extends GameCommand {
   names: string[] = ["friends"];
@@ -9,8 +9,8 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let friendsRaw = await PlayerService.getFriendsList(msg.author.id);
-    let page = parseInt(this.prm[0]) || 1;
+    const friendsRaw = await FriendService.getFriendsByDiscordId(msg.author.id);
+    const page = parseInt(this.prm[0]) || 1;
 
     let friends = friendsRaw.slice(10 * page - 10, 10 * page);
     if (friends.length == 0) friends = friendsRaw.slice(0, 10);
@@ -24,7 +24,7 @@ export class Command extends GameCommand {
         }`
       );
     }
-    let embed = new MessageEmbed()
+    const embed = new MessageEmbed()
       .setAuthor(`${msg.author.tag}'s friends (${friendsRaw.length} total)`)
       .setDescription(
         friends.length > 0 ? tags.join("\n") : "You don't have any friends :("

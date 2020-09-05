@@ -9,11 +9,21 @@ export class Command extends GameCommand {
   category: string = "card";
 
   exec = async (msg: Message) => {
-    let card = await CardService.generateCardImage(this.prm[0]);
+    let card = await CardService.generateCardImageFromReference({
+      abbreviation: this.prm[0].split("#")[0],
+      serial: parseInt(this.prm[0].split("#")[1]),
+    });
+
     let embed = new MessageEmbed()
-      .setDescription(`Owner: <@${card.card.ownerId}>\n*"${card.card.blurb}"*`)
+      .setDescription(
+        `Owner: ${
+          card.userCard.ownerId == "0"
+            ? "No-one!"
+            : `<@${card.userCard.ownerId}>`
+        }\n*"${card.userCard.blurb}"*`
+      )
       .setColor("#40BD66")
-      .setFooter(`Card designed by ${card.card.credit}`);
+      .setFooter(`Card designed by ${card.userCard.credit}`);
     msg.channel.send({ embed: embed, files: [card.image] });
   };
 }

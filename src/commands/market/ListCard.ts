@@ -11,8 +11,11 @@ export class Command extends GameCommand {
   exec = async (msg: Message) => {
     let listing = await MarketService.sellCard(
       msg.author.id,
-      this.prm[0],
-      parseInt(this.prm[1])
+      parseInt(this.prm[1]),
+      {
+        abbreviation: this.prm[0].split("#")[0],
+        serial: parseInt(this.prm[0].split("#")[1]),
+      }
     );
 
     await msg.channel.send(

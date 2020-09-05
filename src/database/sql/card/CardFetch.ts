@@ -7,7 +7,7 @@ import { Card } from "../../../structures/card/Card";
 export class CardFetch extends DBClass {
   public static async getCardByUserCardId(
     id: number
-  ): Promise<{ card: UserCard; imageData: ImageData }> {
+  ): Promise<{ userCard: UserCard; imageData: ImageData }> {
     let card = await this.getFullCardDataFromUserCard(id);
     return card;
   }
@@ -32,7 +32,7 @@ export class CardFetch extends DBClass {
 
   public static async getFullCardDataFromUserCard(
     id: number
-  ): Promise<{ card: UserCard; imageData: ImageData }> {
+  ): Promise<{ userCard: UserCard; imageData: ImageData }> {
     let query = await DB.query(
       `SELECT
         card.id,
@@ -62,13 +62,13 @@ export class CardFetch extends DBClass {
     );
     if (!query[0]) throw new error.InvalidUserCardError();
     let imageData = await this.getImageDataFromCardId(query[0].image_data_id);
-    return { card: new UserCard(query[0]), imageData };
+    return { userCard: new UserCard(query[0]), imageData };
   }
 
-  public static async getFullCardDataFromReference(
-    abbr: string,
-    sn: number
-  ): Promise<{ card: UserCard; imageData: ImageData }> {
+  public static async getFullCardDataFromReference(reference: {
+    abbreviation: string;
+    serial: number;
+  }): Promise<{ userCard: UserCard; imageData: ImageData }> {
     let query = await DB.query(
       `SELECT
         card.id,
@@ -97,12 +97,12 @@ export class CardFetch extends DBClass {
         card.abbreviation=?
       AND
         user_card.serial_number=?`,
-      [abbr, sn]
+      [reference.abbreviation, reference.serial]
     );
     if (!query[0]) throw new error.InvalidUserCardError();
 
     let imageData = await this.getImageDataFromCardId(query[0].image_data_id);
-    return { card: new UserCard(query[0]), imageData };
+    return { userCard: new UserCard(query[0]), imageData };
   }
 
   public static async getImageDataFromCardId(id: number): Promise<ImageData> {

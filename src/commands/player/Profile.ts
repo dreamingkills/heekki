@@ -1,6 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
+import { ProfileEmbed } from "../../helpers/embed/ProfileEmbed";
 
 export class Command extends GameCommand {
   names: string[] = ["profile"];
@@ -10,36 +11,20 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let id = this.prm[0] || msg.author.id;
-    let user = await PlayerService.getProfileFromUser(
+    let user = await PlayerService.getProfileByDiscordId(
       id,
       this.prm[0] ? true : false
     );
 
-    let discordUser = await msg.guild?.members.fetch(
-      user!.discord_id.toString()
+    const discordUser = await msg.client.users.fetch(user.discord_id);
+    const badges = await PlayerService.getBadgesByDiscordId(user.discord_id);
+
+    const embed = new ProfileEmbed(
+      user,
+      badges,
+      discordUser.tag,
+      discordUser.displayAvatarURL()
     );
-    let embed = new MessageEmbed()
-      .setAuthor(
-        (discordUser ? `${discordUser!.user.tag}` : `Unknown User`) +
-          `'s profile`
-      )
-      .setThumbnail(discordUser ? discordUser.user.displayAvatarURL() : "")
-      .setDescription(
-        `${user.blurb || "No description set!"}\n\n<:coin:745447920072917093> ${
-          user.coins
-        }\n:heart: ${user.hearts}` //\n\nHugs Given: **${user.hugsGiven}**\nHugs Received: **${user.hugsReceived}**`
-      )
-      .setColor("#40BD66");
-    if (user.badges.length > 0) {
-      embed.addField(
-        `Badges`,
-        `:${user.badges
-          .map((b) => {
-            return b.emoji;
-          })
-          .join(": :")}:`
-      );
-    }
     await msg.channel.send(embed);
     return;
   };

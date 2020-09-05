@@ -3,224 +3,119 @@ import { PlayerFetch } from "../sql/player/PlayerFetch";
 import { Profile } from "../../structures/player/Profile";
 import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { UserCard } from "../../structures/player/UserCard";
-import { FriendFetch } from "../sql/friend/FriendFetch";
-import { FriendUpdate } from "../sql/friend/FriendUpdate";
 import Chance from "chance";
-import { CardFetch as CardFetchSQL } from "../sql/card/CardFetch";
 import { CardService } from "./CardService";
-import { CardUpdate } from "../sql/card/CardUpdate";
+import { Badge } from "../../structures/player/Badge";
+import { UserCardService } from "./UserCardService";
 
 export class PlayerService {
-  // Remove special characters from mention text (<@2395484958349234>)
-  private static cleanMention(m: string): string {
-    return m.replace(/[\\<>@#&!]/g, "");
-  }
-
-  // New user profile setup
-  public static async createNewUser(m: string): Promise<Profile> {
-    let discord_id = this.cleanMention(m);
+  public static async createNewUser(discord_id: string): Promise<Profile> {
     if (await PlayerFetch.checkIfUserExists(discord_id)) {
       throw new error.DuplicateProfileError();
     }
 
     await PlayerUpdate.createNewProfile(discord_id);
-    let profile = await PlayerFetch.getProfileFromDiscordId(discord_id, false);
-    return profile;
+    const user = await this.getProfileByDiscordId(discord_id, false);
+
+    return user;
   }
 
-  // Fetch profile object from database by user ID
-  public static async getProfileFromUser(
-    m: string,
-    p: boolean
+  public static async getProfileByDiscordId(
+    discord_id: string,
+    perspective: boolean
   ): Promise<Profile> {
-    let user: Profile;
-    let discord_id = this.cleanMention(m);
-    user = await PlayerFetch.getProfileFromDiscordId(discord_id, false);
+    const user = await PlayerFetch.getProfileFromDiscordId(discord_id);
 
     if (!user) {
-      if (p) throw new error.NoProfileOtherError();
+      if (perspective) throw new error.NoProfileOtherError();
       throw new error.NoProfileError();
     }
 
     return user;
   }
 
-  // Change the blurb of a user's profile
   public static async changeProfileDescription(
-    m: string,
-    desc: string
-  ): Promise<Profile> {
-    let discord_id = this.cleanMention(m);
-    if (!(await PlayerFetch.checkIfUserExists(discord_id))) {
-      throw new error.NoProfileError();
-    }
+    discord_id: string,
+    blurb: string
+  ): Promise<{ old: string; new: string }> {
+    const user = await this.getProfileByDiscordId(discord_id, false);
 
-    await PlayerUpdate.changeDescription(discord_id, desc);
-    let profile = await PlayerFetch.getProfileFromDiscordId(discord_id, false);
-    return profile;
+    await PlayerUpdate.changeDescription(discord_id, blurb);
+    return { old: user.blurb, new: blurb };
   }
 
-  // Get all of a user's cards by user ID
-  public static async getCardsByUser(m: string): Promise<UserCard[]> {
-    let user = await this.getProfileFromUser(m, false);
-    let cardList = await PlayerFetch.getUserCardsByDiscordId(user.discord_id);
+  public static async getBadgesByDiscordId(
+    discord_id: string
+  ): Promise<Badge[]> {
+    return await PlayerFetch.getBadgesByDiscordId(discord_id);
+  }
+
+  public static async getCardsByUser(
+    discord_id: string,
+    options?: { starsLessThan?: number; limit?: number; page?: number }
+  ): Promise<UserCard[]> {
+    const user = await this.getProfileByDiscordId(discord_id, false);
+    const cardList = await PlayerFetch.getUserCardsByDiscordId(
+      user.discord_id,
+      options
+    );
 
     return cardList;
   }
 
-  //Get all unclaimed cards
+  public static async openHeartBoxes(
+    discord_id: string
+  ): Promise<{ added: number; total: number; individual: number[] }> {
+    const user = await this.getProfileByDiscordId(discord_id, false);
+
+    const last = await PlayerFetch.getLastHeartBoxByDiscordId(user.discord_id);
+    const now = Date.now();
+    if (now < last + 14400000)
+      throw new error.HeartBoxCooldownError(last + 14400000, now);
+
+    const chance = new Chance();
+    let generated: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      generated.push(chance.weighted([7, 20, 100, 1000], [100, 25, 5, 0.1]));
+    }
+
+    const total = generated.reduce((a, b) => {
+      return a + b;
+    });
+    await PlayerUpdate.addHearts(user.discord_id, total);
+    await PlayerUpdate.setHeartBoxTimestamp(user.discord_id, now);
+    return { added: total, total: user.hearts + total, individual: generated };
+  }
+
+  public static async giftCard(
+    donator: string,
+    recipient: string,
+    reference: { abbreviation: string; serial: number }
+  ): Promise<UserCard> {
+    const gifter = await this.getProfileByDiscordId(donator, false);
+    const receiver = await this.getProfileByDiscordId(recipient, true);
+
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
+    if (gifter.discord_id != card.ownerId) throw new error.NotYourCardError();
+
+    const transfer = await PlayerUpdate.transferCard(
+      receiver.discord_id,
+      card.userCardId
+    );
+    return transfer;
+  }
+
   public static async getOrphanedCards(): Promise<UserCard[]> {
     let cardList = await PlayerFetch.getUserCardsByDiscordId("0");
     return cardList;
   }
 
-  public static async getFriendsList(discord_id: string) {
-    let user = await this.getProfileFromUser(discord_id, false);
-    let friends = await FriendFetch.getFriendsByDiscordId(user.discord_id);
-    return friends;
-  }
-
-  public static async addFriend(
-    discord_id: string,
-    friend: string
-  ): Promise<Profile> {
-    let user = await this.getProfileFromUser(discord_id, false);
-    let friendProfile = await this.getProfileFromUser(friend, true);
-
-    if (user.discord_id == friendProfile.discord_id)
-      throw new error.CannotAddYourselfError();
-    let relationshipStatus = await FriendFetch.checkRelationshipExists(
-      user.discord_id,
-      friendProfile.discord_id
-    );
-    if (relationshipStatus) throw new error.DuplicateRelationshipError();
-    await FriendUpdate.addFriendByDiscordId(
-      user.discord_id,
-      friendProfile.discord_id
-    );
-    return friendProfile;
-  }
-
-  public static async removeFriend(
-    discord_id: string,
-    friend: string
-  ): Promise<Profile> {
-    let user = await this.getProfileFromUser(discord_id, false);
-    let friendProfile = await this.getProfileFromUser(friend, true);
-
-    if (user.discord_id == friendProfile.discord_id)
-      throw new error.CannotRemoveYourselfError();
-    let relationshipStatus = await FriendFetch.checkRelationshipExists(
-      user.discord_id,
-      friendProfile.discord_id
-    );
-    if (!relationshipStatus) throw new error.NonexistentRelationshipError();
-
-    await FriendUpdate.removeFriendByDiscordId(
-      user.discord_id,
-      friendProfile.discord_id
-    );
-    return friendProfile;
-  }
-  public static async sendHeartsToFriends(
-    discord_id: string
-  ): Promise<number[]> {
-    let user = await this.getProfileFromUser(discord_id, false);
-
-    let last = await PlayerFetch.getLastHeartSendByDiscordId(user.discord_id);
-    let now = Date.now();
-    if (now < last + 10800000)
-      throw new error.SendHeartsCooldownError(last + 10800000, now);
-    let friends = await FriendFetch.getFriendsByDiscordId(user.discord_id);
-    friends.forEach(async (f) => {
-      await PlayerUpdate.addHearts(f.toString(), 1);
-    });
-    await PlayerUpdate.setHeartSendTimestamp(user.discord_id);
-    return friends;
-  }
-  public static async openHeartBoxes(
-    discord_id: string
-  ): Promise<{ added: number; total: number; individual: number[] }> {
-    let user = await this.getProfileFromUser(discord_id, false);
-
-    let last = await PlayerFetch.getLastHeartBoxByDiscordId(user.discord_id);
-    let now = Date.now();
-    if (now < last + 14400000)
-      throw new error.HeartBoxCooldownError(last + 14400000, now);
-
-    let chance = new Chance();
-    let generated: number[] = [];
-    for (let i = 0; i < 7; i++) {
-      generated.push(chance.weighted([7, 20, 100, 1000], [100, 25, 5, 0.1]));
-    }
-    let total = generated.reduce((a, b) => {
-      return a + b;
-    });
-    await PlayerUpdate.addHearts(user.discord_id, total);
-    await PlayerUpdate.setHeartBoxTimestamp(user.discord_id);
-    return { added: total, total: user.hearts + total, individual: generated };
-  }
-
-  public static async giftCard(
-    user: string,
-    recipient: string,
-    reference: string
-  ): Promise<UserCard> {
-    let gifter = await this.getProfileFromUser(user, false);
-    let receiver = await this.getProfileFromUser(recipient, true);
-
-    let card = await CardFetchSQL.getFullCardDataFromReference(
-      reference.split("#")[0],
-      parseInt(reference.split("#")[1])
-    );
-    if (user != card.card.ownerId) throw new error.NotYourCardError();
-
-    let transfer = await PlayerUpdate.transferCard(
-      receiver.discord_id,
-      card.card.userCardId
-    );
-    return transfer;
-  }
-
-  public static async forfeitCard(
-    user: string,
-    reference: string
-  ): Promise<UserCard> {
-    let owner = await this.getProfileFromUser(user, false);
-    let card = await CardFetchSQL.getFullCardDataFromReference(
-      reference.split("#")[0],
-      parseInt(reference.split("#")[1])
-    );
-
-    if (owner.discord_id != card.card.ownerId)
-      throw new error.NotYourCardError();
-
-    let forfeit = await CardUpdate.forfeitCard(card.card);
-    return card.card;
-  }
-
-  public static async forfeitBulkUnderStars(
-    user: string,
-    stars: number
-  ): Promise<number> {
-    let owner = await this.getProfileFromUser(user, false);
-    let cardsToForfeit = await PlayerFetch.getUserCardsByDiscordId(
-      owner.discord_id,
-      stars
-    );
-    let numberForfeited = 0;
-    for (let card of cardsToForfeit) {
-      await CardUpdate.forfeitCard(card);
-      numberForfeited++;
-    }
-    return numberForfeited;
-  }
-
   public static async claimOrphanedCard(
     user: string,
-    reference: string
+    reference: { abbreviation: string; serial: number }
   ): Promise<UserCard> {
-    let claimant = await this.getProfileFromUser(user, false);
+    let claimant = await this.getProfileByDiscordId(user, false);
     let last = await PlayerFetch.getLastOrphanClaimByDiscordId(
       claimant.discord_id
     );
@@ -228,11 +123,57 @@ export class PlayerService {
     let now = Date.now();
     if (now < last + 10800000)
       throw new error.OrphanCooldownError(last + 10800000, now);
-    let card = await CardService.parseCardDetails(reference);
+    let card = (await CardService.getCardDataFromReference(reference)).userCard;
 
-    if (card.card.ownerId != "0") throw new error.CardNotOrphanedError();
-    await PlayerUpdate.transferCard(claimant.discord_id, card.card.userCardId);
-    await PlayerUpdate.setOrphanTimestamp(claimant.discord_id);
-    return card.card;
+    if (card.ownerId != "0") throw new error.CardNotOrphanedError();
+    await PlayerUpdate.transferCard(claimant.discord_id, card.userCardId);
+    await PlayerUpdate.setOrphanTimestamp(claimant.discord_id, now);
+    return card;
+  }
+
+  public static async setLastHeartSendByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<number> {
+    await PlayerUpdate.setHeartSendTimestamp(discord_id, time);
+    return time;
+  }
+
+  public static async getLastHeartSendByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastHeartSendByDiscordId(discord_id);
+  }
+
+  public static async addHeartsToUserByDiscordId(
+    discord_id: string,
+    amount: number
+  ): Promise<number> {
+    await PlayerUpdate.addHearts(discord_id, amount);
+    return amount;
+  }
+
+  public static async removeHeartsFromUserByDiscordId(
+    discord_id: string,
+    amount: number
+  ): Promise<number> {
+    await PlayerUpdate.removeHearts(discord_id, amount);
+    return amount;
+  }
+
+  public static async addCoinsToUserByDiscordId(
+    discord_id: string,
+    amount: number
+  ): Promise<number> {
+    await PlayerUpdate.addCoins(discord_id, amount);
+    return amount;
+  }
+
+  public static async removeCoinsFromUserByDiscordId(
+    discord_id: string,
+    amount: number
+  ): Promise<number> {
+    await PlayerUpdate.removeCoins(discord_id, amount);
+    return amount;
   }
 }

@@ -9,14 +9,17 @@ export class Command extends GameCommand {
   category: string = "market";
 
   exec = async (msg: Message) => {
-    let buy = await MarketService.purchaseCard(msg.author.id, this.prm[0]);
+    let buy = await MarketService.purchaseCard(msg.author.id, {
+      abbreviation: this.prm[0].split("#")[0],
+      serial: parseInt(this.prm[0].split("#")[1]),
+    });
 
     await msg.channel.send(
       `:white_check_mark: Successfully purchased **${buy.card.abbreviation}#${
         buy.card.serialNumber
-      }** from <@${
-        buy.seller.discord_id
-      }>.\nYour new balance is <:coin:745447920072917093> **${
+      }** from ${
+        buy.seller ? `<@${buy.seller.discord_id}>` : "No one!"
+      }.\nYour new balance is <:coin:745447920072917093> **${
         buy.buyer.coins - buy.price
       }**.`
     );

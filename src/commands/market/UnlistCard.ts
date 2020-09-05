@@ -9,7 +9,10 @@ export class Command extends GameCommand {
   category: string = "market";
 
   exec = async (msg: Message) => {
-    let listing = await MarketService.removeListing(this.prm[0], msg.author.id);
+    let listing = await MarketService.removeListing(msg.author.id, {
+      abbreviation: this.prm[0].split("#")[0],
+      serial: parseInt(this.prm[0].split("#")[1]),
+    });
 
     await msg.channel.send(
       `:white_check_mark: You've removed the listing for **${listing.abbreviation}#${listing.serialNumber}** from the Marketplace.`

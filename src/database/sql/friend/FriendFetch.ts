@@ -3,21 +3,24 @@ import { DBClass, DB } from "../..";
 export class FriendFetch extends DBClass {
   public static async getFriendsByDiscordId(
     discord_id: string
-  ): Promise<number[]> {
+  ): Promise<string[]> {
     let friends = await DB.query(`SELECT * FROM friend WHERE user_id=?;`, [
       discord_id,
     ]);
-    let ids: number[] = [];
-    friends.forEach((friend: { friend_id: number }) => {
+    let ids: string[] = [];
+    friends.forEach((friend: { friend_id: string }) => {
       ids.push(friend.friend_id);
     });
     return ids;
   }
-  public static async checkRelationshipExists(user: string, friend: string) {
+  public static async checkRelationshipExists(
+    friendOne: string,
+    friendTwo: string
+  ): Promise<boolean> {
     let relationship = await DB.query(
       `SELECT * FROM friend WHERE user_id=? AND friend_id=?;`,
-      [user, friend]
+      [friendOne, friendTwo]
     );
-    return relationship[0];
+    return relationship[0] ? true : false;
   }
 }

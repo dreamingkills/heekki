@@ -7,59 +7,76 @@ import * as error from "../../../structures/Error";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
+    let clean = this.cleanMention(discord_id);
     let query = await DB.query(
-      `SELECT * FROM user_profile WHERE discord_id=${this.clean(discord_id)}`
+      `SELECT * FROM user_profile WHERE discord_id=?;`,
+      [clean]
     );
     return query[0] ? true : false;
   }
 
+  /**
+   * Retrieves a user's data by their Discord ID.
+   * @param discord_id Discord ID of a user.
+   * @param p Perspective - `true` indicates 1P. `false` indicates 3P.
+   */
   public static async getProfileFromDiscordId(
-    discord_id: string,
-    p: boolean
+    discord_id: string
   ): Promise<Profile> {
+    let clean = this.cleanMention(discord_id);
     let user = await DB.query(
-      `SELECT * FROM user_profile WHERE discord_id=${this.clean(discord_id)}`
+      `SELECT * FROM user_profile WHERE discord_id=?;`,
+      [clean]
     );
-    if (!user[0]) {
-      if (!p) throw new error.NoProfileOtherError();
-      throw new error.NoProfileError();
-    }
-    let badges = await this.getBadgesByDiscordId(discord_id);
-    return new Profile(user[0], badges);
+    return new Profile(user[0]);
   }
 
   public static async getUserCardsByDiscordId(
     discord_id: string,
-    stars?: number
+    options?: {
+      starsLessThan?: number;
+      limit?: number;
+      page?: number;
+    }
   ): Promise<UserCard[]> {
-    let cards = await DB.query(
-      `SELECT 
-        card.blurb,
-        card.member,
-        card.credit,
-        card.abbreviation,
-        card.rarity,
-        card.image_url,
-        user_card.id,
-        user_card.serial_number,
-        user_card.owner_id,
-        user_card.stars,
-        user_card.hearts,
-        pack.title,
-        pack.image_data_id
-      FROM
-        card 
-      LEFT JOIN
-        user_card ON
-          card.id=user_card.card_id
-      LEFT JOIN
-        pack ON
-          card.pack_id=pack.id
-      WHERE user_card.owner_id=?
-      AND user_card.stars<?
-      ORDER BY user_card.stars DESC;`,
-      [discord_id, stars || 7]
-    );
+    let query = `SELECT 
+                    card.blurb,
+                    card.member,
+                    card.credit,
+                    card.abbreviation,
+                    card.rarity,
+                    card.image_url,
+                    user_card.id,
+                    user_card.serial_number,
+                    user_card.owner_id,
+                    user_card.stars,
+                    user_card.hearts,
+                    pack.title,
+                    pack.image_data_id
+                  FROM
+                    card 
+                  LEFT JOIN
+                    user_card ON
+                      card.id=user_card.card_id
+                  LEFT JOIN
+                    pack ON
+                      card.pack_id=pack.id
+                  WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
+    let queryOptions = [];
+
+    if (options) query += " AND";
+    if (options?.starsLessThan)
+      queryOptions.push(
+        ` user_card.stars<${DB.connection.escape(options.starsLessThan)}`
+      );
+
+    query +=
+      queryOptions.join(" AND") +
+      " ORDER BY user_card.stars DESC" +
+      (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
+      (options?.page ? `OFFSET ${DB.connection.escape(options.page)}` : ``);
+    console.log(query);
+    const cards = await DB.query(query + ";");
     let cardList: UserCard[] = [];
     let cardIterator = cards.forEach(
       (c: {

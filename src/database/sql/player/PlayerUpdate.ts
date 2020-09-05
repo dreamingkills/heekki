@@ -65,22 +65,22 @@ export class PlayerUpdate extends DBClass {
     return query;
   }
   public static async setHeartSendTimestamp(
-    discord_id: string
+    discord_id: string,
+    time: number
   ): Promise<OkPacket> {
-    let now = Date.now();
     let query = await DB.query(
       `UPDATE user_profile SET hearts_last=? WHERE discord_id=?;`,
-      [now, discord_id]
+      [time, discord_id]
     );
     return query;
   }
   public static async setHeartBoxTimestamp(
-    discord_id: string
+    discord_id: string,
+    time: number
   ): Promise<OkPacket> {
-    let now = Date.now();
     let query = await DB.query(
       `UPDATE user_profile SET heart_box_last=? WHERE discord_id=?;`,
-      [now, discord_id]
+      [time, discord_id]
     );
     return query;
   }
@@ -103,15 +103,15 @@ export class PlayerUpdate extends DBClass {
       cardId,
     ]);
     let card = await CardFetchSQL.getFullCardDataFromUserCard(cardId);
-    return card.card;
+    return card.userCard;
   }
   public static async setOrphanTimestamp(
-    discord_id: string
+    discord_id: string,
+    time: number
   ): Promise<OkPacket> {
-    let now = Date.now();
     let query = await DB.query(
       `UPDATE user_profile SET last_orphan=? WHERE discord_id=?;`,
-      [now, discord_id]
+      [time, discord_id]
     );
     return query;
   }

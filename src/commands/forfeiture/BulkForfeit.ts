@@ -1,6 +1,8 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
+import { CardService } from "../../database/service/CardService";
+import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends GameCommand {
   names: string[] = ["bulkforfeit", "bff"];
@@ -9,8 +11,20 @@ export class Command extends GameCommand {
   category: string = "card";
 
   exec = async (msg: Message) => {
-    let query = this.prm[0].split("<")[0];
-    let starCount = parseInt(this.prm[0].split("<")[1]);
+    let starCount = parseInt(this.prm[0]?.split("<")[1]);
+
+    if (isNaN(starCount)) {
+      await msg.channel.send(
+        "<:red_x:741454361007357993> Please enter a valid constraint (`stars<#`, where # is a number 2 to 7)"
+      );
+      return;
+    }
+    if (starCount < 2) {
+      await msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a valid "less than star count" (any number greater than 2)`
+      );
+      return;
+    }
 
     let conf = await msg.channel.send(
       `:warning: Really forfeit **all cards under ${starCount} stars**?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`
@@ -26,7 +40,7 @@ export class Command extends GameCommand {
     let rxn = reactions.first();
 
     if (rxn) {
-      let bulk = await PlayerService.forfeitBulkUnderStars(
+      let bulk = await UserCardService.forfeitBulkUnderStars(
         msg.author.id,
         starCount
       );

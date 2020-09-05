@@ -16,7 +16,10 @@ export class DB {
 }
 
 export class DBClass {
-  public static clean(data: string | number) {
+  public static clean(data: string | number): string {
     return sqlstring.escape(data);
+  }
+  public static cleanMention(data: string): string {
+    return data.replace(/[\\<>@#&!]/g, "");
   }
 }

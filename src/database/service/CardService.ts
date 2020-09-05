@@ -7,52 +7,73 @@ import { CardFetch } from "../sql/card/CardFetch";
 import { ImageData } from "../../structures/card/ImageData";
 import { Profile } from "../../structures/player/Profile";
 import { CardUpdate } from "../sql/card/CardUpdate";
-import { PlayerUpdate } from "../sql/player/PlayerUpdate";
+import { Card } from "../../structures/card/Card";
 
 export class CardService {
   private static commafyNumber(num: number) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
-  public static heartsToLevel(hearts: number) {
-    let unrounded = hearts / 50;
-    let currentLevel = unrounded >= 1 ? Math.floor(unrounded) + 1 : 1;
 
-    let nextRequirement = currentLevel * 50;
-    let info = {
+  public static heartsToLevel(hearts: number) {
+    const unrounded = hearts / 50;
+    const currentLevel = unrounded >= 1 ? Math.floor(unrounded) + 1 : 1;
+
+    const nextRequirement = currentLevel * 50;
+    return {
       totalHearts: hearts,
       level: currentLevel >= 99 ? 99 : currentLevel,
       next: currentLevel >= 99 ? -1 : nextRequirement,
       toNext: currentLevel >= 99 ? -1 : nextRequirement - hearts,
     };
-    return info;
   }
 
-  public static async parseCardDetails(
-    ref: string
-  ): Promise<{ card: UserCard; imageData: ImageData }> {
-    let data = ref.split("#");
-    let [abbr, sn] = [data[0], parseInt(data[1])];
-    let userCard = await CardFetch.getFullCardDataFromReference(abbr, sn);
-    return userCard;
+  public static async getCardsByPackId(pack_id: number): Promise<Card[]> {
+    return await CardFetch.getCardsByPackId(pack_id);
+  }
+
+  public static async getCardDataFromReference(reference: {
+    abbreviation: string;
+    serial: number;
+  }): Promise<{ userCard: UserCard; imageData: ImageData }> {
+    return await CardFetch.getFullCardDataFromReference(reference);
+  }
+
+  public static async generateCardImageFromReference(reference: {
+    abbreviation: string;
+    serial: number;
+  }): Promise<{ image: Buffer; userCard: UserCard }> {
+    const card = await CardFetch.getFullCardDataFromReference(reference);
+    return await this.generateCardImageFromUserCard({
+      userCard: card.userCard,
+      imageData: card.imageData,
+    });
   }
 
   public static async upgradeCard(
     member: string,
-    card: string,
-    amount: number
+    amount: number,
+    reference: { abbreviation: string; serial: number }
   ): Promise<{ card: UserCard; user: Profile; before: number }> {
     if (isNaN(amount)) throw new error.NotANumberError();
-    let user = await PlayerService.getProfileFromUser(member, true);
+    let user = await PlayerService.getProfileByDiscordId(member, false);
     const rounded = Math.floor(amount);
     if (rounded > user.hearts) throw new error.NotEnoughHeartsError();
 
-    let userCard = await this.parseCardDetails(card);
-    if (userCard.card.ownerId != user.discord_id)
+    let userCard = await CardFetch.getFullCardDataFromReference(reference);
+    if (userCard.userCard.ownerId != user.discord_id)
       throw new error.NotYourCardError();
-    await CardUpdate.addHeartsToCard(userCard.card, amount);
-    await PlayerUpdate.removeHearts(user.discord_id, amount);
 
-    return { card: userCard.card, user: user, before: userCard.card.hearts };
+    await CardUpdate.addHeartsToCard(userCard.userCard, amount);
+    await PlayerService.removeHeartsFromUserByDiscordId(
+      user.discord_id,
+      amount
+    );
+
+    return {
+      card: userCard.userCard,
+      user: user,
+      before: userCard.userCard.hearts,
+    };
   }
 
   public static async generateText(
@@ -74,23 +95,14 @@ export class CardService {
     return ctx;
   }
 
-  public static async generateCardImage(
-    userCard: string
-  ): Promise<{ image: Buffer; card: UserCard }>;
-  public static async generateCardImage(userCard: {
+  public static async generateCardImageFromUserCard(userCard: {
     userCard: UserCard;
     imageData: ImageData;
-  }): Promise<{ image: Buffer; card: UserCard }>;
-  public static async generateCardImage(
-    userCard: string | { userCard: UserCard; imageData: ImageData }
-  ): Promise<{ image: Buffer; card: UserCard }> {
-    let cardData;
-    if (typeof userCard == "string") {
-      cardData = await this.parseCardDetails(userCard);
-    } else
-      cardData = { card: userCard.userCard, imageData: userCard.imageData };
+  }): Promise<{ image: Buffer; userCard: UserCard }> {
+    const cardData = userCard.userCard;
+    const imageData = userCard.imageData;
 
-    let cardImage = await jimp.read(cardData.card.imageUrl);
+    let cardImage = await jimp.read(cardData.imageUrl);
     let size = { width: cardImage.getWidth(), height: cardImage.getHeight() };
     let buffer = await cardImage.getBufferAsync(jimp.MIME_PNG);
 
@@ -100,48 +112,52 @@ export class CardService {
 
     ctx.drawImage(background, 0, 0, size.width, size.height);
 
-    let d = cardData.imageData;
-
-    let heartData = await jimp.read(d.heartImageUrl);
+    let heartData = await jimp.read(imageData.heartImageUrl);
     let heart = await canvas.loadImage(
       await heartData.getBufferAsync(jimp.MIME_PNG)
     );
-    ctx.drawImage(heart, d.heartX, d.heartY, d.heartLength, d.heartHeight);
-    await this.generateText(ctx, { ...d.packText }, cardData.card.title);
-    await this.generateText(ctx, { ...d.memberText }, cardData.card.member);
-    await this.generateText(
-      ctx,
-      { ...d.serialText },
-      `#${this.commafyNumber(cardData.card.serialNumber)}`
+    ctx.drawImage(
+      heart,
+      imageData.heartX,
+      imageData.heartY,
+      imageData.heartLength,
+      imageData.heartHeight
     );
-    await this.generateText(ctx, { ...d.levelText }, `Level`);
+    await this.generateText(ctx, { ...imageData.packText }, cardData.title);
+    await this.generateText(ctx, { ...imageData.memberText }, cardData.member);
     await this.generateText(
       ctx,
-      { ...d.levelNum },
-      this.heartsToLevel(cardData.card.hearts).level.toString()
+      { ...imageData.serialText },
+      `#${this.commafyNumber(cardData.serialNumber)}`
+    );
+    await this.generateText(ctx, { ...imageData.levelText }, `Level`);
+    await this.generateText(
+      ctx,
+      { ...imageData.levelNum },
+      this.heartsToLevel(cardData.hearts).level.toString()
     );
     await this.generateText(
       ctx,
-      { ...d.heartText },
-      this.commafyNumber(cardData.card.hearts)
+      { ...imageData.heartText },
+      this.commafyNumber(cardData.hearts)
     );
 
-    let starData = await jimp.read(d.starImageUrl);
+    let starData = await jimp.read(imageData.starImageUrl);
     let star = await canvas.loadImage(
       await starData.getBufferAsync(jimp.MIME_PNG)
     );
-    for (let i = 0; i < cardData.card.stars; i++) {
+    for (let i = 0; i < userCard.userCard.stars; i++) {
       ctx.drawImage(
         star,
-        d.starStartingX + i * d.starXInc,
-        d.starStartingY + i * d.starYInc,
-        d.starLength,
-        d.starHeight
+        imageData.starStartingX + i * imageData.starXInc,
+        imageData.starStartingY + i * imageData.starYInc,
+        imageData.starLength,
+        imageData.starHeight
       );
     }
 
     let buf = cv.toBuffer("image/png");
     let final = Buffer.alloc(buf.length, buf, "base64");
-    return { image: final, card: cardData.card };
+    return { image: final, userCard: cardData };
   }
 }

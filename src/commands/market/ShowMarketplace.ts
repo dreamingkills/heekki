@@ -34,7 +34,7 @@ export class Command extends GameCommand {
         ff.map((c) => {
           return {
             name: `${c.card.abbreviation}#${c.card.serialNumber}`,
-            value: `**Owner**: <@${c.card.ownerId}>\n<:coin:745447920072917093> ${c.price}`,
+            value: `**${c.card.title}**\n${c.card.member}\n:star: ${c.card.stars}\n<:coin:745447920072917093> ${c.price}`,
             inline: true,
           };
         })

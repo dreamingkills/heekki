@@ -4,7 +4,7 @@ import { CardService } from "../../database/service/CardService";
 
 export class Command extends GameCommand {
   names: string[] = ["upgrade"];
-  usage: string[] = ["%c <card> <amount>"];
+  usage: string[] = ["%c <card reference> <amount>"];
   desc: string = "Adds hearts to a card, which can level it up.";
   category: string = "player";
 
@@ -12,8 +12,11 @@ export class Command extends GameCommand {
     let id = msg.author.id;
     let fedUserCardData = await CardService.upgradeCard(
       id,
-      this.prm[0],
-      parseInt(this.prm[1])
+      parseInt(this.prm[1]),
+      {
+        abbreviation: this.prm[0].split("#")[0],
+        serial: parseInt(this.prm[0].split("#")[1]),
+      }
     );
     let userCard = fedUserCardData.card;
     let beforeLevel = CardService.heartsToLevel(fedUserCardData.before).level;

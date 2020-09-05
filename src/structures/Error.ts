@@ -53,7 +53,9 @@ export class CantHugYourselfError extends ClientError {
 export class InvalidPackError extends ClientError {
   name = "InvalidPackError";
   constructor() {
-    super("That pack does not exist!");
+    super(
+      "That pack does not exist!\nIf you were trying to buy from the Marketplace, use `!mpb <card reference>`."
+    );
   }
 }
 export class ExpiredPackError extends ClientError {
@@ -203,5 +205,11 @@ export class CardAlreadyForSaleError extends ClientError {
   name = "CardAlreadyForSaleError";
   constructor() {
     super(`You've already listed that card for sale.`);
+  }
+}
+export class InvalidPriceError extends ClientError {
+  name = "InvalidPriceError";
+  constructor() {
+    super(`Please enter a valid price, above 0 Coins.`);
   }
 }

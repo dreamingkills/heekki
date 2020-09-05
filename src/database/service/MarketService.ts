@@ -3,12 +3,9 @@ import { UserCardService } from "./UserCardService";
 import { UserCard } from "../../structures/player/UserCard";
 import { CardService } from "./CardService";
 import * as error from "../../structures/Error";
-import { PlayerService } from "./PlayerService";
-import { CardUpdate } from "../sql/card/CardUpdate";
 import { MarketUpdate } from "../sql/market/MarketUpdate";
-import { PlayerFetch } from "../sql/player/PlayerFetch";
-import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { Profile } from "../../structures/player/Profile";
+import { PlayerService } from "./PlayerService";
 
 export class MarketService {
   /**
@@ -29,7 +26,7 @@ export class MarketService {
     let cards = await Promise.all(
       cardIds.map(async (id) => {
         let card = await UserCardService.getCardByUserCardId(id.card_id);
-        return { card: card.card, price: id.price };
+        return { card: card.userCard, price: id.price };
       })
     );
 
@@ -53,22 +50,21 @@ export class MarketService {
    */
   public static async purchaseCard(
     buyer: string,
-    reference: string
+    reference: { abbreviation: string; serial: number }
   ): Promise<{
     card: UserCard;
     buyer: Profile;
-    seller: Profile;
+    seller: Profile | undefined;
     price: number;
   }> {
-    const card = await CardService.parseCardDetails(reference);
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
     if (!card) throw new error.InvalidUserCardError();
 
-    const validateForSale = await this.cardIsOnMarketplace(
-      card.card.userCardId
-    );
+    const validateForSale = await this.cardIsOnMarketplace(card.userCardId);
     if (!validateForSale.forSale) throw new error.CardNotForSaleError();
 
-    const buyerProfile = await PlayerFetch.getProfileFromDiscordId(
+    const buyerProfile = await PlayerService.getProfileByDiscordId(
       buyer,
       false
     );
@@ -76,23 +72,35 @@ export class MarketService {
       throw new error.NotEnoughCoinsError();
 
     //Remove card listing from marketplace
-    await MarketUpdate.removeCardFromMarketplace(card.card.userCardId);
+    await MarketUpdate.removeCardFromMarketplace(card.userCardId);
 
-    const transfer = await CardUpdate.transferCardToUser(
+    const transfer = await UserCardService.transferCardToUserByDiscordId(
       buyer,
-      card.card.userCardId
+      card.userCardId
     );
 
     /* Transfer coins from buyer to seller */
-    const sellerProfile = await PlayerFetch.getProfileFromDiscordId(
-      card.card.ownerId,
+    if (card.ownerId == "0") {
+      await PlayerService.removeCoinsFromUserByDiscordId(
+        buyerProfile.discord_id,
+        validateForSale.price!
+      );
+      return {
+        card: transfer,
+        buyer: buyerProfile,
+        seller: undefined,
+        price: validateForSale.price!,
+      };
+    }
+    const sellerProfile = await PlayerService.getProfileByDiscordId(
+      card.ownerId,
       true
     );
-    await PlayerUpdate.removeCoins(
+    await PlayerService.removeCoinsFromUserByDiscordId(
       buyerProfile.discord_id,
       validateForSale.price!
     );
-    await PlayerUpdate.addCoins(
+    await PlayerService.addCoinsToUserByDiscordId(
       sellerProfile.discord_id,
       validateForSale.price!
     );
@@ -110,37 +118,36 @@ export class MarketService {
    */
   public static async sellCard(
     seller: string,
-    reference: string,
-    price: number
+    price: number,
+    reference: { abbreviation: string; serial: number }
   ): Promise<UserCard> {
-    const card = await CardService.parseCardDetails(reference);
+    if (isNaN(price) || price < 1) throw new error.InvalidPriceError();
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
     if (!card) throw new error.InvalidUserCardError();
-    if (card.card.ownerId != seller) throw new error.NotYourCardError();
+    if (card.ownerId != seller) throw new error.NotYourCardError();
     if (isNaN(price)) throw new error.NotANumberError();
 
-    const validateForSale = await this.cardIsOnMarketplace(
-      card.card.userCardId
-    );
+    const validateForSale = await this.cardIsOnMarketplace(card.userCardId);
     if (validateForSale.forSale) throw new error.CardAlreadyForSaleError();
 
-    await MarketUpdate.listCardOnMarketplace(card.card.userCardId, price);
-    return card.card;
+    await MarketUpdate.listCardOnMarketplace(card.userCardId, price);
+    return card;
   }
 
   public static async removeListing(
-    reference: string,
-    perpetrator: string
+    perpetrator: string,
+    reference: { abbreviation: string; serial: number }
   ): Promise<UserCard> {
-    const card = await CardService.parseCardDetails(reference);
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
     if (!card) throw new error.InvalidUserCardError();
-    if (card.card.ownerId != perpetrator) throw new error.NotYourCardError();
+    if (card.ownerId != perpetrator) throw new error.NotYourCardError();
 
-    const validateForSale = await this.cardIsOnMarketplace(
-      card.card.userCardId
-    );
+    const validateForSale = await this.cardIsOnMarketplace(card.userCardId);
     if (!validateForSale.forSale) throw new error.CardNotForSaleError();
 
-    await MarketUpdate.removeCardFromMarketplace(card.card.userCardId);
-    return card.card;
+    await MarketUpdate.removeCardFromMarketplace(card.userCardId);
+    return card;
   }
 }

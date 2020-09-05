@@ -33,4 +33,8 @@ export abstract class BaseCommand implements Command {
       .filter((e) => e);
     return this.exec(msg);
   };
+
+  public parseMention: (query: string) => string = (query: string): string => {
+    return query.replace(/[\\<>@#&!]/g, "");
+  };
 }

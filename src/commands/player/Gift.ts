@@ -9,13 +9,16 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let gift = await PlayerService.giftCard(
+    const gift = await PlayerService.giftCard(
       msg.author.id,
-      this.prm[0],
-      this.prm[1]
+      this.parseMention(this.prm[0]),
+      {
+        abbreviation: this.prm[1].split("#")[0],
+        serial: parseInt(this.prm[1].split("#")[2]),
+      }
     );
 
-    let user = msg.client.users.resolve(gift.ownerId)!;
+    const user = msg.client.users.resolve(gift.ownerId)!;
     await msg.channel.send(
       `:gift: You gifted **${gift.abbreviation}#${gift.serialNumber}** to **${
         user.tag || `Unknown User (<@${gift.ownerId}>)`

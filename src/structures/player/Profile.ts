@@ -7,7 +7,7 @@ export class Profile {
   hearts: number;
   daily_streak: number;
   daily_last: number;
-  badges: Badge[];
+  badges?: Badge[];
   constructor(
     data: {
       discord_id: string;
@@ -17,7 +17,7 @@ export class Profile {
       hearts: number;
       blurb: string;
     },
-    badges: Badge[]
+    badges?: Badge[]
   ) {
     this.discord_id = data.discord_id;
     this.blurb = data.blurb;

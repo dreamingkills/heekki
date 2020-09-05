@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
+import { FriendService } from "../../database/service/FriendService";
 
 export class Command extends GameCommand {
   names: string[] = ["send"];
@@ -10,7 +10,7 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let sendHearts = await PlayerService.sendHeartsToFriends(msg.author.id);
+    const sendHearts = await FriendService.sendHeartsToFriends(msg.author.id);
     await msg.channel.send(
       `:white_check_mark: Hearts have been sent to **${sendHearts.length}** friends!`
     );

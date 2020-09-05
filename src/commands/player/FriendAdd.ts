@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
+import { FriendService } from "../../database/service/FriendService";
 
 export class Command extends GameCommand {
   names: string[] = ["add"];
@@ -16,24 +16,28 @@ export class Command extends GameCommand {
       return;
     }
     let friend;
+
     if (isNaN(parseInt(this.prm[0])) && !this.prm[0].includes("<@")) {
-      let member = await msg.guild?.members.fetch({ query: this.prm[0] });
+      const member = await msg.guild?.members.fetch({ query: this.prm[0] });
       friend = member?.firstKey();
+      if (!friend) {
+        await msg.channel.send(
+          "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
+        );
+        return;
+      }
     } else {
-      friend = (await PlayerService.getProfileFromUser(this.prm[0], true))
-        .discord_id;
+      friend = this.parseMention(this.prm[0]);
     }
 
-    if (!friend) {
-      await msg.channel.send(
-        "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
-      );
-      return;
-    }
-    let newFriend = await PlayerService.addFriend(msg.author.id, friend);
-    let member = msg.guild?.member(newFriend.discord_id.toString());
+    const newFriend = await FriendService.addFriendByDiscordId(
+      msg.author.id,
+      friend
+    );
+
+    const newUser = await msg.client.users.fetch(newFriend.friend.discord_id);
     await msg.channel.send(
-      `:white_check_mark: Added **${member?.user.tag}** as a friend!`
+      `:white_check_mark: Added **${newUser?.tag}** as a friend!`
     );
   };
 }

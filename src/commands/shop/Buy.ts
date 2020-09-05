@@ -12,30 +12,28 @@ export class Command extends GameCommand {
   category: string = "shop";
 
   exec = async (msg: Message) => {
-    let packName = this.prm.join(" ");
+    const packName = this.prm.join(" ");
+    const generatedCard = await ShopService.rollPack(packName, msg.author.id);
 
-    let card = await ShopService.rollPack(packName, msg.author.id);
-
-    let cardImage = await CardService.generateCardImage({
-      userCard: card.userCard,
-      imageData: card.imageData,
+    const cardImage = await CardService.generateCardImageFromUserCard({
+      userCard: generatedCard.userCard,
+      imageData: generatedCard.imageData,
     });
 
+    const userCard = generatedCard.userCard;
     let embed = new MessageEmbed()
-      .setAuthor(`You rolled the ${card.userCard.title} pack and got...`)
+      .setAuthor(`You rolled the ${userCard.title} pack and got...`)
       .setDescription(
-        `**${card.userCard.member}** ${"⭐".repeat(card.userCard.stars)}\n*"${
-          card.userCard.blurb
+        `**${userCard.member}** ${"⭐".repeat(userCard.stars)}\n*"${
+          userCard.blurb
         }"*`
       )
       .setColor("#40BD66")
       .attachFiles([{ name: "card.png", attachment: cardImage.image }])
       .setFooter(
-        `${
-          card.userCard.abbreviation + "#" + card.userCard.serialNumber
-        } • Rolled by ${msg.author.tag} on ${moment().format(
-          "MMMM Do YYYY [@] HH:mm:ss"
-        )}`
+        `${userCard.abbreviation + "#" + userCard.serialNumber} • Rolled by ${
+          msg.author.tag
+        } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
       );
     await msg.channel.send(embed);
     return;

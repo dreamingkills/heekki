@@ -10,8 +10,8 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    let hb = await PlayerService.openHeartBoxes(msg.author.id);
-    let embed = new MessageEmbed()
+    const hb = await PlayerService.openHeartBoxes(msg.author.id);
+    const embed = new MessageEmbed()
       .setDescription(
         `:gift_heart: You opened your heart boxes and received **${
           hb.added

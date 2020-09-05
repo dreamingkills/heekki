@@ -11,7 +11,7 @@ export class CardUpdate extends DBClass {
     card_id: number,
     stars: number,
     hearts: number
-  ): Promise<{ card: UserCard; imageData: ImageData }> {
+  ): Promise<{ userCard: UserCard; imageData: ImageData }> {
     let serialNumber = await DB.query(
       `SELECT * FROM serial_number WHERE id=?;`,
       [card_id]
@@ -62,6 +62,6 @@ export class CardUpdate extends DBClass {
       id,
     ]);
     let newCard = await CardFetch.getCardByUserCardId(id);
-    return newCard.card;
+    return newCard.userCard;
   }
 }
