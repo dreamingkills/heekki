@@ -1,7 +1,7 @@
 import { DB, DBClass } from "../../index";
 import { Profile } from "../../../structures/player/Profile";
 import { OkPacket } from "mysql";
-import { CardFetchSQL } from "../card/Fetch";
+import { CardFetch as CardFetchSQL } from "../card/CardFetch";
 import { UserCard } from "../../../structures/player/UserCard";
 
 export class PlayerModifySQL extends DBClass {

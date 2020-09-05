@@ -1,11 +1,11 @@
 import { DBClass, DB } from "../..";
 import { UserCard } from "../../../structures/player/UserCard";
 import * as error from "../../../structures/Error";
-import { CardFetchSQL as Fetch, CardFetchSQL } from "./Fetch";
+import { CardFetch as Fetch, CardFetch } from "./CardFetch";
 import { ImageData } from "../../../structures/card/ImageData";
 import { OkPacket } from "mysql";
 
-export class CardModifySQL extends DBClass {
+export class CardModify extends DBClass {
   public static async createNewUserCard(
     owner_id: string,
     card_id: number,
@@ -48,11 +48,20 @@ export class CardModifySQL extends DBClass {
     return query;
   }
 
-  public static async bulkForfeit(
-    user: string,
-    stars: string
-  ): Promise<OkPacket> {
-    let query = await DB.query(`UPDA`);
-    return query;
+  /**
+   * Changes the `owner_id` of a `user_card` to the value of `receiver`.
+   * @param receiver Discord ID of the user who the card is being transferred to.
+   * @param id `id` of the `user_card` which is being transferred.
+   */
+  public static async transferCardToUser(
+    receiver: string,
+    id: number
+  ): Promise<UserCard> {
+    let query = await DB.query(`UPDATE user_card SET owner_id=? WHERE id=?;`, [
+      receiver,
+      id,
+    ]);
+    let newCard = await CardFetch.getCardByUserCardId(id);
+    return newCard.card;
   }
 }

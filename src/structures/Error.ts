@@ -193,3 +193,15 @@ export class CardNotOrphanedError extends ClientError {
     super(`That card belongs to someone already.`);
   }
 }
+export class CardNotForSaleError extends ClientError {
+  name = "CardNotForSaleError";
+  constructor() {
+    super(`That card isn't for sale.`);
+  }
+}
+export class CardAlreadyForSaleError extends ClientError {
+  name = "CardAlreadyForSaleError";
+  constructor() {
+    super(`You've already listed that card for sale.`);
+  }
+}

@@ -166,7 +166,8 @@ CREATE TABLE user_card
     hearts          INT(11),
     card_id         INT(11),
     PRIMARY KEY (id),
-    CONSTRAINT Card FOREIGN KEY (card_id) REFERENCES card (id) ON DELETE CASCADE
+    CONSTRAINT Card FOREIGN KEY (card_id) REFERENCES card (id) ON DELETE CASCADE,
+    CONSTRAINT UC_UserCard UNIQUE (serial_number, card_id)
 );
 
 CREATE TABLE friend
@@ -197,3 +198,12 @@ CREATE TABLE user_badge
     CONSTRAINT UserBadge FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT BadgeOnUser FOREIGN KEY (badge_id) REFERENCES badge (id) ON DELETE CASCADE
 );
+
+CREATE TABLE marketplace
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    card_id         INT(11) NOT NULL,
+    price           INT(11) NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT MarketplaceCard FOREIGN KEY (card_id) REFERENCES user_card (id) ON DELETE CASCADE
+)

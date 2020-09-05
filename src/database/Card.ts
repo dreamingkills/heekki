@@ -3,10 +3,10 @@ import * as error from "../structures/Error";
 import canvas from "canvas";
 import jimp from "jimp";
 import { UserCard } from "../structures/player/UserCard";
-import { CardFetchSQL as Fetch, CardFetchSQL } from "./sql/card/Fetch";
+import { CardFetch as CardFetchSQL } from "./sql/card/CardFetch";
 import { ImageData } from "../structures/card/ImageData";
 import { Profile } from "../structures/player/Profile";
-import { CardModifySQL } from "./sql/card/Modify";
+import { CardModify as CardModifySQL } from "./sql/card/CardModify";
 import { PlayerModifySQL } from "./sql/player/Modify";
 
 export class CardService {

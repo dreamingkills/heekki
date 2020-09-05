@@ -4,7 +4,13 @@ import { ImageData } from "../../../structures/card/ImageData";
 import * as error from "../../../structures/Error";
 import { Card } from "../../../structures/card/Card";
 
-export class CardFetchSQL extends DBClass {
+export class CardFetch extends DBClass {
+  public static async getCardByUserCardId(
+    id: number
+  ): Promise<{ card: UserCard; imageData: ImageData }> {
+    let card = await this.getFullCardDataFromUserCard(id);
+    return card;
+  }
   public static async getCardsByPackId(id: number): Promise<Card[]> {
     let query = await DB.query(`SELECT * FROM card WHERE pack_id=?`, [id]);
     let cardIdList: Card[] = [];

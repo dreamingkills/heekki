@@ -2,8 +2,8 @@ import * as error from "../structures/Error";
 import { PlayerFetchSQL as PlayerFetch } from "./sql/player/Fetch";
 import { PlayerModifySQL as PlayerModify } from "./sql/player/Modify";
 import { ShopFetchSQL as ShopFetch } from "./sql/shop/Fetch";
-import { CardFetchSQL as CardFetch } from "./sql/card/Fetch";
-import { CardModifySQL as CardModify } from "./sql/card/Modify";
+import { CardFetch } from "./sql/card/CardFetch";
+import { CardModify } from "./sql/card/CardModify";
 
 import Chance from "chance";
 import { UserCard } from "../structures/player/UserCard";

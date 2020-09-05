@@ -9,9 +9,9 @@ import { UserCard } from "../structures/player/UserCard";
 import { FriendFetchSQL as FriendFetch } from "./sql/friend/Fetch";
 import { FriendModifySQL as FriendModify } from "./sql/friend/Modify";
 import Chance from "chance";
-import { CardFetchSQL } from "./sql/card/Fetch";
+import { CardFetch as CardFetchSQL } from "./sql/card/CardFetch";
 import { CardService } from "./Card";
-import { CardModifySQL } from "./sql/card/Modify";
+import { CardModify as CardModifySQL } from "./sql/card/CardModify";
 
 export class PlayerService {
   // Remove special characters from mention text (<@2395484958349234>)

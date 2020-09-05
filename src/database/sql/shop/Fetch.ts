@@ -1,5 +1,4 @@
 import { DB } from "../../index";
-import { UserCard } from "../../../structures/player/UserCard";
 import { DBClass } from "../../index";
 import * as error from "../../../structures/Error";
 import { ShopItem } from "../../../structures/shop/Pack";
