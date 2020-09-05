@@ -1,6 +1,6 @@
 import { DBClass, DB } from "../..";
 
-export class FriendFetchSQL extends DBClass {
+export class FriendFetch extends DBClass {
   public static async getFriendsByDiscordId(
     discord_id: string
   ): Promise<number[]> {

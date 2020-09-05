@@ -1,13 +1,13 @@
-import { PlayerService } from "./Player";
-import * as error from "../structures/Error";
+import { PlayerService } from "./PlayerService";
+import * as error from "../../structures/Error";
 import canvas from "canvas";
 import jimp from "jimp";
-import { UserCard } from "../structures/player/UserCard";
-import { CardFetch as CardFetchSQL } from "./sql/card/CardFetch";
-import { ImageData } from "../structures/card/ImageData";
-import { Profile } from "../structures/player/Profile";
-import { CardModify as CardModifySQL } from "./sql/card/CardModify";
-import { PlayerModifySQL } from "./sql/player/Modify";
+import { UserCard } from "../../structures/player/UserCard";
+import { CardFetch } from "../sql/card/CardFetch";
+import { ImageData } from "../../structures/card/ImageData";
+import { Profile } from "../../structures/player/Profile";
+import { CardUpdate } from "../sql/card/CardUpdate";
+import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 
 export class CardService {
   private static commafyNumber(num: number) {
@@ -32,7 +32,7 @@ export class CardService {
   ): Promise<{ card: UserCard; imageData: ImageData }> {
     let data = ref.split("#");
     let [abbr, sn] = [data[0], parseInt(data[1])];
-    let userCard = await CardFetchSQL.getFullCardDataFromReference(abbr, sn);
+    let userCard = await CardFetch.getFullCardDataFromReference(abbr, sn);
     return userCard;
   }
 
@@ -49,8 +49,8 @@ export class CardService {
     let userCard = await this.parseCardDetails(card);
     if (userCard.card.ownerId != user.discord_id)
       throw new error.NotYourCardError();
-    await CardModifySQL.addHeartsToCard(userCard.card, amount);
-    await PlayerModifySQL.removeHearts(user.discord_id, amount);
+    await CardUpdate.addHeartsToCard(userCard.card, amount);
+    await PlayerUpdate.removeHearts(user.discord_id, amount);
 
     return { card: userCard.card, user: user, before: userCard.card.hearts };
   }

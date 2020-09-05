@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed, EmbedFieldData } from "discord.js";
-import { ShopService } from "../../database/Shop";
+import { ShopService } from "../../database/service/ShopService";
 
 export class Command extends GameCommand {
   names: string[] = ["shop"];

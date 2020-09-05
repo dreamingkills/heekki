@@ -4,7 +4,7 @@ import { OkPacket } from "mysql";
 import { CardFetch as CardFetchSQL } from "../card/CardFetch";
 import { UserCard } from "../../../structures/player/UserCard";
 
-export class PlayerModifySQL extends DBClass {
+export class PlayerUpdate extends DBClass {
   public static async createNewProfile(discord_id: string): Promise<OkPacket> {
     let user = await DB.query(
       `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${

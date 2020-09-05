@@ -1,13 +1,13 @@
 import { MarketFetch } from "../sql/market/MarketFetch";
 import { UserCardService } from "./UserCardService";
 import { UserCard } from "../../structures/player/UserCard";
-import { CardService } from "../Card";
+import { CardService } from "./CardService";
 import * as error from "../../structures/Error";
-import { PlayerService } from "../Player";
-import { CardModify } from "../sql/card/CardModify";
+import { PlayerService } from "./PlayerService";
+import { CardUpdate } from "../sql/card/CardUpdate";
 import { MarketUpdate } from "../sql/market/MarketUpdate";
-import { PlayerFetchSQL } from "../sql/player/Fetch";
-import { PlayerModifySQL } from "../sql/player/Modify";
+import { PlayerFetch } from "../sql/player/PlayerFetch";
+import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { Profile } from "../../structures/player/Profile";
 
 export class MarketService {
@@ -68,7 +68,7 @@ export class MarketService {
     );
     if (!validateForSale.forSale) throw new error.CardNotForSaleError();
 
-    const buyerProfile = await PlayerFetchSQL.getProfileFromDiscordId(
+    const buyerProfile = await PlayerFetch.getProfileFromDiscordId(
       buyer,
       false
     );
@@ -78,21 +78,21 @@ export class MarketService {
     //Remove card listing from marketplace
     await MarketUpdate.removeCardFromMarketplace(card.card.userCardId);
 
-    const transfer = await CardModify.transferCardToUser(
+    const transfer = await CardUpdate.transferCardToUser(
       buyer,
       card.card.userCardId
     );
 
     /* Transfer coins from buyer to seller */
-    const sellerProfile = await PlayerFetchSQL.getProfileFromDiscordId(
+    const sellerProfile = await PlayerFetch.getProfileFromDiscordId(
       card.card.ownerId,
       true
     );
-    await PlayerModifySQL.removeCoins(
+    await PlayerUpdate.removeCoins(
       buyerProfile.discord_id,
       validateForSale.price!
     );
-    await PlayerModifySQL.addCoins(
+    await PlayerUpdate.addCoins(
       sellerProfile.discord_id,
       validateForSale.price!
     );

@@ -5,7 +5,7 @@ import { DBClass } from "../../index";
 import { Badge } from "../../../structures/player/Badge";
 import * as error from "../../../structures/Error";
 
-export class PlayerFetchSQL extends DBClass {
+export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
     let query = await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=${this.clean(discord_id)}`

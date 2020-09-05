@@ -1,13 +1,13 @@
-import * as error from "../structures/Error";
-import { PlayerFetchSQL as PlayerFetch } from "./sql/player/Fetch";
-import { PlayerModifySQL as PlayerModify } from "./sql/player/Modify";
-import { ShopFetchSQL as ShopFetch } from "./sql/shop/Fetch";
-import { CardFetch } from "./sql/card/CardFetch";
-import { CardModify } from "./sql/card/CardModify";
+import * as error from "../../structures/Error";
+import { PlayerFetch } from "../sql/player/PlayerFetch";
+import { PlayerUpdate } from "../sql/player/PlayerUpdate";
+import { ShopFetch } from "../sql/shop/ShopFetch";
+import { CardFetch } from "../sql/card/CardFetch";
+import { CardUpdate } from "../sql/card/CardUpdate";
 
 import Chance from "chance";
-import { UserCard } from "../structures/player/UserCard";
-import { ImageData } from "../structures/card/ImageData";
+import { UserCard } from "../../structures/player/UserCard";
+import { ImageData } from "../../structures/card/ImageData";
 
 export class ShopService {
   public static async rollPack(
@@ -34,13 +34,13 @@ export class ShopService {
       [70, 45, 30, 8, 3, 0.15]
     );
 
-    let newCard = await CardModify.createNewUserCard(
+    let newCard = await CardUpdate.createNewUserCard(
       user.discord_id,
       randomCard.id,
       starCount,
       0
     );
-    await PlayerModify.removeCoins(user.discord_id, shopItem.price);
+    await PlayerUpdate.removeCoins(user.discord_id, shopItem.price);
 
     return { userCard: newCard.card, imageData: newCard.imageData };
   }

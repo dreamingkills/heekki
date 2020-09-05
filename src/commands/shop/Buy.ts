@@ -1,7 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message, MessageEmbed, EmbedFieldData } from "discord.js";
-import { ShopService } from "../../database/Shop";
-import { CardService } from "../../database/Card";
+import { Message, MessageEmbed } from "discord.js";
+import { ShopService } from "../../database/service/ShopService";
+import { CardService } from "../../database/service/CardService";
 import moment from "moment";
 
 export class Command extends GameCommand {

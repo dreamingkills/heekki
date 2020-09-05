@@ -1,11 +1,11 @@
 import { DBClass, DB } from "../..";
 import { UserCard } from "../../../structures/player/UserCard";
 import * as error from "../../../structures/Error";
-import { CardFetch as Fetch, CardFetch } from "./CardFetch";
+import { CardFetch } from "./CardFetch";
 import { ImageData } from "../../../structures/card/ImageData";
 import { OkPacket } from "mysql";
 
-export class CardModify extends DBClass {
+export class CardUpdate extends DBClass {
   public static async createNewUserCard(
     owner_id: string,
     card_id: number,
@@ -21,7 +21,7 @@ export class CardModify extends DBClass {
       `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
       [serialNumber[0].serial_number + 1, owner_id, stars, hearts, card_id]
     );
-    let newUserCard = await Fetch.getFullCardDataFromUserCard(
+    let newUserCard = await CardFetch.getFullCardDataFromUserCard(
       insertQuery.insertId
     );
     await DB.query(

@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
-import { AdminService } from "../../database/Admin";
+import { AdminService } from "../../database/service/AdminService";
 
 export class Command extends GameCommand {
   names: string[] = ["createcard"];

@@ -1,5 +1,5 @@
-import * as error from "../structures/Error";
-import { PlayerModifySQL } from "./sql/player/Modify";
+import * as error from "../../structures/Error";
+import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { OkPacket } from "mysql";
 
 export class AdminService {
@@ -7,6 +7,6 @@ export class AdminService {
     discord_id: string,
     badge_id: number
   ): Promise<OkPacket> {
-    return await PlayerModifySQL.giveBadge(discord_id, badge_id);
+    return await PlayerUpdate.giveBadge(discord_id, badge_id);
   }
 }

@@ -3,7 +3,7 @@ import { DBClass } from "../../index";
 import * as error from "../../../structures/Error";
 import { ShopItem } from "../../../structures/shop/Pack";
 
-export class ShopFetchSQL extends DBClass {
+export class ShopFetch extends DBClass {
   public static async findShopItemById(id: number): Promise<ShopItem> {
     let query = await DB.query(`SELECT * FROM shop WHERE id=?;`, [id]);
     if (!query[0]) throw new error.InvalidPackError();

@@ -1,6 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { CardService } from "../../database/Card";
+import { CardService } from "../../database/service/CardService";
 
 export class Command extends GameCommand {
   names: string[] = ["upgrade"];

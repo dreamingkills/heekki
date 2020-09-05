@@ -1,6 +1,6 @@
 import { DBClass, DB } from "../..";
 
-export class Stats extends DBClass {
+export class StatsFetch extends DBClass {
   public static async getNumberOfCards(stars?: number): Promise<number> {
     let query;
     if (stars) {

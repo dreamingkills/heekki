@@ -1,7 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
-import { PlayerService } from "../../database/Player";
-import { CardService } from "../../database/Card";
+import { PlayerService } from "../../database/service/PlayerService";
+import { CardService } from "../../database/service/CardService";
 
 export class Command extends GameCommand {
   names: string[] = ["inventory", "inv"];

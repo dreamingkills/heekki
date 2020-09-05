@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
-import { Stats } from "../../database/sql/stats/Fetch";
+import { StatsFetch } from "../../database/sql/stats/StatsFetch";
 
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
@@ -9,7 +9,7 @@ export class Command extends BaseCommand {
   category: string = "misc";
 
   exec = async function (msg: Message) {
-    let stats = await Stats.getStats();
+    let stats = await StatsFetch.getStats();
 
     let embed = new MessageEmbed()
       .setAuthor(`HaSeul Statistics`)

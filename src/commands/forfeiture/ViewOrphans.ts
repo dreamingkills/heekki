@@ -1,15 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import {
-  Message,
-  MessageEmbed,
-  EmbedFieldData,
-  MessageReaction,
-  User,
-} from "discord.js";
-import { ShopService } from "../../database/Shop";
-import { CardService } from "../../database/Card";
-import moment from "moment";
-import { PlayerService } from "../../database/Player";
+import { Message, MessageEmbed } from "discord.js";
+import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends GameCommand {
   names: string[] = ["viewforfeited", "vff"];
