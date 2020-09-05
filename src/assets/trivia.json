@@ -1,5 +1,9 @@
 {
   "trivia": [
-    { "question": "", "answer": "", "reward": { "min": 69, "max": 420 } }
+    {
+      "question": "This is an example question. The answer is 42.",
+      "answer": "42",
+      "reward": { "min": 69, "max": 420 }
+    }
   ]
 }
