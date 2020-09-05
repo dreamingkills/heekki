@@ -206,4 +206,4 @@ CREATE TABLE marketplace
     price           INT(11) NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT MarketplaceCard FOREIGN KEY (card_id) REFERENCES user_card (id) ON DELETE CASCADE
-)
+);
