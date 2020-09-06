@@ -75,6 +75,7 @@ export class PlayerFetch extends DBClass {
       " ORDER BY user_card.stars DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
       (options?.page ? `OFFSET ${DB.connection.escape(options.page)}` : ``);
+    console.log(query);
     const cards = await DB.query(query + ";");
     let cardList: UserCard[] = [];
     let cardIterator = cards.forEach(

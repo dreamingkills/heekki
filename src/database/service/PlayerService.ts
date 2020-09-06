@@ -107,8 +107,11 @@ export class PlayerService {
     return transfer;
   }
 
-  public static async getOrphanedCards(): Promise<UserCard[]> {
-    let cardList = await PlayerFetch.getUserCardsByDiscordId("0");
+  public static async getOrphanedCards(page: number): Promise<UserCard[]> {
+    let cardList = await PlayerFetch.getUserCardsByDiscordId("0", {
+      page: page,
+      limit: 9,
+    });
     return cardList;
   }
 
