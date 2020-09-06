@@ -159,6 +159,26 @@
       "question": "Who is the developer of this bot?",
       "answer": ["rtfl"],
       "reward": { "min": 1, "max": 1 }
+    },
+    {
+      "question": "What location is HeeJin associated with in 1/3?",
+      "answer": ["france", "paris", "paris, france"],
+      "reward": { "min": 10, "max": 20 }
+    },
+    {
+      "question": "What location is HyunJin associated with in 1/3?",
+      "answer": ["tokyo", "japan", "tokyo, japan"],
+      "reward": { "min": 10, "max": 20 }
+    },
+    {
+      "question": "What location is HaSeul associated with in 1/3?",
+      "answer": ["iceland"],
+      "reward": { "min": 10, "max": 20 }
+    },
+    {
+      "question": "What location is ViVi associated with in 1/3",
+      "answer": ["hong kong"],
+      "reward": { "min": 10, "max": 20 }
     }
   ]
 }
