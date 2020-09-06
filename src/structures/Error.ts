@@ -109,7 +109,7 @@ export class NotEnoughHeartsError extends ClientError {
 export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
   constructor() {
-    super("Please enter a valid card reference (e.g. `DLHJ#32`)");
+    super("Please enter a valid card reference (e.g. `DLHJ#32`)!");
   }
 }
 export class InvalidCollectionError extends ClientError {
