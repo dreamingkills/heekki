@@ -28,7 +28,7 @@ export class Command extends GameCommand {
     }
     const embed = new MessageEmbed()
       .setAuthor(
-        `${msg.author.tag}'s inventory (page ${page}/${Math.ceil(
+        `Inventory | ${msg.author.tag} (page ${page}/${Math.ceil(
           cardCount / 10
         )})`
       )
