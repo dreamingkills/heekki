@@ -3,6 +3,7 @@ import config from "../../config.json";
 import glob from "glob";
 import { Message } from "discord.js";
 import { promisify } from "util";
+import { ClientError } from "../structures/Error";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
@@ -70,7 +71,9 @@ export class CommandManager {
       return;
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
-      return console.log(`${e.message}\n${e.stack}`);
+      if (!(e.prototype instanceof ClientError))
+        console.log(`${e.message}\n${e.stack}`);
+      return;
     }
   }
 }
