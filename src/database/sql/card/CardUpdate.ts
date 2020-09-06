@@ -30,6 +30,7 @@ export class CardUpdate extends DBClass {
     );
     return newUserCard;
   }
+
   public static async addHeartsToCard(
     card: UserCard,
     amount: number

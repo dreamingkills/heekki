@@ -22,14 +22,9 @@ export class MarketFetch extends DBClass {
     if (options?.priceMax)
       queryOptions.push(` price<${DB.connection.escape(options?.priceMax)}`);
 
-    const limit = (options?.page || 1) * 9;
-    const offset = (options?.page || 1) * 9 - 9;
     query += queryOptions.join(" AND") + " ORDER BY id DESC LIMIT ? OFFSET ?;";
 
-    let forSale = await DB.query(query, [
-      (options?.page || 1) * 9,
-      (options?.page || 1) * 9 - 9,
-    ]);
+    let forSale = await DB.query(query, [9, (options?.page || 1) * 9 - 9]);
     return forSale;
   }
 

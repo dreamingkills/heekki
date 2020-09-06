@@ -13,6 +13,7 @@ export class Command extends BaseCommand {
     let stats = await StatsFetch.getStats();
     const miscStats = await StatsService.getMiscStats();
 
+    const uptime = msg.client.uptime! / 1000 / 60;
     let embed = new MessageEmbed()
       .setAuthor(`HaSeul Statistics`)
       .addField(
@@ -28,6 +29,13 @@ export class Command extends BaseCommand {
       .addField(
         `Miscellaneous stats`,
         `triviaCorrect: **${miscStats.triviaCorrect}**\ntriviaWrong: **${miscStats.triviaWrong}**\nmarketSales: **${miscStats.marketSales}**\ntradesComplete: **${miscStats.tradesComplete}**`,
+        true
+      )
+      .addField(
+        `Bot stats`,
+        `Guilds cached: **${msg.client.guilds.cache.size}**\nUsers cached: **${
+          msg.client.users.cache.size
+        }**\nUptime in minutes: **${uptime.toFixed(2)}**`,
         true
       )
       .setColor("#40BD66");

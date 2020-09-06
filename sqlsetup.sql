@@ -193,7 +193,7 @@ CREATE TABLE badge
 CREATE TABLE user_badge
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
-    discord_id      VARCHAR(255) NOT NULL,
+    discord_id      VARCHAR(32) NOT NULL,
     badge_id        INT(11) NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT UserBadge FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,

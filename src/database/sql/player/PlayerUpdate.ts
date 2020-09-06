@@ -7,9 +7,7 @@ import { UserCard } from "../../../structures/player/UserCard";
 export class PlayerUpdate extends DBClass {
   public static async createNewProfile(discord_id: string): Promise<OkPacket> {
     let user = await DB.query(
-      `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${
-        999999 /*300*/
-      });`,
+      `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${300});`,
       [discord_id]
     );
     return user;
