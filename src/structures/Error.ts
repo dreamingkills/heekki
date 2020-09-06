@@ -272,9 +272,23 @@ export class TradeDoesNotExistError extends ClientError {
     );
   }
 }
-export class NotYourTradeError extends ClientError {
-  name = "NotYourTradeError";
+export class NotYourTradeToAcceptError extends ClientError {
+  name = "NotYourTradeToAcceptError";
   constructor() {
-    super(`That is not your trade to accept, reject, or cancel.`);
+    super(`That is not your trade to accept.`);
+  }
+}
+export class NotYourTradeToRejectError extends ClientError {
+  name = "NotYourTradeToRejectError";
+  constructor() {
+    super(`That is not your trade to reject or cancel.`);
+  }
+}
+export class CannotTradeForOrphanedCardError extends ClientError {
+  name = "CannotTradeForOrphanedCardError";
+  constructor() {
+    super(
+      `You can't trade for an orphaned card. Use \`!cf <card reference>\` instead.`
+    );
   }
 }

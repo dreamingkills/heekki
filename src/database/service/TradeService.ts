@@ -25,6 +25,8 @@ export class TradeService {
     perspective: "recipient" | "sender"
   ): Promise<boolean> {
     for (let i = 0; i < cards.length; i++) {
+      if (cards[i].ownerId === "0")
+        throw new error.CannotTradeForOrphanedCardError();
       if (perspective === "recipient" && cards[i].ownerId === sender)
         throw new error.CannotTradeWithYourselfError();
       if (cards[i].ownerId != idShouldBe) {
@@ -126,7 +128,8 @@ export class TradeService {
     const trades = await TradeFetch.getTradesByUniqueId(unique);
     if (trades.length == 0) throw new error.TradeDoesNotExistError();
 
-    if (sender !== trades[0].recipient) throw new error.NotYourTradeError();
+    if (sender !== trades[0].recipient)
+      throw new error.NotYourTradeToAcceptError();
 
     for (let trade of trades) {
       if (trade.senderCard !== 0) {
@@ -155,7 +158,7 @@ export class TradeService {
     if (trades.length == 0) throw new error.TradeDoesNotExistError();
 
     if (sender !== trades[0].sender && sender !== trades[0].recipient)
-      throw new error.NotYourTradeError();
+      throw new error.NotYourTradeToRejectError();
 
     await TradeUpdate.deleteTrade(unique);
     return true;
