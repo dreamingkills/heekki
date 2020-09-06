@@ -3,7 +3,7 @@
     {
       "question": "What is the shortest LOONA song, excluding intros?",
       "answer": ["one & only", "one and only"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Which ODD EYE CIRCLE song has an English version?",
@@ -18,12 +18,12 @@
     {
       "question": "Who is the oldest member of LOONA?",
       "answer": ["vivi"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Who is the youngest member of LOONA?",
       "answer": ["yeojin"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "What does \"yyxy\" stand for?",
@@ -33,42 +33,42 @@
     {
       "question": "Who is the \"slash\" in \"1/3\"?",
       "answer": ["yeojin"],
-      "reward": { "min": 8, "max": 30 }
+      "reward": { "min": 8, "max": 18 }
     },
     {
       "question": "Who is the leader of 1/3?",
       "answer": ["haseul"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Who is the leader of ODD EYE CIRCLE?",
       "answer": ["kim lip", "kimlip"],
-      "reward": { "min": 7, "max": 30 }
+      "reward": { "min": 7, "max": 17 }
     },
     {
       "question": "Who is the leader of yyxy?",
       "answer": ["yves"],
-      "reward": { "min": 7, "max": 30 }
+      "reward": { "min": 7, "max": 17 }
     },
     {
-      "question": "Out of \"Love Battery\", \"Fire\". \"Cherry Bomb\" and \"Full Moon\", which of these LOONA covers has a studio version?",
+      "question": "Out of \"Love Battery\", \"Fire\", \"Cherry Bomb\", and \"Full Moon\", which of these LOONA covers has a studio version?",
       "answer": ["love battery"],
-      "reward": { "min": 10, "max": 30 }
+      "reward": { "min": 10, "max": 20 }
     },
     {
       "question": "Which member has a scar under their eye?",
       "answer": ["jinsoul"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Which 1/3 song was remixed on Orbit 1.0?",
       "answer": ["love&live", "love & live", "love and live"],
-      "reward": { "min": 5, "max": 30 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "What is the English translation of the title of the \"Love & Live\" remix from Orbit 1.0?",
       "answer": ["i like it more now"],
-      "reward": { "min": 20, "max": 40 }
+      "reward": { "min": 20, "max": 30 }
     },
     {
       "question": "How many members are in LOONA?",
@@ -78,22 +78,22 @@
     {
       "question": "What is Olivia Hye's representative fruit?",
       "answer": ["blood plum", "bloodplum"],
-      "reward": { "min": 10, "max": 30 }
+      "reward": { "min": 10, "max": 20 }
     },
     {
       "question": "Which member trained for the least amount of time?",
       "answer": ["olivia hye", "hyejoo"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Which member trained for the longest amount of time?",
       "answer": ["hyunjin"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "True or False: yyxy members and Choerry are the only members with representative fruits.",
       "answer": ["true"],
-      "reward": { "min": 10, "max": 25 }
+      "reward": { "min": 10, "max": 20 }
     },
     {
       "question": "What is LOONA?",
@@ -103,27 +103,27 @@
     {
       "question": "Where was the music video for Let Me In filmed?",
       "answer": ["iceland"],
-      "reward": { "min": 10, "max": 25 }
+      "reward": { "min": 10, "max": 20 }
     },
     {
       "question": "What is the name of Chuu's OST?",
       "answer": ["spring flower"],
-      "reward": { "min": 5, "max": 10 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "What is the name of JinSoul's OST?",
       "answer": ["as time goes"],
-      "reward": { "min": 5, "max": 10 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "What is the name of the survival show HeeJin and HyunJin appeared on predebut?",
       "answer": ["mixnine", "mix nine", "mix9", "mix 9"],
-      "reward": { "min": 5, "max": 10 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Which member has been an MC on Fact iN Star?",
       "answer": ["yves"],
-      "reward": { "min": 5, "max": 10 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "Which music video does **not** have a 4K version?",
@@ -143,7 +143,7 @@
     {
       "question": "What are you supposed to burn, according to So What?",
       "answer": ["yourself"],
-      "reward": { "min": 5, "max": 20 }
+      "reward": { "min": 5, "max": 15 }
     },
     {
       "question": "What is the name of the hidden track on [#]?",
@@ -153,7 +153,7 @@
     {
       "question": "Approximately how large is the LOONA lightstick (in centimetres)?",
       "answer": ["43", "43cm", "43 cm"],
-      "reward": { "min": 15, "max": 30 }
+      "reward": { "min": 15, "max": 25 }
     },
     {
       "question": "Who is the developer of this bot?",
@@ -179,6 +179,244 @@
       "question": "What location is ViVi associated with in 1/3",
       "answer": ["hong kong"],
       "reward": { "min": 10, "max": 20 }
+    },
+    {
+      "question": "Which member is afraid of pigeons?",
+      "answer": ["heejin"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What song was covered by Kim Lip & Chuu?",
+      "answer": ["i see the light"],
+      "reward": { "min": 15, "max": 25 }
+    },
+    {
+      "question": "What song was covered by LOONA for their Halloween 2019 stage?",
+      "answer": ["full moon"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Name a member who is part of the \"halloween subunit\".",
+      "answer": [
+        "yves",
+        "kim lip",
+        "kimlip",
+        "heejin",
+        "choerry",
+        "olivia hye",
+        "hyejoo"
+      ],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HaSeul's representative animal?",
+      "answer": ["bird", "white bird", "dove"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HaSeul's representative color?",
+      "answer": ["green"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HaSeul's english name?",
+      "answer": ["jane"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Which member is scared of water?",
+      "answer": ["haseul"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is ViVi's representative animal?",
+      "answer": ["deer"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is ViVi's representative color?",
+      "answer": ["pastel rose"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Yves' representative color?",
+      "answer": ["burgundy"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Yves' representative animal?",
+      "answer": ["swan"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Yves' representative fruit?",
+      "answer": ["apple"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is JinSoul's representative color?",
+      "answer": ["blue"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is JinSoul's representative animal?",
+      "answer": ["blue betta", "siamese fighter"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Kim Lip's representative color?",
+      "answer": ["red"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Kim Lip's representative animal?",
+      "answer": ["owl"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Chuu's representative color?",
+      "answer": ["peach"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Chuu's representative animal?",
+      "answer": ["penguin"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Chuu's representative fruit?",
+      "answer": ["strawberry"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HeeJin's representative color?",
+      "answer": ["pink", "bright pink"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HeeJin's representative animal?",
+      "answer": ["rabbit", "bunny"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HeeJin's English name?",
+      "answer": ["zoe"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Which member is allergic to fur?",
+      "answer": ["heejin"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HyunJin's representative animal?",
+      "answer": ["cat"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is HyunJin's representative color?",
+      "answer": ["yellow"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Go Won's representative color?",
+      "answer": ["eden green"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Go Won's representative animal?",
+      "answer": ["butterfly"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Go Won's representative fruit?",
+      "answer": ["pineapple"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is the name of Go Won's dog?",
+      "answer": ["bbomi"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Choerry's representative color?",
+      "answer": ["purple"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Choerry's representative animal?",
+      "answer": ["fruit bat"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "True or False: Choerry does not like cherries.",
+      "answer": ["true"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "True or False: Choerry prefers being called by her real name.",
+      "answer": ["true"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Which member enjoys collecting pens?",
+      "answer": ["choerry"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Choerry's favorite color?",
+      "answer": ["pink"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Olivia Hye's representative animal?",
+      "answer": ["wolf"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is Olivia Hye's representative color?",
+      "answer": ["silver", "gray", "black", "white"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Which member is nicknamed \"Boss Baby\"?",
+      "answer": ["olivia hye", "hyejoo"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "True or False: Olivia Hye prefers being called by her real name.",
+      "answer": ["true"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "True or False: Olivia Hye dislikes bubble tea.",
+      "answer": ["true"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is YeoJin's representative color?",
+      "answer": ["orange"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is YeoJin's representative animal?",
+      "answer": ["frog"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is YeoJin's English name?",
+      "answer": ["runa"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Who is the shortest member?",
+      "answer": ["yeojin"],
+      "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "Who is the tallest member?",
+      "answer": ["yves"],
+      "reward": { "min": 5, "max": 15 }
     }
   ]
 }
