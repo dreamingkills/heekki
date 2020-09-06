@@ -221,3 +221,14 @@ CREATE TABLE trade_request
     CONSTRAINT TradeSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT TradeRecipient FOREIGN KEY (recipient_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
 );
+
+CREATE TABLE stats
+(
+    statistic_name  VARCHAR(255) NOT NULL,
+    statistic_count INT(11) DEFAULT 0
+);
+
+INSERT INTO stats (statistic_name) VALUES ("trivia_correct");
+INSERT INTO stats (statistic_name) VALUES ("trivia_wrong");
+INSERT INTO stats (statistic_name) VALUES ("trades_complete");
+INSERT INTO stats (statistic_name) VALUES ("market_sales");

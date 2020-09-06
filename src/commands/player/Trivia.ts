@@ -3,6 +3,7 @@ import { Message, TextChannel } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import trivia from "../../assets/trivia.json";
 import Chance from "chance";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends GameCommand {
   names: string[] = ["trivia"];
@@ -16,7 +17,7 @@ export class Command extends GameCommand {
     const channel = msg.channel as TextChannel;
 
     const triviaMessage = await channel.send(
-      `:information_source: **Trivia Time!**\n${triviaSelect.question}`
+      `:information_source: **Trivia Time!** ${msg.author}\n${triviaSelect.question}`
     );
 
     const profit = chance.integer({
@@ -38,12 +39,15 @@ export class Command extends GameCommand {
         );
         PlayerService.addCoinsToUserByDiscordId(msg.author.id, profit);
 
+        StatsService.incrementStat("trivia_correct");
         return collect.stop("correct");
       } else m.react("741454361007357993");
     });
     collect.on("end", async (collected, reason) => {
       if (reason != "correct") {
         msg.react("741454361007357993");
+
+        StatsService.incrementStat("trivia_wrong");
         triviaMessage.edit(
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );

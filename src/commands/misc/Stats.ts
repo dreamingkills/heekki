@@ -1,6 +1,7 @@
 import { Message, MessageEmbed } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
 import { StatsFetch } from "../../database/sql/stats/StatsFetch";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
@@ -10,6 +11,7 @@ export class Command extends BaseCommand {
 
   exec = async function (msg: Message) {
     let stats = await StatsFetch.getStats();
+    const miscStats = await StatsService.getMiscStats();
 
     let embed = new MessageEmbed()
       .setAuthor(`HaSeul Statistics`)
@@ -21,6 +23,11 @@ export class Command extends BaseCommand {
       .addField(
         `Profile stats`,
         `Total profiles: **${stats.totalProfiles}**\nRelationship count: **${stats.totalRelationships}**\nRichest user: <@${stats.richestUser.id}> (**${stats.richestUser.coins}** coins)\nTop collector: <@${stats.topCollector.id}> (**${stats.topCollector.cards}** cards)`,
+        true
+      )
+      .addField(
+        `Miscellaneous stats`,
+        `triviaCorrect: **${miscStats.triviaCorrect}**\ntriviaWrong: **${miscStats.triviaWrong}**\nmarketSales: **${miscStats.marketSales}**\ntradesComplete: **${miscStats.tradesComplete}**`,
         true
       )
       .setColor("#40BD66");

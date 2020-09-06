@@ -102,4 +102,19 @@ export class StatsFetch extends DBClass {
       totalOrphaned,
     };
   }
+
+  public static async getMiscStats(): Promise<{
+    triviaCorrect: number;
+    triviaWrong: number;
+    tradesComplete: number;
+    marketSales: number;
+  }> {
+    const query = await DB.query(`SELECT * FROM stats;`);
+    return {
+      triviaCorrect: query[0].statistic_count,
+      triviaWrong: query[1].statistic_count,
+      tradesComplete: query[2].statistic_count,
+      marketSales: query[3].statistic_count,
+    };
+  }
 }

@@ -1,6 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { MarketService } from "../../database/service/MarketService";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends GameCommand {
   names: string[] = ["buycard", "mpb"];
@@ -14,6 +15,7 @@ export class Command extends GameCommand {
       serial: parseInt(this.prm[0].split("#")[1]),
     });
 
+    await StatsService.incrementStat("market_sales");
     await msg.channel.send(
       `:white_check_mark: Successfully purchased **${buy.card.abbreviation}#${
         buy.card.serialNumber
