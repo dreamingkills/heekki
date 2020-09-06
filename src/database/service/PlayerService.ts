@@ -176,6 +176,23 @@ export class PlayerService {
     };
   }
 
+  public static async claimDaily(
+    discord_id: string
+  ): Promise<{ added: number; total: number; user: Profile }> {
+    const dailyClaimer = await this.getProfileByDiscordId(discord_id, false);
+    const last = await this.getLastDailyByDiscordId(dailyClaimer.discord_id);
+
+    let now = Date.now();
+    if (now < last + 86400000)
+      throw new error.DailyCooldownError(last + 86400000, now);
+
+    Promise.all([
+      await this.addCoinsToUserByDiscordId(dailyClaimer.discord_id, 750),
+      await this.setLastDailyByDiscordId(dailyClaimer.discord_id, now),
+    ]);
+    return { added: 750, total: dailyClaimer.coins + 750, user: dailyClaimer };
+  }
+
   public static async setLastHeartSendByDiscordId(
     discord_id: string,
     time: number
@@ -210,6 +227,20 @@ export class PlayerService {
   ): Promise<number> {
     await PlayerUpdate.addHearts(discord_id, amount);
     return amount;
+  }
+
+  public static async setLastDailyByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<number> {
+    await PlayerUpdate.setDailyTimestamp(discord_id, time);
+    return time;
+  }
+
+  public static async getLastDailyByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastDailyByDiscordId(discord_id);
   }
 
   public static async removeHeartsFromUserByDiscordId(

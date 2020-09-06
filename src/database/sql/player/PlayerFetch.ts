@@ -103,6 +103,16 @@ export class PlayerFetch extends DBClass {
     return cardList;
   }
 
+  public static async getLastDailyByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    let query = await DB.query(
+      `SELECT daily_last FROM user_profile WHERE discord_id=?;`,
+      [discord_id]
+    );
+    return query[0].daily_last;
+  }
+
   public static async getLastHeartSendByDiscordId(
     discord_id: string
   ): Promise<number> {

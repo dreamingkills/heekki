@@ -125,4 +125,13 @@ export class PlayerUpdate extends DBClass {
     );
     return query;
   }
+  public static async setDailyTimestamp(
+    discord_id: string,
+    time: number
+  ): Promise<OkPacket> {
+    return await DB.query(
+      `UPDATE user_profile SET daily_last=? WHERE discord_id=?;`,
+      [time, discord_id]
+    );
+  }
 }

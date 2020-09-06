@@ -292,3 +292,14 @@ export class CannotTradeForOrphanedCardError extends ClientError {
     );
   }
 }
+export class DailyCooldownError extends ClientError {
+  name = "DailyCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `You must wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before claiming your daily reward again.`
+    );
+  }
+}

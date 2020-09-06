@@ -154,6 +154,11 @@
       "question": "Approximately how large is the LOONA lightstick (in centimetres)?",
       "answer": ["43", "43cm", "43 cm"],
       "reward": { "min": 15, "max": 40 }
+    },
+    {
+      "question": "Who is the developer of this bot?",
+      "answer": ["rtfl"],
+      "reward": { "min": 1, "max": 1 }
     }
   ]
 }
