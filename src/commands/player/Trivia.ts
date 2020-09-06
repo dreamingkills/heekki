@@ -31,14 +31,13 @@ export class Command extends GameCommand {
       }
     );
     collect.on("collect", async (m: Message) => {
-      if (m.content.toLowerCase() === triviaSelect.answer) {
+      if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
         msg.react("✅");
         triviaMessage.edit(
           `:tada: **Correct!**\nYou were rewarded <:coin:745447920072917093> **${profit}**.`
         );
         PlayerService.addCoinsToUserByDiscordId(msg.author.id, profit);
 
-        m.delete();
         return collect.stop("correct");
       } else m.react("741454361007357993");
     });
@@ -48,9 +47,8 @@ export class Command extends GameCommand {
         triviaMessage.edit(
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
-
-        return channel.bulkDelete(collected);
       }
+      channel.bulkDelete(collected);
     });
 
     return;

@@ -226,3 +226,55 @@ export class MissionCooldownError extends ClientError {
     );
   }
 }
+export class NotYourCardInTradeError extends ClientError {
+  name = "NotYourCardInTradeError";
+  constructor() {
+    super(
+      `One or more of the cards you specified on your side of the trade do not belong to you.`
+    );
+  }
+}
+export class InconsistentCardOwnerOnRightSideOfTradeError extends ClientError {
+  name = "InconsistentCardOwnerOnRightSideOfTradeError";
+  constructor() {
+    super(
+      `The cards you specified on the right side of the trade do not all belong to the same person.`
+    );
+  }
+}
+export class CannotTradeWithYourselfError extends ClientError {
+  name = "CannotTradeWithYourselfError";
+  constructor() {
+    super(`You can't trade with yourself!`);
+  }
+}
+export class LeftSideCardIsOnMarketplaceError extends ClientError {
+  name = "LeftSideCardIsOnMarketplaceError";
+  constructor() {
+    super(
+      `One or more of the cards you specified the left side of your trade are currently on the marketplace and cannot be traded.`
+    );
+  }
+}
+export class RightSideCardIsOnMarketplaceError extends ClientError {
+  name = "RightSideCardIsOnMarketplaceError";
+  constructor() {
+    super(
+      `One or more of the cards you specified on the right side of your trade are currently on the marketplace and cannot be traded.`
+    );
+  }
+}
+export class TradeDoesNotExistError extends ClientError {
+  name = "TradeDoesNotExistError";
+  constructor() {
+    super(
+      "That trade does not exist. It may already have been accepted.\nPlease verify that you entered the ID correctly."
+    );
+  }
+}
+export class NotYourTradeError extends ClientError {
+  name = "NotYourTradeError";
+  constructor() {
+    super(`That is not your trade to accept, reject, or cancel.`);
+  }
+}

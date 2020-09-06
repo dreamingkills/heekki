@@ -208,3 +208,16 @@ CREATE TABLE marketplace
     PRIMARY KEY(id),
     CONSTRAINT MarketplaceCard FOREIGN KEY (card_id) REFERENCES user_card (id) ON DELETE CASCADE
 );
+
+CREATE TABLE trade_request
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    unique_id       VARCHAR(255) NOT NULL,
+    sender_id       VARCHAR(32) NOT NULL,
+    recipient_id    VARCHAR(32) NOT NULL,
+    sender_card     INT(11),
+    recipient_card  INT(11),
+    PRIMARY KEY(id),
+    CONSTRAINT TradeSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT TradeRecipient FOREIGN KEY (recipient_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);

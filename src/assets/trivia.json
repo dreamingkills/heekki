@@ -1,9 +1,84 @@
 {
   "trivia": [
     {
-      "question": "This is an example question. The answer is 42.",
-      "answer": "42",
-      "reward": { "min": 69, "max": 420 }
+      "question": "What is the shortest LOONA song, excluding intros?",
+      "answer": ["one & only", "one and only"],
+      "reward": { "min": 10, "max": 60 }
+    },
+    {
+      "question": "Which ODD EYE CIRCLE song has an English version?",
+      "answer": ["loonatic"],
+      "reward": { "min": 5, "max": 50 }
+    },
+    {
+      "question": "How many songs are on YeoJin's solo album?",
+      "answer": ["3", "three"],
+      "reward": { "min": 5, "max": 50 }
+    },
+    {
+      "question": "Who is the oldest member of LOONA?",
+      "answer": ["vivi"],
+      "reward": { "min": 10, "max": 60 }
+    },
+    {
+      "question": "Who is the youngest member of LOONA?",
+      "answer": ["yeojin"],
+      "reward": { "min": 10, "max": 60 }
+    },
+    {
+      "question": "What does \"yyxy\" stand for?",
+      "answer": ["youth youth by young"],
+      "reward": { "min": 10, "max": 50 }
+    },
+    {
+      "question": "Who is the \"slash\" in \"1/3\"?",
+      "answer": ["yeojin"],
+      "reward": { "min": 15, "max": 75 }
+    },
+    {
+      "question": "Who is the leader of 1/3?",
+      "answer": ["haseul"],
+      "reward": { "min": 15, "max": 75 }
+    },
+    {
+      "question": "Who is the leader of ODD EYE CIRCLE?",
+      "answer": ["kim lip"],
+      "reward": { "min": 15, "max": 75 }
+    },
+    {
+      "question": "Who is the leader of yyxy?",
+      "answer": ["yves"],
+      "reward": { "min": 15, "max": 75 }
+    },
+    {
+      "question": "Out of \"Love Battery\", \"Fire\". \"Cherry Bomb\" and \"Full Moon\", which of these LOONA covers has a studio version?",
+      "answer": ["love battery"],
+      "reward": { "min": 50, "max": 125 }
+    },
+    {
+      "question": "Which member has a scar under their eye?",
+      "answer": ["jinsoul"],
+      "reward": { "min": 25, "max": 100 }
+    },
+    {
+      "question": "Which 1/3 song was remixed on Orbit 1.0?",
+      "answer": ["love&live", "love & live", "love and live"],
+      "reward": { "min": 50, "max": 125 }
+    },
+    {
+      "question": "What is the English translation of the title of the \"Love & Live\" remix from Orbit 1.0?",
+      "answer": ["i like it more now"],
+      "reward": { "min": 75, "max": 150 }
+    },
+    {
+      "question": "How many members are in LOONA?",
+      "answer": ["12", "twelve"],
+      "reward": { "min": 1, "max": 1 }
+    },
+    {
+      "question": "What is Olivia Hye's representative fruit?",
+      "answer": ["blood plum"],
+      "reward": { "min": 50, "max": 100 }
     }
   ]
 }
