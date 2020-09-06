@@ -24,9 +24,9 @@ export class Command extends GameCommand {
     let embed = new MessageEmbed()
       .setAuthor(`You rolled the ${userCard.title} pack and got...`)
       .setDescription(
-        `**${userCard.member}** ${"⭐".repeat(userCard.stars)}\n*"${
-          userCard.blurb
-        }"*`
+        `**${userCard.member}** ${"⭐".repeat(userCard.stars)}${
+          userCard.blurb !== "" ? `\n*"${userCard.blurb}"*` : ``
+        }`
       )
       .setColor("#40BD66")
       .attachFiles([{ name: "card.png", attachment: cardImage.image }])
