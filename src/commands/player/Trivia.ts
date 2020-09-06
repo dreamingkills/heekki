@@ -34,7 +34,7 @@ export class Command extends GameCommand {
     collect.on("collect", async (m: Message) => {
       if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
         triviaMessage.edit(
-          `:tada: **Correct!**\nYou were rewarded <:coin:745447920072917093> **${profit}**.`
+          `:tada: **Correct!**\nYou were awarded <:coin:745447920072917093> **${profit}**.`
         );
         msg.react("✅");
         StatsService.incrementStat("trivia_correct");
