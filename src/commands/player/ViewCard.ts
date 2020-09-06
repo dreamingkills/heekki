@@ -20,7 +20,7 @@ export class Command extends GameCommand {
           card.userCard.ownerId == "0"
             ? "No-one!"
             : `<@${card.userCard.ownerId}>`
-        }\n*"${card.userCard.blurb}"*`
+        }\n${card.userCard.blurb != "" ? `*"${card.userCard.blurb}"*` : ``}`
       )
       .setColor("#40BD66")
       .setFooter(`Card designed by ${card.userCard.credit}`);
