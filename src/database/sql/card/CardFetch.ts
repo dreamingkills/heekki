@@ -116,7 +116,7 @@ export class CardFetch extends DBClass {
     let memberText = await DB.query(`SELECT * FROM member_text WHERE id=?;`, [
       imageDataQuery[0].member_text_id,
     ]);
-    let serialText = await DB.query(`SELECT * FROM serial_Text WHERE id=?;`, [
+    let serialText = await DB.query(`SELECT * FROM serial_text WHERE id=?;`, [
       imageDataQuery[0].serial_text_id,
     ]);
     let levelText = await DB.query(`SELECT * FROM level_text WHERE id=?;`, [
