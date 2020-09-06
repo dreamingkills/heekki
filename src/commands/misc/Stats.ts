@@ -2,6 +2,7 @@ import { Message, MessageEmbed } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
 import { StatsFetch } from "../../database/sql/stats/StatsFetch";
 import { StatsService } from "../../database/service/StatsService";
+import version from "../../version.json";
 
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
@@ -38,7 +39,8 @@ export class Command extends BaseCommand {
         }**\nUptime in minutes: **${uptime.toFixed(2)}**`,
         true
       )
-      .setColor("#40BD66");
+      .setColor("#40BD66")
+      .setFooter(`Bot version: ${version.version}`);
     await msg.channel.send(embed);
     return;
   };
