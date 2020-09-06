@@ -5,6 +5,7 @@ export class UserCard {
   ownerId: string;
   stars: number;
   hearts: number;
+  isFavorite: boolean;
   //Card
   blurb: string;
   member: string;
@@ -22,6 +23,7 @@ export class UserCard {
     serial_number: number;
     stars: number;
     hearts: number;
+    is_favorite: boolean;
 
     blurb: string;
     member: string;
@@ -38,6 +40,7 @@ export class UserCard {
     this.ownerId = data.owner_id;
     this.stars = data.stars;
     this.hearts = data.hearts;
+    this.isFavorite = data.is_favorite;
 
     this.blurb = data.blurb;
     this.member = data.member;

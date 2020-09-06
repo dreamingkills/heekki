@@ -108,6 +108,7 @@ export class StatsFetch extends DBClass {
     triviaWrong: number;
     tradesComplete: number;
     marketSales: number;
+    missionsComplete: number;
   }> {
     const query = await DB.query(`SELECT * FROM stats;`);
     return {
@@ -115,6 +116,7 @@ export class StatsFetch extends DBClass {
       triviaWrong: query[1].statistic_count,
       tradesComplete: query[2].statistic_count,
       marketSales: query[3].statistic_count,
+      missionsComplete: query[4].statistic_count,
     };
   }
 }

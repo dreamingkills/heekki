@@ -303,3 +303,33 @@ export class DailyCooldownError extends ClientError {
     );
   }
 }
+export class FavoriteCardError extends ClientError {
+  name = "FavoriteCardError";
+  constructor() {
+    super(
+      `That card is favorited!\nUse \`!favorite <card reference>\` to unfavorite.`
+    );
+  }
+}
+export class FavoriteCardOnLeftSideOfTradeError extends ClientError {
+  name = "FavoriteCardOnLeftSideOfTradeError";
+  constructor() {
+    super(
+      `One of the cards on the left side of your trade is favorited!\nUse \`!favorite <card reference>\` to unfavorite.`
+    );
+  }
+}
+export class FavoriteCardOnRightSideOfTradeError extends ClientError {
+  name = "FavoriteCardOnRightSideOfTradeError";
+  constructor() {
+    super(`One of the cards on the right side of your trade is favorited!`);
+  }
+}
+export class CardOnMarketplaceError extends ClientError {
+  name = "CardOnMarketplaceError";
+  constructor() {
+    super(
+      `That card is currently on the Marketplace.\nTo unlist it, use \`!unlist <card reference>\`.`
+    );
+  }
+}

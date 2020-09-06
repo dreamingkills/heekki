@@ -1,6 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends GameCommand {
   names: string[] = ["mission"];
@@ -14,6 +15,7 @@ export class Command extends GameCommand {
       serial: parseInt(this.prm[0].split("#")[1]),
     });
 
+    StatsService.incrementStat("missions_complete");
     await msg.channel.send(
       (mission.lucky ? `:star: Your card has gained a star!\n` : ``) +
         mission.result

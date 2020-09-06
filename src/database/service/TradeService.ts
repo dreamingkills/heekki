@@ -42,6 +42,11 @@ export class TradeService {
           throw new error.RightSideCardIsOnMarketplaceError();
         throw new error.LeftSideCardIsOnMarketplaceError();
       }
+      if (cards[i].isFavorite) {
+        if (perspective === "recipient")
+          throw new error.FavoriteCardOnRightSideOfTradeError();
+        throw new error.FavoriteCardOnLeftSideOfTradeError();
+      }
     }
     return true;
   }

@@ -166,6 +166,7 @@ CREATE TABLE user_card
     stars           INT(11),
     hearts          INT(11),
     card_id         INT(11),
+    is_favorite     BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (id),
     CONSTRAINT Card FOREIGN KEY (card_id) REFERENCES card (id) ON DELETE CASCADE,
     CONSTRAINT UC_UserCard UNIQUE (serial_number, card_id)
@@ -232,3 +233,4 @@ INSERT INTO stats (statistic_name) VALUES ("trivia_correct");
 INSERT INTO stats (statistic_name) VALUES ("trivia_wrong");
 INSERT INTO stats (statistic_name) VALUES ("trades_complete");
 INSERT INTO stats (statistic_name) VALUES ("market_sales");
+INSERT INTO stats (statistic_name) VALUES ("missions_complete");

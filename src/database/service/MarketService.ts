@@ -127,7 +127,7 @@ export class MarketService {
       .userCard;
     if (!card) throw new error.InvalidUserCardError();
     if (card.ownerId != seller) throw new error.NotYourCardError();
-    if (isNaN(price)) throw new error.NotANumberError();
+    if (card.isFavorite) throw new error.FavoriteCardError();
 
     const validateForSale = await this.cardIsOnMarketplace(card.userCardId);
     if (validateForSale.forSale) throw new error.CardAlreadyForSaleError();

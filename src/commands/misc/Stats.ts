@@ -29,7 +29,7 @@ export class Command extends BaseCommand {
       )
       .addField(
         `Miscellaneous stats`,
-        `triviaCorrect: **${miscStats.triviaCorrect}**\ntriviaWrong: **${miscStats.triviaWrong}**\nmarketSales: **${miscStats.marketSales}**\ntradesComplete: **${miscStats.tradesComplete}**`,
+        `triviaCorrect: **${miscStats.triviaCorrect}**\ntriviaWrong: **${miscStats.triviaWrong}**\nmarketSales: **${miscStats.marketSales}**\ntradesComplete: **${miscStats.tradesComplete}**\nmissionsComplete: **${miscStats.missionsComplete}**`,
         true
       )
       .addField(

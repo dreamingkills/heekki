@@ -4,6 +4,7 @@ import { ImageData } from "../../structures/card/ImageData";
 import { CardUpdate } from "../sql/card/CardUpdate";
 import { PlayerService } from "./PlayerService";
 import * as error from "../../structures/Error";
+import { CardService } from "./CardService";
 
 export class UserCardService {
   public static async getCardByUserCardId(
@@ -39,6 +40,8 @@ export class UserCardService {
     card: UserCard
   ): Promise<UserCard> {
     if (user != card.ownerId) throw new error.NotYourCardError();
+    if (card.isFavorite) throw new error.FavoriteCardError();
+
     await CardUpdate.forfeitCard(card);
     return card;
   }
@@ -53,6 +56,7 @@ export class UserCardService {
     });
     let numberForfeited = 0;
     for (let card of cardsToForfeit) {
+      if (card.isFavorite) continue;
       await UserCardService.forfeitCard(owner.discord_id, card);
       numberForfeited++;
     }
@@ -61,5 +65,9 @@ export class UserCardService {
 
   public static async incrementCardStars(card_id: number): Promise<UserCard> {
     return await CardUpdate.incrementCardStars(card_id);
+  }
+
+  public static async setCardFavorite(card_id: number): Promise<UserCard> {
+    return await CardUpdate.toggleCardAsFavorite(card_id);
   }
 }

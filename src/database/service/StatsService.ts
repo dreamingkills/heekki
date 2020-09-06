@@ -3,7 +3,12 @@ import { StatsFetch } from "../sql/stats/StatsFetch";
 
 export class StatsService {
   public static async incrementStat(
-    stat: "trivia_correct" | "trivia_wrong" | "trades_complete" | "market_sales"
+    stat:
+      | "trivia_correct"
+      | "trivia_wrong"
+      | "trades_complete"
+      | "market_sales"
+      | "missions_complete"
   ): Promise<boolean> {
     return await StatsUpdate.incrementStat(stat);
   }
@@ -13,6 +18,7 @@ export class StatsService {
     triviaWrong: number;
     tradesComplete: number;
     marketSales: number;
+    missionsComplete: number;
   }> {
     return await StatsFetch.getMiscStats();
   }

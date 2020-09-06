@@ -8,6 +8,7 @@ import { CardService } from "./CardService";
 import { Badge } from "../../structures/player/Badge";
 import { UserCardService } from "./UserCardService";
 import missions from "../../assets/missions.json";
+import { MarketService } from "./MarketService";
 
 export class PlayerService {
   public static async createNewUser(discord_id: string): Promise<Profile> {
@@ -99,6 +100,7 @@ export class PlayerService {
     const card = (await CardService.getCardDataFromReference(reference))
       .userCard;
     if (gifter.discord_id != card.ownerId) throw new error.NotYourCardError();
+    if (card.isFavorite) throw new error.FavoriteCardError();
 
     const transfer = await PlayerUpdate.transferCard(
       receiver.discord_id,
@@ -271,5 +273,22 @@ export class PlayerService {
     discord_id: string
   ): Promise<number> {
     return await PlayerFetch.getCardCountByDiscordId(discord_id);
+  }
+
+  public static async toggleFavorite(
+    reference: {
+      abbreviation: string;
+      serial: number;
+    },
+    sender: string
+  ): Promise<UserCard> {
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
+
+    if (card.ownerId !== sender) throw new error.NotYourCardError();
+    if ((await MarketService.cardIsOnMarketplace(card.userCardId)).forSale)
+      throw new error.CardOnMarketplaceError();
+
+    return await UserCardService.setCardFavorite(card.userCardId);
   }
 }

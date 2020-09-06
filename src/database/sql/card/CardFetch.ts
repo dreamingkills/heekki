@@ -46,6 +46,7 @@ export class CardFetch extends DBClass {
         user_card.owner_id,
         user_card.stars,
         user_card.hearts,
+        user_card.is_favorite,
         pack.title,
         pack.image_data_id
       FROM
@@ -83,6 +84,7 @@ export class CardFetch extends DBClass {
         user_card.owner_id,
         user_card.stars,
         user_card.hearts,
+        user_card.is_favorite,
         pack.title,
         pack.image_data_id
       FROM

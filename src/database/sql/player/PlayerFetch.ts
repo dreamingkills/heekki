@@ -51,6 +51,7 @@ export class PlayerFetch extends DBClass {
                     user_card.owner_id,
                     user_card.stars,
                     user_card.hearts,
+                    user_card.is_favorite,
                     pack.title,
                     pack.image_data_id
                   FROM
@@ -72,7 +73,7 @@ export class PlayerFetch extends DBClass {
 
     query +=
       queryOptions.join(" AND") +
-      " ORDER BY user_card.stars DESC" +
+      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
       (options?.page && options.limit
         ? ` OFFSET ${DB.connection.escape(
@@ -89,6 +90,7 @@ export class PlayerFetch extends DBClass {
         credit: string;
         abbreviation: string;
         rarity: number;
+        is_favorite: boolean;
         image_url: string;
         serial_number: number;
         owner_id: string;

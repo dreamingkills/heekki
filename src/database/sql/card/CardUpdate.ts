@@ -74,4 +74,11 @@ export class CardUpdate extends DBClass {
     let newCard = await CardFetch.getCardByUserCardId(card_id);
     return newCard.userCard;
   }
+
+  public static async toggleCardAsFavorite(card_id: number): Promise<UserCard> {
+    let query = await DB.query(
+      `UPDATE user_card SET is_favorite=1-is_favorite WHERE id=${card_id};`
+    );
+    return (await CardFetch.getFullCardDataFromUserCard(card_id)).userCard;
+  }
 }
