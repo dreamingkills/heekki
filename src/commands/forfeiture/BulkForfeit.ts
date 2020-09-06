@@ -1,7 +1,5 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
-import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends GameCommand {

@@ -1,5 +1,5 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message, MessageEmbed } from "discord.js";
+import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { ProfileEmbed } from "../../helpers/embed/ProfileEmbed";
 

@@ -1,9 +1,7 @@
 import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { TradeService } from "../../database/service/TradeService";
-import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
-import { UserCard } from "../../structures/player/UserCard";
 
 export class Command extends GameCommand {
   names: string[] = ["showtrade", "st"];
