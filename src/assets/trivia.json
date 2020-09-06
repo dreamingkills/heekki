@@ -42,7 +42,7 @@
     },
     {
       "question": "Who is the leader of ODD EYE CIRCLE?",
-      "answer": ["kim lip"],
+      "answer": ["kim lip", "kimlip"],
       "reward": { "min": 7, "max": 30 }
     },
     {
@@ -77,7 +77,7 @@
     },
     {
       "question": "What is Olivia Hye's representative fruit?",
-      "answer": ["blood plum"],
+      "answer": ["blood plum", "bloodplum"],
       "reward": { "min": 10, "max": 30 }
     },
     {
