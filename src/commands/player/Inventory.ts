@@ -10,7 +10,7 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    const page = this.prm[0] ? parseInt(this.prm[0]) : 1;
+    const page = !isNaN(parseInt(this.prm[0])) ? parseInt(this.prm[0]) : 1;
     const user = await PlayerService.getProfileByDiscordId(msg.author.id, true);
     const cards = await PlayerService.getCardsByUser(user.discord_id, {
       limit: 10,
