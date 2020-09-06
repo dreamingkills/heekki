@@ -64,7 +64,7 @@ export class PlayerFetch extends DBClass {
                   WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
     let queryOptions = [];
 
-    if (options) query += " AND";
+    if (options?.starsLessThan) query += " AND";
     if (options?.starsLessThan)
       queryOptions.push(
         ` user_card.stars<${DB.connection.escape(options.starsLessThan)}`
@@ -74,8 +74,11 @@ export class PlayerFetch extends DBClass {
       queryOptions.join(" AND") +
       " ORDER BY user_card.stars DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
-      (options?.page ? `OFFSET ${DB.connection.escape(options.page)}` : ``);
-    console.log(query);
+      (options?.page && options.limit
+        ? ` OFFSET ${DB.connection.escape(
+            options.page * options.limit - options.limit
+          )}`
+        : ``);
     const cards = await DB.query(query + ";");
     let cardList: UserCard[] = [];
     let cardIterator = cards.forEach(
@@ -162,5 +165,16 @@ export class PlayerFetch extends DBClass {
       [discord_id]
     );
     return query[0].mission_last;
+  }
+
+  public static async getCardCountByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    const query = await DB.query(
+      `SELECT COUNT(*) FROM user_card WHERE owner_id=?;`,
+      [discord_id]
+    );
+
+    return query[0][`COUNT(*)`];
   }
 }

@@ -9,10 +9,8 @@ export class Command extends GameCommand {
   category: string = "card";
 
   exec = async (msg: Message) => {
-    let forfeitedRaw = await PlayerService.getOrphanedCards();
-    let page = this.prm[0] ? parseInt(this.prm[0]) : 1;
-
-    let forfeited = forfeitedRaw.slice(page * 9 - 9, page * 9);
+    let page = isNaN(parseInt(this.prm[0])) ? 1 : parseInt(this.prm[0]);
+    let forfeitedRaw = await PlayerService.getOrphanedCards(page);
 
     let embed = new MessageEmbed()
       .setAuthor(`Cards currently up-for-grabs`)
@@ -21,7 +19,7 @@ export class Command extends GameCommand {
       )
       .setColor("#40BD66");
 
-    for (let f of forfeited) {
+    for (let f of forfeitedRaw) {
       embed.addField(
         `${f.abbreviation}#${f.serialNumber}`,
         `:star: ${f.stars}\n:heart: ${f.hearts}`,

@@ -235,4 +235,10 @@ export class PlayerService {
     await PlayerUpdate.removeCoins(discord_id, amount);
     return amount;
   }
+
+  public static async getCardCountByUserId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getCardCountByDiscordId(discord_id);
+  }
 }
