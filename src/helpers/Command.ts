@@ -43,7 +43,7 @@ export class CommandManager {
   }
 
   async handle(msg: Message): Promise<void> {
-    let cmd = this.getCommandByName(msg.content, config.prefix);
+    let cmd = this.getCommandByName(msg.content.toLowerCase(), config.prefix);
     if (!cmd) return;
     if (cmd.role) {
       let role = await msg.guild?.roles.fetch(cmd.role);
