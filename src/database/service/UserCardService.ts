@@ -36,6 +36,23 @@ export class UserCardService {
     );
   }
 
+  public static async toggleCardAsFavorite(
+    reference: {
+      abbreviation: string;
+      serial: number;
+    },
+    sender: string
+  ): Promise<UserCard> {
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
+
+    if (card.ownerId !== sender) throw new error.NotYourCardError();
+    if ((await MarketService.cardIsOnMarketplace(card.userCardId)).forSale)
+      throw new error.CardOnMarketplaceError();
+
+    return await CardUpdate.toggleCardAsFavorite(card.userCardId);
+  }
+
   public static async forfeitCard(
     user: string,
     card: UserCard
@@ -52,9 +69,12 @@ export class UserCardService {
     stars: number
   ): Promise<number> {
     let owner = await PlayerService.getProfileByDiscordId(user, false);
-    let cardsToForfeit = await PlayerService.getCardsByUser(owner.discord_id, {
-      starsLessThan: stars,
-    });
+    let cardsToForfeit = await PlayerService.getCardsByDiscordId(
+      owner.discord_id,
+      {
+        starsLessThan: stars,
+      }
+    );
     let numberForfeited = 0;
     for (let card of cardsToForfeit) {
       if (card.isFavorite) continue;
@@ -66,26 +86,5 @@ export class UserCardService {
 
   public static async incrementCardStars(card_id: number): Promise<UserCard> {
     return await CardUpdate.incrementCardStars(card_id);
-  }
-
-  public static async setCardFavorite(card_id: number): Promise<UserCard> {
-    return await CardUpdate.toggleCardAsFavorite(card_id);
-  }
-
-  public static async toggleFavorite(
-    reference: {
-      abbreviation: string;
-      serial: number;
-    },
-    sender: string
-  ): Promise<UserCard> {
-    const card = (await CardService.getCardDataFromReference(reference))
-      .userCard;
-
-    if (card.ownerId !== sender) throw new error.NotYourCardError();
-    if ((await MarketService.cardIsOnMarketplace(card.userCardId)).forSale)
-      throw new error.CardOnMarketplaceError();
-
-    return await UserCardService.setCardFavorite(card.userCardId);
   }
 }

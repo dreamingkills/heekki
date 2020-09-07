@@ -14,7 +14,7 @@ export class Command extends GameCommand {
       abbreviation: this.prm[0].split("#")[0],
       serial: parseInt(this.prm[0].split("#")[1]),
     };
-    const newCard = await UserCardService.toggleFavorite(
+    const newCard = await UserCardService.toggleCardAsFavorite(
       reference,
       msg.author.id
     );

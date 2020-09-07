@@ -11,7 +11,10 @@ export class Command extends GameCommand {
   exec = async (msg: Message) => {
     let id = msg.author.id;
     let desc = this.prm.join(" ");
-    let user = await PlayerService.changeProfileDescription(id, desc);
+    let user = await PlayerService.changeProfileDescriptionByDiscordId(
+      id,
+      desc
+    );
 
     msg.channel.send(
       `:white_check_mark: Your description was updated to:\n\`${user.new}\``

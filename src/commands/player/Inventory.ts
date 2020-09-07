@@ -13,11 +13,13 @@ export class Command extends GameCommand {
   exec = async (msg: Message) => {
     const page = !isNaN(parseInt(this.prm[0])) ? parseInt(this.prm[0]) : 1;
     const user = await PlayerService.getProfileByDiscordId(msg.author.id, true);
-    const cards = await PlayerService.getCardsByUser(user.discord_id, {
+    const cards = await PlayerService.getCardsByDiscordId(user.discord_id, {
       limit: 10,
       page: page,
     });
-    const cardCount = await PlayerService.getCardCountByUserId(user.discord_id);
+    const cardCount = await PlayerService.getCardCountByDiscordId(
+      user.discord_id
+    );
 
     let desc = `${msg.author.tag} has **${cardCount}** cards!\n\n`;
 

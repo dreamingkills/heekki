@@ -10,7 +10,7 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    const newUser = await PlayerService.createNewUser(msg.author.id);
+    const newUser = await PlayerService.createNewProfile(msg.author.id);
 
     const embed = new ProfileEmbed(
       newUser,

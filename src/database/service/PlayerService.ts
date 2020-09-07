@@ -11,7 +11,7 @@ import missions from "../../assets/missions.json";
 import { MarketService } from "./MarketService";
 
 export class PlayerService {
-  public static async createNewUser(discord_id: string): Promise<Profile> {
+  public static async createNewProfile(discord_id: string): Promise<Profile> {
     if (await PlayerFetch.checkIfUserExists(discord_id)) {
       throw new error.DuplicateProfileError();
     }
@@ -36,7 +36,7 @@ export class PlayerService {
     return user;
   }
 
-  public static async changeProfileDescription(
+  public static async changeProfileDescriptionByDiscordId(
     discord_id: string,
     blurb: string
   ): Promise<{ old: string; new: string }> {
@@ -52,7 +52,7 @@ export class PlayerService {
     return await PlayerFetch.getBadgesByDiscordId(discord_id);
   }
 
-  public static async getCardsByUser(
+  public static async getCardsByDiscordId(
     discord_id: string,
     options?: { starsLessThan?: number; limit?: number; page?: number }
   ): Promise<UserCard[]> {
@@ -65,12 +65,18 @@ export class PlayerService {
     return cardList;
   }
 
+  public static async getCardCountByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getCardCountByDiscordId(discord_id);
+  }
+
   public static async openHeartBoxes(
     discord_id: string
   ): Promise<{ added: number; total: number; individual: number[] }> {
     const user = await this.getProfileByDiscordId(discord_id, false);
-
     const last = await this.getLastHeartBoxByDiscordId(user.discord_id);
+
     const now = Date.now();
     if (now < last + 14400000)
       throw new error.HeartBoxCooldownError(last + 14400000, now);
@@ -84,8 +90,10 @@ export class PlayerService {
     const total = generated.reduce((a, b) => {
       return a + b;
     });
-    await this.addHeartsToUserByDiscordId(user.discord_id, total);
-    await this.setLastHeartBoxByDiscordId(user.discord_id, now);
+    await Promise.all([
+      this.addHeartsToUserByDiscordId(user.discord_id, total),
+      this.setLastHeartBoxByDiscordId(user.discord_id, now),
+    ]);
     return { added: total, total: user.hearts + total, individual: generated };
   }
 
@@ -293,11 +301,5 @@ export class PlayerService {
     discord_id: string
   ): Promise<number> {
     return await PlayerFetch.getLastOrphanClaimByDiscordId(discord_id);
-  }
-
-  public static async getCardCountByUserId(
-    discord_id: string
-  ): Promise<number> {
-    return await PlayerFetch.getCardCountByDiscordId(discord_id);
   }
 }
