@@ -1,8 +1,5 @@
 import { DB, DBClass } from "../../index";
-import { Profile } from "../../../structures/player/Profile";
 import { OkPacket } from "mysql";
-import { CardFetch as CardFetchSQL } from "../card/CardFetch";
-import { UserCard } from "../../../structures/player/UserCard";
 
 export class PlayerUpdate extends DBClass {
   public static async createNewProfile(discord_id: string): Promise<void> {
@@ -84,17 +81,7 @@ export class PlayerUpdate extends DBClass {
     );
     return query;
   }
-  public static async transferCard(
-    recipient: string,
-    cardId: number
-  ): Promise<UserCard> {
-    let query = await DB.query(`UPDATE user_card SET owner_id=? WHERE id=?;`, [
-      recipient,
-      cardId,
-    ]);
-    let card = await CardFetchSQL.getFullCardDataFromUserCard(cardId);
-    return card.userCard;
-  }
+
   public static async setOrphanTimestamp(
     discord_id: string,
     time: number

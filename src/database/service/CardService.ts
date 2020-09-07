@@ -35,7 +35,8 @@ export class CardService {
     abbreviation: string;
     serial: number;
   }): Promise<{ userCard: UserCard; imageData: ImageData }> {
-    if (isNaN(reference.serial)) throw new error.InvalidUserCardError();
+    if (isNaN(reference.serial))
+      throw new error.InvalidUserCardError(reference);
     return await CardFetch.getFullCardDataFromReference(reference);
   }
 
@@ -43,7 +44,8 @@ export class CardService {
     abbreviation: string;
     serial: number;
   }): Promise<{ image: Buffer; userCard: UserCard }> {
-    if (isNaN(reference.serial)) throw new error.InvalidUserCardError();
+    if (isNaN(reference.serial))
+      throw new error.InvalidUserCardError(reference);
     const card = await CardFetch.getFullCardDataFromReference(reference);
     return await this.generateCardImageFromUserCard({
       userCard: card.userCard,

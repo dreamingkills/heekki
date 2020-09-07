@@ -59,7 +59,7 @@ export class MarketService {
   }> {
     const card = (await CardService.getCardDataFromReference(reference))
       .userCard;
-    if (!card) throw new error.InvalidUserCardError();
+    if (!card) throw new error.InvalidUserCardError(reference);
 
     const validateForSale = await this.cardIsOnMarketplace(card.userCardId);
     if (!validateForSale.forSale) throw new error.CardNotForSaleError();
@@ -125,7 +125,7 @@ export class MarketService {
       throw new error.InvalidPriceError();
     const card = (await CardService.getCardDataFromReference(reference))
       .userCard;
-    if (!card) throw new error.InvalidUserCardError();
+    if (!card) throw new error.InvalidUserCardError(reference);
     if (card.ownerId != seller) throw new error.NotYourCardError();
     if (card.isFavorite) throw new error.FavoriteCardError();
 
@@ -142,7 +142,7 @@ export class MarketService {
   ): Promise<UserCard> {
     const card = (await CardService.getCardDataFromReference(reference))
       .userCard;
-    if (!card) throw new error.InvalidUserCardError();
+    if (!card) throw new error.InvalidUserCardError(reference);
     if (card.ownerId != perpetrator) throw new error.NotYourCardError();
 
     const validateForSale = await this.cardIsOnMarketplace(card.userCardId);

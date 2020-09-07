@@ -87,4 +87,12 @@ export class UserCardService {
   public static async incrementCardStars(card_id: number): Promise<UserCard> {
     return await CardUpdate.incrementCardStars(card_id);
   }
+
+  public static async transferCard(
+    recipient: string,
+    userCardId: number
+  ): Promise<UserCard> {
+    const transfer = await CardUpdate.transferCardToUser(recipient, userCardId);
+    return transfer;
+  }
 }

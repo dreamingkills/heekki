@@ -16,7 +16,6 @@ export class CardUpdate extends DBClass {
       `SELECT * FROM serial_number WHERE id=?;`,
       [card_id]
     );
-    if (!serialNumber[0]) throw new error.InvalidCardError();
     let insertQuery = await DB.query(
       `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
       [serialNumber[0].serial_number + 1, owner_id, stars, hearts, card_id]

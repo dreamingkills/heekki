@@ -94,12 +94,6 @@ export class NotANumberError extends ClientError {
     super("Please use a valid number!");
   }
 }
-export class InvalidCardError extends ClientError {
-  name = "InvalidCardError";
-  constructor() {
-    super("Please enter a valid card ID!");
-  }
-}
 export class NotEnoughHeartsError extends ClientError {
   name = "NotEnoughHeartsError";
   constructor() {
@@ -108,8 +102,10 @@ export class NotEnoughHeartsError extends ClientError {
 }
 export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
-  constructor() {
-    super("Please enter a valid card reference (e.g. `DLHJ#32`)!");
+  constructor(reference: { abbreviation: string; serial: number }) {
+    super(
+      `I couldn't find **${reference.abbreviation}#${reference.serial}**! Please make sure you entered it correctly.`
+    );
   }
 }
 export class InvalidCollectionError extends ClientError {

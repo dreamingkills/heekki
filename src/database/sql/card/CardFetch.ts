@@ -60,7 +60,11 @@ export class CardFetch extends DBClass {
         user_card.id=?`,
       [id]
     );
-    if (!query[0]) throw new error.InvalidUserCardError();
+    if (!query[0])
+      throw new error.InvalidUserCardError({
+        abbreviation: "ERROR",
+        serial: 0,
+      });
     let imageData = await this.getImageDataFromCardId(query[0].image_data_id);
     return { userCard: new UserCard(query[0]), imageData };
   }
@@ -100,7 +104,7 @@ export class CardFetch extends DBClass {
         user_card.serial_number=?`,
       [reference.abbreviation, reference.serial]
     );
-    if (!query[0]) throw new error.InvalidUserCardError();
+    if (!query[0]) throw new error.InvalidUserCardError(reference);
 
     let imageData = await this.getImageDataFromCardId(query[0].image_data_id);
     return { userCard: new UserCard(query[0]), imageData };

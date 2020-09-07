@@ -97,26 +97,6 @@ export class PlayerService {
     return { added: total, total: user.hearts + total, individual: generated };
   }
 
-  public static async giftCard(
-    donator: string,
-    recipient: string,
-    reference: { abbreviation: string; serial: number }
-  ): Promise<UserCard> {
-    const gifter = await this.getProfileByDiscordId(donator, false);
-    const receiver = await this.getProfileByDiscordId(recipient, true);
-
-    const card = (await CardService.getCardDataFromReference(reference))
-      .userCard;
-    if (gifter.discord_id != card.ownerId) throw new error.NotYourCardError();
-    if (card.isFavorite) throw new error.FavoriteCardError();
-
-    const transfer = await PlayerUpdate.transferCard(
-      receiver.discord_id,
-      card.userCardId
-    );
-    return transfer;
-  }
-
   public static async getOrphanedCards(page: number): Promise<UserCard[]> {
     let cardList = await PlayerFetch.getUserCardsByDiscordId("0", {
       page: page,
@@ -138,7 +118,7 @@ export class PlayerService {
     let card = (await CardService.getCardDataFromReference(reference)).userCard;
 
     if (card.ownerId != "0") throw new error.CardNotOrphanedError();
-    await PlayerUpdate.transferCard(claimant.discord_id, card.userCardId);
+    await UserCardService.transferCard(claimant.discord_id, card.userCardId);
     await this.setLastOrphanClaimByDiscordId(claimant.discord_id, now);
     return card;
   }

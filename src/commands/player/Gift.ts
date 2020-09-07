@@ -1,5 +1,9 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message } from "discord.js";
+import { Message, MessageReaction, User } from "discord.js";
+import { CardService } from "../../database/service/CardService";
+import { UserCard } from "../../structures/player/UserCard";
+import { MarketService } from "../../database/service/MarketService";
+import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends GameCommand {
@@ -9,21 +13,93 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
-    console.log(this.prm);
-    const gift = await PlayerService.giftCard(
-      msg.author.id,
-      this.parseMention(this.prm[0]),
-      {
-        abbreviation: this.prm[1].split("#")[0],
-        serial: parseInt(this.prm[1].split("#")[1]),
+    const references = this.prm.filter((p) => p.includes("#"));
+    const cardList = await Promise.all(
+      references.map(async (p) => {
+        return (
+          await CardService.getCardDataFromReference({
+            abbreviation: p.split("#")[0],
+            serial: parseInt(p.split("#")[1]),
+          })
+        ).userCard;
+      })
+    );
+    if (cardList.length < 1) {
+      msg.channel.send(
+        "<:red_x:741454361007357993> You haven't specified any cards!"
+      );
+      return;
+    }
+
+    const mention = msg.mentions.users.first();
+    if (!mention) {
+      msg.channel.send(`<:red_x:741454361007357993> Please mention a user.`);
+      return;
+    }
+    if (mention.id === msg.author.id) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> You can't gift cards to yourself!`
+      );
+      return;
+    }
+    const profile = await PlayerService.getProfileByDiscordId(mention.id, true);
+
+    //Validations
+    let validCards: UserCard[] = [];
+    let invalidMessage = "";
+    for (let c of cardList) {
+      if (c.ownerId != msg.author.id) {
+        invalidMessage += `\nYou are not the owner of **${c.abbreviation}#${c.serialNumber}**!`;
+        continue;
       }
+      if (c.isFavorite) {
+        invalidMessage += `\nYour card **${c.abbreviation}#${c.serialNumber}** is currently favorited.`;
+        continue;
+      }
+      if ((await MarketService.cardIsOnMarketplace(c.userCardId)).forSale) {
+        invalidMessage += `\nYour card **${c.abbreviation}#${c.serialNumber}** is currently on the marketplace.`;
+        continue;
+      }
+      validCards.push(c!);
+    }
+
+    if (invalidMessage)
+      await msg.channel.send(
+        `<:red_x:741454361007357993> ${
+          validCards.length === 0 ? "All" : "Some"
+        } of the cards you specified were invalid:` + invalidMessage
+      );
+    if (validCards.length === 0) return;
+    const confirmation = await msg.channel.send(
+      `:warning: Really gift **${validCards.length}** card(s) to **${
+        mention.tag
+      }**?\nThis action is **irreversible**! React with :white_check_mark: to confirm.\n${validCards
+        .map((v) => {
+          return `- ${v.abbreviation}#${v.serialNumber}`;
+        })
+        .join("\n")}`
     );
 
-    const user = await msg.client.users.fetch(gift.ownerId)!;
-    msg.channel.send(
-      `:gift: You gifted **${gift.abbreviation}#${gift.serialNumber}** to **${
-        user.tag || `Unknown User (<@${gift.ownerId}>)`
-      }**!`
+    confirmation.react("✅");
+    const filter = (reaction: MessageReaction, user: User) => {
+      return reaction.emoji.name === "✅" && user.id == msg.author.id;
+    };
+    const reactions = await confirmation.awaitReactions(filter, {
+      max: 1,
+      time: 15000,
+    });
+
+    if (reactions.first()) {
+      for (let c of validCards) {
+        await UserCardService.transferCardToUserByDiscordId(
+          profile.discord_id,
+          c.userCardId
+        );
+      }
+    }
+
+    confirmation.edit(
+      `:white_check_mark: Gifted **${validCards.length}** cards to **${mention.tag}**!`
     );
   };
 }
