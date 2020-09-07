@@ -13,19 +13,15 @@ export class MarketService {
    * @options An Object of search options.
    */
   public static async getMarket(options?: {
-    page?: number;
-    priceMin?: number;
-    priceMax?: number;
-    starsMin?: number;
-    starsMax?: number;
-    serialMin?: number;
-    serialMax?: number;
+    [key: string]: string | number;
   }): Promise<{ card: UserCard; price: number }[]> {
     let cardIds = await MarketFetch.fetchCardIdsInMarketplace(options);
 
     let cards = await Promise.all(
       cardIds.map(async (id) => {
-        let card = await UserCardService.getCardByUserCardId(id.card_id);
+        let card = await UserCardService.getCardByUserCardId(
+          id.card.userCardId
+        );
         return { card: card.userCard, price: id.price };
       })
     );

@@ -34,9 +34,7 @@ export class PlayerFetch extends DBClass {
   public static async getUserCardsByDiscordId(
     discord_id: string,
     options?: {
-      starsLessThan?: number;
-      limit?: number;
-      page?: number;
+      [key: string]: string | number;
     }
   ): Promise<UserCard[]> {
     let query = `SELECT 
@@ -62,24 +60,38 @@ export class PlayerFetch extends DBClass {
                   LEFT JOIN
                     pack ON
                       card.pack_id=pack.id
+                  LEFT JOIN
+                    shop ON
+                      shop.pack_id=pack.id
                   WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
     let queryOptions = [];
 
-    if (options?.starsLessThan) query += " AND";
-    if (options?.starsLessThan)
+    if (options?.pack)
       queryOptions.push(
-        ` user_card.stars<${DB.connection.escape(options.starsLessThan)}`
+        ` shop.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+      );
+    if (options?.member)
+      queryOptions.push(
+        ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
+      );
+    if (options?.minstars)
+      queryOptions.push(
+        ` user_card.stars>=${DB.connection.escape(options.minstars)}`
       );
 
     query +=
+      (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
-      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts, user_card.id DESC" +
+      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts DESC, user_card.id DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
       (options?.page && options.limit
         ? ` OFFSET ${DB.connection.escape(
-            options.page * options.limit - options.limit
+            (isNaN(<number>options.page) ? 1 : <number>options.page) *
+              <number>options.limit -
+              <number>options.limit
           )}`
         : ``);
+
     const cards = await DB.query(query + ";");
     let cardList = cards.map(
       (c: {
@@ -180,13 +192,39 @@ export class PlayerFetch extends DBClass {
   }
 
   public static async getCardCountByDiscordId(
-    discord_id: string
+    discord_id: string,
+    options?: { [key: string]: string | number }
   ): Promise<number> {
-    const query = await DB.query(
-      `SELECT COUNT(*) FROM user_card WHERE owner_id=?;`,
-      [discord_id]
-    );
+    let query = `SELECT 
+                  COUNT(*)
+                FROM
+                  card 
+                LEFT JOIN
+                  user_card ON
+                    card.id=user_card.card_id
+                LEFT JOIN
+                  pack ON
+                    card.pack_id=pack.id
+                LEFT JOIN
+                  shop ON
+                    shop.pack_id=pack.id
+                WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
-    return query[0][`COUNT(*)`];
+    let queryOptions = [];
+
+    if (options?.pack)
+      queryOptions.push(
+        ` shop.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+      );
+    if (options?.member)
+      queryOptions.push(
+        ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
+      );
+
+    query +=
+      (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
+
+    const count = await DB.query(`${query};`);
+    return count[0][`COUNT(*)`];
   }
 }

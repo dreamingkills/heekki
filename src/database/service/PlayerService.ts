@@ -54,7 +54,7 @@ export class PlayerService {
 
   public static async getCardsByDiscordId(
     discord_id: string,
-    options?: { starsLessThan?: number; limit?: number; page?: number }
+    options?: { [key: string]: string | number }
   ): Promise<UserCard[]> {
     const user = await this.getProfileByDiscordId(discord_id, false);
     const cardList = await PlayerFetch.getUserCardsByDiscordId(
@@ -66,9 +66,10 @@ export class PlayerService {
   }
 
   public static async getCardCountByDiscordId(
-    discord_id: string
+    discord_id: string,
+    options?: { [key: string]: string | number }
   ): Promise<number> {
-    return await PlayerFetch.getCardCountByDiscordId(discord_id);
+    return await PlayerFetch.getCardCountByDiscordId(discord_id, options);
   }
 
   public static async openHeartBoxes(
@@ -97,11 +98,10 @@ export class PlayerService {
     return { added: total, total: user.hearts + total, individual: generated };
   }
 
-  public static async getOrphanedCards(page: number): Promise<UserCard[]> {
-    let cardList = await PlayerFetch.getUserCardsByDiscordId("0", {
-      page: page,
-      limit: 9,
-    });
+  public static async getOrphanedCards(options?: {
+    [key: string]: string | number;
+  }): Promise<UserCard[]> {
+    let cardList = await PlayerFetch.getUserCardsByDiscordId("0", options);
     return cardList;
   }
 

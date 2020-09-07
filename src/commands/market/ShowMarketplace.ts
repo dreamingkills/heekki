@@ -9,22 +9,22 @@ export class Command extends GameCommand {
   category: string = "market";
 
   exec = async (msg: Message) => {
-    let options: { page?: number; priceMin?: number; priceMax?: number } = {};
-    this.prm.forEach((o) => {
-      if (o.startsWith("page=")) {
-        options.page = parseInt(o.split("=")[1]);
-      }
-      if (o.startsWith("price<")) {
-        options.priceMax = parseInt(o.split("<")[1]);
-      } else if (o.startsWith("price>")) {
-        options.priceMin = parseInt(o.split(">")[1]);
-      }
-    });
+    const optionsRaw = this.prm.filter((v) => v.includes("="));
+    let options: { [key: string]: string } = {};
+    for (let option of optionsRaw) {
+      const name = option.split("=")[0];
+      const value = option.split("=")[1];
+      options[name.toLowerCase()] = value;
+    }
 
     let ff = await MarketService.getMarket(options);
 
     let embed = new MessageEmbed()
-      .setAuthor(`The Marketplace - page ${options.page || 1}`)
+      .setAuthor(
+        `The Marketplace - page ${
+          isNaN(parseInt(options.page)) ? 1 : options.page
+        }`
+      )
       .setDescription(
         ff.length === 0
           ? ":mag_right: There's nothing here... Try searching for a different page!"

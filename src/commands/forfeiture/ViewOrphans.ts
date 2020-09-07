@@ -9,11 +9,26 @@ export class Command extends GameCommand {
   category: string = "card";
 
   exec = async (msg: Message) => {
-    let page = isNaN(parseInt(this.prm[0])) ? 1 : parseInt(this.prm[0]);
-    let forfeitedRaw = await PlayerService.getOrphanedCards(page);
+    const optionsRaw = this.prm.filter((v) => v.includes("="));
+    let options: { [key: string]: string } = {};
+    for (let option of optionsRaw) {
+      const name = option.split("=")[0];
+      const value = option.split("=")[1];
+      options[name.toLowerCase()] = value;
+    }
+
+    let forfeitedRaw = await PlayerService.getOrphanedCards({
+      ...options,
+      limit: 9,
+    });
 
     let embed = new MessageEmbed()
-      .setAuthor(`Cards currently up-for-grabs`)
+      .setAuthor(
+        `Cards currently up-for-grabs${
+          optionsRaw.length > 0 ? ` (${optionsRaw.join(", ")})` : ""
+        }`,
+        msg.author.displayAvatarURL()
+      )
       .setFooter(
         `Use !cf <card reference> to claim a card / !vff [page] to view another page`
       )
