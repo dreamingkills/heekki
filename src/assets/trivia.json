@@ -417,6 +417,177 @@
       "question": "Who is the tallest member?",
       "answer": ["yves"],
       "reward": { "min": 5, "max": 15 }
+    },
+    {
+      "question": "What is the name of HeeJin's solo song?",
+      "answer": ["vivid"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from HeeJin's album?",
+      "answer": [
+        "vivid acoustic mix",
+        "vivid (acoustic mix)",
+        "vivid acoustic ver",
+        "vivid (acoustic ver)",
+        "vivid acoustic"
+      ],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of HyunJin's solo song?",
+      "answer": ["around you"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from HyunJin's album?",
+      "answer": ["i'll be there"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of HaSeul's solo song?",
+      "answer": ["let me in"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from HaSeul's album?",
+      "answer": ["the carol"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of YeoJin's solo song?",
+      "answer": ["kiss later", "키스는 다음에"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What song from YeoJin's album does not include YeoJin?",
+      "answer": ["my sunday"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of HeeJin and HyunJin's duet on YeoJin's album?",
+      "answer": ["my sunday"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of HaSeul and YeoJin's duet?",
+      "answer": ["my melody"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Vivi's duet with HaSeul?",
+      "answer": ["everyday i love you", "edily"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Vivi's album?",
+      "answer": ["everyday i need you", "ediny"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Which member featured on \"Everyday I Need You\"?",
+      "answer": ["jinsoul"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Kim Lip's solo?",
+      "answer": ["eclipse"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Kim Lip's album?",
+      "answer": ["twilight"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of the Western producer who worked on Twilight?",
+      "answer": ["cha cha malone"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of JinSoul's solo?",
+      "answer": ["singing in the rain"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from JinSoul's album?",
+      "answer": ["love letter"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Choerry's solo?",
+      "answer": ["love cherry motion"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Choerry's album?",
+      "answer": ["puzzle"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Yves' solo?",
+      "answer": ["new"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Yves' album?",
+      "answer": ["d-1"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Chuu's solo?",
+      "answer": ["heart attack"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Chuu's album?",
+      "answer": ["girl's talk"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Go Won's solo?",
+      "answer": ["one and only", "one & only", "one&only"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Go Won's album?",
+      "answer": ["see saw"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "True or False: Olivia Hye featured on See Saw.",
+      "answer": ["false"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of Olivia Hye's solo?",
+      "answer": ["egoist"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the B-side track from Olivia Hye's album?",
+      "answer": ["rosy"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "True or False: JinSoul featured on Rosy.",
+      "answer": ["false"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of the hidden track only on copies of [X X] Limited A?",
+      "answer": ["stay with me babe"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of the hidden track only on copies of [X X] Limited B?",
+      "answer": ["daydream"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "True or False: 365 was meant to be on La Maison LOONA.",
+      "answer": ["false"],
+      "reward": { "min": 5, "max": 10 }
     }
   ]
 }
