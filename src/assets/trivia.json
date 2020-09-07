@@ -235,7 +235,7 @@
     },
     {
       "question": "What is ViVi's representative color?",
-      "answer": ["pastel rose"],
+      "answer": ["pastel rose", "light pink"],
       "reward": { "min": 5, "max": 15 }
     },
     {
@@ -320,7 +320,7 @@
     },
     {
       "question": "What is Go Won's representative color?",
-      "answer": ["eden green"],
+      "answer": ["eden green", "mint green", "mint"],
       "reward": { "min": 5, "max": 15 }
     },
     {
