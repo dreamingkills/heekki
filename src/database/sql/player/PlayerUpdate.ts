@@ -5,82 +5,74 @@ import { CardFetch as CardFetchSQL } from "../card/CardFetch";
 import { UserCard } from "../../../structures/player/UserCard";
 
 export class PlayerUpdate extends DBClass {
-  public static async createNewProfile(discord_id: string): Promise<OkPacket> {
-    let user = await DB.query(
+  public static async createNewProfile(discord_id: string): Promise<void> {
+    await DB.query(
       `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${300});`,
       [discord_id]
     );
-    return user;
   }
   public static async changeDescription(
     discord_id: string,
     description: string
-  ): Promise<OkPacket> {
-    let query = await DB.query(
-      `UPDATE user_profile SET blurb=? WHERE discord_id=?;`,
-      [description, discord_id]
-    );
-    return query;
+  ): Promise<void> {
+    await DB.query(`UPDATE user_profile SET blurb=? WHERE discord_id=?;`, [
+      description,
+      discord_id,
+    ]);
   }
   public static async addCoins(
     discord_id: string,
     amount: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET coins=coins+? WHERE discord_id=?;`,
       [amount, discord_id]
     );
-    return query;
   }
   public static async removeCoins(
     discord_id: string,
     amount: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
-      `UPDATE user_profile SET coins=coins-? WHERE discord_id=?`,
-      [amount, discord_id]
-    );
-    return query;
+  ): Promise<void> {
+    await DB.query(`UPDATE user_profile SET coins=coins-? WHERE discord_id=?`, [
+      amount,
+      discord_id,
+    ]);
   }
   public static async addHearts(
     discord_id: string,
     amount: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET hearts=hearts+? WHERE discord_id=?;`,
       [amount, discord_id]
     );
-    return query;
   }
   public static async removeHearts(
     discord_id: string,
     amount: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET hearts=hearts-? WHERE discord_id=?`,
       [amount, discord_id]
     );
-    return query;
   }
   public static async setHeartSendTimestamp(
     discord_id: string,
     time: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET hearts_last=? WHERE discord_id=?;`,
       [time, discord_id]
     );
-    return query;
   }
   public static async setHeartBoxTimestamp(
     discord_id: string,
     time: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET heart_box_last=? WHERE discord_id=?;`,
       [time, discord_id]
     );
-    return query;
   }
   public static async giveBadge(
     discord_id: string,

@@ -41,7 +41,6 @@ export class Command extends BaseCommand {
       )
       .setColor("#40BD66")
       .setFooter(`Bot version: ${version.version}`);
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

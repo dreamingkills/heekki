@@ -42,6 +42,6 @@ export class Command extends GameCommand {
       .setThumbnail(msg.author.displayAvatarURL())
       .setColor("#40BD66")
       .setFooter("To browse another page, use !inventory <page number>");
-    await msg.channel.send(embed);
+    msg.channel.send(embed);
   };
 }

@@ -18,7 +18,7 @@ export class Command extends GameCommand {
       }
     );
 
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: You've listed **${listing.abbreviation}#${listing.serialNumber}** on the Marketplace for <:coin:745447920072917093> **${this.prm[1]}**`
     );
   };

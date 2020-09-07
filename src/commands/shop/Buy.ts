@@ -35,7 +35,6 @@ export class Command extends GameCommand {
           msg.author.tag
         } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
       );
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

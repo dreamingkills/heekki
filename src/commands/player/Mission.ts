@@ -16,7 +16,7 @@ export class Command extends GameCommand {
     });
 
     StatsService.incrementStat("missions_complete");
-    await msg.channel.send(
+    msg.channel.send(
       (mission.lucky ? `:star: Your card has gained a star!\n` : ``) +
         mission.result
           .replace(
@@ -25,6 +25,5 @@ export class Command extends GameCommand {
           )
           .replace(`%C`, `<:coin:745447920072917093> **${mission.profit}**`)
     );
-    return;
   };
 }

@@ -43,7 +43,6 @@ export class Command extends GameCommand {
         } hearts.`
       )
       .setColor("#40BD66");
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

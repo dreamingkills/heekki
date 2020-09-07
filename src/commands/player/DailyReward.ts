@@ -11,9 +11,8 @@ export class Command extends GameCommand {
   exec = async (msg: Message) => {
     const daily = await PlayerService.claimDaily(msg.author.id);
 
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: You claimed your daily reward today and received <:coin:745447920072917093> **${daily.added}**!\nYour current balance is <:coin:745447920072917093> **${daily.total}**.`
     );
-    return;
   };
 }

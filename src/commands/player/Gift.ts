@@ -19,12 +19,11 @@ export class Command extends GameCommand {
       }
     );
 
-    const user = msg.client.users.resolve(gift.ownerId)!;
-    await msg.channel.send(
+    const user = await msg.client.users.fetch(gift.ownerId)!;
+    msg.channel.send(
       `:gift: You gifted **${gift.abbreviation}#${gift.serialNumber}** to **${
         user.tag || `Unknown User (<@${gift.ownerId}>)`
       }**!`
     );
-    return;
   };
 }

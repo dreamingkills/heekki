@@ -13,9 +13,8 @@ export class Command extends GameCommand {
     let desc = this.prm.join(" ");
     let user = await PlayerService.changeProfileDescription(id, desc);
 
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: Your description was updated to:\n\`${user.new}\``
     );
-    return;
   };
 }

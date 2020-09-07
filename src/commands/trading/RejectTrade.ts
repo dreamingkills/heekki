@@ -12,9 +12,6 @@ export class Command extends GameCommand {
     const tradeId = this.prm[0];
 
     await TradeService.cancelTrade(tradeId, msg.author.id);
-    await msg.channel.send(
-      `:white_check_mark: Cancelled trade **${tradeId}**!`
-    );
-    return;
+    msg.channel.send(`:white_check_mark: Cancelled trade **${tradeId}**!`);
   };
 }

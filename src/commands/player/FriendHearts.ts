@@ -11,7 +11,7 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     const sendHearts = await FriendService.sendHeartsToFriends(msg.author.id);
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: Hearts have been sent to **${sendHearts.length}** friends!`
     );
   };

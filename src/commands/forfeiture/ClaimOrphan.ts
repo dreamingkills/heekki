@@ -14,9 +14,8 @@ export class Command extends GameCommand {
       serial: parseInt(this.prm[0].split("#")[1]),
     });
 
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: You claimed **${ff.abbreviation}#${ff.serialNumber}**!\nYou will not be able to claim another card for **3 hours**.`
     );
-    return;
   };
 }

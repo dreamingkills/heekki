@@ -44,7 +44,6 @@ export class Command extends GameCommand {
       .addField(`Card listing (2)`, cardList2, true)
       .addField(`Card listing (3)`, cardList3, true);
 
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

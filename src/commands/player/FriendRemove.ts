@@ -10,7 +10,7 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     if (!this.prm[0]) {
-      await msg.channel.send(
+      msg.channel.send(
         `<:red_x:741454361007357993> Please specify a user to add!`
       );
       return;
@@ -23,7 +23,7 @@ export class Command extends GameCommand {
       });
       friend = member?.firstKey();
       if (!friend) {
-        await msg.channel.send(
+        msg.channel.send(
           "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
         );
         return;
@@ -40,7 +40,7 @@ export class Command extends GameCommand {
     const oldUser = await msg.client.users.fetch(
       removedFriend.friend.discord_id
     );
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: Removed **${oldUser?.tag}** from your friends list!`
     );
   };

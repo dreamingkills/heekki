@@ -20,7 +20,7 @@ export class Command extends GameCommand {
     let conf = await msg.channel.send(
       `:warning: Really forfeit **${card.abbreviation}#${card.serialNumber}**?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`
     );
-    await conf.react("✅");
+    conf.react("✅");
     let filter = (reaction: MessageReaction, user: User) => {
       return reaction.emoji.name == "✅" && user.id == msg.author.id;
     };
@@ -33,16 +33,15 @@ export class Command extends GameCommand {
     if (rxn) {
       await UserCardService.forfeitCard(msg.author.id, card);
 
-      await msg.channel.send(
+      msg.channel.send(
         `:white_check_mark: You forfeited **${card.abbreviation}#${card.serialNumber}**.`
       );
-      await conf.delete();
+      conf.delete();
     } else {
-      await conf.edit(
+      conf.edit(
         `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
       );
-      await conf.reactions.removeAll();
+      conf.reactions.removeAll();
     }
-    return;
   };
 }

@@ -28,7 +28,6 @@ export class Command extends GameCommand {
       .addFields(desc)
       .setColor("#40BD66")
       .setThumbnail(msg.author.displayAvatarURL());
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

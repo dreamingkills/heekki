@@ -70,7 +70,7 @@ export class PlayerService {
   ): Promise<{ added: number; total: number; individual: number[] }> {
     const user = await this.getProfileByDiscordId(discord_id, false);
 
-    const last = await PlayerFetch.getLastHeartBoxByDiscordId(user.discord_id);
+    const last = await this.getLastHeartBoxByDiscordId(user.discord_id);
     const now = Date.now();
     if (now < last + 14400000)
       throw new error.HeartBoxCooldownError(last + 14400000, now);
@@ -84,8 +84,8 @@ export class PlayerService {
     const total = generated.reduce((a, b) => {
       return a + b;
     });
-    await PlayerUpdate.addHearts(user.discord_id, total);
-    await PlayerUpdate.setHeartBoxTimestamp(user.discord_id, now);
+    await this.addHeartsToUserByDiscordId(user.discord_id, total);
+    await this.setLastHeartBoxByDiscordId(user.discord_id, now);
     return { added: total, total: user.hearts + total, individual: generated };
   }
 
@@ -122,9 +122,7 @@ export class PlayerService {
     reference: { abbreviation: string; serial: number }
   ): Promise<UserCard> {
     let claimant = await this.getProfileByDiscordId(user, false);
-    let last = await PlayerFetch.getLastOrphanClaimByDiscordId(
-      claimant.discord_id
-    );
+    let last = await this.getLastOrphanClaimByDiscordId(claimant.discord_id);
 
     let now = Date.now();
     if (now < last + 10800000)
@@ -133,7 +131,7 @@ export class PlayerService {
 
     if (card.ownerId != "0") throw new error.CardNotOrphanedError();
     await PlayerUpdate.transferCard(claimant.discord_id, card.userCardId);
-    await PlayerUpdate.setOrphanTimestamp(claimant.discord_id, now);
+    await this.setLastOrphanClaimByDiscordId(claimant.discord_id, now);
     return card;
   }
 
@@ -163,11 +161,8 @@ export class PlayerService {
     }
 
     const profit = chance.integer({ min: 50, max: 350 });
-    await PlayerService.addCoinsToUserByDiscordId(
-      missionDoer.discord_id,
-      profit
-    );
-    await PlayerService.setLastMissionByDiscordId(missionDoer.discord_id, now);
+    await this.addCoinsToUserByDiscordId(missionDoer.discord_id, profit);
+    await this.setLastMissionByDiscordId(missionDoer.discord_id, now);
 
     const result = chance.pickone(missions.missions);
     return {
@@ -195,33 +190,9 @@ export class PlayerService {
     return { added: 750, total: dailyClaimer.coins + 750, user: dailyClaimer };
   }
 
-  public static async setLastHeartSendByDiscordId(
-    discord_id: string,
-    time: number
-  ): Promise<number> {
-    await PlayerUpdate.setHeartSendTimestamp(discord_id, time);
-    return time;
-  }
-
-  public static async getLastHeartSendByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    return await PlayerFetch.getLastHeartSendByDiscordId(discord_id);
-  }
-
-  public static async setLastMissionByDiscordId(
-    discord_id: string,
-    time: number
-  ): Promise<number> {
-    await PlayerUpdate.setMissionTimestamp(discord_id, time);
-    return time;
-  }
-
-  public static async getLastMissionByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    return await PlayerFetch.getLastMissionByDiscordId(discord_id);
-  }
+  /* 
+      Currency Manipulation 
+                              */
 
   public static async addHeartsToUserByDiscordId(
     discord_id: string,
@@ -229,20 +200,6 @@ export class PlayerService {
   ): Promise<number> {
     await PlayerUpdate.addHearts(discord_id, amount);
     return amount;
-  }
-
-  public static async setLastDailyByDiscordId(
-    discord_id: string,
-    time: number
-  ): Promise<number> {
-    await PlayerUpdate.setDailyTimestamp(discord_id, time);
-    return time;
-  }
-
-  public static async getLastDailyByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    return await PlayerFetch.getLastDailyByDiscordId(discord_id);
   }
 
   public static async removeHeartsFromUserByDiscordId(
@@ -267,6 +224,75 @@ export class PlayerService {
   ): Promise<number> {
     await PlayerUpdate.removeCoins(discord_id, amount);
     return amount;
+  }
+
+  /* 
+      Timers Get & Set 
+                        */
+
+  public static async setLastHeartSendByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<void> {
+    await PlayerUpdate.setHeartSendTimestamp(discord_id, time);
+  }
+
+  public static async getLastHeartSendByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastHeartSendByDiscordId(discord_id);
+  }
+
+  public static async setLastMissionByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<void> {
+    await PlayerUpdate.setMissionTimestamp(discord_id, time);
+  }
+
+  public static async getLastMissionByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastMissionByDiscordId(discord_id);
+  }
+
+  public static async setLastDailyByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<void> {
+    await PlayerUpdate.setDailyTimestamp(discord_id, time);
+  }
+
+  public static async getLastDailyByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastDailyByDiscordId(discord_id);
+  }
+
+  public static async setLastHeartBoxByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<void> {
+    await PlayerUpdate.setHeartBoxTimestamp(discord_id, time);
+  }
+
+  public static async getLastHeartBoxByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastHeartBoxByDiscordId(discord_id);
+  }
+
+  public static async setLastOrphanClaimByDiscordId(
+    discord_id: string,
+    time: number
+  ): Promise<void> {
+    await PlayerUpdate.setOrphanTimestamp(discord_id, time);
+  }
+
+  public static async getLastOrphanClaimByDiscordId(
+    discord_id: string
+  ): Promise<number> {
+    return await PlayerFetch.getLastOrphanClaimByDiscordId(discord_id);
   }
 
   public static async getCardCountByUserId(

@@ -11,6 +11,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       "**HaSeul Documentation**\nhttps://olivia-hye.github.io/haseul-docs/"
     );
-    return;
   };
 }

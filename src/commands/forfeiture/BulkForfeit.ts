@@ -12,13 +12,13 @@ export class Command extends GameCommand {
     let starCount = parseInt(this.prm[0]?.split("<")[1]);
 
     if (isNaN(starCount)) {
-      await msg.channel.send(
+      msg.channel.send(
         "<:red_x:741454361007357993> Please enter a valid constraint (`stars<#`, where # is a number 2 to 7)"
       );
       return;
     }
     if (starCount < 2) {
-      await msg.channel.send(
+      msg.channel.send(
         `<:red_x:741454361007357993> Please enter a valid "less than star count" (any number greater than 2)`
       );
       return;
@@ -27,7 +27,7 @@ export class Command extends GameCommand {
     let conf = await msg.channel.send(
       `:warning: Really forfeit **all cards under ${starCount} stars**?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`
     );
-    await conf.react("✅");
+    conf.react("✅");
     let filter = (reaction: MessageReaction, user: User) => {
       return reaction.emoji.name == "✅" && user.id == msg.author.id;
     };
@@ -43,16 +43,15 @@ export class Command extends GameCommand {
         starCount
       );
 
-      await msg.channel.send(
+      msg.channel.send(
         `:white_check_mark: You forfeited **${bulk}** cards :wave:.`
       );
-      await conf.delete();
+      conf.delete();
     } else {
-      await conf.edit(
+      conf.edit(
         `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
       );
-      await conf.reactions.removeAll();
+      conf.reactions.removeAll();
     }
-    return;
   };
 }

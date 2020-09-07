@@ -54,7 +54,5 @@ export class Command extends GameCommand {
       }
       if (msg.deletable) channel.bulkDelete(collected);
     });
-
-    return;
   };
 }

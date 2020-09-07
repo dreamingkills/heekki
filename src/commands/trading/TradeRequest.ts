@@ -18,9 +18,8 @@ export class Command extends GameCommand {
       refsOther,
       msg.author.id
     );
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: Created a trade request with **<@${tradeRequest.recipient}>**.\nTo accept the trade, they can run \`!accept ${tradeRequest.unique}\``
     );
-    return;
   };
 }

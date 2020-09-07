@@ -32,7 +32,6 @@ export class Command extends GameCommand {
       .setThumbnail(msg.author.displayAvatarURL())
       .setFooter(`Use !friends <page> to view another page!`)
       .setColor("40BD66");
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

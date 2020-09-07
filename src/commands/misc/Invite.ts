@@ -16,6 +16,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:information_source: You can invite HaSeul to your server with the following link:\n<${invite}>\nYou can find the official HaSeul server at https://discord.gg/KbcQjRG.`
     );
-    return;
   };
 }

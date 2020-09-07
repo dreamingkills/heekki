@@ -27,7 +27,6 @@ export class Command extends GameCommand {
       );
     }
 
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

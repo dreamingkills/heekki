@@ -56,6 +56,5 @@ export class Command extends BaseCommand {
         after - now
       }**ms.`
     );
-    return;
   };
 }

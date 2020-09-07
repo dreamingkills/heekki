@@ -14,7 +14,7 @@ export class Command extends GameCommand {
       serial: parseInt(this.prm[0].split("#")[1]),
     });
 
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: You've removed the listing for **${listing.abbreviation}#${listing.serialNumber}** from the Marketplace.`
     );
   };

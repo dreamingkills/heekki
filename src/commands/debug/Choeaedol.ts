@@ -50,7 +50,6 @@ export class Command extends GameCommand {
       .setAuthor(`Current Choeaedol standings (${groups.length} groups)`)
       .setDescription(desc)
       .setColor("#40BD66");
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

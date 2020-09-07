@@ -24,7 +24,7 @@ export class Command extends GameCommand {
     const post = newCard.isFavorite
       ? "You are no longer able to trade, sell, or forfeit that card."
       : "You are now able to trade, sell, and forfeit that card.";
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: ${pre} **${reference.abbreviation}#${reference.serial}**!\n${post}`
     );
   };

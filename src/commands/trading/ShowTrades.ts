@@ -35,7 +35,6 @@ export class Command extends GameCommand {
       )
       .setFooter(`To accept a trade, use !accept <trade id>`);
 
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }

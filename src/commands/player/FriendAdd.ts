@@ -10,7 +10,7 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     if (!this.prm[0]) {
-      await msg.channel.send(
+      msg.channel.send(
         `<:red_x:741454361007357993> Please specify a user to add!`
       );
       return;
@@ -38,7 +38,7 @@ export class Command extends GameCommand {
     );
 
     const newUser = await msg.client.users.fetch(newFriend.friend.discord_id);
-    await msg.channel.send(
+    msg.channel.send(
       `:white_check_mark: Added **${newUser?.tag}** as a friend!`
     );
   };

@@ -41,8 +41,6 @@ export class Command extends GameCommand {
       )
       .setFooter(`Use !market page=X to view another page.`)
       .setColor(`#40BD66`);
-    await msg.channel.send(embed);
-
-    return;
+    msg.channel.send(embed);
   };
 }

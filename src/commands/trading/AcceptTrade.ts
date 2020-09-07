@@ -15,8 +15,7 @@ export class Command extends GameCommand {
 
     await TradeService.acceptTrade(tradeId, msg.author.id);
 
-    await StatsService.incrementStat("trades_complete");
-    await msg.channel.send(`:white_check_mark: Accepted trade **${tradeId}**!`);
-    return;
+    StatsService.incrementStat("trades_complete");
+    msg.channel.send(`:white_check_mark: Accepted trade **${tradeId}**!`);
   };
 }

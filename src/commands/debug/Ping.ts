@@ -10,6 +10,5 @@ export class Command extends BaseCommand {
 
   exec = async function (msg: Message) {
     msg.channel.send("Hello!");
-    return;
   };
 }

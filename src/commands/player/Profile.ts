@@ -43,7 +43,6 @@ export class Command extends GameCommand {
       discordUser.tag,
       discordUser.displayAvatarURL()
     );
-    await msg.channel.send(embed);
-    return;
+    msg.channel.send(embed);
   };
 }
