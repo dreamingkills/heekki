@@ -5,7 +5,7 @@ import { CardService } from "../../database/service/CardService";
 export class Command extends GameCommand {
   names: string[] = ["preview"];
   usage: string[] = ["%c <up to 9 card references...>"];
-  desc: string = "Claims your daily reward.";
+  desc: string = "Preview up to 9 cards.";
   category: string = "player";
 
   exec = async (msg: Message) => {

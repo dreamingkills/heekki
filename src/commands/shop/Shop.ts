@@ -23,7 +23,9 @@ export class Command extends GameCommand {
     }
     let embed = new MessageEmbed()
       .setAuthor(
-        `Buyable packs (page ${page}/${Math.ceil(packsRaw.length / 9)})`
+        `Shop | ${msg.author.tag} (page ${page}/${Math.ceil(
+          packsRaw.length / 9
+        )})`
       )
       .addFields(desc)
       .setColor("#40BD66")

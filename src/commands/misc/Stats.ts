@@ -16,7 +16,7 @@ export class Command extends BaseCommand {
 
     const uptime = msg.client.uptime! / 1000 / 60;
     let embed = new MessageEmbed()
-      .setAuthor(`HaSeul Statistics`)
+      .setAuthor(`Global Statistics`)
       .addField(
         `Card stats`,
         `Total cards: **${stats.totalCards.total}**\nForfeited cards: **${stats.totalOrphaned}**\n6 :star:: **${stats.totalCards.sixStars}**\n5 :star:: **${stats.totalCards.fiveStars}**\n4 :star:: **${stats.totalCards.fourStars}**\n3 :star:: **${stats.totalCards.threeStars}**\n2 :star:: **${stats.totalCards.twoStars}**\n1 :star:: **${stats.totalCards.oneStar}**`,
@@ -40,7 +40,7 @@ export class Command extends BaseCommand {
         true
       )
       .setColor("#40BD66")
-      .setFooter(`Bot version: ${version.version}`);
+      .setFooter(`loonacards v${version.version}`);
     msg.channel.send(embed);
   };
 }

@@ -19,7 +19,7 @@ export class Command extends GameCommand {
       msg.author.displayAvatarURL()
     );
     msg.channel.send(
-      `:white_check_mark: Successfully set up your profile!\nPlease read the **documentation** at <https://olivia-hye.github.io/haseul-docs/help/getting-started/> for information on how to play!`,
+      `:white_check_mark: Successfully set up your profile!\nPlease read the **documentation** at <https://olivia-hye.github.io/heekki-docs/help/getting-started/> for information on how to play!`,
       embed
     );
   };

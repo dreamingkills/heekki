@@ -9,7 +9,7 @@ export class Command extends BaseCommand {
 
   exec = async function (msg: Message) {
     msg.channel.send(
-      "**HaSeul Documentation**\nhttps://olivia-hye.github.io/haseul-docs/"
+      "**Heekki Documentation**\nhttps://olivia-hye.github.io/heekki-docs/"
     );
   };
 }
