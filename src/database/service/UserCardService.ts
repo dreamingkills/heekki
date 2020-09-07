@@ -5,6 +5,7 @@ import { CardUpdate } from "../sql/card/CardUpdate";
 import { PlayerService } from "./PlayerService";
 import * as error from "../../structures/Error";
 import { CardService } from "./CardService";
+import { MarketService } from "./MarketService";
 
 export class UserCardService {
   public static async getCardByUserCardId(
@@ -69,5 +70,22 @@ export class UserCardService {
 
   public static async setCardFavorite(card_id: number): Promise<UserCard> {
     return await CardUpdate.toggleCardAsFavorite(card_id);
+  }
+
+  public static async toggleFavorite(
+    reference: {
+      abbreviation: string;
+      serial: number;
+    },
+    sender: string
+  ): Promise<UserCard> {
+    const card = (await CardService.getCardDataFromReference(reference))
+      .userCard;
+
+    if (card.ownerId !== sender) throw new error.NotYourCardError();
+    if ((await MarketService.cardIsOnMarketplace(card.userCardId)).forSale)
+      throw new error.CardOnMarketplaceError();
+
+    return await UserCardService.setCardFavorite(card.userCardId);
   }
 }

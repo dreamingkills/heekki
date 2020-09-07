@@ -300,21 +300,4 @@ export class PlayerService {
   ): Promise<number> {
     return await PlayerFetch.getCardCountByDiscordId(discord_id);
   }
-
-  public static async toggleFavorite(
-    reference: {
-      abbreviation: string;
-      serial: number;
-    },
-    sender: string
-  ): Promise<UserCard> {
-    const card = (await CardService.getCardDataFromReference(reference))
-      .userCard;
-
-    if (card.ownerId !== sender) throw new error.NotYourCardError();
-    if ((await MarketService.cardIsOnMarketplace(card.userCardId)).forSale)
-      throw new error.CardOnMarketplaceError();
-
-    return await UserCardService.setCardFavorite(card.userCardId);
-  }
 }

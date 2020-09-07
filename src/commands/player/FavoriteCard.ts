@@ -1,7 +1,6 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message, MessageEmbed } from "discord.js";
-import { CardService } from "../../database/service/CardService";
-import { PlayerService } from "../../database/service/PlayerService";
+import { Message } from "discord.js";
+import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends GameCommand {
   names: string[] = ["favorite"];
@@ -15,7 +14,7 @@ export class Command extends GameCommand {
       abbreviation: this.prm[0].split("#")[0],
       serial: parseInt(this.prm[0].split("#")[1]),
     };
-    const newCard = await PlayerService.toggleFavorite(
+    const newCard = await UserCardService.toggleFavorite(
       reference,
       msg.author.id
     );
