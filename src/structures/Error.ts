@@ -3,6 +3,7 @@ import moment from "moment";
 export abstract class ClientError extends Error {
   message: string;
   name = "ClientError";
+  isClientFacing = "true";
   constructor(msg: string) {
     super(msg);
     this.message = msg;

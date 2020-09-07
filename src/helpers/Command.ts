@@ -71,8 +71,7 @@ export class CommandManager {
       return;
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
-      if (!(e.prototype instanceof ClientError))
-        console.log(`${e.message}\n${e.stack}`);
+      if (!e.isClientFacing) console.log(`${e.message}\n${e.stack}`);
       return;
     }
   }
