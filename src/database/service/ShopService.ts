@@ -31,7 +31,7 @@ export class ShopService {
     let randomCard = chance.weighted(cardList, chances);
     let starCount = chance.weighted(
       [1, 2, 3, 4, 5, 6],
-      [50, 30, 20, 11.5, 3.8, 1.11]
+      [52.3, 31.7, 22.7, 11.9, 3.4, 0.72]
     );
 
     let newCard = await UserCardService.createNewUserCard(
