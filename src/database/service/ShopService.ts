@@ -6,6 +6,8 @@ import { ImageData } from "../../structures/card/ImageData";
 import { PlayerService } from "./PlayerService";
 import { CardService } from "./CardService";
 import { UserCardService } from "./UserCardService";
+import { ShopItem } from "../../structures/shop/Pack";
+import { Card } from "../../structures/card/Card";
 
 export class ShopService {
   public static async rollPack(
@@ -45,8 +47,22 @@ export class ShopService {
 
     return { userCard: newCard.userCard, imageData: newCard.imageData };
   }
-  public static async getAllShopItems(active?: boolean) {
+  public static async getAllShopItems(active?: boolean): Promise<ShopItem[]> {
     let items = await ShopFetch.getAllShopItems(active);
     return items;
+  }
+
+  public static async getFullPackData(
+    name: string
+  ): Promise<{
+    cover: string;
+    name: string;
+    credit: string;
+    flavor: string;
+    cards: Card[];
+  }> {
+    const shopItem = await ShopFetch.findShopItemByName(name);
+
+    return await ShopFetch.getFullPackData(shopItem.packId);
   }
 }

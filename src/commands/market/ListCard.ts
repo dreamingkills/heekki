@@ -13,8 +13,8 @@ export class Command extends GameCommand {
       msg.author.id,
       parseInt(this.prm[1]),
       {
-        abbreviation: this.prm[0].split("#")[0],
-        serial: parseInt(this.prm[0].split("#")[1]),
+        abbreviation: this.prm[0]?.split("#")[0],
+        serial: parseInt(this.prm[0]?.split("#")[1]),
       }
     );
 

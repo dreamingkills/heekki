@@ -12,14 +12,13 @@ export class CardFetch extends DBClass {
     return card;
   }
   public static async getCardsByPackId(id: number): Promise<Card[]> {
-    let query = await DB.query(`SELECT * FROM card WHERE pack_id=?`, [id]);
+    let query = await DB.query(`SELECT * FROM card WHERE pack_id=?;`, [id]);
     let cardIdList: Card[] = [];
     query.forEach(
       (c: {
         id: number;
         blurb: string;
         member: string;
-        credit: string;
         abbreviation: string;
         rarity: number;
         image_url: string;
@@ -38,7 +37,6 @@ export class CardFetch extends DBClass {
         card.id,
         card.blurb,
         card.member,
-        card.credit,
         card.abbreviation,
         card.rarity,
         card.image_url,
@@ -48,6 +46,7 @@ export class CardFetch extends DBClass {
         user_card.hearts,
         user_card.is_favorite,
         pack.title,
+        pack.credit,
         pack.image_data_id
       FROM
         card
@@ -75,7 +74,6 @@ export class CardFetch extends DBClass {
         card.id,
         card.blurb,
         card.member,
-        card.credit,
         card.abbreviation,
         card.rarity,
         card.image_url,
@@ -86,6 +84,7 @@ export class CardFetch extends DBClass {
         user_card.hearts,
         user_card.is_favorite,
         pack.title,
+        pack.credit,
         pack.image_data_id
       FROM
         card

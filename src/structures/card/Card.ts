@@ -2,7 +2,6 @@ export class Card {
   id: number;
   blurb: string;
   member: string;
-  credit: string;
   abbreviation: string;
   rarity: number;
   imageUrl: string;
@@ -13,7 +12,6 @@ export class Card {
     id: number;
     blurb: string;
     member: string;
-    credit: string;
     abbreviation: string;
     rarity: number;
     image_url: string;
@@ -23,7 +21,6 @@ export class Card {
     this.id = data.id;
     this.blurb = data.blurb;
     this.member = data.member;
-    this.credit = data.credit;
     this.abbreviation = data.abbreviation;
     this.rarity = data.rarity;
     this.imageUrl = data.image_url;

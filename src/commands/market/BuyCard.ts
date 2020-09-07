@@ -11,8 +11,8 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let buy = await MarketService.purchaseCard(msg.author.id, {
-      abbreviation: this.prm[0].split("#")[0],
-      serial: parseInt(this.prm[0].split("#")[1]),
+      abbreviation: this.prm[0]?.split("#")[0],
+      serial: parseInt(this.prm[0]?.split("#")[1]),
     });
 
     await StatsService.incrementStat("market_sales");

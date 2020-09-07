@@ -42,7 +42,6 @@ export class PlayerFetch extends DBClass {
     let query = `SELECT 
                     card.blurb,
                     card.member,
-                    card.credit,
                     card.abbreviation,
                     card.rarity,
                     card.image_url,
@@ -53,6 +52,7 @@ export class PlayerFetch extends DBClass {
                     user_card.hearts,
                     user_card.is_favorite,
                     pack.title,
+                    pack.credit,
                     pack.image_data_id
                   FROM
                     card 
@@ -73,7 +73,7 @@ export class PlayerFetch extends DBClass {
 
     query +=
       queryOptions.join(" AND") +
-      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC" +
+      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
       (options?.page && options.limit
         ? ` OFFSET ${DB.connection.escape(
@@ -81,8 +81,7 @@ export class PlayerFetch extends DBClass {
           )}`
         : ``);
     const cards = await DB.query(query + ";");
-    let cardList: UserCard[] = [];
-    let cardIterator = cards.forEach(
+    let cardList = cards.map(
       (c: {
         id: number;
         blurb: string;
@@ -99,9 +98,10 @@ export class PlayerFetch extends DBClass {
         title: string;
         image_data_id: number;
       }) => {
-        cardList.push(new UserCard(c));
+        return new UserCard(c);
       }
     );
+
     return cardList;
   }
 

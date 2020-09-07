@@ -19,7 +19,9 @@ export class Bot extends Client {
         `Ready - ${userCount[0]["COUNT(discord_id)"]} users in database`
       );
     });
-    this.on("message", async (msg: Message) => this.cmdMan.handle(msg));
+    this.on("message", async (msg: Message) => {
+      if (msg.channel.type == "text") this.cmdMan.handle(msg);
+    });
 
     this.login(config.botToken);
   }
