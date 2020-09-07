@@ -73,7 +73,7 @@ export class PlayerFetch extends DBClass {
 
     query +=
       queryOptions.join(" AND") +
-      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts DESC" +
+      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts, user_card.id DESC" +
       (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
       (options?.page && options.limit
         ? ` OFFSET ${DB.connection.escape(
