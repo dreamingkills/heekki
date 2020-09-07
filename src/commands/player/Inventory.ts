@@ -51,7 +51,8 @@ export class Command extends GameCommand {
       .setAuthor(
         `Inventory | ${user.tag} (page ${
           isNaN(parseInt(options.page)) ? 1 : options.page
-        }/${Math.ceil(cardCount / 10)})`
+        }/${Math.ceil(cardCount / 10)})`,
+        msg.author.displayAvatarURL()
       )
       .setDescription(desc)
       .setThumbnail(user.displayAvatarURL())

@@ -16,12 +16,19 @@ export class Command extends GameCommand {
     });
 
     StatsService.incrementStat("market_sales");
+
+    if (buy.seller) {
+      const seller = await msg.client.users.fetch(buy.seller.discord_id);
+      if (seller)
+        seller.send(
+          `:white_check_mark: Your card **${buy.card.abbreviation}#${buy.card.serialNumber}** has been purchased by **${msg.author.tag}**.`
+        );
+    }
+
     msg.channel.send(
       `:white_check_mark: Successfully purchased **${buy.card.abbreviation}#${
         buy.card.serialNumber
-      }** from ${
-        buy.seller ? `<@${buy.seller.discord_id}>` : "No one!"
-      }.\nYour new balance is <:coin:745447920072917093> **${
+      }**!\nYour new balance is <:coin:745447920072917093> **${
         buy.buyer.coins - buy.price
       }**.`
     );

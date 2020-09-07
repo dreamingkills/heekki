@@ -220,6 +220,10 @@ export class PlayerFetch extends DBClass {
       queryOptions.push(
         ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
       );
+    if (options?.minstars)
+      queryOptions.push(
+        ` user_card.stars>=${DB.connection.escape(options.minstars)}`
+      );
 
     query +=
       (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
