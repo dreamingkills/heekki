@@ -25,27 +25,36 @@ export class Command extends GameCommand {
     const timeUntilHeartBox = moment(
       (await PlayerService.getLastHeartBoxByDiscordId(id)) + 14400000
     );
+    const timeUntilForfeitClaim = moment(
+      (await PlayerService.getLastOrphanClaimByDiscordId(id)) + 10800000
+    );
 
     const embed = new MessageEmbed()
       .setAuthor(`Timers | ${msg.author.tag}`)
       .setThumbnail(msg.author.displayAvatarURL())
       .setColor(`#40BD66`)
       .setDescription(
-        `:alarm_clock: **Time-Based Rewards**\n:clock12: Daily Reward: ${
+        `:alarm_clock: **Time-Based Rewards**\n- Daily Reward: ${
           now <= timeUntilDaily
             ? moment.utc(timeUntilDaily.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n:clock4: Heart Boxes: ${
+        }\n-  Heart Boxes: ${
           now <= timeUntilHeartBox
             ? moment.utc(timeUntilHeartBox.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n:clock1: Send Hearts: ${
+        }\n-  Send Hearts: ${
           now <= timeUntilSend
             ? moment.utc(timeUntilSend.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n:clock1230: Mission: ${
+        }\n-  Mission: ${
           now <= timeUntilMission
             ? moment.utc(timeUntilMission.diff(now)).format(`[__]HH:mm:ss[__]`)
+            : "**Now!**"
+        }\n- Claim Forfeited Card: ${
+          now <= timeUntilForfeitClaim
+            ? moment
+                .utc(timeUntilForfeitClaim.diff(now))
+                .format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
         }`
       );
