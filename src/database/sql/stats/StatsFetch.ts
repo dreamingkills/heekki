@@ -1,4 +1,5 @@
 import { DBClass, DB } from "../..";
+import { Stats } from "../../../structures/game/Stats";
 
 export class StatsFetch extends DBClass {
   public static async getNumberOfCards(stars?: number): Promise<number> {
@@ -55,29 +56,21 @@ export class StatsFetch extends DBClass {
     return query[0][`COUNT(1)`];
   }
 
-  public static async getStats(): Promise<{
-    totalCards: {
-      total: number;
-      sixStars: number;
-      fiveStars: number;
-      fourStars: number;
-      threeStars: number;
-      twoStars: number;
-      oneStar: number;
-    };
-    totalProfiles: number;
-    richestUser: { id: string; coins: number };
-    totalRelationships: number;
-    topCollector: { id: string; cards: number };
-    totalOrphaned: number;
-  }> {
-    let totalAll = await this.getNumberOfCards();
-    let total6 = await this.getNumberOfCards(6);
-    let total5 = await this.getNumberOfCards(5);
-    let total4 = await this.getNumberOfCards(4);
-    let total3 = await this.getNumberOfCards(3);
-    let total2 = await this.getNumberOfCards(2);
-    let total1 = await this.getNumberOfCards(1);
+  public static async getTotalCoins(): Promise<number> {
+    return (await DB.query(`SELECT SUM(coins) FROM user_card;`))[0][
+      `SUM(coins)`
+    ];
+  }
+
+  public static async getStats(): Promise<Stats> {
+    const totalAll = await this.getNumberOfCards();
+    const total6 = await this.getNumberOfCards(6);
+    const total5 = await this.getNumberOfCards(5);
+    const total4 = await this.getNumberOfCards(4);
+    const total3 = await this.getNumberOfCards(3);
+    const total2 = await this.getNumberOfCards(2);
+    const total1 = await this.getNumberOfCards(1);
+    const misc = await this.getMiscStats();
 
     let totalCards = {
       total: totalAll,
@@ -93,14 +86,21 @@ export class StatsFetch extends DBClass {
     let totalRelationships = await this.getNumberOfRelationships();
     let topCollector = await this.getTopCollector();
     let totalOrphaned = await this.getNumberOfOrphanedCards();
-    return {
+    const totalCoins = await this.getTotalCoins();
+    return new Stats(
       totalCards,
       totalProfiles,
       richestUser,
       totalRelationships,
       topCollector,
       totalOrphaned,
-    };
+      totalCoins,
+      misc.triviaCorrect,
+      misc.triviaWrong,
+      misc.tradesComplete,
+      misc.marketSales,
+      misc.missionsComplete
+    );
   }
 
   public static async getMiscStats(): Promise<{

@@ -12,7 +12,6 @@ export class Command extends BaseCommand {
 
   exec = async function (msg: Message) {
     let stats = await StatsFetch.getStats();
-    const miscStats = await StatsService.getMiscStats();
 
     const uptime = msg.client.uptime! / 1000 / 60;
     let embed = new MessageEmbed()
@@ -29,7 +28,7 @@ export class Command extends BaseCommand {
       )
       .addField(
         `Miscellaneous stats`,
-        `triviaCorrect: **${miscStats.triviaCorrect}**\ntriviaWrong: **${miscStats.triviaWrong}**\nmarketSales: **${miscStats.marketSales}**\ntradesComplete: **${miscStats.tradesComplete}**\nmissionsComplete: **${miscStats.missionsComplete}**`,
+        `triviaCorrect: **${stats.triviaCorrect}**\ntriviaWrong: **${stats.triviaWrong}**\nmarketSales: **${stats.marketSales}**\ntradesComplete: **${stats.tradesComplete}**\nmissionsComplete: **${stats.missionsComplete}**\ntotalCoins: **${stats.totalCoins}**`,
         true
       )
       .addField(

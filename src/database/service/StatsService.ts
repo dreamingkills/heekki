@@ -1,7 +1,11 @@
 import { StatsUpdate } from "../sql/stats/StatsUpdate";
 import { StatsFetch } from "../sql/stats/StatsFetch";
+import { Stats } from "../../structures/game/Stats";
 
 export class StatsService {
+  public static async getGlobalStats(): Promise<Stats> {
+    return await StatsFetch.getStats();
+  }
   public static async incrementStat(
     stat:
       | "trivia_correct"
