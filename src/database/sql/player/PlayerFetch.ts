@@ -78,6 +78,10 @@ export class PlayerFetch extends DBClass {
       queryOptions.push(
         ` user_card.stars>=${DB.connection.escape(options.minstars)}`
       );
+    if (options?.maxstarsnoninclusive)
+      queryOptions.push(
+        ` user_card.stars<${DB.connection.escape(options.maxstarsnoninclusive)}`
+      );
 
     query +=
       (queryOptions.length > 0 ? " AND" : "") +

@@ -72,12 +72,14 @@ export class UserCardService {
     let cardsToForfeit = await PlayerService.getCardsByDiscordId(
       owner.discord_id,
       {
-        starsLessThan: stars,
+        maxstarsnoninclusive: stars,
       }
     );
     let numberForfeited = 0;
     for (let card of cardsToForfeit) {
       if (card.isFavorite) continue;
+      if ((await MarketService.cardIsOnMarketplace(card.userCardId)).forSale)
+        continue;
       await UserCardService.forfeitCard(owner.discord_id, card);
       numberForfeited++;
     }
