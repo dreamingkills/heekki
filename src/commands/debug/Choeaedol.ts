@@ -10,45 +10,76 @@ export class Command extends GameCommand {
   hidden: boolean = true;
 
   exec = async (msg: Message) => {
-    let ids = {
-      615: "TWICE",
-      703: "BLACKPINK",
+    const ids = {
+      411: "Apink",
+      412: "GIRLS' GENERATION",
       445: "Red Velvet",
-      529: "GFRIEND",
-      100196: "IZ*ONE",
+      458: "AOA",
       476: "MAMAMOO",
+      529: "GFRIEND",
+      530: "Lovelyz",
+      545: "OH MY GIRL",
+      582: "April",
+      615: "TWICE",
+      662: "WJSN",
+      703: "BLACKPINK",
+      754: "MOMOLAND",
+      100037: "Weki Meki",
+      100091: "fromis_9",
+      100114: "(G)I-DLE",
       100123: "DREAMCATCHER",
       100144: "LOONA",
+      100196: "IZ*ONE",
       100228: "ITZY",
-      100114: "(G)I-DLE",
       100347: "NATURE",
-      754: "MOMOLAND",
-      582: "April",
-      411: "Apink",
-      545: "OH MY GIRL",
-      412: "GIRLS' GENERATION",
-      662: "WJSN",
       100390: "Weeekly",
-      530: "Lovelyz",
-      100091: "fromis_9",
-      458: "AOA",
-      100037: "Weki Meki",
+      members: {
+        100145: "HeeJin",
+        100146: "HyunJin",
+        100147: "HaSeul",
+        100148: "YeoJin",
+        100149: "Vivi",
+        100150: "Kim Lip",
+        100151: "JinSoul",
+        100152: "Choerry",
+        100153: "Yves",
+        100154: "Chuu",
+        100155: "Go Won",
+        100156: "Olivia Hye",
+      },
     };
-    let url =
+    const url =
       "https://www.myloveidol.com/api/v1/idols/?type=G&category=F&fields=heart,top3";
+    const mUrl =
+      "https://www.myloveidol.com/api/v1/idols/?type=S&category=F&fields=heart,top3";
     let response = await fetch(url);
+    const mResponse = await fetch(mUrl);
     let json = await response.json();
-    let groups = json.objects;
-    let desc = "";
-    for (let i = 0; i < groups.length; i++) {
-      let cur = ids[groups[i].id as keyof typeof ids];
-      desc += `**${i + 1}**) ${
-        (cur == "LOONA" ? "__" : "") + cur + (cur == "LOONA" ? "__" : "")
-      } - **${groups[i].heart}** :heart:\n`;
+    const mJson = await mResponse.json();
+    const groups = json.objects;
+    const members = mJson.objects;
+    let memberDesc = "";
+    let loonaRank = 0;
+    for (let group of groups) {
+      const cur = ids[group.id as keyof typeof ids];
+      if (group.id === 100144) loonaRank = parseInt(groups.indexOf(group) + 1);
+    }
+    for (let member of members) {
+      const cur = ids.members[member.id as keyof typeof ids.members];
+      if (cur) {
+        memberDesc += `**${members.indexOf(member) + 1}**) ${cur} - **${
+          member.heart
+        }** :heart:\n`;
+      }
     }
     let embed = new MessageEmbed()
-      .setAuthor(`Current Choeaedol standings (${groups.length} groups)`)
-      .setDescription(desc)
+      .setAuthor(
+        `Current Choeaedol standings (${groups.length} groups, ${members.length} members)`
+      )
+      .setDescription(
+        `LOONA is currently rank **${loonaRank}** for girl groups.`
+      )
+      .addField(`Member Rankings`, memberDesc, true)
       .setColor("#40BD66");
     msg.channel.send(embed);
   };
