@@ -18,7 +18,9 @@ export class Bot extends Client {
       console.log(
         `Ready - ${userCount[0]["COUNT(discord_id)"]} users in database`
       );
+      this.user.setPresence({ activity: { name: "with cards - !help" } });
     });
+
     this.on("message", async (msg: Message) => {
       if (msg.channel.type == "text") this.cmdMan.handle(msg);
     });
