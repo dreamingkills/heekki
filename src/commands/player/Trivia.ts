@@ -52,7 +52,8 @@ export class Command extends GameCommand {
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
       }
-      if (msg && msg.deletable) channel.bulkDelete(collected);
+      const msgs = collected.map((m) => m);
+      channel.bulkDelete(msgs);
     });
   };
 }
