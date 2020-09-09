@@ -1,6 +1,5 @@
 import { Message, MessageEmbed } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
-import { StatsFetch } from "../../database/sql/stats/StatsFetch";
 import { StatsService } from "../../database/service/StatsService";
 import version from "../../version.json";
 
@@ -11,7 +10,7 @@ export class Command extends BaseCommand {
   category: string = "misc";
 
   exec = async function (msg: Message) {
-    let stats = await StatsFetch.getStats();
+    let stats = await StatsService.getGlobalStats();
 
     const uptime = msg.client.uptime! / 1000 / 60;
     let embed = new MessageEmbed()

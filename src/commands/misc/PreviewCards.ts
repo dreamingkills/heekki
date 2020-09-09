@@ -1,5 +1,11 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message, MessageEmbed } from "discord.js";
+import {
+  Message,
+  MessageEmbed,
+  MessageReaction,
+  User,
+  TextChannel,
+} from "discord.js";
 import { CardService } from "../../database/service/CardService";
 
 export class Command extends GameCommand {
@@ -36,6 +42,18 @@ export class Command extends GameCommand {
       );
     }
 
-    msg.channel.send(embed);
+    const sent = await msg.channel.send(embed);
+    if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")) {
+      sent.react(`753019858932727868`);
+      const collector = sent.createReactionCollector(
+        (reaction: MessageReaction, user: User) =>
+          reaction.emoji.id === "753019858932727868" &&
+          user.id === msg.author.id,
+        { time: 20000 }
+      );
+      collector.on("collect", (r) =>
+        (<TextChannel>msg.channel).bulkDelete([sent, msg])
+      );
+    }
   };
 }

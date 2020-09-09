@@ -11,6 +11,7 @@ export interface Command {
   hidden?: boolean;
   disabled?: boolean;
   role?: string;
+  deletable?: boolean;
 }
 
 export abstract class BaseCommand implements Command {
@@ -22,6 +23,7 @@ export abstract class BaseCommand implements Command {
   hidden: boolean = false;
   disabled: boolean = false;
   role: string | undefined = undefined;
+  deletable: boolean = false;
 
   prm: string[] = [];
 

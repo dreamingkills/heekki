@@ -15,7 +15,7 @@ export class Command extends GameCommand {
       .setDescription(
         `:gift_heart: You opened your heart boxes and received **${
           hb.added
-        }** hearts!\nYou can more heart boxes in 4 hours.\n\n${hb.individual
+        }** hearts!\nYou can open more heart boxes in 4 hours.\n\n${hb.individual
           .map((n) => {
             return `:package: ${n}`;
           })

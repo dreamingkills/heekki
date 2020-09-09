@@ -53,7 +53,8 @@ export class Command extends GameCommand {
         );
       }
       const msgs = collected.map((m) => m);
-      channel.bulkDelete(msgs);
+      if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES"))
+        (<TextChannel>msg.channel).bulkDelete(msgs);
     });
   };
 }

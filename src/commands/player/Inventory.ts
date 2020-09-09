@@ -1,14 +1,28 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageReaction, User } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
+import { UserCard } from "../../structures/player/UserCard";
+import { ScrollableEmbed } from "../../helpers/embed/ScrollableEmbed";
 
 export class Command extends GameCommand {
   names: string[] = ["inventory", "inv"];
   usage: string[] = ["%c [page]"];
   desc: string = "Shows a user's inventory.";
   category: string = "player";
+
+  private async renderInventory(cards: UserCard[]): Promise<string> {
+    let desc = "";
+    for (let c of cards) {
+      const { forSale } = await MarketService.cardIsOnMarketplace(c.userCardId);
+      const { level } = CardService.heartsToLevel(c.hearts);
+      desc += `__**${c.abbreviation}#${c.serialNumber}**__ - ${c.member} ${
+        (c.isFavorite ? ":heart:" : "") + (forSale ? ":dollar:" : "")
+      }\nLevel **${level}** / ${":star:".repeat(c.stars)}\n`;
+    }
+    return desc;
+  }
 
   exec = async (msg: Message) => {
     const optionsRaw = this.prm.filter((v) => v.includes("="));
@@ -21,43 +35,72 @@ export class Command extends GameCommand {
 
     const user = msg.mentions.users.first() || msg.author;
     const profile = await PlayerService.getProfileByDiscordId(user.id, true);
-    const cards = await PlayerService.getCardsByDiscordId(profile.discord_id, {
-      ...options,
-      limit: 10,
-    });
     const cardCount = await PlayerService.getCardCountByDiscordId(
       profile.discord_id,
       options
     );
+    const pageLimit = Math.ceil(cardCount / 10);
+    const pageU = isNaN(parseInt(options.page)) ? 1 : parseInt(options.page);
+    let page = pageU > pageLimit ? pageLimit : pageU;
 
-    let desc = `${user.tag} has **${cardCount}** card(s)${
-      optionsRaw.length > 0 ? " matching this search" : ""
-    }!\n${optionsRaw.length > 0 ? "```" : ""}${optionsRaw.join("\n")}${
-      optionsRaw.length > 0 ? "```\n" : ""
+    const cards = await PlayerService.getCardsByDiscordId(profile.discord_id, {
+      ...options,
+      limit: 10,
+      page,
+    });
+
+    const desc = `**${cardCount}** card(s)${
+      optionsRaw[0] ? " matching this search" : ""
+    }!\n${optionsRaw[0] ? "```" : ""}${optionsRaw.join("\n")}${
+      optionsRaw[0] ? "```\n" : ""
     }\n`;
+    const embed = new ScrollableEmbed(page)
+      .setAuthor(`Inventory | ${user.tag} (page ${page}/${pageLimit})`)
+      .setDescription(desc + (await this.renderInventory(cards)))
+      .setFooter(`To change pages, click the arrow reactions.`)
+      .setColor(`#40BD66`)
+      .setThumbnail(user.displayAvatarURL());
+    const sent = await msg.channel.send(embed);
+    await Promise.all([sent.react(`◀️`), sent.react(`▶️`)]);
 
-    for (let card of cards) {
-      const isOnMarketplace = await MarketService.cardIsOnMarketplace(
-        card.userCardId
-      );
-      let lvl = CardService.heartsToLevel(card.hearts).level;
-      desc += `__**${card.abbreviation}#${card.serialNumber}**__ - ${
-        card.member
-      } ${card.isFavorite ? ":heart:" : ""}${
-        isOnMarketplace.forSale ? ":dollar:" : ""
-      }\nLevel **${lvl}** / ${":star:".repeat(card.stars)}\n`;
-    }
-    const embed = new MessageEmbed()
-      .setAuthor(
-        `Inventory | ${user.tag} (page ${
-          isNaN(parseInt(options.page)) ? 1 : options.page
-        }/${Math.ceil(cardCount / 10)})`,
-        msg.author.displayAvatarURL()
-      )
-      .setDescription(desc)
-      .setThumbnail(user.displayAvatarURL())
-      .setColor("#40BD66")
-      .setFooter("To browse another page, use !inventory <page number>");
-    msg.channel.send(embed);
+    const collector = sent.createReactionCollector(
+      (r: MessageReaction, u: User) =>
+        (r.emoji.name === "◀️" || r.emoji.name === "▶️") &&
+        msg.author.id === u.id,
+      { time: 60000 }
+    );
+    collector.on("collect", async (r) => {
+      if (r.emoji.name === "◀️" && embed.page !== 1) {
+        const newCards = await PlayerService.getCardsByDiscordId(
+          profile.discord_id,
+          { ...options, limit: 10, page: embed.page - 1 }
+        );
+        sent.edit(
+          await embed.switchPage("prev", {
+            author: `Inventory | ${user.tag} (page ${
+              embed.page - 1
+            }/${pageLimit})`,
+            desc: desc + (await this.renderInventory(newCards)),
+          })
+        );
+      } else if (r.emoji.name === "▶️" && embed.page !== pageLimit) {
+        const newCards = await PlayerService.getCardsByDiscordId(
+          profile.discord_id,
+          { ...options, limit: 10, page: embed.page + 1 }
+        );
+        sent.edit(
+          await embed.switchPage("next", {
+            author: `Inventory | ${user.tag} (page ${
+              embed.page + 1
+            }/${pageLimit})`,
+            desc: desc + (await this.renderInventory(newCards)),
+          })
+        );
+      }
+      r.users.remove(msg.author);
+    });
+    collector.on("end", async () => {
+      if (!sent.deleted) sent.reactions.removeAll();
+    });
   };
 }
