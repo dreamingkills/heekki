@@ -38,8 +38,7 @@ export class Command extends GameCommand {
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>
           reaction.emoji.id === "753019858932727868" &&
-          user.id === msg.author.id,
-        { time: 20000 }
+          user.id === msg.author.id
       );
       collector.on("collect", (r) =>
         (<TextChannel>msg.channel).bulkDelete([sent, msg])
