@@ -67,7 +67,7 @@
     },
     {
       "question": "What is the English translation of the title of the \"Love & Live\" remix from Orbit 1.0?",
-      "answer": ["i like it more now"],
+      "answer": ["i like it more now", "i like you more now"],
       "reward": { "min": 20, "max": 30 }
     },
     {
@@ -203,6 +203,7 @@
         "kimlip",
         "heejin",
         "choerry",
+        "yerim",
         "olivia hye",
         "hyejoo"
       ],
@@ -360,7 +361,7 @@
     },
     {
       "question": "Which member enjoys collecting pens?",
-      "answer": ["choerry"],
+      "answer": ["choerry", "yerim"],
       "reward": { "min": 5, "max": 15 }
     },
     {
@@ -541,7 +542,7 @@
     },
     {
       "question": "What is the B-side track from Chuu's album?",
-      "answer": ["girl's talk"],
+      "answer": ["girl's talk", "girls talk"],
       "reward": { "min": 5, "max": 10 }
     },
     {
@@ -588,6 +589,235 @@
       "question": "True or False: 365 was meant to be on La Maison LOONA.",
       "answer": ["false"],
       "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is Go Won's favorite color?",
+      "answer": ["lavender"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the first member of LOONA?",
+      "answer": ["heejin"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the second member of LOONA?",
+      "answer": ["hyunjin"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the third member of LOONA?",
+      "answer": ["haseul"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the fourth member of LOONA?",
+      "answer": ["yeojin"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the fifth member of LOONA?",
+      "answer": ["vivi"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the sixth member of LOONA?",
+      "answer": ["kim lip", "kimlip"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the seventh member of LOONA?",
+      "answer": ["jinsoul"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the eigth member of LOONA?",
+      "answer": ["choerry", "yerim"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the ninth member of LOONA?",
+      "answer": ["yves"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the tenth member of LOONA?",
+      "answer": ["chuu"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the eleventh member of LOONA?",
+      "answer": ["go won", "gowon"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the twelfth member of LOONA?",
+      "answer": ["olivia hye", "hyejoo"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "True or False: There is a rendezvous 18.6 music video.",
+      "answer": ["true"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Go Won is the godmother of whose baby?",
+      "answer": ["grimes", "elon musk", "grimes and elon musk"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the October girl?",
+      "answer": ["heejin"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Name one of the November girls.",
+      "answer": ["hyunjin", "yves"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who was the first November girl?",
+      "answer": ["hyunjin"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Name one of the December girls.",
+      "answer": ["haseul", "chuu"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who was the first December girl?",
+      "answer": ["haseul"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Name one of the January girls.",
+      "answer": ["yeojin", "go won"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who was the first January girl?",
+      "answer": ["yeojin"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the April girl?",
+      "answer": ["vivi"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the May girl?",
+      "answer": ["kim lip", "kimlip"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the June girl?",
+      "answer": ["jinsoul"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the July girl?",
+      "answer": ["choerry", "yerim"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the second November girl?",
+      "answer": ["yves"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the second December girl?",
+      "answer": ["chuu"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the second January girl?",
+      "answer": ["go won", "gowon"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Who is the March girl?",
+      "answer": ["olivia hye", "hyejoo"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is 1/3's concept?",
+      "answer": ["innocent"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is ODD EYE CIRCLE's concept?",
+      "answer": ["girl crush", "girlcrush"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is yyxy's concept?",
+      "answer": ["youth"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What was LOONA's first Korean digital single?",
+      "answer": ["the carol 2.0"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What was LOONA's first English digital single?",
+      "answer": [
+        "loonatic english version",
+        "loonatic eng ver",
+        "loonatic english ver"
+      ],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Which year did LOONA do a CF for Skoolooks?",
+      "answer": ["2019"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Which year did HeeJin and HyunJin do a CF for Avajar?",
+      "answer": ["2018"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Which year did Heejin, HyunJin, YeoJin, ViVi, and Kim Lip do a CF for Law of Creation?",
+      "answer": ["2017"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What was the name of BlockBerry Creative's pre-debut trainee searching project?",
+      "answer": ["loonation"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "True or False: The amount of potential songs per album exceeded 1,000.",
+      "answer": ["true"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What is the name of BlockBerry Creative's parent company?",
+      "answer": ["polaris entertainment", "polaris"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "When did LOONA receive their first win?",
+      "answer": ["march 12 2020", "march 12, 2020", "200412"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "Where was Girl Front filmed??",
+      "answer": ["los angeles", "la"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "What did HaSeul give to HyunJin in LOONA Kick #44?",
+      "answer": ["chair", "a chair"],
+      "reward": { "min": 5, "max": 10 }
+    },
+    {
+      "question": "True or False: LOONA gives you eternal life.",
+      "answer": ["true"],
+      "reward": { "min": 1, "max": 1 }
     }
   ]
 }
