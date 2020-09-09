@@ -57,7 +57,7 @@ export class StatsFetch extends DBClass {
   }
 
   public static async getTotalCoins(): Promise<number> {
-    return (await DB.query(`SELECT SUM(coins) FROM user_card;`))[0][
+    return (await DB.query(`SELECT SUM(coins) FROM user_profile;`))[0][
       `SUM(coins)`
     ];
   }
