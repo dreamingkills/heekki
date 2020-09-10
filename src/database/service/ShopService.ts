@@ -20,7 +20,7 @@ export class ShopService {
     if (shopItem.price > user.coins) throw new error.NotEnoughCoinsError();
     if (!shopItem.active) throw new error.ExpiredPackError();
 
-    let cardList = await CardService.getCardsByPackId(shopItem.id);
+    let cardList = await CardService.getCardsByPackId(shopItem.packId);
 
     let chance = new Chance();
     let chances = [];
