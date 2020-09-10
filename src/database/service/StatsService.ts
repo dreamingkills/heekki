@@ -26,4 +26,12 @@ export class StatsService {
   }> {
     return await StatsFetch.getMiscStats();
   }
+
+  public static async getNumberOfOrphanedCards(): Promise<number> {
+    return await StatsFetch.getNumberOfOrphanedCards();
+  }
+
+  public static async getNumberOfCardsInMarketplace(): Promise<number> {
+    return await StatsFetch.getNumberOfCardsInMarketplace();
+  }
 }

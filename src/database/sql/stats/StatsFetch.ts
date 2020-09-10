@@ -56,6 +56,9 @@ export class StatsFetch extends DBClass {
     return query[0][`COUNT(1)`];
   }
 
+  public static async getNumberOfCardsInMarketplace(): Promise<number> {
+    return (await DB.query(`SELECT COUNT(*) FROM marketplace;`))[0][`COUNT(*)`];
+  }
   public static async getTotalCoins(): Promise<number> {
     return (await DB.query(`SELECT SUM(coins) FROM user_profile;`))[0][
       `SUM(coins)`

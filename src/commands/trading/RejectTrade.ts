@@ -8,10 +8,10 @@ export class Command extends GameCommand {
   desc: string = "Cancels a trade request you sent, or one from another user.";
   category: string = "card";
 
-  exec = async (msg: Message) => {
+  async exec(msg: Message) {
     const tradeId = this.prm[0];
 
     await TradeService.cancelTrade(tradeId, msg.author.id);
     msg.channel.send(`:white_check_mark: Cancelled trade **${tradeId}**!`);
-  };
+  }
 }

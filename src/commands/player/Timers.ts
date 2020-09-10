@@ -4,7 +4,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 import moment from "moment";
 
 export class Command extends GameCommand {
-  names: string[] = ["timers"];
+  names: string[] = ["timers", "t"];
   usage: string[] = ["%c"];
   desc: string = "Shows the time until you can claim your time-based rewards.";
   category: string = "player";
