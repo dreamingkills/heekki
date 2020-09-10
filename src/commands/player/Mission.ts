@@ -10,6 +10,10 @@ export class Command extends GameCommand {
   category: string = "player";
 
   exec = async (msg: Message) => {
+    if (!this.prm[0]) {
+      msg.channel.send("<:red_x:741454361007357993> Please specify a card.");
+      return;
+    }
     const mission = await PlayerService.doMission(msg.author.id, {
       abbreviation: this.prm[0].split("#")[0],
       serial: parseInt(this.prm[0].split("#")[1]),

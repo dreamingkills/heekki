@@ -18,8 +18,8 @@ export class Command extends GameCommand {
       references.map(async (p) => {
         return (
           await CardService.getCardDataFromReference({
-            abbreviation: p.split("#")[0],
-            serial: parseInt(p.split("#")[1]),
+            abbreviation: p?.split("#")[0],
+            serial: parseInt(p?.split("#")[1]),
           })
         ).userCard;
       })

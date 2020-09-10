@@ -11,9 +11,15 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     const reference = {
-      abbreviation: this.prm[0].split("#")[0],
-      serial: parseInt(this.prm[0].split("#")[1]),
+      abbreviation: this.prm[0]?.split("#")[0],
+      serial: parseInt(this.prm[0]?.split("#")[1]),
     };
+    if (!reference.abbreviation) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a card to favorite.`
+      );
+      return;
+    }
     const newCard = await UserCardService.toggleCardAsFavorite(
       reference,
       msg.author.id

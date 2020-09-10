@@ -13,6 +13,12 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     const packName = this.prm.join(" ");
+    if (!packName) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a pack to purchase from.`
+      );
+      return;
+    }
     const generatedCard = await ShopService.rollPack(packName, msg.author.id);
 
     const cardImage = await CardService.generateCardImageFromUserCard({

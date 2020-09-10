@@ -9,7 +9,19 @@ export class Command extends GameCommand {
   category: string = "card";
 
   exec = async (msg: Message) => {
-    const refs = this.prm.join(" ").split("for");
+    const refs = this.prm.join(" ")?.split("for");
+    if (!refs[0]) {
+      msg.channel.send(
+        "<:red_x:741454361007357993> Please enter a card to trade."
+      );
+      return;
+    }
+    if (!refs[1]) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a card to trade for.`
+      );
+      return;
+    }
     let refsSender = refs[0].split(" ").filter((e) => e);
     let refsOther = refs[1].split(" ").filter((e) => e);
 
