@@ -24,13 +24,11 @@ export class ShopService {
 
     let chance = new Chance();
     let chances = [];
-    console.log(cardList);
     for (let card of cardList) {
       let adjustedRarity =
         card.rarity > 3 ? card.rarity * 3.36 : card.rarity * 0.16;
       chances.push(adjustedRarity);
     }
-    console.log(chances);
 
     let randomCard = chance.weighted(cardList, chances);
     let starCount = chance.weighted(
@@ -40,7 +38,7 @@ export class ShopService {
 
     let newCard = await UserCardService.createNewUserCard(
       user.discord_id,
-      randomCard.id,
+      randomCard,
       starCount,
       0
     );

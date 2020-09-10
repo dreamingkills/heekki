@@ -4,30 +4,39 @@ import * as error from "../../../structures/Error";
 import { CardFetch } from "./CardFetch";
 import { ImageData } from "../../../structures/card/ImageData";
 import { OkPacket } from "mysql";
+import { Card } from "../../../structures/card/Card";
 
 export class CardUpdate extends DBClass {
   public static async createNewUserCard(
     owner_id: string,
-    card_id: number,
+    card: Card,
     stars: number,
     hearts: number
   ): Promise<{ userCard: UserCard; imageData: ImageData }> {
     let serialNumber = await DB.query(
       `SELECT * FROM serial_number WHERE id=?;`,
-      [card_id]
+      [card.serialId]
     );
-    let insertQuery = await DB.query(
-      `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
-      [serialNumber[0].serial_number + 1, owner_id, stars, hearts, card_id]
-    );
-    let newUserCard = await CardFetch.getFullCardDataFromUserCard(
-      insertQuery.insertId
-    );
-    await DB.query(
-      `UPDATE serial_number SET serial_number=serial_number+1 WHERE id=?`,
-      [serialNumber[0].id]
-    );
-    return newUserCard;
+    let tries = 0;
+    while (true) {
+      try {
+        let insertQuery = await DB.query(
+          `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
+          [serialNumber[0].serial_number + 1, owner_id, stars, hearts, card.id]
+        );
+        let newUserCard = await CardFetch.getFullCardDataFromUserCard(
+          insertQuery.insertId
+        );
+        await DB.query(
+          `UPDATE serial_number SET serial_number=serial_number+1 WHERE id=?`,
+          [serialNumber[0].id]
+        );
+        return newUserCard;
+      } catch (e) {
+        if (++tries === 3) throw e;
+        serialNumber++;
+      }
+    }
   }
 
   public static async addHeartsToCard(

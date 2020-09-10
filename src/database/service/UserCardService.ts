@@ -6,6 +6,7 @@ import { PlayerService } from "./PlayerService";
 import * as error from "../../structures/Error";
 import { CardService } from "./CardService";
 import { MarketService } from "./MarketService";
+import { Card } from "../../structures/card/Card";
 
 export class UserCardService {
   public static async getCardByUserCardId(
@@ -24,16 +25,11 @@ export class UserCardService {
 
   public static async createNewUserCard(
     discord_id: string,
-    card_id: number,
+    card: Card,
     stars: number,
     hearts: number
   ): Promise<{ userCard: UserCard; imageData: ImageData }> {
-    return await CardUpdate.createNewUserCard(
-      discord_id,
-      card_id,
-      stars,
-      hearts
-    );
+    return await CardUpdate.createNewUserCard(discord_id, card, stars, hearts);
   }
 
   public static async toggleCardAsFavorite(
