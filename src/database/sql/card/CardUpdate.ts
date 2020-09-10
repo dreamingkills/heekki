@@ -13,10 +13,9 @@ export class CardUpdate extends DBClass {
     stars: number,
     hearts: number
   ): Promise<{ userCard: UserCard; imageData: ImageData }> {
-    let serialNumber = await DB.query(
-      `SELECT * FROM serial_number WHERE id=?;`,
-      [card.serialId]
-    );
+    let serialNumber = (
+      await DB.query(`SELECT * FROM serial_number WHERE id=?;`, [card.serialId])
+    )[0].serial_number;
     let tries = 0;
     while (true) {
       try {

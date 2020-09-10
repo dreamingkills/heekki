@@ -19,6 +19,11 @@ export class Command extends GameCommand {
       );
       return;
     }
+    if (
+      packName.toLowerCase() === "reveal" &&
+      msg.author.id !== "197186779843919877"
+    )
+      return;
     const generatedCard = await ShopService.rollPack(packName, msg.author.id);
 
     const cardImage = await CardService.generateCardImageFromUserCard({
