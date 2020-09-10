@@ -30,7 +30,11 @@ export class Command extends GameCommand {
         }\n${card.userCard.blurb != "" ? `*"${card.userCard.blurb}"*` : ``}`
       )
       .setColor("#40BD66")
-      .setFooter(`Card designed by ${card.userCard.credit}`);
+      .setFooter(
+        `Card designed by ${card.userCard.credit} - ${
+          Date.now() - msg.createdTimestamp
+        }ms`
+      );
     const sent = await msg.channel.send({ embed: embed, files: [card.image] });
 
     if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")) {
