@@ -13,22 +13,32 @@ export class CardUpdate extends DBClass {
     stars: number,
     hearts: number
   ): Promise<{ userCard: UserCard; imageData: ImageData }> {
+    console.log(card);
     let serialNumber = (
       await DB.query(`SELECT * FROM serial_number WHERE id=?;`, [card.serialId])
-    )[0].serial_number;
+    )[0]?.serial_number;
+    console.log(
+      await DB.query(`SELECT * FROM serial_number WHERE id=?;`, [card.serialId])
+    );
+    console.log(
+      DB.connection.format(`SELECT * FROM serial_number WHERE id=?;`, [
+        card.serialId,
+      ])
+    );
+    console.log(serialNumber);
     let tries = 0;
     while (true) {
       try {
         let insertQuery = await DB.query(
           `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
-          [serialNumber[0].serial_number + 1, owner_id, stars, hearts, card.id]
+          [serialNumber + 1, owner_id, stars, hearts, card.id]
         );
         let newUserCard = await CardFetch.getFullCardDataFromUserCard(
           insertQuery.insertId
         );
         await DB.query(
           `UPDATE serial_number SET serial_number=serial_number+1 WHERE id=?`,
-          [serialNumber[0].id]
+          [card.serialId]
         );
         return newUserCard;
       } catch (e) {
