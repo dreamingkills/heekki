@@ -18,6 +18,7 @@ export class ShopService {
     let shopItem = await ShopFetch.findShopItemByName(packName);
 
     if (shopItem.price > user.coins) throw new error.NotEnoughCoinsError();
+    if (!shopItem.active) throw new error.ExpiredPackError();
 
     let cardList = await CardService.getCardsByPackId(shopItem.id);
 
