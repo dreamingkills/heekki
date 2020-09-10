@@ -29,6 +29,8 @@ export class ShopService {
         card.rarity > 3 ? card.rarity * 3.36 : card.rarity * 0.16;
       chances.push(adjustedRarity);
     }
+    console.log(chances);
+
     let randomCard = chance.weighted(cardList, chances);
     let starCount = chance.weighted(
       [1, 2, 3, 4, 5, 6],
@@ -48,6 +50,7 @@ export class ShopService {
 
     return { userCard: newCard.userCard, imageData: newCard.imageData };
   }
+
   public static async getAllShopItems(active?: boolean): Promise<ShopItem[]> {
     let items = await ShopFetch.getAllShopItems(active);
     return items;
