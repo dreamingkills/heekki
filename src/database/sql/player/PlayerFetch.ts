@@ -82,6 +82,10 @@ export class PlayerFetch extends DBClass {
       queryOptions.push(
         ` user_card.stars<${DB.connection.escape(options.maxstarsnoninclusive)}`
       );
+    if (options?.serial)
+      queryOptions.push(
+        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
+      );
 
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
@@ -227,6 +231,10 @@ export class PlayerFetch extends DBClass {
     if (options?.minstars)
       queryOptions.push(
         ` user_card.stars>=${DB.connection.escape(options.minstars)}`
+      );
+    if (options?.serial)
+      queryOptions.push(
+        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
       );
 
     query +=

@@ -56,6 +56,10 @@ export class MarketFetch extends DBClass {
       queryOptions.push(
         ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
       );
+    if (options?.serial)
+      queryOptions.push(
+        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
+      );
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
