@@ -33,15 +33,14 @@ export class Command extends GameCommand {
     if (rxn) {
       await UserCardService.forfeitCard(msg.author.id, card);
 
-      msg.channel.send(
+      conf.edit(
         `:white_check_mark: You forfeited **${card.abbreviation}#${card.serialNumber}**.`
       );
-      conf.delete();
     } else {
       conf.edit(
         `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
       );
-      conf.reactions.removeAll();
     }
+    conf.reactions.removeAll();
   };
 }
