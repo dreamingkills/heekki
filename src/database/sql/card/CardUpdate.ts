@@ -20,11 +20,7 @@ export class CardUpdate extends DBClass {
     console.log(
       await DB.query(`SELECT * FROM serial_number WHERE id=?;`, [card.serialId])
     );
-    console.log(
-      DB.connection.format(`SELECT * FROM serial_number WHERE id=?;`, [
-        card.serialId,
-      ])
-    );
+    console.log(card.serialId);
     console.log(serialNumber);
     let tries = 0;
     while (true) {
