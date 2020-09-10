@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends GameCommand {
-  names: string[] = ["favorite"];
+  names: string[] = ["favorite", "fav"];
   usage: string[] = ["%c <card reference>"];
   desc: string =
     "Marks a card as 'favorite', preventing it from being traded, sold, or forfeited.";
