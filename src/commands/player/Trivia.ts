@@ -52,7 +52,7 @@ export class Command extends GameCommand {
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
       }
-      const msgs = collected.map((m) => m);
+      const msgs = collected.filter((m) => !m.deleted);
       if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES"))
         (<TextChannel>msg.channel).bulkDelete(msgs);
     });
