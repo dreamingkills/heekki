@@ -12,6 +12,7 @@ export class Command extends GameCommand {
   category: string = "shop";
 
   exec = async (msg: Message) => {
+    console.log(`Command received - ${msg.author.tag}`);
     const packName = this.prm.join(" ");
     if (!packName) {
       msg.channel.send(
@@ -42,6 +43,10 @@ export class Command extends GameCommand {
           msg.author.tag
         } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
       );
+
+    console.log(
+      `Command complete - ${msg.author.tag} - ${msg.createdTimestamp}`
+    );
     msg.channel.send(embed);
   };
 }
