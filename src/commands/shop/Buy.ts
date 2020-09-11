@@ -12,7 +12,7 @@ export class Command extends GameCommand {
   category: string = "shop";
 
   exec = async (msg: Message) => {
-    console.log(`Command received - ${msg.author.tag}`);
+    console.log(`Command received - ${msg.author.id}`);
     const packName = this.prm.join(" ");
     if (!packName) {
       msg.channel.send(
@@ -22,6 +22,7 @@ export class Command extends GameCommand {
     }
 
     const generatedCard = await ShopService.rollPack(packName, msg.author.id);
+    console.log(`Pack rolled - ${msg.author.id}`);
 
     const cardImage = await CardService.generateCardImageFromUserCard({
       userCard: generatedCard.userCard,
@@ -45,7 +46,7 @@ export class Command extends GameCommand {
       );
 
     console.log(
-      `Command complete - ${msg.author.tag} - ${msg.createdTimestamp}`
+      `Command complete - ${msg.author.id} - ${msg.createdTimestamp}`
     );
     msg.channel.send(embed);
   };
