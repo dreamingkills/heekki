@@ -116,26 +116,11 @@ export class CardService {
 
     ctx.drawImage(background, 0, 0, size.width, size.height);
 
-    /*let heartData = await jimp.read(imageData.heartImageUrl);
-    let heart = await canvas.loadImage(
-      await heartData.getBufferAsync(jimp.MIME_PNG)
-    );
-    ctx.drawImage(
-      heart,
-      imageData.heartX,
-      imageData.heartY,
-      imageData.heartLength,
-      imageData.heartHeight
-    );*/
-
-    //await this.generateText(ctx, { ...imageData.packText }, cardData.title);
-    //await this.generateText(ctx, { ...imageData.memberText }, cardData.member);
     await this.generateText(
       ctx,
       { ...imageData.serialText },
       `#${this.commafyNumber(cardData.serialNumber)}`
     );
-    //await this.generateText(ctx, { ...imageData.levelText }, `Level`);
     await this.generateText(
       ctx,
       { ...imageData.levelNum },

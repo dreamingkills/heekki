@@ -112,33 +112,22 @@ export class CardFetch extends DBClass {
 
   public static async getImageDataFromCardId(id: number): Promise<ImageData> {
     let imageDataQuery = await DB.query(
-      `SELECT * FROM image_data WHERE id=${id};`
+      `SELECT * FROM image_data WHERE id=?;`,
+      [id]
     );
     if (!imageDataQuery[0]) throw new error.InvalidImageDataError();
-    let packText = await DB.query(`SELECT * FROM pack_text WHERE id=?;`, [
-      imageDataQuery[0].pack_text_id,
-    ]);
-    let memberText = await DB.query(`SELECT * FROM member_text WHERE id=?;`, [
-      imageDataQuery[0].member_text_id,
-    ]);
     let serialText = await DB.query(`SELECT * FROM serial_text WHERE id=?;`, [
       imageDataQuery[0].serial_text_id,
-    ]);
-    let levelText = await DB.query(`SELECT * FROM level_text WHERE id=?;`, [
-      imageDataQuery[0].level_text_id,
     ]);
     let levelNum = await DB.query(`SELECT * FROM level_num WHERE id=?;`, [
       imageDataQuery[0].level_num_id,
     ]);
-    let heartText = await DB.query(`SELECT * FROM heart_text WHERE id=?`, [
+    let heartText = await DB.query(`SELECT * FROM heart_text WHERE id=?;`, [
       imageDataQuery[0].heart_text_id,
     ]);
     let imageData = new ImageData(
       imageDataQuery[0],
-      packText[0],
-      memberText[0],
       serialText[0],
-      levelText[0],
       levelNum[0],
       heartText[0]
     );

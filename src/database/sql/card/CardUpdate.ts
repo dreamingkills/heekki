@@ -14,11 +14,7 @@ export class CardUpdate extends DBClass {
     stars: number,
     hearts: number
   ): Promise<{ userCard: UserCard; imageData: ImageData }> {
-    console.log(card);
     let newSerial = await SerialGenerator.queueSerialGen(card);
-    console.log(`New Serial Generated - ${owner_id}`);
-    console.log(card.serialId);
-    console.log(newSerial);
     let tries = 0;
     while (true) {
       try {

@@ -20,43 +20,8 @@ CREATE TABLE serial_number
     PRIMARY KEY (id)
 );
 
-CREATE TABLE pack_text
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    font            VARCHAR(255) DEFAULT "Impact",
-    size            INT(11) DEFAULT 25,
-    color           VARCHAR(255) DEFAULT "white",
-    align           VARCHAR(255) DEFAULT "left",
-    x               INT(11) DEFAULT 25,
-    y               INT(11) DEFAULT 100,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE member_text
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    font            VARCHAR(255) DEFAULT "Impact",
-    size            INT(11) DEFAULT 25,
-    color           VARCHAR(255) DEFAULT "white",
-    align           VARCHAR(255) DEFAULT "left",
-    x               INT(11) DEFAULT 25,
-    y               INT(11) DEFAULT 100,
-    PRIMARY KEY (id)
-);
 
 CREATE TABLE serial_text
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    font            VARCHAR(255) DEFAULT "Impact",
-    size            INT(11) DEFAULT 25,
-    color           VARCHAR(255) DEFAULT "white",
-    align           VARCHAR(255) DEFAULT "left",
-    x               INT(11) DEFAULT 25,
-    y               INT(11) DEFAULT 100,
-    PRIMARY KEY (id)
-);
-
-CREATE TABLE level_text
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
     font            VARCHAR(255) DEFAULT "Impact",
@@ -95,11 +60,6 @@ CREATE TABLE heart_text
 CREATE TABLE image_data
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
-    heart_image_url VARCHAR(255),
-    heart_x         INT(11),
-    heart_y         INT(11),
-    heart_length    INT(11),
-    heart_height    INT(11),
     star_image_url  VARCHAR(255),
     star_starting_x INT(11),
     star_starting_y INT(11),
@@ -107,17 +67,11 @@ CREATE TABLE image_data
     star_length     INT(11),
     star_x_inc      INT(11),
     star_y_inc      INT(11),
-    pack_text_id    INT(11), 
-    member_text_id  INT(11),
     serial_text_id  INT(11),
-    level_text_id   INT(11),
     level_num_id    INT(11),
     heart_text_id   INT(11),
     PRIMARY KEY (id), 
-    CONSTRAINT PackText FOREIGN KEY (pack_text_id) REFERENCES pack_text(id) ON DELETE CASCADE,
-    CONSTRAINT MemberText FOREIGN KEY (member_text_id) REFERENCES member_text(id) ON DELETE CASCADE,
     CONSTRAINT SerialText FOREIGN KEY (serial_text_id) REFERENCES serial_text(id) ON DELETE CASCADE,
-    CONSTRAINT LevelText FOREIGN KEY (level_text_id) REFERENCES level_text(id) ON DELETE CASCADE,
     CONSTRAINT LevelNum FOREIGN KEY (level_num_id) REFERENCES level_num(id) ON DELETE CASCADE,
     CONSTRAINT HeartText FOREIGN KEY (heart_text_id) REFERENCES heart_text(id) ON DELETE CASCADE
 );
