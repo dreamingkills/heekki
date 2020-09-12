@@ -24,11 +24,6 @@ export class Command extends GameCommand {
     const generatedCard = await ShopService.rollPack(packName, msg.author.id);
     console.log(`Pack rolled - ${msg.author.id}`);
 
-    /*const cardImage = await CardService.generateCardImageFromUserCard({
-      userCard: generatedCard.userCard,
-      imageData: generatedCard.imageData,
-    });*/
-
     const userCard = generatedCard.userCard;
     let embed = new MessageEmbed()
       .setAuthor(`You rolled the ${userCard.title} pack and got...`)
@@ -38,12 +33,19 @@ export class Command extends GameCommand {
         }`
       )
       .setColor("#40BD66")
-      //.attachFiles([{ name: "card.png", attachment: cardImage.image }])
       .setFooter(
         `${userCard.abbreviation + "#" + userCard.serialNumber} • Rolled by ${
           msg.author.tag
         } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
       );
+
+    if (msg.author.id == "197186779843919877") {
+      const cardImage = await CardService.generateCardImageFromUserCard({
+        userCard: generatedCard.userCard,
+        imageData: generatedCard.imageData,
+      });
+      embed.attachFiles([{ name: "card.png", attachment: cardImage.image }]);
+    }
 
     console.log(
       `Command complete - ${msg.author.id} - ${msg.createdTimestamp}`

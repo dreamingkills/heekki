@@ -16,7 +16,8 @@ export class Command extends GameCommand {
   deletable: boolean = true;
 
   exec = async (msg: Message) => {
-    /*let card = await CardService.generateCardImageFromReference({
+    if (msg.author.id != "197186779843919877") return;
+    let card = await CardService.generateCardImageFromReference({
       abbreviation: this.prm[0].split("#")[0],
       serial: parseInt(this.prm[0].split("#")[1]),
     });
@@ -48,6 +49,5 @@ export class Command extends GameCommand {
         (<TextChannel>msg.channel).bulkDelete([sent, msg])
       );
     }
-    */
   };
 }
