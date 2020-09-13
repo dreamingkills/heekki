@@ -27,11 +27,7 @@ export class PlayerService {
     perspective: boolean
   ): Promise<Profile> {
     const user = await PlayerFetch.getProfileFromDiscordId(discord_id);
-
-    if (!user) {
-      if (perspective) throw new error.NoProfileOtherError();
-      throw new error.NoProfileError();
-    }
+    if (!user) throw new error.NoProfileError(perspective);
 
     return user;
   }

@@ -12,7 +12,6 @@ export class Command extends GameCommand {
   category: string = "shop";
 
   exec = async (msg: Message) => {
-    console.log(`Command received - ${msg.author.id}`);
     const packName = this.prm.join(" ");
     if (!packName) {
       msg.channel.send(
@@ -22,7 +21,6 @@ export class Command extends GameCommand {
     }
 
     const generatedCard = await ShopService.rollPack(packName, msg.author.id);
-    console.log(`Pack rolled - ${msg.author.id}`);
 
     const userCard = generatedCard.userCard;
     let embed = new MessageEmbed()
@@ -47,9 +45,6 @@ export class Command extends GameCommand {
       embed.attachFiles([{ name: "card.png", attachment: cardImage.image }]);
     }
 
-    console.log(
-      `Command complete - ${msg.author.id} - ${msg.createdTimestamp}`
-    );
     msg.channel.send(embed);
   };
 }

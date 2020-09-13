@@ -15,4 +15,14 @@ export class StatsUpdate extends DBClass {
     );
     return true;
   }
+
+  public static async triviaComplete(
+    discord_id: string,
+    correct: boolean
+  ): Promise<void> {
+    await DB.query(`INSERT INTO trivia (discord_id, correct) VALUES (?, ?);`, [
+      discord_id,
+      correct,
+    ]);
+  }
 }

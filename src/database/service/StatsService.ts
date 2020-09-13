@@ -34,4 +34,11 @@ export class StatsService {
   public static async getNumberOfCardsInMarketplace(): Promise<number> {
     return await StatsFetch.getNumberOfCardsInMarketplace();
   }
+
+  public static async triviaComplete(
+    discord_id: string,
+    correct: boolean
+  ): Promise<void> {
+    StatsUpdate.triviaComplete(discord_id, correct);
+  }
 }

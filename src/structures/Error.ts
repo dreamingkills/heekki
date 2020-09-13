@@ -9,46 +9,27 @@ export abstract class ClientError extends Error {
     this.message = msg;
   }
 }
+/**
+ * Perspective:
+ *
+ * `0` - First-person ("You haven't...")
+ *
+ * `1` - Third-person ("They haven't...")
+ */
 export class NoProfileError extends ClientError {
   name = "NoProfileError";
-  constructor() {
+  constructor(perspective: boolean) {
     super(
-      "You haven't created a profile yet! Use the `!play` command to get started."
+      `${
+        perspective ? "They" : "You"
+      } haven't created a profile yet! Use the \`!play\` command to get started.`
     );
-  }
-}
-export class NoProfileOtherError extends ClientError {
-  name = "NoProfileOtherError";
-  constructor() {
-    super("That person hasn't created a profile yet!");
   }
 }
 export class DuplicateProfileError extends ClientError {
   name = "DuplicateProfileError";
   constructor() {
     super("You've already set up a profile! Use `!profile` to view it.");
-  }
-}
-export class PageOutOfBoundsError extends ClientError {
-  name = "PageOutOfBoundsError";
-  constructor() {
-    super(
-      "That isn't a valid page! It must be a number greater than or equal to 1."
-    );
-  }
-}
-export class NobodyToHugError extends ClientError {
-  name = "NobodyToHugError";
-  constructor() {
-    super(
-      "You can't hug nobody! (*hint: you may have typed an invalid mention*)"
-    );
-  }
-}
-export class CantHugYourselfError extends ClientError {
-  name = "CantHugYourselfError";
-  constructor() {
-    super("You can't hug yourself!");
   }
 }
 export class InvalidPackError extends ClientError {
@@ -83,12 +64,6 @@ export class EmptyPackError extends ClientError {
     super("That pack is empty!");
   }
 }
-export class NoPackIDError extends ClientError {
-  name = "NoPackIDError";
-  constructor() {
-    super("Please specify a valid Pack ID (shown in the !shop).");
-  }
-}
 export class NotANumberError extends ClientError {
   name = "NotANumberError";
   constructor() {
@@ -107,12 +82,6 @@ export class InvalidUserCardError extends ClientError {
     super(
       `I couldn't find **${reference.abbreviation}#${reference.serial}**! Please make sure you entered it correctly.`
     );
-  }
-}
-export class InvalidCollectionError extends ClientError {
-  name = "InvalidCollectionError";
-  constructor() {
-    super("That collection does not exist!");
   }
 }
 export class InvalidImageDataError extends ClientError {

@@ -37,7 +37,6 @@ export class Command extends GameCommand {
           `:tada: **Correct!**\nYou were awarded <:coin:745447920072917093> **${profit}**.`
         );
         msg.react("✅");
-        StatsService.incrementStat("trivia_correct");
 
         await PlayerService.addCoinsToUserByDiscordId(msg.author.id, profit);
         return collect.stop("correct");
@@ -47,14 +46,23 @@ export class Command extends GameCommand {
       if (reason != "correct") {
         msg.react("741454361007357993");
 
-        StatsService.incrementStat("trivia_wrong");
         triviaMessage.edit(
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
       }
       const msgs = collected.filter((m) => !m.deleted);
-      if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES"))
-        (<TextChannel>msg.channel).bulkDelete(msgs);
+      try {
+        if (
+          msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")
+        )
+          (<TextChannel>msg.channel).bulkDelete(msgs);
+      } catch (e) {
+        // Ignore 'Unknown Message' - doesn't matter
+      }
+      StatsService.triviaComplete(
+        msg.author.id,
+        reason === "correct" ? true : false
+      );
     });
   };
 }

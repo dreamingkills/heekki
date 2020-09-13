@@ -39,9 +39,13 @@ export class Command extends GameCommand {
       profile.discord_id,
       options
     );
+
     const pageLimit = Math.ceil(cardCount / 10);
-    const pageU = isNaN(parseInt(options.page)) ? 1 : parseInt(options.page);
-    let page = pageU > pageLimit ? pageLimit : pageU;
+    const pageNotNaN = isNaN(parseInt(options.page))
+      ? 1
+      : parseInt(options.page);
+    const pageNotNegative = pageNotNaN < 1 ? 1 : pageNotNaN;
+    let page = pageNotNegative > pageLimit ? pageLimit : pageNotNegative;
 
     const desc = `**${cardCount}** card(s)${
       optionsRaw[0] ? " matching this search" : ""
@@ -68,7 +72,7 @@ export class Command extends GameCommand {
       (r: MessageReaction, u: User) =>
         (r.emoji.name === "◀️" || r.emoji.name === "▶️") &&
         msg.author.id === u.id,
-      { time: 60000 }
+      { time: 30000 }
     );
     collector.on("collect", async (r) => {
       if (r.emoji.name === "◀️" && page !== 1) {

@@ -1,9 +1,8 @@
 import { BaseCommand } from "../structures/command/Command";
 import config from "../../config.json";
 import glob from "glob";
-import { Message, MessageReaction, User } from "discord.js";
+import { Message } from "discord.js";
 import { promisify } from "util";
-import { ClientError, InvalidCollectionError } from "../structures/Error";
 
 export class CommandManager {
   commands: BaseCommand[] = [];

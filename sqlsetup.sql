@@ -183,6 +183,13 @@ CREATE TABLE stats
     statistic_count INT(11) DEFAULT 0
 );
 
+CREATE TABLE trivia
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      VARCHAR(32) NOT NULL,
+    correct         BOOLEAN NOT NULL
+);
+
 INSERT INTO stats (statistic_name) VALUES ("trivia_correct");
 INSERT INTO stats (statistic_name) VALUES ("trivia_wrong");
 INSERT INTO stats (statistic_name) VALUES ("trades_complete");
