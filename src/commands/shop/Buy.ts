@@ -37,13 +37,11 @@ export class Command extends GameCommand {
         } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
       );
 
-    if (msg.author.id == "197186779843919877") {
-      const cardImage = await CardService.generateCardImageFromUserCard({
-        userCard: generatedCard.userCard,
-        imageData: generatedCard.imageData,
-      });
-      embed.attachFiles([{ name: "card.png", attachment: cardImage.image }]);
-    }
+    const cardImage = await CardService.generateCardImageFromUserCard({
+      userCard: generatedCard.userCard,
+      imageData: generatedCard.imageData,
+    });
+    embed.attachFiles([{ name: "card.png", attachment: cardImage.image }]);
 
     msg.channel.send(embed);
   };

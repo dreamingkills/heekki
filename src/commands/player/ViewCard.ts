@@ -16,7 +16,6 @@ export class Command extends GameCommand {
   deletable: boolean = true;
 
   exec = async (msg: Message) => {
-    if (msg.author.id != "197186779843919877") return;
     let card = await CardService.generateCardImageFromReference({
       abbreviation: this.prm[0].split("#")[0],
       serial: parseInt(this.prm[0].split("#")[1]),
