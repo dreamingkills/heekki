@@ -1,5 +1,5 @@
 import { GameCommand } from "../../structures/command/GameCommand";
-import { Message, MessageEmbed } from "discord.js";
+import { Message, MessageAttachment, MessageEmbed } from "discord.js";
 import { ShopService } from "../../database/service/ShopService";
 
 export class Command extends GameCommand {
@@ -33,10 +33,12 @@ export class Command extends GameCommand {
         }\n`;
       });
 
+    const cardImage = new MessageAttachment(pack.cover, "cover.png");
     const embed = new MessageEmbed()
       .setDescription(pack.flavor)
       .setAuthor(`Pack | ${pack.name}`)
-      .setImage(pack.cover)
+      .attachFiles([cardImage])
+      .setImage(`attachment://cover.png`)
       .setFooter(`Created by ${pack.credit}`)
       .setColor("#40BD66")
       .addField(`Card listing (1)`, cardList1, true)

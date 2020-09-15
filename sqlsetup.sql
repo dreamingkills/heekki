@@ -187,7 +187,30 @@ CREATE TABLE trivia
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
     discord_id      VARCHAR(32) NOT NULL,
-    correct         BOOLEAN NOT NULL
+    correct         BOOLEAN NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT TriviaCompleter FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);
+
+CREATE TABLE sale
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    buyer_id        VARCHAR(32) NOT NULL,
+    seller_id       VARCHAR(32) NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT SaleBuyer FOREIGN KEY (buyer_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT SaleSeller FOREIGN KEY (seller_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);
+
+CREATE TABLE fish
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      VARCHAR(32) NOT NULL,
+    fish_name       VARCHAR(255) NOT NULL,
+    fish_weight     DOUBLE(11, 4) NOT NULL,
+    gender          ENUM('male', 'female', '???') NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT FishOwner FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
 );
 
 INSERT INTO stats (statistic_name) VALUES ("trivia_correct");

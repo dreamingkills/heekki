@@ -23,4 +23,14 @@ export class MarketUpdate extends DBClass {
     ]);
     return true;
   }
+
+  public static async completeTransaction(
+    buyer_id: string,
+    seller_id: string
+  ): Promise<void> {
+    await DB.query(
+      `INSERT INTO transaction (buyer_id, seller_id) VALUES (?, ?);`,
+      [buyer_id, seller_id]
+    );
+  }
 }

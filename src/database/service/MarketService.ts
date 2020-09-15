@@ -101,6 +101,10 @@ export class MarketService {
       validateForSale.price!
     );
 
+    MarketUpdate.completeTransaction(
+      buyerProfile.discord_id,
+      sellerProfile.discord_id
+    );
     return {
       card: transfer,
       buyer: buyerProfile,

@@ -4,6 +4,7 @@ import { UserCard } from "../../../structures/player/UserCard";
 import { DBClass } from "../../index";
 import { Badge } from "../../../structures/player/Badge";
 import * as error from "../../../structures/Error";
+import { Fish } from "../../../structures/game/Fish";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -242,5 +243,21 @@ export class PlayerFetch extends DBClass {
 
     const count = await DB.query(`${query};`);
     return count[0][`COUNT(*)`];
+  }
+
+  public static async getFishByDiscordId(discord_id: string): Promise<Fish[]> {
+    const fishRaw = await DB.query(`SELECT * FROM fish WHERE discord_id=?;`, [
+      discord_id,
+    ]);
+    return fishRaw.map(
+      (fishy: {
+        discord_id: string;
+        fish_name: string;
+        fish_weight: number;
+        gender: "male" | "female";
+      }) => {
+        return new Fish(fishy);
+      }
+    );
   }
 }

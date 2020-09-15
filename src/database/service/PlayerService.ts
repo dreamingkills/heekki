@@ -9,6 +9,7 @@ import { Badge } from "../../structures/player/Badge";
 import { UserCardService } from "./UserCardService";
 import missions from "../../assets/missions.json";
 import { MarketService } from "./MarketService";
+import { Fish } from "../../structures/game/Fish";
 
 export class PlayerService {
   public static async createNewProfile(discord_id: string): Promise<Profile> {
@@ -277,5 +278,17 @@ export class PlayerService {
     discord_id: string
   ): Promise<number> {
     return await PlayerFetch.getLastOrphanClaimByDiscordId(discord_id);
+  }
+
+  public static async getFishByDiscordId(discord_id: string): Promise<Fish[]> {
+    return await PlayerFetch.getFishByDiscordId(discord_id);
+  }
+  public static async createFishByDiscordId(
+    discord_id: string,
+    fish: string,
+    weight: number,
+    gender: "male" | "female" | "???"
+  ): Promise<void> {
+    return await PlayerUpdate.createFish(discord_id, fish, weight, gender);
   }
 }

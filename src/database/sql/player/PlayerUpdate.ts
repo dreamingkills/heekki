@@ -111,4 +111,16 @@ export class PlayerUpdate extends DBClass {
       [time, discord_id]
     );
   }
+
+  public static async createFish(
+    discord_id: string,
+    fish: string,
+    weight: number,
+    gender: "male" | "female" | "???"
+  ): Promise<void> {
+    return await DB.query(
+      `INSERT INTO fish (discord_id, fish_name, fish_weight, gender) VALUES (?, ?, ?, ?);`,
+      [discord_id, fish, weight, gender]
+    );
+  }
 }
