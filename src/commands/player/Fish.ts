@@ -8,6 +8,7 @@ export class Command extends GameCommand {
   usage: string[] = ["%c <user>"];
   desc: string = "";
   category: string = "player";
+  role: string = "752040728477040780";
 
   exec = async (msg: Message) => {
     const profile = await PlayerService.getProfileByDiscordId(

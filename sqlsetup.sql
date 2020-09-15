@@ -205,12 +205,11 @@ CREATE TABLE sale
 CREATE TABLE fish
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
-    discord_id      VARCHAR(32) NOT NULL,
+    discord_id        VARCHAR(32) NOT NULL,
     fish_name       VARCHAR(255) NOT NULL,
     fish_weight     DOUBLE(11, 4) NOT NULL,
     gender          ENUM('male', 'female', '???') NOT NULL,
-    PRIMARY KEY(id),
-    CONSTRAINT FishOwner FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+    PRIMARY KEY(id)
 );
 
 INSERT INTO stats (statistic_name) VALUES ("trivia_correct");

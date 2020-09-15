@@ -9,6 +9,7 @@ export class Command extends GameCommand {
   usage: string[] = ["%c"];
   desc: string = "gone fishin yeehaw :cowboy:";
   category: string = "player";
+  role: string = "752040728477040780";
 
   private async generateFish(
     force?: string
