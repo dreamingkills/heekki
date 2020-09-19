@@ -202,6 +202,11 @@ CREATE TABLE sale
     CONSTRAINT SaleSeller FOREIGN KEY (seller_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
 );
 
+CREATE TABLE trade
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT
+)
+
 CREATE TABLE fish
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,

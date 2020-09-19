@@ -8,7 +8,13 @@ export class Command extends BaseCommand {
   exec = async (msg: Message) => {
     if (this.options[0] === "me") {
       const stats = await StatsService.getUserStats(msg.author.id);
-      return console.log(stats);
+      const embed = new MessageEmbed()
+        .setAuthor(`Stats | ${msg.author.tag}`, msg.author.displayAvatarURL())
+        .setDescription(
+          `Trivia Correct: **${stats.triviaCorrect}**\nTrivia Incorrect: **${stats.triviaIncorrect}**\nMarket Purchases: **${stats.marketPurchases}**\nMarket Sales: **${stats.marketSales}**`
+        );
+      msg.channel.send(embed);
+      return;
     }
     let stats = await StatsService.getGlobalStats();
 
