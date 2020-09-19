@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { MarketService } from "../../database/service/MarketService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["unlist"];
   usage: string[] = ["%c <card reference>"];
   desc: string = "Removes a card listing from the Marketplace.";
@@ -10,8 +10,8 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let listing = await MarketService.removeListing(msg.author.id, {
-      abbreviation: this.prm[0].split("#")[0],
-      serial: parseInt(this.prm[0].split("#")[1]),
+      abbreviation: this.options[0].split("#")[0],
+      serial: parseInt(this.options[0].split("#")[1]),
     });
 
     msg.channel.send(

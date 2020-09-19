@@ -1,15 +1,15 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed, EmbedFieldData } from "discord.js";
 import { ShopService } from "../../database/service/ShopService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["shop"];
   usage: string[] = ["%c [page]"];
   desc: string = "Shows you the shop.";
   category: string = "shop";
 
   exec = async (msg: Message) => {
-    let page = this.prm[0] ? parseInt(this.prm[0]) : 1;
+    let page = this.options[0] ? parseInt(this.options[0]) : 1;
 
     let packsRaw = await ShopService.getAllShopItems(true);
     let packs = packsRaw.slice(page * 9 - 9, page * 9);

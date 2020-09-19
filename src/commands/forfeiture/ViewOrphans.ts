@@ -29,7 +29,7 @@ export class Command extends BaseCommand {
   }
 
   exec = async (msg: Message) => {
-    const optionsRaw = this.prm.filter((v) => v.includes("="));
+    const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
       options[option.split("=")[0].toLowerCase()] = option.split("=")[1];

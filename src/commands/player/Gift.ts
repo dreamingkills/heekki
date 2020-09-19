@@ -1,19 +1,19 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { UserCard } from "../../structures/player/UserCard";
 import { MarketService } from "../../database/service/MarketService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["gift"];
   usage: string[] = ["%c <card id> <mention>"];
   desc: string = "Gifts a card to someone, for free!";
   category: string = "player";
 
   exec = async (msg: Message) => {
-    const references = this.prm.filter((p) => p.includes("#"));
+    const references = this.options.filter((p) => p.includes("#"));
     const cardList = await Promise.all(
       references.map(async (p) => {
         return (

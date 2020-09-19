@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["daily"];
   usage: string[] = ["%c"];
   desc: string = "Claims your daily reward.";

@@ -41,4 +41,15 @@ export class StatsService {
   ): Promise<void> {
     StatsUpdate.triviaComplete(discord_id, correct);
   }
+
+  public static async getUserStats(
+    discord_id: string
+  ): Promise<{
+    triviaCorrect: number;
+    triviaIncorrect: number;
+    marketSales: number;
+    marketPurchases: number;
+  }> {
+    return await StatsFetch.getUserStats(discord_id);
+  }
 }

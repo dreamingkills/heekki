@@ -5,11 +5,11 @@ import version from "../../version.json";
 
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
-  usage: string[] = ["%c"];
-  desc: string = "Posts various stats collected from the bot.";
-  category: string = "misc";
-
-  exec = async function (msg: Message) {
+  exec = async (msg: Message) => {
+    if (this.options[0] === "me") {
+      const stats = await StatsService.getUserStats(msg.author.id);
+      return console.log(stats);
+    }
     let stats = await StatsService.getGlobalStats();
 
     const uptime = msg.client.uptime! / 1000 / 60;

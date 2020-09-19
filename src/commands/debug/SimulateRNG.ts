@@ -14,7 +14,7 @@ export class Command extends BaseCommand {
       msg.channel.send("You aren't allowed to use that.");
       return;
     }
-    const loopTime = parseInt(this.prm[0]);
+    const loopTime = parseInt(this.options[0]);
     if (isNaN(loopTime)) {
       msg.channel.send("Enter a valid number.");
       return;

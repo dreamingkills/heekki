@@ -1,11 +1,11 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
 import { UserCard } from "../../structures/player/UserCard";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["inventory", "inv"];
   usage: string[] = ["%c [page]"];
   desc: string = "Shows a user's inventory.";
@@ -24,7 +24,7 @@ export class Command extends GameCommand {
   }
 
   exec = async (msg: Message) => {
-    const optionsRaw = this.prm.filter((v) => v.includes("="));
+    const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
       const name = option.split("=")[0];

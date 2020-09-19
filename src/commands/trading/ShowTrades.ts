@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { TradeService } from "../../database/service/TradeService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["trades"];
   usage: string[] = ["%c"];
   desc: string = "Shows your active trade requests..";

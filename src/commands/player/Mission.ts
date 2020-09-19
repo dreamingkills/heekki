@@ -1,22 +1,22 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { StatsService } from "../../database/service/StatsService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["mission"];
   usage: string[] = ["%c <card reference>"];
   desc: string = "Sets a card on a mission, giving you some coins in return.";
   category: string = "player";
 
   exec = async (msg: Message) => {
-    if (!this.prm[0]) {
+    if (!this.options[0]) {
       msg.channel.send("<:red_x:741454361007357993> Please specify a card.");
       return;
     }
     const mission = await PlayerService.doMission(msg.author.id, {
-      abbreviation: this.prm[0].split("#")[0],
-      serial: parseInt(this.prm[0].split("#")[1]),
+      abbreviation: this.options[0].split("#")[0],
+      serial: parseInt(this.options[0].split("#")[1]),
     });
 
     StatsService.incrementStat("missions_complete");

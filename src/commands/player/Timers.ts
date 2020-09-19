@@ -1,9 +1,9 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import moment from "moment";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["timers", "t"];
   usage: string[] = ["%c"];
   desc: string = "Shows the time until you can claim your time-based rewards.";

@@ -1,16 +1,16 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { TradeService } from "../../database/service/TradeService";
 import { UserCardService } from "../../database/service/UserCardService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["showtrade", "st"];
   usage: string[] = ["%c <trade id>"];
   desc: string = "Shows an active trade.";
   category: string = "card";
 
   exec = async (msg: Message) => {
-    const tradeCards = await TradeService.getTradeByUnique(this.prm[0]);
+    const tradeCards = await TradeService.getTradeByUnique(this.options[0]);
     let transferData = [];
     for (let trade of tradeCards) {
       if (trade.senderCard === 0) {
@@ -44,7 +44,7 @@ export class Command extends GameCommand {
     }
 
     const embed = new MessageEmbed()
-      .setAuthor(`Trade Details | ${this.prm[0]}`)
+      .setAuthor(`Trade Details | ${this.options[0]}`)
       .setDescription(
         `<@${tradeCards[0].sender}> <==> <@${
           tradeCards[0].recipient

@@ -1,15 +1,15 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["remove"];
   usage: string[] = ["%c <@mention>"];
   desc: string = "Remove someone from your friends list :broken_heart:";
   category: string = "player";
 
   exec = async (msg: Message) => {
-    if (!this.prm[0]) {
+    if (!this.options[0]) {
       msg.channel.send(
         `<:red_x:741454361007357993> Please specify a user to add!`
       );
@@ -17,9 +17,9 @@ export class Command extends GameCommand {
     }
     let friend;
 
-    if (isNaN(parseInt(this.prm[0])) && !this.prm[0].includes("<@")) {
+    if (isNaN(parseInt(this.options[0])) && !this.options[0].includes("<@")) {
       const member = await msg.guild?.members.fetch({
-        query: this.prm.join(" "),
+        query: this.options.join(" "),
       });
       friend = member?.firstKey();
       if (!friend) {
@@ -29,7 +29,7 @@ export class Command extends GameCommand {
         return;
       }
     } else {
-      friend = this.parseMention(this.prm[0]);
+      friend = this.parseMention(this.options[0]);
     }
 
     const removedFriend = await FriendService.removeFriendByDiscordId(

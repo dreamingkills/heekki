@@ -1,15 +1,15 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
 import { UserCardService } from "../../database/service/UserCardService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["bulkforfeit", "bff"];
   usage: string[] = ["%c < stars<# >"];
   desc: string = "Forfeits all cards under a certain star count.";
   category: string = "card";
 
   exec = async (msg: Message) => {
-    let starCount = parseInt(this.prm[0]?.split("<")[1]);
+    let starCount = parseInt(this.options[0]?.split("<")[1]);
 
     if (isNaN(starCount)) {
       msg.channel.send(

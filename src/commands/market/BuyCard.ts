@@ -1,10 +1,10 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
 import { MarketService } from "../../database/service/MarketService";
 import { StatsService } from "../../database/service/StatsService";
 import { CardService } from "../../database/service/CardService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["buycard", "mpb"];
   usage: string[] = ["%c <card reference>"];
   desc: string = "Puts a card up for sale on the marketplace.";
@@ -12,8 +12,8 @@ export class Command extends GameCommand {
 
   async exec(msg: Message) {
     const reference = {
-      abbreviation: this.prm[0]?.split("#")[0],
-      serial: parseInt(this.prm[0]?.split("#")[1]),
+      abbreviation: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[0]?.split("#")[1]),
     };
     const card = (await CardService.getCardDataFromReference(reference))
       .userCard;
@@ -40,8 +40,8 @@ export class Command extends GameCommand {
 
     if (rxn) {
       let buy = await MarketService.purchaseCard(msg.author.id, {
-        abbreviation: this.prm[0]?.split("#")[0],
-        serial: parseInt(this.prm[0]?.split("#")[1]),
+        abbreviation: this.options[0]?.split("#")[0],
+        serial: parseInt(this.options[0]?.split("#")[1]),
       });
 
       StatsService.incrementStat("market_sales");

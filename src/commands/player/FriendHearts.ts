@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["send"];
   usage: string[] = ["%c"];
   desc: string =

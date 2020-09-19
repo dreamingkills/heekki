@@ -1,9 +1,9 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { ProfileEmbed } from "../../helpers/embed/ProfileEmbed";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["play"];
   usage: string[] = ["%c"];
   desc: string = "Creates a new profile.";

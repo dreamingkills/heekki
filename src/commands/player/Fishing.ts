@@ -1,10 +1,10 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
 import Chance from "chance";
 import fish from "../../assets/fish.json";
 import { PlayerService } from "../../database/service/PlayerService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["fishing"];
   usage: string[] = ["%c"];
   desc: string = "gone fishin yeehaw :cowboy:";

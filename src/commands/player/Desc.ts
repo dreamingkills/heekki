@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["desc"];
   usage: string[] = ["%c <description>"];
   desc: string = "Sets the description on your profile.";
@@ -10,7 +10,7 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let id = msg.author.id;
-    let desc = this.prm.join(" ");
+    let desc = this.options.join(" ");
     let user = await PlayerService.changeProfileDescriptionByDiscordId(
       id,
       desc

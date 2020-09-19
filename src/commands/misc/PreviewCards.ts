@@ -1,4 +1,3 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import {
   Message,
   MessageEmbed,
@@ -8,15 +7,16 @@ import {
 } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["preview"];
   usage: string[] = ["%c <up to 9 card references...>"];
   desc: string = "Preview up to 9 cards.";
   category: string = "player";
 
   exec = async (msg: Message) => {
-    const references = this.prm.filter((p) => p.includes("#")).slice(0, 9);
+    const references = this.options.filter((p) => p.includes("#")).slice(0, 9);
     const cardList = await Promise.all(
       references.map(async (p) => {
         return (

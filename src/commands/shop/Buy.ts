@@ -1,10 +1,10 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { ShopService } from "../../database/service/ShopService";
 import { CardService } from "../../database/service/CardService";
 import moment from "moment";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["buy"];
   usage: string[] = ["%c <pack id>"];
   desc: string =
@@ -12,7 +12,7 @@ export class Command extends GameCommand {
   category: string = "shop";
 
   exec = async (msg: Message) => {
-    const packName = this.prm.join(" ");
+    const packName = this.options.join(" ");
     if (!packName) {
       msg.channel.send(
         `<:red_x:741454361007357993> Please enter a pack to purchase from.`

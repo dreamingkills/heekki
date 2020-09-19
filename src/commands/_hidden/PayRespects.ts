@@ -9,6 +9,6 @@ export class Command extends BaseCommand {
   hidden: boolean = true;
 
   exec = async (msg: Message) => {
-    if (this.prm[0] === "respects") msg.react("🇫");
+    if (this.options[0] === "respects") msg.react("🇫");
   };
 }

@@ -1,15 +1,15 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { TradeService } from "../../database/service/TradeService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["trade"];
   usage: string[] = ["%c <card reference/s> for <card reference/s>"];
   desc: string = "Sends a trade request to another user";
   category: string = "card";
 
   exec = async (msg: Message) => {
-    const refs = this.prm.join(" ")?.split("for");
+    const refs = this.options.join(" ")?.split("for");
     if (!refs[0]) {
       msg.channel.send(
         "<:red_x:741454361007357993> Please enter a card to trade."

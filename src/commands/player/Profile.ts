@@ -1,9 +1,9 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { ProfileEmbed } from "../../helpers/embed/ProfileEmbed";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["profile"];
   usage: string[] = ["%c [@mention]"];
   desc: string = "Shows a user's profile.";
@@ -11,10 +11,10 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let userQuery;
-    if (this.prm[0]) {
-      if (isNaN(parseInt(this.prm[0])) && !this.prm[0].includes("<@")) {
+    if (this.options[0]) {
+      if (isNaN(parseInt(this.options[0])) && !this.options[0].includes("<@")) {
         const member = await msg.guild?.members.fetch({
-          query: this.prm.join(" "),
+          query: this.options.join(" "),
         });
         userQuery = member?.firstKey();
         if (!userQuery) {
@@ -24,7 +24,7 @@ export class Command extends GameCommand {
           return;
         }
       } else {
-        userQuery = this.parseMention(this.prm[0]);
+        userQuery = this.parseMention(this.options[0]);
       }
     } else {
       userQuery = msg.author.id;

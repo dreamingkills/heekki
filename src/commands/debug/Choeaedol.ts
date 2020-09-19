@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import fetch from "node-fetch";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["chad"];
   usage: string[] = ["%c"];
   desc: string = "Shows current LOONA standings on Choeaedol.";

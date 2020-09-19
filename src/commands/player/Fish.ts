@@ -1,9 +1,9 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import fish from "../../assets/fish.json";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["fish"];
   usage: string[] = ["%c <user>"];
   desc: string = "";

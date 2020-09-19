@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["friends"];
   usage: string[] = ["%c [page]"];
   desc: string = "Shows you your friends list!";
@@ -10,7 +10,7 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     const friendsRaw = await FriendService.getFriendsByDiscordId(msg.author.id);
-    const page = parseInt(this.prm[0]) || 1;
+    const page = parseInt(this.options[0]) || 1;
 
     let friends = friendsRaw.slice(10 * page - 10, 10 * page);
     if (friends.length == 0) friends = friendsRaw.slice(0, 10);

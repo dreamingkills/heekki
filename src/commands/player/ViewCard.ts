@@ -1,4 +1,3 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import {
   Message,
   MessageEmbed,
@@ -7,8 +6,9 @@ import {
   TextChannel,
 } from "discord.js";
 import { CardService } from "../../database/service/CardService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["card", "show"];
   usage: string[] = ["%c [card reference]"];
   desc: string = "Generates an image of a card.";
@@ -17,8 +17,8 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     let card = await CardService.generateCardImageFromReference({
-      abbreviation: this.prm[0].split("#")[0],
-      serial: parseInt(this.prm[0].split("#")[1]),
+      abbreviation: this.options[0].split("#")[0],
+      serial: parseInt(this.options[0].split("#")[1]),
     });
 
     let embed = new MessageEmbed()

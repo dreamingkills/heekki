@@ -1,9 +1,9 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["forfeit", "ff"];
   usage: string[] = ["%c <card reference>"];
   desc: string =
@@ -12,8 +12,8 @@ export class Command extends GameCommand {
 
   exec = async (msg: Message) => {
     const reference = {
-      abbreviation: this.prm[0].split("#")[0],
-      serial: parseInt(this.prm[0].split("#")[1]),
+      abbreviation: this.options[0].split("#")[0],
+      serial: parseInt(this.options[0].split("#")[1]),
     };
     let card = (await CardService.getCardDataFromReference(reference)).userCard;
 

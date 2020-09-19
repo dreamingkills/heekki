@@ -1,8 +1,8 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageEmbed } from "discord.js";
 import { CardService } from "../../database/service/CardService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["upgrade"];
   usage: string[] = ["%c <card reference> <amount>"];
   desc: string = "Adds hearts to a card, which can level it up.";
@@ -12,10 +12,10 @@ export class Command extends GameCommand {
     let id = msg.author.id;
     let fedUserCardData = await CardService.upgradeCard(
       id,
-      parseInt(this.prm[1]),
+      parseInt(this.options[1]),
       {
-        abbreviation: this.prm[0].split("#")[0],
-        serial: parseInt(this.prm[0].split("#")[1]),
+        abbreviation: this.options[0].split("#")[0],
+        serial: parseInt(this.options[0].split("#")[1]),
       }
     );
     let userCard = fedUserCardData.card;
@@ -30,16 +30,18 @@ export class Command extends GameCommand {
             ? `:tada: **LEVEL UP!**\n${beforeLevel} ~~-->~~ ${afterLevel}\n\n`
             : ``
         } Successfully added **${
-          this.prm[1]
+          this.options[1]
         }** hearts to the following card:\n**__${userCard.abbreviation}#${
           userCard.serialNumber
         }__** - ${userCard.member}\n${"⭐".repeat(
           userCard.stars
-        )}\n\nCard heart count: **${userCard.hearts + parseInt(this.prm[1])}**`
+        )}\n\nCard heart count: **${
+          userCard.hearts + parseInt(this.options[1])
+        }**`
       )
       .setFooter(
         `You now have ${
-          fedUserCardData.user.hearts - parseInt(this.prm[1])
+          fedUserCardData.user.hearts - parseInt(this.options[1])
         } hearts.`
       )
       .setColor("#40BD66");

@@ -1,15 +1,15 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, MessageAttachment, MessageEmbed } from "discord.js";
 import { ShopService } from "../../database/service/ShopService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["viewpack", "vp"];
   usage: string[] = ["%c <pack name>"];
   desc: string = "Shows a list of cards in a pack.";
   category: string = "market";
 
   exec = async (msg: Message) => {
-    const packName = this.prm.join("");
+    const packName = this.options.join("");
     const pack = await ShopService.getFullPackData(packName);
     const cardsPerColumn = Math.ceil(pack.cards.length / 3);
 

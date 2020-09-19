@@ -122,4 +122,37 @@ export class StatsFetch extends DBClass {
       missionsComplete: query[4].statistic_count,
     };
   }
+
+  public static async getUserStats(
+    discord_id: string
+  ): Promise<{
+    triviaCorrect: number;
+    triviaIncorrect: number;
+    marketPurchases: number;
+    marketSales: number;
+  }> {
+    const triviaCorrect = await DB.query(
+      `SELECT COUNT(*) FROM trivia WHERE discord_id=? AND correct=1;`,
+      [discord_id]
+    );
+    const triviaIncorrect = await DB.query(
+      `SELECT COUNT(*) FROM trivia WHERE discord_id=? AND correct=0;`,
+      [discord_id]
+    );
+    const marketPurchases = await DB.query(
+      `SELECT COUNT(*) FROM transaction WHERE buyer_id=?;`,
+      [discord_id]
+    );
+    const marketSales = await DB.query(
+      `SELECT COUNT(*) FROM transaction WHERE seller_id=?;`,
+      [discord_id]
+    );
+
+    return {
+      triviaCorrect: triviaCorrect[0][`COUNT(*)`],
+      triviaIncorrect: triviaIncorrect[0][`COUNT(*)`],
+      marketPurchases: marketPurchases[0][`COUNT(*)`],
+      marketSales: marketSales[0][`COUNT(*)`],
+    };
+  }
 }

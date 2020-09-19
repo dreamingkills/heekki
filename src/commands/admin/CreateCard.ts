@@ -1,8 +1,7 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message } from "discord.js";
-import { AdminService } from "../../database/service/AdminService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["createcard"];
   usage: string[] = [
     "%c <imageUrl> <member> <rarity> <collectionId> <credit> <abbr>",

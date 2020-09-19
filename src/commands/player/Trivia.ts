@@ -1,11 +1,11 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import { Message, TextChannel } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import trivia from "../../assets/trivia.json";
 import Chance from "chance";
 import { StatsService } from "../../database/service/StatsService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["trivia"];
   usage: string[] = ["%c"];
   desc: string = "Gives you a random question to answer for points.";

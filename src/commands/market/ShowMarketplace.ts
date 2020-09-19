@@ -1,4 +1,3 @@
-import { GameCommand } from "../../structures/command/GameCommand";
 import {
   Message,
   MessageEmbed,
@@ -8,10 +7,10 @@ import {
 } from "discord.js";
 import { MarketService } from "../../database/service/MarketService";
 import { UserCard } from "../../structures/player/UserCard";
-import { PlayerService } from "../../database/service/PlayerService";
 import { StatsService } from "../../database/service/StatsService";
+import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends GameCommand {
+export class Command extends BaseCommand {
   names: string[] = ["market", "marketplace", "mp"];
   usage: string[] = ["%c [page]"];
   desc: string = "Shows a list of cards currently up for sale.";
@@ -30,7 +29,7 @@ export class Command extends GameCommand {
   }
 
   exec = async (msg: Message) => {
-    const optionsRaw = this.prm.filter((v) => v.includes("="));
+    const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
       const name = option.split("=")[0];

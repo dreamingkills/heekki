@@ -1,5 +1,4 @@
 import { Message } from "discord.js";
-import { AdminService } from "../../database/service/AdminService";
 import { AdminCommand } from "../../structures/command/AdminCommand";
 
 export class Command extends AdminCommand {
