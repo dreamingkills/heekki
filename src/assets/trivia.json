@@ -432,7 +432,7 @@
     },
     {
       "question": "What is the B-side track from HyunJin's album?",
-      "answer": ["i'll be there"],
+      "answer": ["i'll be there", "ill be there"],
       "reward": { "min": 5, "max": 10 }
     },
     {
@@ -621,7 +621,7 @@
       "reward": { "min": 5, "max": 10 }
     },
     {
-      "question": "Who is the eigth member of LOONA?",
+      "question": "Who is the eighth member of LOONA?",
       "answer": ["choerry", "yerim"],
       "reward": { "min": 5, "max": 10 }
     },
@@ -682,7 +682,7 @@
     },
     {
       "question": "Name one of the January girls.",
-      "answer": ["yeojin", "go won"],
+      "answer": ["yeojin", "go won", "gowon"],
       "reward": { "min": 5, "max": 10 }
     },
     {

@@ -19,10 +19,10 @@ export class CardService {
   }
 
   public static heartsToLevel(hearts: number) {
-    const unrounded = hearts / 50;
+    const unrounded = hearts / 150;
     const currentLevel = unrounded >= 1 ? Math.floor(unrounded) + 1 : 1;
 
-    const nextRequirement = currentLevel * 50;
+    const nextRequirement = currentLevel * 150;
     return {
       totalHearts: hearts,
       level: currentLevel >= 99 ? 99 : currentLevel,

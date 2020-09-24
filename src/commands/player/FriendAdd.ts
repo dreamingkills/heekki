@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
     }
     let friend;
 
-    if (isNaN(parseInt(this.options[0])) && !this.options[0].includes("<@")) {
+    if (!this.options[0].includes("<@")) {
       const member = await msg.guild?.members.fetch({
         query: this.options.join(" "),
       });

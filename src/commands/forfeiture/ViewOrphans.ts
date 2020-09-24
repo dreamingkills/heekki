@@ -30,7 +30,10 @@ export class Command extends BaseCommand {
       options[option.split("=")[0].toLowerCase()] = option.split("=")[1];
     }
 
-    const totalOrphaned = await StatsService.getNumberOfOrphanedCards();
+    const totalOrphaned = await PlayerService.getOrphanedCardCount({
+      ...options,
+    });
+
     const pageLimit = Math.ceil(totalOrphaned / 9);
     const pageRaw = isNaN(parseInt(options.page)) ? 1 : parseInt(options.page);
     let page = pageRaw > pageLimit ? pageLimit : pageRaw;

@@ -105,6 +105,11 @@ export class PlayerService {
     };
   }
 
+  public static async getOrphanedCardCount(options?: {
+    [key: string]: string | number;
+  }): Promise<number> {
+    return await PlayerFetch.getOrphanedCardCount(options);
+  }
   public static async getOrphanedCards(options?: {
     [key: string]: string | number;
   }): Promise<UserCard[]> {

@@ -19,8 +19,15 @@ export class Command extends BaseCommand {
 
     const reference = {
       identifier: this.options[0]?.split("#")[0],
-      serial: parseInt(this.options[1]?.split("#")[1]),
+      serial: parseInt(this.options[0]?.split("#")[1]),
     };
+    if (isNaN(reference.serial)) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a valid card reference.`
+      );
+      return;
+    }
+
     const targetCard = await CardService.getCardDataFromReference(reference);
     if (targetCard.ownerId !== "0") throw new CardNotOrphanedError();
 

@@ -38,6 +38,60 @@ export class PlayerFetch extends DBClass {
     return new Profile(user[0]);
   }
 
+  public static async getOrphanedCardCount(options?: {
+    [key: string]: string | number;
+  }): Promise<number> {
+    let query = `SELECT COUNT(*) FROM card LEFT JOIN user_card ON user_card.card_id=card.id WHERE user_card.owner_id=0`;
+    let queryOptions = [];
+
+    if (options?.pack)
+      queryOptions.push(
+        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+      );
+    if (options?.member)
+      queryOptions.push(
+        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.member + `%`
+        )}, ' ', '')`
+      );
+    if (options?.minstars)
+      queryOptions.push(
+        ` user_card.stars>=${DB.connection.escape(options.minstars)}`
+      );
+    if (options?.maxstarsnoninclusive)
+      queryOptions.push(
+        ` user_card.stars<${DB.connection.escape(options.maxstarsnoninclusive)}`
+      );
+    if (options?.serial)
+      queryOptions.push(
+        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
+      );
+    if (options?.stars)
+      queryOptions.push(
+        ` user_card.stars=${DB.connection.escape(options.stars)}`
+      );
+    if (options?.forsale === "true")
+      queryOptions.push(` marketplace.price IS NOT NULL`);
+
+    query +=
+      (queryOptions.length > 0 ? " AND" : "") +
+      queryOptions.join(" AND") +
+      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts DESC, user_card.id DESC" +
+      (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
+      (options?.page && options.limit
+        ? ` OFFSET ${DB.connection.escape(
+            (isNaN(<number>options.page) ? 1 : <number>options.page) *
+              <number>options.limit -
+              <number>options.limit
+          )}`
+        : ``);
+
+    const cards = (await DB.query(query + ";")) as {
+      "COUNT(*)": number;
+    }[];
+
+    return cards[0]["COUNT(*)"];
+  }
   public static async getUserCardsByDiscordId(
     discord_id: string,
     options?: {
@@ -87,7 +141,9 @@ export class PlayerFetch extends DBClass {
       );
     if (options?.member)
       queryOptions.push(
-        ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
+        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.member + `%`
+        )}, ' ', '')`
       );
     if (options?.minstars)
       queryOptions.push(
@@ -255,7 +311,9 @@ export class PlayerFetch extends DBClass {
       );
     if (options?.member)
       queryOptions.push(
-        ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
+        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.member + `%`
+        )}, ' ', '')`
       );
     if (options?.minstars)
       queryOptions.push(

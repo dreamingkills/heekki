@@ -10,6 +10,12 @@ export class MarketService {
     return await MarketFetch.fetchCardIdsInMarketplace(options);
   }
 
+  public static async getMarketCount(options?: {
+    [key: string]: string | number;
+  }): Promise<number> {
+    return await MarketFetch.fetchMarketplaceCardCount(options);
+  }
+
   public static async cardIsOnMarketplace(
     card: UserCard
   ): Promise<{ forSale: boolean; price: number }> {

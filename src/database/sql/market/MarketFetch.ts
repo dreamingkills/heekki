@@ -57,7 +57,9 @@ export class MarketFetch extends DBClass {
       );
     if (options?.member)
       queryOptions.push(
-        ` card.member LIKE ${DB.connection.escape(`%` + options.member + `%`)}`
+        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.member + `%`
+        )}, ' ', '')`
       );
     if (options?.serial)
       queryOptions.push(
@@ -95,6 +97,60 @@ export class MarketFetch extends DBClass {
     return forSale.map((c) => {
       return { card: new UserCard(c), price: c.price };
     });
+  }
+
+  public static async fetchMarketplaceCardCount(options?: {
+    [key: string]: string | number;
+  }): Promise<number> {
+    let query = `SELECT 
+                  COUNT(*)
+                FROM
+                  marketplace
+                LEFT JOIN
+                  user_card ON marketplace.card_id=user_card.id
+                LEFT JOIN
+                  card ON user_card.card_id=card.id
+                LEFT JOIN
+                  pack ON card.pack_id=pack.id`;
+    let queryOptions: string[] = [];
+    if (options?.minprice)
+      queryOptions.push(
+        ` marketplace.price>${DB.connection.escape(options?.minprice)}`
+      );
+    if (options?.maxprice)
+      queryOptions.push(
+        ` marketplace.price<${DB.connection.escape(options?.maxprice)}`
+      );
+    if (options?.pack)
+      queryOptions.push(
+        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+      );
+    if (options?.minstars)
+      queryOptions.push(
+        ` user_card.stars>=${DB.connection.escape(<number>options?.minstars)}`
+      );
+    if (options?.member)
+      queryOptions.push(
+        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.member + `%`
+        )}, ' ', '')`
+      );
+    if (options?.serial)
+      queryOptions.push(
+        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
+      );
+
+    query +=
+      (queryOptions.length > 0 ? " WHERE" : "") +
+      queryOptions.join(" AND") +
+      ` ORDER BY marketplace.id DESC LIMIT 9 OFFSET ${
+        (<number>options?.page || 1) * 9 - 9
+      };`;
+
+    let forSale = (await DB.query(query)) as {
+      "COUNT(*)": number;
+    }[];
+    return forSale[0]["COUNT(*)"];
   }
 
   /**

@@ -63,7 +63,7 @@ export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
   constructor(reference: { identifier: string; serial: number }) {
     super(
-      `I couldn't find **${reference.identifier}#${
+      `I couldn't find **${reference.identifier.toUpperCase()}#${
         isNaN(reference.serial) ? "????" : reference.serial
       }**! Please make sure you entered it correctly.`
     );
