@@ -1,15 +1,12 @@
 import { Message, MessageEmbed } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["friends"];
-  usage: string[] = ["%c [page]"];
-  desc: string = "Shows you your friends list!";
-  category: string = "player";
-
-  exec = async (msg: Message) => {
-    const friendsRaw = await FriendService.getFriendsByDiscordId(msg.author.id);
+  exec = async (msg: Message, executor: Profile) => {
+    const friendsRaw = await FriendService.getFriendsByProfile(executor);
     const page = parseInt(this.options[0]) || 1;
 
     let friends = friendsRaw.slice(10 * page - 10, 10 * page);

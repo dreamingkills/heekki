@@ -1,25 +1,45 @@
 import { Message } from "discord.js";
+import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["sell"];
-  usage: string[] = ["%c <card reference> <price>"];
-  desc: string = "Puts a card up for sale on the marketplace.";
-  category: string = "market";
+  exec = async (msg: Message, executor: Profile) => {
+    const reference = {
+      identifier: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[0]?.split("#")[1]),
+    };
+    const card = await CardService.getCardDataFromReference(reference);
+    if (card.ownerId !== executor.discord_id) {
+      msg.channel.send(
+        "<:red_x:741454361007357993> That card doesn't belong to you."
+      );
+      return;
+    }
+    if (card.isFavorite) {
+      msg.channel.send(
+        "<:red_x:741454361007357993> That card is currently favorited."
+      );
+      return;
+    }
+    const isForSale = await MarketService.cardIsOnMarketplace(card);
+    if (isForSale.forSale) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> That card is already on the marketplace.`
+      );
+      return;
+    }
+    if (isNaN(parseInt(this.options[1]))) {
+      msg.channel.send("<:red_x:741454361007357993> Please specify a price.");
+      return;
+    }
 
-  exec = async (msg: Message) => {
-    let listing = await MarketService.sellCard(
-      msg.author.id,
-      parseInt(this.options[1]),
-      {
-        abbreviation: this.options[0]?.split("#")[0],
-        serial: parseInt(this.options[0]?.split("#")[1]),
-      }
-    );
+    await MarketService.sellCard(parseInt(this.options[1]), card);
 
     msg.channel.send(
-      `:white_check_mark: You've listed **${listing.abbreviation}#${listing.serialNumber}** on the Marketplace for <:coin:745447920072917093> **${this.options[1]}**`
+      `:white_check_mark: You've listed **${card.abbreviation}#${card.serialNumber}** on the Marketplace for <:cash:757146832639098930> **${this.options[1]}**.`
     );
   };
 }

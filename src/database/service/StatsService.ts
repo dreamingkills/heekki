@@ -1,32 +1,9 @@
 import { StatsUpdate } from "../sql/stats/StatsUpdate";
 import { StatsFetch } from "../sql/stats/StatsFetch";
 import { Stats } from "../../structures/game/Stats";
+import { Profile } from "../../structures/player/Profile";
 
 export class StatsService {
-  public static async getGlobalStats(): Promise<Stats> {
-    return await StatsFetch.getStats();
-  }
-  public static async incrementStat(
-    stat:
-      | "trivia_correct"
-      | "trivia_wrong"
-      | "trades_complete"
-      | "market_sales"
-      | "missions_complete"
-  ): Promise<boolean> {
-    return await StatsUpdate.incrementStat(stat);
-  }
-
-  public static async getMiscStats(): Promise<{
-    triviaCorrect: number;
-    triviaWrong: number;
-    tradesComplete: number;
-    marketSales: number;
-    missionsComplete: number;
-  }> {
-    return await StatsFetch.getMiscStats();
-  }
-
   public static async getNumberOfOrphanedCards(): Promise<number> {
     return await StatsFetch.getNumberOfOrphanedCards();
   }
@@ -36,20 +13,24 @@ export class StatsService {
   }
 
   public static async triviaComplete(
-    discord_id: string,
+    profile: Profile,
     correct: boolean
   ): Promise<void> {
-    StatsUpdate.triviaComplete(discord_id, correct);
+    StatsUpdate.triviaComplete(profile.discord_id, correct);
   }
 
-  public static async getUserStats(
-    discord_id: string
-  ): Promise<{
-    triviaCorrect: number;
-    triviaIncorrect: number;
-    marketSales: number;
-    marketPurchases: number;
-  }> {
-    return await StatsFetch.getUserStats(discord_id);
+  public static async missionComplete(
+    profile: Profile,
+    correct: boolean
+  ): Promise<void> {
+    StatsUpdate.missionComplete(profile.discord_id, correct);
+  }
+
+  public static async saleComplete(
+    buyer: Profile,
+    seller: string,
+    card: string
+  ): Promise<void> {
+    StatsUpdate.saleComplete(buyer.discord_id, seller, card);
   }
 }

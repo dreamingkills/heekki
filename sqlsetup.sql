@@ -80,6 +80,9 @@ CREATE TABLE pack
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
     title           VARCHAR(255),
+    credit          VARCHAR(255),
+    cover_url       VARCHAR(255),
+    flavor_text     VARCHAR(255),
     image_data_id   INT(11),
     PRIMARY KEY (id),
     CONSTRAINT ImageData FOREIGN KEY (image_data_id) REFERENCES image_data (id) ON DELETE CASCADE
@@ -90,7 +93,6 @@ CREATE TABLE card
     id              INT(11) NOT NULL AUTO_INCREMENT,
     blurb           VARCHAR(255),
     member          VARCHAR(255),
-    credit          VARCHAR(255),
     abbreviation    VARCHAR(255),
     rarity          INT(11) DEFAULT 5,
     image_url       VARCHAR(255),
@@ -197,6 +199,7 @@ CREATE TABLE sale
     id              INT(11) NOT NULL AUTO_INCREMENT,
     buyer_id        VARCHAR(32) NOT NULL,
     seller_id       VARCHAR(32) NOT NULL,
+    card            VARCHAR(32) NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT SaleBuyer FOREIGN KEY (buyer_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT SaleSeller FOREIGN KEY (seller_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
@@ -204,8 +207,13 @@ CREATE TABLE sale
 
 CREATE TABLE trade
 (
-    id              INT(11) NOT NULL AUTO_INCREMENT
-)
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    sender_id       VARCHAR(32) NOT NULL,
+    receiver_id     VARCHAR(32) NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT LogTradeSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT LogTradeReceiver FOREIGN KEY (receiver_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);
 
 CREATE TABLE fish
 (
@@ -214,11 +222,26 @@ CREATE TABLE fish
     fish_name       VARCHAR(255) NOT NULL,
     fish_weight     DOUBLE(11, 4) NOT NULL,
     gender          ENUM('male', 'female', '???') NOT NULL,
+    CONSTRAINT FishOwner FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     PRIMARY KEY(id)
 );
 
-INSERT INTO stats (statistic_name) VALUES ("trivia_correct");
-INSERT INTO stats (statistic_name) VALUES ("trivia_wrong");
-INSERT INTO stats (statistic_name) VALUES ("trades_complete");
-INSERT INTO stats (statistic_name) VALUES ("market_sales");
-INSERT INTO stats (statistic_name) VALUES ("missions_complete");
+CREATE TABLE mission
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      VARCHAR(32) NOT NULL,
+    success         BOOLEAN,
+    PRIMARY KEY(id),
+    CONSTRAINT MissionExecutor FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);
+
+CREATE TABLE reputation
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    receiver_id     VARCHAR(32) NOT NULL,
+    sender_id       VARCHAR(32) NOT NULL,
+    PRIMARY KEY(id),
+    CONSTRAINT ReputationReceiver FOREIGN KEY (receiver_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT ReputationSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT UniqueRep UNIQUE(receiver_id, sender_id)
+);

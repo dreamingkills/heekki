@@ -8,12 +8,11 @@ export class TradeUpdate extends DBClass {
     recipientId: string,
     recipientCardId: number,
     unique: string
-  ): Promise<number> {
-    const query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `INSERT INTO trade_request (unique_id, sender_id, recipient_id, sender_card, recipient_card) VALUES (?, ?, ?, ?, ?);`,
       [unique, senderId, recipientId, senderCardId, recipientCardId]
     );
-    return query.insertId;
   }
 
   public static async createTrade(
@@ -22,7 +21,7 @@ export class TradeUpdate extends DBClass {
     senderCards: UserCard[],
     recipientCards: UserCard[],
     unique: string
-  ): Promise<boolean> {
+  ): Promise<void> {
     if (senderCards.length > recipientCards.length) {
       for (let i = 0; i < senderCards.length; i++) {
         await this.createTradeRow(
@@ -44,14 +43,9 @@ export class TradeUpdate extends DBClass {
         );
       }
     }
-    return true; // what to return here ?
   }
 
-  public static async deleteTrade(unique: string): Promise<boolean> {
-    const query = await DB.query(
-      `DELETE FROM trade_request WHERE unique_id=?;`,
-      [unique]
-    );
-    return true;
+  public static async deleteTrade(unique: string): Promise<void> {
+    await DB.query(`DELETE FROM trade_request WHERE unique_id=?;`, [unique]);
   }
 }

@@ -2,37 +2,32 @@ import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import moment from "moment";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["timers", "t"];
-  usage: string[] = ["%c"];
-  desc: string = "Shows the time until you can claim your time-based rewards.";
-  category: string = "player";
-
-  exec = async (msg: Message) => {
-    const id = (await PlayerService.getProfileByDiscordId(msg.author.id, false))
-      .discord_id;
+  exec = async (msg: Message, executor: Profile) => {
     const now = moment(Date.now());
     const timeUntilDaily = moment(
-      (await PlayerService.getLastDailyByDiscordId(id)) + 86400000
+      (await PlayerService.getLastDaily(executor)) + 86400000
     );
     const timeUntilMission = moment(
-      (await PlayerService.getLastMissionByDiscordId(id)) + 1800000
+      (await PlayerService.getLastMission(executor)) + 1800000
     );
     const timeUntilSend = moment(
-      (await PlayerService.getLastHeartSendByDiscordId(id)) + 3600000
+      (await PlayerService.getLastHeartSend(executor)) + 3600000
     );
     const timeUntilHeartBox = moment(
-      (await PlayerService.getLastHeartBoxByDiscordId(id)) + 14400000
+      (await PlayerService.getLastHeartBox(executor)) + 14400000
     );
     const timeUntilForfeitClaim = moment(
-      (await PlayerService.getLastOrphanClaimByDiscordId(id)) + 10800000
+      (await PlayerService.getLastOrphanClaim(executor)) + 10800000
     );
 
     const embed = new MessageEmbed()
       .setAuthor(`Timers | ${msg.author.tag}`)
       .setThumbnail(msg.author.displayAvatarURL())
-      .setColor(`#40BD66`)
+      .setColor(`#FFAACC`)
       .setDescription(
         `:alarm_clock: **Time-Based Rewards**\n- Daily Reward: ${
           now <= timeUntilDaily

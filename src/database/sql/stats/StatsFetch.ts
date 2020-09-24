@@ -1,43 +1,50 @@
 import { DBClass, DB } from "../..";
 import { Stats } from "../../../structures/game/Stats";
+import { Profile } from "../../../structures/player/Profile";
 
 export class StatsFetch extends DBClass {
   public static async getNumberOfCards(stars?: number): Promise<number> {
-    let query;
-    if (stars) {
-      query = `SELECT COUNT(1) FROM user_card WHERE stars=?`;
-    } else {
-      query = `SELECT COUNT(1) FROM user_card;`;
-    }
-    const count = await DB.query(query, [stars]);
-    return count[0][`COUNT(1)`];
+    let query = `SELECT COUNT(*) FROM user_card`;
+    if (stars) query += ` WHERE stars=?`;
+    const count = (await DB.query(`${query};`, [stars])) as {
+      "COUNT(*)": number;
+    }[];
+    return count[0]["COUNT(*)"];
   }
 
   public static async getNumberOfProfiles(): Promise<number> {
-    const query = await DB.query(`SELECT COUNT(1) FROM user_profile;`);
-    return query[0][`COUNT(1)`];
+    const query = (await DB.query(`SELECT COUNT(*) FROM user_profile;`)) as {
+      "COUNT(*)": number;
+    }[];
+    return query[0]["COUNT(*)"];
   }
 
-  public static async findRichestUser(): Promise<{
-    id: string;
-    coins: number;
-  }> {
-    const query = await DB.query(
+  public static async findRichestUser(): Promise<Profile> {
+    const query = (await DB.query(
       `SELECT * FROM user_profile ORDER BY coins DESC LIMIT 1;`
-    );
-    return { id: query[0].discord_id, coins: query[0].coins };
+    )) as {
+      discord_id: string;
+      blurb: string;
+      coins: number;
+      hearts: number;
+      daily_streak: number;
+      daily_last: number;
+    }[];
+    return new Profile(query[0]);
   }
 
   public static async getNumberOfRelationships(): Promise<number> {
-    const query = await DB.query(`SELECT COUNT(1) FROM friend;`);
-    return query[0][`COUNT(1)`];
+    const query = (await DB.query(`SELECT COUNT(1) FROM friend;`)) as {
+      "COUNT(*)": number;
+    }[];
+    return query[0]["COUNT(*)"];
   }
 
   public static async getTopCollector(): Promise<{
     id: string;
     cards: number;
   }> {
-    const query = await DB.query(`
+    const query = (await DB.query(`
       SELECT
         owner_id, COUNT(*) AS counted
       FROM user_card
@@ -45,27 +52,31 @@ export class StatsFetch extends DBClass {
       GROUP BY owner_id
       ORDER BY counted DESC, owner_id
       LIMIT 1;
-      `);
+      `)) as { owner_id: string; counted: number }[];
     return { id: query[0].owner_id, cards: query[0].counted };
   }
 
   public static async getNumberOfOrphanedCards(): Promise<number> {
-    const query = await DB.query(
-      `SELECT COUNT(1) FROM user_card WHERE owner_id=0;`
-    );
-    return query[0][`COUNT(1)`];
+    const query = (await DB.query(
+      `SELECT COUNT(*) FROM user_card WHERE owner_id=0;`
+    )) as { "COUNT(*)": number }[];
+    return query[0]["COUNT(*)"];
   }
 
   public static async getNumberOfCardsInMarketplace(): Promise<number> {
-    return (await DB.query(`SELECT COUNT(*) FROM marketplace;`))[0][`COUNT(*)`];
+    const query = (await DB.query(`SELECT COUNT(*) FROM marketplace;`)) as {
+      "COUNT(*)": number;
+    }[];
+    return query[0][`COUNT(*)`];
   }
   public static async getTotalCoins(): Promise<number> {
-    return (await DB.query(`SELECT SUM(coins) FROM user_profile;`))[0][
-      `SUM(coins)`
-    ];
+    const query = (await DB.query(`SELECT SUM(coins) FROM user_profile;`)) as {
+      "SUM(coins)": number;
+    }[];
+    return query[0][`SUM(coins)`];
   }
 
-  public static async getStats(): Promise<Stats> {
+  /*public static async getStats(): Promise<Stats> {
     const totalAll = await this.getNumberOfCards();
     const total6 = await this.getNumberOfCards(6);
     const total5 = await this.getNumberOfCards(5);
@@ -104,26 +115,9 @@ export class StatsFetch extends DBClass {
       misc.marketSales,
       misc.missionsComplete
     );
-  }
+  }*/
 
-  public static async getMiscStats(): Promise<{
-    triviaCorrect: number;
-    triviaWrong: number;
-    tradesComplete: number;
-    marketSales: number;
-    missionsComplete: number;
-  }> {
-    const query = await DB.query(`SELECT * FROM stats;`);
-    return {
-      triviaCorrect: query[0].statistic_count,
-      triviaWrong: query[1].statistic_count,
-      tradesComplete: query[2].statistic_count,
-      marketSales: query[3].statistic_count,
-      missionsComplete: query[4].statistic_count,
-    };
-  }
-
-  public static async getUserStats(
+  /*public static async getUserStats(
     discord_id: string
   ): Promise<{
     triviaCorrect: number;
@@ -131,22 +125,22 @@ export class StatsFetch extends DBClass {
     marketPurchases: number;
     marketSales: number;
   }> {
-    const triviaCorrect = await DB.query(
+    const triviaCorrect = (await DB.query(
       `SELECT COUNT(*) FROM trivia WHERE discord_id=? AND correct=1;`,
       [discord_id]
-    );
-    const triviaIncorrect = await DB.query(
+    )) as { "COUNT(*)": number }[];
+    const triviaIncorrect = (await DB.query(
       `SELECT COUNT(*) FROM trivia WHERE discord_id=? AND correct=0;`,
       [discord_id]
-    );
-    const marketPurchases = await DB.query(
-      `SELECT COUNT(*) FROM transaction WHERE buyer_id=?;`,
+    )) as { "COUNT(*)": number }[];
+    const marketPurchases = (await DB.query(
+      `SELECT COUNT(*) FROM sale WHERE buyer_id=?;`,
       [discord_id]
-    );
-    const marketSales = await DB.query(
-      `SELECT COUNT(*) FROM transaction WHERE seller_id=?;`,
+    )) as { "COUNT(*)": number }[];
+    const marketSales = (await DB.query(
+      `SELECT COUNT(*) FROM sale WHERE seller_id=?;`,
       [discord_id]
-    );
+    )) as { "COUNT(*)": number }[];
 
     return {
       triviaCorrect: triviaCorrect[0][`COUNT(*)`],
@@ -154,5 +148,5 @@ export class StatsFetch extends DBClass {
       marketPurchases: marketPurchases[0][`COUNT(*)`],
       marketSales: marketSales[0][`COUNT(*)`],
     };
-  }
+  }*/
 }

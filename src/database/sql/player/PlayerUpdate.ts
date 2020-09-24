@@ -1,5 +1,4 @@
 import { DB, DBClass } from "../../index";
-import { OkPacket } from "mysql";
 
 export class PlayerUpdate extends DBClass {
   public static async createNewProfile(discord_id: string): Promise<void> {
@@ -74,42 +73,49 @@ export class PlayerUpdate extends DBClass {
   public static async giveBadge(
     discord_id: string,
     badge_id: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `INSERT INTO user_badge (discord_id, badge_id) VALUES (?, ?);`,
       [discord_id, badge_id]
     );
-    return query;
+  }
+
+  public static async removeBadge(
+    discord_id: string,
+    badge_id: number
+  ): Promise<void> {
+    await DB.query(
+      `DELETE FROM user_badge WHERE discord_id=? AND badge_id=?;`,
+      [discord_id, badge_id]
+    );
   }
 
   public static async setOrphanTimestamp(
     discord_id: string,
     time: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET last_orphan=? WHERE discord_id=?;`,
       [time, discord_id]
     );
-    return query;
   }
   public static async setMissionTimestamp(
     discord_id: string,
     time: number
-  ): Promise<OkPacket> {
-    let query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE user_profile SET mission_last=? WHERE discord_id=?;`,
       [time, discord_id]
     );
-    return query;
   }
   public static async setDailyTimestamp(
     discord_id: string,
     time: number
-  ): Promise<OkPacket> {
-    return await DB.query(
-      `UPDATE user_profile SET daily_last=? WHERE discord_id=?;`,
-      [time, discord_id]
-    );
+  ): Promise<void> {
+    await DB.query(`UPDATE user_profile SET daily_last=? WHERE discord_id=?;`, [
+      time,
+      discord_id,
+    ]);
   }
 
   public static async createFish(
@@ -118,9 +124,29 @@ export class PlayerUpdate extends DBClass {
     weight: number,
     gender: "male" | "female" | "???"
   ): Promise<void> {
-    return await DB.query(
+    await DB.query(
       `INSERT INTO fish (discord_id, fish_name, fish_weight, gender) VALUES (?, ?, ?, ?);`,
       [discord_id, fish, weight, gender]
+    );
+  }
+
+  public static async giveReputation(
+    sender_id: string,
+    receiver_id: string
+  ): Promise<void> {
+    await DB.query(
+      `INSERT INTO reputation (sender_id, receiver_id) VALUES (?, ?);`,
+      [sender_id, receiver_id]
+    );
+  }
+
+  public static async removeReputation(
+    sender_id: string,
+    receiver_id: string
+  ): Promise<void> {
+    await DB.query(
+      `DELETE FROM reputation WHERE sender_id=? AND receiver_id=?;`,
+      [sender_id, receiver_id]
     );
   }
 }

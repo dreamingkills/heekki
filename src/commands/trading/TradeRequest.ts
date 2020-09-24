@@ -1,13 +1,10 @@
 import { Message } from "discord.js";
+import { CardService } from "../../database/service/CardService";
 import { TradeService } from "../../database/service/TradeService";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["trade"];
-  usage: string[] = ["%c <card reference/s> for <card reference/s>"];
-  desc: string = "Sends a trade request to another user";
-  category: string = "card";
-
   exec = async (msg: Message) => {
     const refs = this.options.join(" ")?.split("for");
     if (!refs[0]) {
@@ -24,10 +21,29 @@ export class Command extends BaseCommand {
     }
     let refsSender = refs[0].split(" ").filter((e) => e);
     let refsOther = refs[1].split(" ").filter((e) => e);
+    let cardsSender = [];
+    let cardsRecipient = [];
+
+    for (let ref of refsSender) {
+      const reference = {
+        identifier: ref.split("#")[0],
+        serial: parseInt(ref.split("#")[1]),
+      };
+      const card = await CardService.getCardDataFromReference(reference);
+      cardsSender.push(card);
+    }
+    for (let ref of refsOther) {
+      const reference = {
+        identifier: ref.split("#")[0],
+        serial: parseInt(ref.split("#")[1]),
+      };
+      const card = await CardService.getCardDataFromReference(reference);
+      cardsRecipient.push(card);
+    }
 
     const tradeRequest = await TradeService.createNewTradeRequest(
-      refsSender,
-      refsOther,
+      cardsSender,
+      cardsRecipient,
       msg.author.id
     );
     msg.channel.send(

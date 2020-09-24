@@ -4,6 +4,7 @@ import {
   EmbedField,
   MessageReaction,
   User,
+  TextChannel,
 } from "discord.js";
 import { MarketService } from "../../database/service/MarketService";
 import { UserCard } from "../../structures/player/UserCard";
@@ -12,17 +13,13 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["market", "marketplace", "mp"];
-  usage: string[] = ["%c [page]"];
-  desc: string = "Shows a list of cards currently up for sale.";
-  category: string = "market";
-
   private async renderMarket(
     cards: { card: UserCard; price: number }[]
   ): Promise<EmbedField[]> {
     return cards.map((c) => {
       return {
         name: `${c.card.abbreviation}#${c.card.serialNumber}`,
-        value: `**${c.card.title}**\n${c.card.member}\n:star: ${c.card.stars}\n<:coin:745447920072917093> ${c.price}`,
+        value: `:star: ${c.card.stars}\n<:cash:757146832639098930> ${c.price}\nSeller: <@${c.card.ownerId}>`,
         inline: true,
       };
     });
@@ -56,21 +53,45 @@ export class Command extends BaseCommand {
       .setFooter(
         `To buy a card, use !mpb <card reference>.\nTo change pages, click the arrow reactions.`
       )
-      .setColor(`#40BD66`);
+      .setColor(`#FFAACC`);
 
     const sent = await msg.channel.send(
       embed.addFields(await this.renderMarket(ff))
     );
-    await Promise.all([sent.react(`◀️`), sent.react(`▶️`)]);
+    await Promise.all([
+      sent.react(`⏪`),
+      sent.react(`◀️`),
+      sent.react(`754832389620105276`),
+      sent.react(`▶️`),
+      sent.react(`⏩`),
+    ]);
 
     const collector = sent.createReactionCollector(
       (r: MessageReaction, u: User) =>
-        (r.emoji.name === "◀️" || r.emoji.name === "▶️") &&
+        (r.emoji.name === "⏪" ||
+          r.emoji.name === "◀️" ||
+          r.emoji.name === "delete" ||
+          r.emoji.name === "▶️" ||
+          r.emoji.name == "⏩") &&
         msg.author.id === u.id,
       { time: 60000 }
     );
     collector.on("collect", async (r) => {
-      if (r.emoji.name === "◀️" && page !== 1) {
+      if (r.emoji.name === "⏪" && page !== 1) {
+        page = 1;
+        const newCards = await MarketService.getMarket({
+          ...options,
+          limit: 9,
+          page,
+        });
+        embed.fields = await this.renderMarket(newCards);
+        sent.edit(
+          embed.setAuthor(
+            `The Marketplace | ${msg.author.tag} (page ${page}/${pageLimit})`,
+            msg.author.displayAvatarURL()
+          )
+        );
+      } else if (r.emoji.name === "◀️" && page !== 1) {
         page--;
         const newCards = await MarketService.getMarket({
           ...options,
@@ -84,8 +105,24 @@ export class Command extends BaseCommand {
             msg.author.displayAvatarURL()
           )
         );
+      } else if (r.emoji.name === "delete") {
+        return (<TextChannel>msg.channel).bulkDelete([msg, sent]);
       } else if (r.emoji.name === "▶️" && page !== pageLimit) {
         page++;
+        const newCards = await MarketService.getMarket({
+          ...options,
+          limit: 9,
+          page,
+        });
+        embed.fields = await this.renderMarket(newCards);
+        sent.edit(
+          embed.setAuthor(
+            `The Marketplace | ${msg.author.tag} (page ${page}/${pageLimit})`,
+            msg.author.displayAvatarURL()
+          )
+        );
+      } else if (r.emoji.name === "⏩" && page !== pageLimit) {
+        page = pageLimit;
         const newCards = await MarketService.getMarket({
           ...options,
           limit: 9,

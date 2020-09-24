@@ -1,36 +1,33 @@
 import { Message } from "discord.js";
+import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
+import { UserCard } from "../../structures/player/UserCard";
 
 export class Command extends BaseCommand {
   names: string[] = ["favorite", "fav"];
-  usage: string[] = ["%c <card reference>"];
-  desc: string =
-    "Marks a card as 'favorite', preventing it from being traded, sold, or forfeited.";
-  category: string = "card";
-
-  exec = async (msg: Message) => {
+  exec = async (msg: Message, executor: Profile) => {
     const reference = {
-      abbreviation: this.options[0]?.split("#")[0],
+      identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    if (!reference.abbreviation) {
+
+    const card = await CardService.getCardDataFromReference(reference);
+    if (card.ownerId !== executor.discord_id) {
       msg.channel.send(
-        `<:red_x:741454361007357993> Please enter a card to favorite.`
+        "<:red_x:741454361007357993> That card doesn't belong to you."
       );
       return;
     }
-    const newCard = await UserCardService.toggleCardAsFavorite(
-      reference,
-      msg.author.id
-    );
+    await UserCardService.toggleCardAsFavorite(card);
 
-    const pre = newCard.isFavorite ? "Favorited" : "Unfavorited";
-    const post = newCard.isFavorite
+    const pre = !card.isFavorite ? "Favorited" : "Unfavorited";
+    const post = !card.isFavorite
       ? "You are no longer able to trade, sell, or forfeit that card."
       : "You are now able to trade, sell, and forfeit that card.";
     msg.channel.send(
-      `:white_check_mark: ${pre} **${reference.abbreviation}#${reference.serial}**!\n${post}`
+      `:white_check_mark: ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
     );
   };
 }

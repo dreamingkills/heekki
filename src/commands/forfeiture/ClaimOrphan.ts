@@ -1,21 +1,34 @@
 import { Message } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
+import { CardService } from "../../database/service/CardService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
+import {
+  CardNotOrphanedError,
+  OrphanCooldownError,
+} from "../../structures/Error";
+import { UserCardService } from "../../database/service/UserCardService";
+import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
   names: string[] = ["claimforfeit", "cf"];
-  usage: string[] = ["%c <card reference>>"];
-  desc: string = "Claims a forfeited card - usable once every 3 hours.";
-  category: string = "card";
+  exec = async (msg: Message, executor: Profile) => {
+    const lastForfeit = await PlayerService.getLastOrphanClaim(executor);
+    const now = Date.now();
+    if (now < lastForfeit + 7200000)
+      throw new OrphanCooldownError(lastForfeit + 7200000, now);
 
-  exec = async (msg: Message) => {
-    let ff = await PlayerService.claimOrphanedCard(msg.author.id, {
-      abbreviation: this.options[0].split("#")[0],
-      serial: parseInt(this.options[0].split("#")[1]),
-    });
+    const reference = {
+      identifier: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[1]?.split("#")[1]),
+    };
+    const targetCard = await CardService.getCardDataFromReference(reference);
+    if (targetCard.ownerId !== "0") throw new CardNotOrphanedError();
+
+    await UserCardService.transferCardToProfile(executor, targetCard);
+    await PlayerService.setLastOrphanClaim(executor, now);
 
     msg.channel.send(
-      `:white_check_mark: You claimed **${ff.abbreviation}#${ff.serialNumber}**!\nYou will not be able to claim another card for **3 hours**.`
+      `:white_check_mark: You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **2 hours**.`
     );
   };
 }

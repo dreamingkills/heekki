@@ -10,12 +10,15 @@ export class MarketFetch extends DBClass {
     [key: string]: string | number;
   }): Promise<{ card: UserCard; price: number }[]> {
     let query = `SELECT 
+                  card.id AS card_id,
                   card.blurb,
                   card.member,
                   card.abbreviation,
                   card.rarity,
                   card.image_url,
-                  user_card.id,
+                  card.serial_id,
+                  card.pack_id,
+                  user_card.id AS user_card_id,
                   user_card.serial_number,
                   user_card.owner_id,
                   user_card.stars,
@@ -46,7 +49,7 @@ export class MarketFetch extends DBClass {
       );
     if (options?.pack)
       queryOptions.push(
-        ` shop.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
       );
     if (options?.minstars)
       queryOptions.push(
@@ -68,29 +71,30 @@ export class MarketFetch extends DBClass {
         (<number>options?.page || 1) * 9 - 9
       };`;
 
-    let forSale = await DB.query(query);
-    let cardList = forSale.map(
-      (c: {
-        id: number;
-        blurb: string;
-        member: string;
-        credit: string;
-        abbreviation: string;
-        rarity: number;
-        is_favorite: boolean;
-        image_url: string;
-        serial_number: number;
-        owner_id: string;
-        stars: number;
-        hearts: number;
-        title: string;
-        image_data_id: number;
-        price: number;
-      }) => {
-        return { card: new UserCard(c), price: c.price };
-      }
-    );
-    return cardList;
+    let forSale = (await DB.query(query)) as {
+      card_id: number;
+      user_card_id: number;
+      serial_id: number;
+      id: number;
+      blurb: string;
+      member: string;
+      credit: string;
+      pack_id: number;
+      abbreviation: string;
+      rarity: number;
+      is_favorite: boolean;
+      image_url: string;
+      serial_number: number;
+      owner_id: string;
+      stars: number;
+      hearts: number;
+      title: string;
+      image_data_id: number;
+      price: number;
+    }[];
+    return forSale.map((c) => {
+      return { card: new UserCard(c), price: c.price };
+    });
   }
 
   /**
@@ -99,13 +103,13 @@ export class MarketFetch extends DBClass {
    */
   public static async fetchCardIsForSale(
     id: number
-  ): Promise<{ forSale: boolean; price?: number }> {
-    let query = await DB.query(`SELECT * FROM marketplace WHERE card_id=?`, [
+  ): Promise<{ forSale: boolean; price: number }> {
+    let query = (await DB.query(`SELECT * FROM marketplace WHERE card_id=?`, [
       id,
-    ]);
+    ])) as { id: number; card_id: number; price: number }[];
     return {
       forSale: query[0] ? true : false,
-      price: query[0] ? query[0].price : undefined,
+      price: query[0] ? query[0].price : -1,
     };
   }
 }

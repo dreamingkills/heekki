@@ -1,14 +1,12 @@
 import { Message } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";
+import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["add"];
-  usage: string[] = ["%c <@mention>"];
-  desc: string = "Adds someone to your friends list!";
-  category: string = "player";
-
-  exec = async (msg: Message) => {
+  exec = async (msg: Message, executor: Profile) => {
     if (!this.options[0]) {
       msg.channel.send(
         `<:red_x:741454361007357993> Please specify a user to add!`
@@ -32,9 +30,10 @@ export class Command extends BaseCommand {
       friend = this.parseMention(this.options[0]);
     }
 
+    const friendProfile = await PlayerService.getProfileByDiscordId(friend);
     const newFriend = await FriendService.addFriendByDiscordId(
-      msg.author.id,
-      friend
+      executor,
+      friendProfile
     );
 
     const newUser = await msg.client.users.fetch(newFriend.friend.discord_id);

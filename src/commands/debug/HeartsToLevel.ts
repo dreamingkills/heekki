@@ -4,11 +4,6 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["h2l"];
-  usage: string[] = ["%c <hearts>"];
-  desc: string = "Translates hearts to level.";
-  category: string = "player";
-  hidden: boolean = true;
-
   exec = async (msg: Message) => {
     let level = CardService.heartsToLevel(parseInt(this.options[0]));
 

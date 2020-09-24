@@ -3,6 +3,7 @@ import config from "../../config.json";
 import glob from "glob";
 import { Message } from "discord.js";
 import { promisify } from "util";
+import { PlayerService } from "../database/service/PlayerService";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
@@ -44,16 +45,11 @@ export class CommandManager {
   async handle(msg: Message): Promise<void> {
     let cmd = this.getCommandByName(msg.content.toLowerCase(), config.prefix);
     if (!cmd) return;
-    if (cmd.role) {
-      let role = await msg.guild?.roles.fetch(cmd.role);
-      if (!role)
-        return console.log(`Command ${cmd.names[0]} has an invalid role set.`);
-      if (!msg.member?.roles.cache.get(cmd.role)) {
-        await msg.channel.send(
-          `<:red_x:741454361007357993> You need \`${role.name}\` to use that.`
-        );
-        return;
-      }
+    if (cmd.users && cmd.users[0] !== msg.author.id) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> You don't have access to that command.`
+      );
+      return;
     }
     if (this.cooldown.has(msg.author.id)) {
       await msg.channel.send(
@@ -61,17 +57,17 @@ export class CommandManager {
       );
       return;
     }
+
     try {
       this.cooldown.add(msg.author.id);
       setTimeout(() => {
         this.cooldown.delete(msg.author.id);
       }, 3000);
-      await cmd.run(msg);
-      return;
+      const profile = await PlayerService.getProfileByDiscordId(msg.author.id);
+      await cmd.run(msg, profile);
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
       if (!e.isClientFacing) console.log(`${e.message}\n${e.stack}`);
-      return;
     }
   }
 }

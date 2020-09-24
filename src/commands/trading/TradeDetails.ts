@@ -5,37 +5,29 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["showtrade", "st"];
-  usage: string[] = ["%c <trade id>"];
-  desc: string = "Shows an active trade.";
-  category: string = "card";
-
   exec = async (msg: Message) => {
     const tradeCards = await TradeService.getTradeByUnique(this.options[0]);
     let transferData = [];
     for (let trade of tradeCards) {
       if (trade.senderCard === 0) {
-        const card = (
-          await UserCardService.getCardByUserCardId(trade.recipientCard)
-        ).userCard;
+        const card = await UserCardService.getUserCardById(trade.recipientCard);
         transferData.push({
           card1Reference: "Nothing",
           card2Reference: `${card.abbreviation}#${card.serialNumber}`,
         });
       } else if (trade.recipientCard === 0) {
-        const card = (
-          await UserCardService.getCardByUserCardId(trade.senderCard)
-        ).userCard;
+        const card = await UserCardService.getUserCardById(trade.senderCard);
         transferData.push({
           card1Reference: `${card.abbreviation}#${card.serialNumber}`,
           card2Reference: `Nothing`,
         });
       } else {
-        const senderCard = (
-          await UserCardService.getCardByUserCardId(trade.senderCard)
-        ).userCard;
-        const recipientCard = (
-          await UserCardService.getCardByUserCardId(trade.recipientCard)
-        ).userCard;
+        const senderCard = await UserCardService.getUserCardById(
+          trade.senderCard
+        );
+        const recipientCard = await UserCardService.getUserCardById(
+          trade.recipientCard
+        );
         transferData.push({
           card1Reference: `${senderCard.abbreviation}#${senderCard.serialNumber}`,
           card2Reference: `${recipientCard.abbreviation}#${recipientCard.serialNumber}`,
@@ -55,7 +47,8 @@ export class Command extends BaseCommand {
           .join("\n")}\n\n**Trade Type**: ${
           tradeCards[0].recipient === msg.author.id ? "Incoming" : "Outgoing"
         }`
-      );
+      )
+      .setColor(`#FFAACC`);
 
     msg.channel.send(embed);
   };

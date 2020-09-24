@@ -1,15 +1,12 @@
 import { Message, MessageReaction, User } from "discord.js";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["bulkforfeit", "bff"];
-  usage: string[] = ["%c < stars<# >"];
-  desc: string = "Forfeits all cards under a certain star count.";
-  category: string = "card";
-
-  exec = async (msg: Message) => {
-    let starCount = parseInt(this.options[0]?.split("<")[1]);
+  exec = async (msg: Message, executor: Profile) => {
+    /*let starCount = parseInt(this.options[0]?.split("<")[1]);
 
     if (isNaN(starCount)) {
       msg.channel.send(
@@ -39,7 +36,7 @@ export class Command extends BaseCommand {
 
     if (rxn) {
       let bulk = await UserCardService.forfeitBulkUnderStars(
-        msg.author.id,
+        executor,
         starCount
       );
 
@@ -52,6 +49,6 @@ export class Command extends BaseCommand {
         `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
       );
       conf.reactions.removeAll();
-    }
+    }*/
   };
 }

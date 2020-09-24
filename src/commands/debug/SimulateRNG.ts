@@ -4,16 +4,8 @@ import { Chance } from "chance";
 
 export class Command extends BaseCommand {
   names: string[] = ["sim"];
-  usage: string[] = ["%c <number>"];
-  desc: string = "Simulates X card generations.";
-  category: string = "debug";
-  hidden: boolean = true;
-
+  users: string[] = ["197186779843919877"];
   exec = async (msg: Message) => {
-    if (msg.author.id !== "197186779843919877") {
-      msg.channel.send("You aren't allowed to use that.");
-      return;
-    }
     const loopTime = parseInt(this.options[0]);
     if (isNaN(loopTime)) {
       msg.channel.send("Enter a valid number.");

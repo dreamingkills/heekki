@@ -5,23 +5,18 @@ import { MarketService } from "../../database/service/MarketService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["gift"];
-  usage: string[] = ["%c <card id> <mention>"];
-  desc: string = "Gifts a card to someone, for free!";
-  category: string = "player";
-
-  exec = async (msg: Message) => {
+  exec = async (msg: Message, executor: Profile) => {
     const references = this.options.filter((p) => p.includes("#"));
     const cardList = await Promise.all(
       references.map(async (p) => {
-        return (
-          await CardService.getCardDataFromReference({
-            abbreviation: p?.split("#")[0],
-            serial: parseInt(p?.split("#")[1]),
-          })
-        ).userCard;
+        return await CardService.getCardDataFromReference({
+          identifier: p?.split("#")[0],
+          serial: parseInt(p?.split("#")[1]),
+        });
       })
     );
     if (cardList.length < 1) {
@@ -42,7 +37,7 @@ export class Command extends BaseCommand {
       );
       return;
     }
-    const profile = await PlayerService.getProfileByDiscordId(mention.id, true);
+    const profile = await PlayerService.getProfileByDiscordId(mention.id);
 
     //Validations
     let validCards: UserCard[] = [];
@@ -56,7 +51,7 @@ export class Command extends BaseCommand {
         invalidMessage += `\nYour card **${c.abbreviation}#${c.serialNumber}** is currently favorited.`;
         continue;
       }
-      if ((await MarketService.cardIsOnMarketplace(c.userCardId)).forSale) {
+      if ((await MarketService.cardIsOnMarketplace(c)).forSale) {
         invalidMessage += `\nYour card **${c.abbreviation}#${c.serialNumber}** is currently on the marketplace.`;
         continue;
       }
@@ -91,10 +86,7 @@ export class Command extends BaseCommand {
 
     if (reactions.first()) {
       for (let c of validCards) {
-        await UserCardService.transferCardToUserByDiscordId(
-          profile.discord_id,
-          c.userCardId
-        );
+        await UserCardService.transferCardToProfile(profile, c);
       }
     }
 

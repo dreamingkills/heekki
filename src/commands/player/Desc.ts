@@ -1,19 +1,14 @@
 import { Message } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["desc"];
-  usage: string[] = ["%c <description>"];
-  desc: string = "Sets the description on your profile.";
-  category: string = "player";
-
-  exec = async (msg: Message) => {
-    let id = msg.author.id;
-    let desc = this.options.join(" ");
+  exec = async (msg: Message, executor: Profile) => {
     let user = await PlayerService.changeProfileDescriptionByDiscordId(
-      id,
-      desc
+      executor,
+      this.options.join(" ")
     );
 
     msg.channel.send(

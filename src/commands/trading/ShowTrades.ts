@@ -4,10 +4,6 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["trades"];
-  usage: string[] = ["%c"];
-  desc: string = "Shows your active trade requests..";
-  category: string = "card";
-
   exec = async (msg: Message) => {
     const trades = await TradeService.getTradeRequests(msg.author.id);
 
@@ -33,8 +29,8 @@ export class Command extends BaseCommand {
           )
           .join("\n")}`
       )
-      .setFooter(`To accept a trade, use !accept <trade id>`);
-
+      .setFooter(`To accept a trade, use !accept <trade id>`)
+      .setColor(`#FFAACC`);
     msg.channel.send(embed);
   };
 }

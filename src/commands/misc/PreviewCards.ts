@@ -7,24 +7,19 @@ import {
 } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
+import { ShopService } from "../../database/service/ShopService";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["preview"];
-  usage: string[] = ["%c <up to 9 card references...>"];
-  desc: string = "Preview up to 9 cards.";
-  category: string = "player";
-
   exec = async (msg: Message) => {
     const references = this.options.filter((p) => p.includes("#")).slice(0, 9);
     const cardList = await Promise.all(
       references.map(async (p) => {
-        return (
-          await CardService.getCardDataFromReference({
-            abbreviation: p.split("#")[0],
-            serial: parseInt(p.split("#")[1]),
-          })
-        ).userCard;
+        return await CardService.getCardDataFromReference({
+          identifier: p.split("#")[0],
+          serial: parseInt(p.split("#")[1]),
+        });
       })
     );
 
@@ -34,18 +29,19 @@ export class Command extends BaseCommand {
         msg.author.displayAvatarURL()
       )
       .setDescription(`**${cardList.length}** cards requested...`)
-      .setColor(`#40BD66`);
+      .setColor(`#FFAACC`);
     for (let card of cardList) {
-      const isInMarketplace = await MarketService.cardIsOnMarketplace(
-        card.userCardId
-      );
+      const isInMarketplace = await MarketService.cardIsOnMarketplace(card);
+      const pack = await ShopService.getPackById(card.packId);
       embed.addField(
         `${card.abbreviation}#${card.serialNumber}`,
-        `**${card.title}**\n${card.member}\n:star: **${
-          card.stars
-        }**\n:heart: **${card.hearts}**\nOwner: <@${card.ownerId}>${
+        `Owner: <@${card.ownerId}>\n**${pack.title}**\n${
+          card.member
+        }\n:star: **${card.stars}**\n<:heekki_heart:757147742383505488> **${
+          card.hearts
+        }**\n\n${
           isInMarketplace.forSale
-            ? `\n:dollar: For Sale: **${isInMarketplace.price}** <:coin:745447920072917093>`
+            ? `:dollar: For Sale: **${isInMarketplace.price}** <:cash:757146832639098930>`
             : ""
         }`,
         true

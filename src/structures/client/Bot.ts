@@ -19,12 +19,10 @@ export class Bot extends Client {
 
     this.on("ready", async () => {
       if (!this.user) return console.error("I'm null!");
-      let userCount = await DB.query(
-        `SELECT COUNT(discord_id) FROM user_profile;`
-      );
-      console.log(
-        `Ready - ${userCount[0]["COUNT(discord_id)"]} users in database`
-      );
+      let userCount = (await DB.query(
+        `SELECT COUNT(*) FROM user_profile;`
+      )) as { "COUNT(*)": number }[];
+      console.log(`Ready - ${userCount[0]["COUNT(*)"]} users in database`);
       this.user.setPresence({ activity: { name: "with cards - !help" } });
     });
 

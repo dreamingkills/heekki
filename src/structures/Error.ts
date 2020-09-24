@@ -9,23 +9,6 @@ export abstract class ClientError extends Error {
     this.message = msg;
   }
 }
-/**
- * Perspective:
- *
- * `0` - First-person ("You haven't...")
- *
- * `1` - Third-person ("They haven't...")
- */
-export class NoProfileError extends ClientError {
-  name = "NoProfileError";
-  constructor(perspective: boolean) {
-    super(
-      `${
-        perspective ? "They" : "You"
-      } haven't created a profile yet! Use the \`!play\` command to get started.`
-    );
-  }
-}
 export class DuplicateProfileError extends ClientError {
   name = "DuplicateProfileError";
   constructor() {
@@ -78,9 +61,11 @@ export class NotEnoughHeartsError extends ClientError {
 }
 export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
-  constructor(reference: { abbreviation: string; serial: number }) {
+  constructor(reference: { identifier: string; serial: number }) {
     super(
-      `I couldn't find **${reference.abbreviation}#${reference.serial}**! Please make sure you entered it correctly.`
+      `I couldn't find **${reference.identifier}#${
+        isNaN(reference.serial) ? "????" : reference.serial
+      }**! Please make sure you entered it correctly.`
     );
   }
 }
@@ -297,5 +282,11 @@ export class CardOnMarketplaceError extends ClientError {
     super(
       `That card is currently on the Marketplace.\nTo unlist it, use \`!unlist <card reference>\`.`
     );
+  }
+}
+export class CardInTradeError extends ClientError {
+  name = "CardInTradeError";
+  constructor() {
+    super(`That card is currently in a trade.`);
   }
 }

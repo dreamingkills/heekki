@@ -2,20 +2,21 @@ import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
+import {
+  NotYourCardError,
+  CardOnMarketplaceError,
+  CardInTradeError,
+} from "../../structures/Error";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["forfeit", "ff"];
-  usage: string[] = ["%c <card reference>"];
-  desc: string =
-    "Removes a card from your inventory, making it available to anyone.";
-  category: string = "card";
-
-  exec = async (msg: Message) => {
+  exec = async (msg: Message, executor: Profile) => {
     const reference = {
-      abbreviation: this.options[0].split("#")[0],
-      serial: parseInt(this.options[0].split("#")[1]),
+      identifier: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    let card = (await CardService.getCardDataFromReference(reference)).userCard;
+    let card = await CardService.getCardDataFromReference(reference);
 
     let conf = await msg.channel.send(
       `:warning: Really forfeit **${card.abbreviation}#${card.serialNumber}**?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`

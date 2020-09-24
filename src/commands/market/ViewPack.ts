@@ -1,50 +1,53 @@
+import { Cipher } from "crypto";
 import { Message, MessageAttachment, MessageEmbed } from "discord.js";
+import { CardService } from "../../database/service/CardService";
+import { PlayerService } from "../../database/service/PlayerService";
 import { ShopService } from "../../database/service/ShopService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
-  names: string[] = ["viewpack", "vp"];
-  usage: string[] = ["%c <pack name>"];
-  desc: string = "Shows a list of cards in a pack.";
-  category: string = "market";
-
-  exec = async (msg: Message) => {
-    const packName = this.options.join("");
-    const pack = await ShopService.getFullPackData(packName);
-    const cardsPerColumn = Math.ceil(pack.cards.length / 3);
-
-    const cardList1 = pack.cards.slice(0, cardsPerColumn).map((c) => {
-      return `**${c.member}** (${c.abbreviation})\n${
-        c.blurb !== "" ? `*${c.blurb}*` : ""
-      }\n`;
+  names: string[] = ["pack", "viewpack", "vp"];
+  exec = async (msg: Message, executor: Profile) => {
+    if (!this.options[0]) {
+      msg.channel.send(
+        "<:red_x:741454361007357993> Please specify a pack to view."
+      );
+    }
+    const packName = this.options.join(" ");
+    const pack = await ShopService.getPackByFuzzySearch(packName);
+    const packCards = await CardService.getCardsByPack(pack);
+    const ownedByUser = await PlayerService.getCardsByProfile(executor, {
+      pack: pack.keyword,
     });
-    const cardList2 = pack.cards
-      .slice(cardsPerColumn, cardsPerColumn * 2)
-      .map((c) => {
-        return `**${c.member}** (${c.abbreviation})\n${
-          c.blurb !== "" ? `*${c.blurb}*` : ""
-        }\n`;
-      });
-    const cardList3 = pack.cards
-      .slice(cardsPerColumn * 2, cardsPerColumn * 3)
-      .map((c) => {
-        return `**${c.member}** (${c.abbreviation})\n${
-          c.blurb !== "" ? `*${c.blurb}*` : ""
-        }\n`;
-      });
 
-    const cardImage = new MessageAttachment(pack.cover, "cover.png");
+    const count = ownedByUser.filter((c) => c.id === 1).length;
+    console.log(count);
+
     const embed = new MessageEmbed()
-      .setDescription(pack.flavor)
-      .setAuthor(`Pack | ${pack.name}`)
-      .attachFiles([cardImage])
-      .setImage(`attachment://cover.png`)
-      .setFooter(`Created by ${pack.credit}`)
-      .setColor("#40BD66")
-      .addField(`Card listing (1)`, cardList1, true)
-      .addField(`Card listing (2)`, cardList2, true)
-      .addField(`Card listing (3)`, cardList3, true);
-
-    msg.channel.send(embed);
+      .setAuthor(`Pack Viewer | ${msg.author.tag}`)
+      .setDescription(
+        `*"${pack.flavorText}"*\n<:cards:757151797235286089> There ${
+          packCards.length > 1 ? "are" : "is"
+        } **${packCards.length}** card${
+          packCards.length > 1 ? "s" : ""
+        } in the **${pack.title}** pack.\nYou own **${
+          ownedByUser.length
+        }** card${
+          ownedByUser.length > 1 ? "s" : ""
+        } from this pack.\n\n${packCards.map((card) => {
+          const count = ownedByUser.filter((c) => c.id === card.id).length;
+          return `${
+            count > 0
+              ? `<:cards:757151797235286089>`
+              : `<:cards_dark:757771501335347311>`
+          } **${card.member}** (${card.abbreviation})\nOwned: **${count}**\n*"${
+            card.blurb
+          }"*\n`;
+        })}`
+      )
+      .setColor(`#FFAACC`)
+      .setFooter(`Pack designed by ${pack.credit}`);
+    await msg.channel.send(embed);
   };
 }

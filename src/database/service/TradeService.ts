@@ -6,6 +6,7 @@ import { MarketService } from "./MarketService";
 import { UserCard } from "../../structures/player/UserCard";
 import { TradeFetch } from "../sql/trade/TradeFetch";
 import { UserCardService } from "./UserCardService";
+import { Card } from "../../structures/card/Card";
 
 export class TradeService {
   private static generateUniqueTradeId(): string {
@@ -34,9 +35,7 @@ export class TradeService {
           throw new error.InconsistentCardOwnerOnRightSideOfTradeError();
         throw new error.NotYourCardInTradeError();
       }
-      const isForSale = await MarketService.cardIsOnMarketplace(
-        cards[i].userCardId
-      );
+      const isForSale = await MarketService.cardIsOnMarketplace(cards[i]);
       if (isForSale.forSale) {
         if (perspective === "recipient")
           throw new error.RightSideCardIsOnMarketplaceError();
@@ -52,49 +51,28 @@ export class TradeService {
   }
 
   public static async createNewTradeRequest(
-    senderCards: string[],
-    recipientCards: string[],
+    senderCards: UserCard[],
+    recipientCards: UserCard[],
     senderId: string
   ): Promise<{ recipient: string; unique: string }> {
-    const senderUserCards = await Promise.all(
-      senderCards.map(async (c) => {
-        return (
-          await CardService.getCardDataFromReference({
-            abbreviation: c.split("#")[0],
-            serial: parseInt(c.split("#")[1]),
-          })
-        ).userCard;
-      })
-    );
-    await this.validateCards(senderUserCards, senderId, senderId, "sender");
-
-    const recipientUserCards = await Promise.all(
-      recipientCards.map(async (c) => {
-        return (
-          await CardService.getCardDataFromReference({
-            abbreviation: c.split("#")[0],
-            serial: parseInt(c.split("#")[1]),
-          })
-        ).userCard;
-      })
-    );
+    await this.validateCards(senderCards, senderId, senderId, "sender");
     await this.validateCards(
-      recipientUserCards,
+      recipientCards,
       senderId,
-      recipientUserCards[0].ownerId,
+      recipientCards[0].ownerId,
       "recipient"
     );
 
     const uniqueId = this.generateUniqueTradeId();
     await TradeUpdate.createTrade(
       senderId,
-      recipientUserCards[0].ownerId,
-      senderUserCards,
-      recipientUserCards,
+      recipientCards[0].ownerId,
+      senderCards,
+      recipientCards,
       uniqueId
     );
     return {
-      recipient: recipientUserCards[0].ownerId,
+      recipient: recipientCards[0].ownerId,
       unique: uniqueId,
     };
   }
@@ -137,17 +115,14 @@ export class TradeService {
       throw new error.NotYourTradeToAcceptError();
 
     for (let trade of trades) {
+      console.log(trade);
       if (trade.senderCard !== 0) {
-        await UserCardService.transferCardToUserByDiscordId(
-          trade.recipient,
-          trade.senderCard
-        );
+        const card = await UserCardService.getUserCardById(trade.senderCard);
+        await UserCardService.transferCard(trade.recipient, card);
       }
       if (trade.recipientCard !== 0) {
-        await UserCardService.transferCardToUserByDiscordId(
-          trade.sender,
-          trade.recipientCard
-        );
+        const card = await UserCardService.getUserCardById(trade.recipientCard);
+        await UserCardService.transferCard(trade.sender, card);
       }
     }
 

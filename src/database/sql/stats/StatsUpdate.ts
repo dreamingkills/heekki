@@ -8,12 +8,11 @@ export class StatsUpdate extends DBClass {
       | "trades_complete"
       | "market_sales"
       | "missions_complete"
-  ): Promise<boolean> {
-    const query = await DB.query(
+  ): Promise<void> {
+    await DB.query(
       `UPDATE stats SET statistic_count=statistic_count+1 WHERE statistic_name=?;`,
       [stat]
     );
-    return true;
   }
 
   public static async triviaComplete(
@@ -24,5 +23,26 @@ export class StatsUpdate extends DBClass {
       discord_id,
       correct,
     ]);
+  }
+
+  public static async missionComplete(
+    discord_id: string,
+    correct: boolean
+  ): Promise<void> {
+    await DB.query(`INSERT INTO mission (discord_id, success) VALUES (?, ?);`, [
+      discord_id,
+      correct,
+    ]);
+  }
+
+  public static async saleComplete(
+    buyer_id: string,
+    seller_id: string,
+    card: string
+  ): Promise<void> {
+    await DB.query(
+      `INSERT INTO sale (buyer_id, seller_id, card) VALUES (?, ?, ?);`,
+      [buyer_id, seller_id, card]
+    );
   }
 }

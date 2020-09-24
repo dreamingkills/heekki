@@ -5,13 +5,8 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["fish"];
-  usage: string[] = ["%c <user>"];
-  desc: string = "";
-  category: string = "player";
-  role: string = "752040728477040780";
-
   exec = async (msg: Message) => {
-    const profile = await PlayerService.getProfileByDiscordId(
+    /* const profile = await PlayerService.getProfileByDiscordId(
       msg.author.id,
       false
     );
@@ -29,6 +24,6 @@ export class Command extends BaseCommand {
         })
       );
 
-    await msg.channel.send(fishEmbed);
+    await msg.channel.send(fishEmbed); */
   };
 }

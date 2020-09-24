@@ -1,54 +1,77 @@
 import { DB } from "../../index";
 import { DBClass } from "../../index";
 import * as error from "../../../structures/Error";
-import { ShopItem } from "../../../structures/shop/Pack";
-import { Card } from "../../../structures/card/Card";
-import { stringify } from "querystring";
-import { CardService } from "../../service/CardService";
+import { ShopItem } from "../../../structures/shop/ShopItem";
+import { Pack } from "../../../structures/card/Pack";
 
 export class ShopFetch extends DBClass {
-  public static async findShopItemById(id: number): Promise<ShopItem> {
-    let query = await DB.query(`SELECT * FROM shop WHERE id=?;`, [id]);
+  public static async getPackByFuzzySearch(name: string): Promise<ShopItem> {
+    const query = (await DB.query(
+      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE pack.title LIKE ?;`,
+      [`%${name}%`]
+    )) as {
+      id: number;
+      keyword: string;
+      price: number;
+      active: boolean;
+      title: string;
+      credit: string;
+      image_data_id: number;
+      cover_url: string;
+      flavor_text: string;
+    }[];
     if (!query[0]) throw new error.InvalidPackError();
     return new ShopItem(query[0]);
-  }
-  public static async findShopItemByName(name: string): Promise<ShopItem> {
-    let query = await DB.query(`SELECT * FROM shop WHERE title=?;`, [name]);
-    if (!query[0]) throw new error.InvalidPackError();
-    return new ShopItem(query[0]);
-  }
-  public static async getAllShopItems(active?: boolean): Promise<ShopItem[]> {
-    let query = await DB.query(`SELECT * FROM shop WHERE active=?`, [active]);
-    return query.map(
-      (i: {
-        id: number;
-        title: string;
-        price: number;
-        active: boolean;
-        pack_id: number;
-      }) => {
-        return new ShopItem(i);
-      }
-    );
   }
 
-  public static async getFullPackData(
-    id: number
-  ): Promise<{
-    cover: string;
-    name: string;
-    credit: string;
-    flavor: string;
-    cards: Card[];
-  }> {
-    const cards = await CardService.getCardsByPackId(id);
-    const pack = await DB.query(`SELECT * FROM pack WHERE id=?;`, [id]);
-    return {
-      cover: pack[0].cover_url,
-      name: pack[0].title,
-      credit: pack[0].credit,
-      flavor: pack[0].flavor_text,
-      cards,
-    };
+  public static async getPackByName(name: string): Promise<ShopItem> {
+    const query = (await DB.query(
+      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE shop.title=?;`,
+      [name]
+    )) as {
+      id: number;
+      keyword: string;
+      price: number;
+      active: boolean;
+      title: string;
+      credit: string;
+      image_data_id: number;
+      cover_url: string;
+      flavor_text: string;
+    }[];
+    if (!query[0]) throw new error.InvalidPackError();
+    return new ShopItem(query[0]);
+  }
+
+  public static async getPackById(id: number): Promise<Pack> {
+    const query = (await DB.query(`SELECT * FROM pack WHERE id=?;`, [id])) as {
+      id: number;
+      title: string;
+      image_data_id: number;
+      credit: string;
+      cover_url: string;
+      flavor_text: string;
+    }[];
+    return new Pack(query[0]);
+  }
+
+  public static async getAllShopItems(active?: boolean): Promise<ShopItem[]> {
+    const query = (await DB.query(
+      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE active=?`,
+      [active]
+    )) as {
+      id: number;
+      keyword: string;
+      price: number;
+      active: boolean;
+      title: string;
+      credit: string;
+      image_data_id: number;
+      cover_url: string;
+      flavor_text: string;
+    }[];
+    return query.map((i) => {
+      return new ShopItem(i);
+    });
   }
 }

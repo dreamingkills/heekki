@@ -4,14 +4,11 @@ import trivia from "../../assets/trivia.json";
 import Chance from "chance";
 import { StatsService } from "../../database/service/StatsService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["trivia"];
-  usage: string[] = ["%c"];
-  desc: string = "Gives you a random question to answer for points.";
-  category: string = "player";
-
-  exec = async (msg: Message) => {
+  exec = async (msg: Message, executor: Profile) => {
     const chance = new Chance();
     const triviaSelect = chance.pickone(trivia.trivia);
     const channel = msg.channel as TextChannel;
@@ -20,10 +17,10 @@ export class Command extends BaseCommand {
       `:information_source: **Trivia Time!** ${msg.author}\n${triviaSelect.question}`
     );
 
-    const profit = chance.integer({
+    /*const profit = chance.integer({
       min: triviaSelect.reward.min,
       max: triviaSelect.reward.max,
-    });
+    });*/
 
     const collect = channel.createMessageCollector(
       (m: Message) => m.author == msg.author,
@@ -34,11 +31,11 @@ export class Command extends BaseCommand {
     collect.on("collect", async (m: Message) => {
       if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
         triviaMessage.edit(
-          `:tada: **Correct!**\nYou were awarded <:coin:745447920072917093> **${profit}**.`
+          `:tada: **Correct!**` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
         );
         msg.react("✅");
 
-        await PlayerService.addCoinsToUserByDiscordId(msg.author.id, profit);
+        //await PlayerService.addCoinsToProfile(executor, profit);
         return collect.stop("correct");
       } else m.react("741454361007357993");
     });
@@ -55,12 +52,12 @@ export class Command extends BaseCommand {
         if (
           msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")
         )
-          (<TextChannel>msg.channel).bulkDelete(msgs);
+          channel.bulkDelete(msgs);
       } catch (e) {
         // Ignore 'Unknown Message' - doesn't matter
       }
       StatsService.triviaComplete(
-        msg.author.id,
+        executor,
         reason === "correct" ? true : false
       );
     });

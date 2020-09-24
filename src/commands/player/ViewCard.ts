@@ -6,36 +6,46 @@ import {
   TextChannel,
 } from "discord.js";
 import { CardService } from "../../database/service/CardService";
+import { ShopService } from "../../database/service/ShopService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["card", "show"];
-  usage: string[] = ["%c [card reference]"];
-  desc: string = "Generates an image of a card.";
-  category: string = "card";
-  deletable: boolean = true;
-
-  exec = async (msg: Message) => {
-    let card = await CardService.generateCardImageFromReference({
-      abbreviation: this.options[0].split("#")[0],
-      serial: parseInt(this.options[0].split("#")[1]),
-    });
+  exec = async (msg: Message, executor: Profile) => {
+    const reference = {
+      identifier: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[0]?.split("#")[1]),
+    };
+    if (isNaN(reference.serial)) {
+      msg.channel.send(`:x: That isn't a valid card reference.`);
+      return;
+    }
+    const card = await CardService.getCardDataFromReference(reference);
+    const pack = await ShopService.getPackById(card.packId);
+    const imageData = await CardService.getImageDataFromPack(pack);
+    const image = await CardService.generateCardImageFromUserCard(
+      card,
+      imageData
+    );
 
     let embed = new MessageEmbed()
-      .setDescription(
-        `Owner: ${
-          card.userCard.ownerId == "0"
-            ? "No-one!"
-            : `<@${card.userCard.ownerId}>`
-        }\n${card.userCard.blurb != "" ? `*"${card.userCard.blurb}"*` : ``}`
+      .setAuthor(
+        `Card View | ${card.abbreviation}#${card.serialNumber}`,
+        msg.author.displayAvatarURL()
       )
-      .setColor("#40BD66")
+      .setDescription(
+        `${card.blurb != "" ? `*"${card.blurb}"*` : ``}\n**Owner**: ${
+          card.ownerId == "0" ? "no-one!" : `<@${card.ownerId}>`
+        }\n<:heekki_heart:757147742383505488> **${card.hearts}**\n⭐ **${
+          card.stars
+        }**`
+      )
+      .setColor("#FFAACC")
       .setFooter(
-        `Card designed by ${card.userCard.credit} - ${
-          Date.now() - msg.createdTimestamp
-        }ms`
+        `Designed by ${pack.credit} - ${Date.now() - msg.createdTimestamp}ms`
       );
-    const sent = await msg.channel.send({ embed: embed, files: [card.image] });
+    const sent = await msg.channel.send({ embed: embed, files: [image] });
 
     if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")) {
       sent.react(`753019858932727868`);

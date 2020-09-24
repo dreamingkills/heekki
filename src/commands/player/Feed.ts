@@ -1,50 +1,66 @@
 import { Message, MessageEmbed } from "discord.js";
 import { CardService } from "../../database/service/CardService";
+import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["upgrade"];
-  usage: string[] = ["%c <card reference> <amount>"];
-  desc: string = "Adds hearts to a card, which can level it up.";
-  category: string = "player";
+  exec = async (msg: Message, executor: Profile) => {
+    const reference = {
+      identifier: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[0]?.split("#")[1]),
+    };
+    const amount = parseInt(this.options[1]);
+    if (isNaN(amount)) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter an amount of hearts to upgrade your card with.`
+      );
+      return;
+    }
+    if (isNaN(reference.serial)) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a valid card reference.`
+      );
+      return;
+    }
+    const card = await CardService.getCardDataFromReference(reference);
 
-  exec = async (msg: Message) => {
-    let id = msg.author.id;
-    let fedUserCardData = await CardService.upgradeCard(
-      id,
-      parseInt(this.options[1]),
-      {
-        abbreviation: this.options[0].split("#")[0],
-        serial: parseInt(this.options[0].split("#")[1]),
-      }
-    );
-    let userCard = fedUserCardData.card;
-    let beforeLevel = CardService.heartsToLevel(fedUserCardData.before).level;
-    let afterLevel = CardService.heartsToLevel(userCard.hearts).level;
+    if (card.ownerId !== msg.author.id) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> That card does not belong to you.`
+      );
+      return;
+    }
+    if (amount > executor.hearts) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> You don't have enough hearts to do that.\nYou have <:heekki_heart:757147742383505488> **${executor.hearts}**.`
+      );
+      return;
+    }
+    await CardService.upgradeCard(amount, card);
+    await PlayerService.removeHeartsFromProfile(executor, amount);
+
+    let beforeLevel = CardService.heartsToLevel(card.hearts).level;
+    let afterLevel = CardService.heartsToLevel(card.hearts + amount).level;
 
     let embed = new MessageEmbed()
-      .setAuthor(`Successfully upgraded card!`, msg.author.displayAvatarURL())
+      .setAuthor(`Upgrade | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         `${
           afterLevel > beforeLevel
-            ? `:tada: **LEVEL UP!**\n${beforeLevel} ~~-->~~ ${afterLevel}\n\n`
+            ? `:tada: **LEVEL UP!** ${beforeLevel} ~~-->~~ ${afterLevel}\n`
             : ``
-        } Successfully added **${
+        } Successfully added <:heekki_heart:757147742383505488> **${
           this.options[1]
-        }** hearts to the following card:\n**__${userCard.abbreviation}#${
-          userCard.serialNumber
-        }__** - ${userCard.member}\n${"⭐".repeat(
-          userCard.stars
-        )}\n\nCard heart count: **${
-          userCard.hearts + parseInt(this.options[1])
-        }**`
+        }** to **${card.abbreviation}#${
+          card.serialNumber
+        }**.\nYour card now has <:heekki_heart:757147742383505488> **${
+          card.hearts + amount
+        }**.`
       )
-      .setFooter(
-        `You now have ${
-          fedUserCardData.user.hearts - parseInt(this.options[1])
-        } hearts.`
-      )
-      .setColor("#40BD66");
+      .setFooter(`You now have ${executor.hearts - amount} hearts.`)
+      .setColor("#FFAACC");
     msg.channel.send(embed);
   };
 }

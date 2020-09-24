@@ -6,7 +6,7 @@ import version from "../../version.json";
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
   exec = async (msg: Message) => {
-    if (this.options[0] === "me") {
+    /* if (this.options[0] === "me") {
       const stats = await StatsService.getUserStats(msg.author.id);
       const embed = new MessageEmbed()
         .setAuthor(`Stats | ${msg.author.tag}`, msg.author.displayAvatarURL())
@@ -45,6 +45,6 @@ export class Command extends BaseCommand {
       )
       .setColor("#40BD66")
       .setFooter(`loonacards v${version.version}`);
-    msg.channel.send(embed);
+    msg.channel.send(embed); */
   };
 }

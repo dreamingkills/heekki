@@ -1,24 +1,17 @@
-export class UserCard {
-  userCardId: number;
+import { stringify } from "querystring";
+import { Card } from "../card/Card";
 
+export class UserCard extends Card {
+  userCardId: number;
   serialNumber: number;
   ownerId: string;
   stars: number;
   hearts: number;
   isFavorite: boolean;
-  //Card
-  blurb: string;
-  member: string;
-  credit: string;
-  abbreviation: string;
-  rarity: number;
-  imageUrl: string;
-  //collection
-  title: string;
-  imageDataId: number;
 
   constructor(data: {
-    id: number;
+    card_id: number;
+    user_card_id: number;
     owner_id: string;
     serial_number: number;
     stars: number;
@@ -27,29 +20,27 @@ export class UserCard {
 
     blurb: string;
     member: string;
-    credit: string;
     abbreviation: string;
     rarity: number;
     image_url: string;
-
-    title: string;
-    image_data_id: number;
+    pack_id: number;
+    serial_id: number;
   }) {
-    this.userCardId = data.id;
+    super({
+      id: data.card_id,
+      blurb: data.blurb,
+      member: data.member,
+      abbreviation: data.abbreviation,
+      rarity: data.rarity,
+      image_url: data.image_url,
+      pack_id: data.pack_id,
+      serial_id: data.serial_id,
+    });
+    this.userCardId = data.user_card_id;
     this.serialNumber = data.serial_number;
     this.ownerId = data.owner_id;
     this.stars = data.stars;
     this.hearts = data.hearts;
     this.isFavorite = data.is_favorite;
-
-    this.blurb = data.blurb;
-    this.member = data.member;
-    this.credit = data.credit;
-    this.abbreviation = data.abbreviation;
-    this.rarity = data.rarity;
-    this.imageUrl = data.image_url;
-
-    this.title = data.title;
-    this.imageDataId = data.image_data_id;
   }
 }

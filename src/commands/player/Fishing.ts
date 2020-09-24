@@ -6,11 +6,6 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
-  usage: string[] = ["%c"];
-  desc: string = "gone fishin yeehaw :cowboy:";
-  category: string = "player";
-  role: string = "752040728477040780";
-
   private async generateFish(
     force?: string
   ): Promise<{
@@ -60,7 +55,7 @@ export class Command extends BaseCommand {
   }
 
   exec = async (msg: Message) => {
-    const fishingEmbed = new MessageEmbed()
+    /* const fishingEmbed = new MessageEmbed()
       .setAuthor(`Fishing | ${msg.author.tag}`)
       .setDescription(
         `:fishing_pole_and_fish: You cast your line into the water and wait...`
@@ -153,6 +148,6 @@ export class Command extends BaseCommand {
           }
         });
       }
-    }, 3000);
+    }, 3000); */
   };
 }

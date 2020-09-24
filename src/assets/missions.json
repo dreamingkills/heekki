@@ -1,11 +1,36 @@
 {
   "missions": [
-    ":tada: %M was invited to MC on Fact iN Star! They made %C. Fans sent a coffee truck, but their manager didn't allow them to go. :confused:",
-    "%M made a fun banner to encourage Orbits to vote. They were harassed on Twitter. Collect %C.",
-    "%M filmed an earring CF! Collect %C. BlockBerry Creative took the other 99%.",
-    "%M picked the pockets of BlockBerry Creative, returning %C to its rightful owner.",
-    "%M sold some albums, netting %C.",
-    "%M sold a card on Heekki for %C.",
-    "Orbits sent a birthday gift to %M containing %C."
+    {
+      "text": "%M was invited to MC on Fact iN Star!",
+      "baseReward": 300
+    },
+    {
+      "text": "%M was paid for an earring CF.",
+      "baseReward": 600
+    },
+    {
+      "text": "%M stole from BlockBerry Creative - but was it really stealing?",
+      "baseReward": 1200
+    },
+    {
+      "text": "%M sold some albums.",
+      "baseReward": 200
+    },
+    {
+      "text": "%M received a birthday gift from Orbits.",
+      "baseReward": 500
+    },
+    {
+      "text": "%M was scared by a pigeon",
+      "baseReward": 0
+    },
+    {
+      "text": "%M went fishing and came back with nothing.",
+      "baseReward": 0
+    },
+    {
+      "text": "%M tried *Mad Dog 357* and lived to tell the tale.",
+      "baseReward": 400
+    }
   ]
 }
