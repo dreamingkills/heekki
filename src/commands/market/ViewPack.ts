@@ -13,6 +13,7 @@ export class Command extends BaseCommand {
       msg.channel.send(
         "<:red_x:741454361007357993> Please specify a pack to view."
       );
+      return;
     }
     const packName = this.options.join(" ");
     const pack = await ShopService.getPackByFuzzySearch(packName);
