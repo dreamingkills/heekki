@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
       (await PlayerService.getLastDaily(executor)) + 86400000
     );
     const timeUntilMission = moment(
-      (await PlayerService.getLastMission(executor)) + 1800000
+      (await PlayerService.getLastMission(executor)) + 2700000
     );
     const timeUntilSend = moment(
       (await PlayerService.getLastHeartSend(executor)) + 3600000
