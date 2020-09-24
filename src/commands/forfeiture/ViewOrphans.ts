@@ -24,13 +24,13 @@ export class Command extends BaseCommand {
     return temp.fields;
   }
   exec = async (msg: Message) => {
-    /*const optionsRaw = this.options.filter((v) => v.includes("="));
+    const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
       options[option.split("=")[0].toLowerCase()] = option.split("=")[1];
     }
 
-    const totalOrphaned = await StatsService;
+    const totalOrphaned = await StatsService.getNumberOfOrphanedCards();
     const pageLimit = Math.ceil(totalOrphaned / 9);
     const pageRaw = isNaN(parseInt(options.page)) ? 1 : parseInt(options.page);
     let page = pageRaw > pageLimit ? pageLimit : pageRaw;
@@ -97,6 +97,6 @@ export class Command extends BaseCommand {
 
     collector.on("end", async () => {
       if (!sent.deleted) sent.reactions.removeAll();
-    });*/
+    });
   };
 }

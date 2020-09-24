@@ -47,12 +47,11 @@ export class Command extends BaseCommand {
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
       }
-      const msgs = collected.filter((m) => !m.deleted);
       try {
         if (
           msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")
         )
-          channel.bulkDelete(msgs);
+          await channel.bulkDelete(collected);
       } catch (e) {
         // Ignore 'Unknown Message' - doesn't matter
       }

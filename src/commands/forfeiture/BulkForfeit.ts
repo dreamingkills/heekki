@@ -6,7 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 export class Command extends BaseCommand {
   names: string[] = ["bulkforfeit", "bff"];
   exec = async (msg: Message, executor: Profile) => {
-    /*let starCount = parseInt(this.options[0]?.split("<")[1]);
+    let starCount = parseInt(this.options[0]?.split("<")[1]);
 
     if (isNaN(starCount)) {
       msg.channel.send(
@@ -49,6 +49,6 @@ export class Command extends BaseCommand {
         `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
       );
       conf.reactions.removeAll();
-    }*/
+    }
   };
 }
