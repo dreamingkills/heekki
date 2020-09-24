@@ -46,7 +46,7 @@ export class Command extends BaseCommand {
       .setFooter(
         `Use !cf <card reference> to claim a card\nTo change pages, click the arrow reactions.`
       )
-      .setColor("#40BD66");
+      .setColor("#FFAACC");
 
     let forfeited = await PlayerService.getOrphanedCards({
       ...options,
