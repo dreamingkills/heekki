@@ -200,9 +200,7 @@ CREATE TABLE sale
     buyer_id        VARCHAR(32) NOT NULL,
     seller_id       VARCHAR(32) NOT NULL,
     card            VARCHAR(32) NOT NULL,
-    PRIMARY KEY(id),
-    CONSTRAINT SaleBuyer FOREIGN KEY (buyer_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT SaleSeller FOREIGN KEY (seller_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE trade
@@ -210,9 +208,7 @@ CREATE TABLE trade
     id              INT(11) NOT NULL AUTO_INCREMENT,
     sender_id       VARCHAR(32) NOT NULL,
     receiver_id     VARCHAR(32) NOT NULL,
-    PRIMARY KEY(id),
-    CONSTRAINT LogTradeSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT LogTradeReceiver FOREIGN KEY (receiver_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE fish
@@ -231,8 +227,7 @@ CREATE TABLE mission
     id              INT(11) NOT NULL AUTO_INCREMENT,
     discord_id      VARCHAR(32) NOT NULL,
     success         BOOLEAN,
-    PRIMARY KEY(id),
-    CONSTRAINT MissionExecutor FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+    PRIMARY KEY(id)
 );
 
 CREATE TABLE reputation
@@ -241,7 +236,5 @@ CREATE TABLE reputation
     receiver_id     VARCHAR(32) NOT NULL,
     sender_id       VARCHAR(32) NOT NULL,
     PRIMARY KEY(id),
-    CONSTRAINT ReputationReceiver FOREIGN KEY (receiver_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT ReputationSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT UniqueRep UNIQUE(receiver_id, sender_id)
 );

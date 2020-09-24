@@ -36,7 +36,7 @@ export class Command extends BaseCommand {
       reward += `<:cash:757146832639098930> **1000**`;
     }
 
-    //PlayerService.setLastDaily(executor, now);
+    PlayerService.setLastDaily(executor, now);
     const embed = new MessageEmbed()
       .setAuthor(
         `Daily Reward | ${msg.author.tag}`,
