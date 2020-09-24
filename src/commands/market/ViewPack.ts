@@ -35,16 +35,18 @@ export class Command extends BaseCommand {
           ownedByUser.length
         }** card${
           ownedByUser.length > 1 ? "s" : ""
-        } from this pack.\n\n${packCards.map((card) => {
-          const count = ownedByUser.filter((c) => c.id === card.id).length;
-          return `${
-            count > 0
-              ? `<:cards:757151797235286089>`
-              : `<:cards_dark:757771501335347311>`
-          } **${card.member}** (${card.abbreviation})\nOwned: **${count}**\n*"${
-            card.blurb
-          }"*\n`;
-        })}`
+        } from this pack.\n\n${packCards
+          .map((card) => {
+            const count = ownedByUser.filter((c) => c.id === card.id).length;
+            return `${
+              count > 0
+                ? `<:cards:757151797235286089>`
+                : `<:cards_dark:757771501335347311>`
+            } **${card.member}** (${
+              card.abbreviation
+            })\nOwned: **${count}**\n*"${card.blurb}"*`;
+          })
+          .join("\n")}`
       )
       .setColor(`#FFAACC`)
       .setFooter(`Pack designed by ${pack.credit}`);
