@@ -126,7 +126,7 @@ export class PlayerService {
     discord_id: string,
     amount: number
   ): Promise<void> {
-    await PlayerUpdate.removeHearts(discord_id, amount);
+    await PlayerUpdate.addHearts(discord_id, amount);
   }
 
   public static async removeHeartsFromProfile(
