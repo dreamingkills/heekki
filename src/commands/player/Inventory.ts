@@ -72,7 +72,10 @@ export class Command extends BaseCommand {
     });
 
     const embed = new MessageEmbed()
-      .setAuthor(`Inventory | ${user.tag} (page ${page}/${pageLimit})`)
+      .setAuthor(
+        `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
+        msg.author.displayAvatarURL()
+      )
       .setDescription(desc + (await this.renderInventory(cards)))
       .setFooter(`To change pages, click the arrow reactions.`)
       .setColor(`#FFAACC`)
@@ -106,7 +109,10 @@ export class Command extends BaseCommand {
         });
         sent.edit(
           embed
-            .setAuthor(`Inventory | ${user.tag} (page ${page}/${pageLimit})`)
+            .setAuthor(
+              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
+              msg.author.displayAvatarURL()
+            )
             .setDescription(desc + (await this.renderInventory(newCards)))
         );
       } else if (r.emoji.name === "◀️" && page !== 1) {
@@ -118,7 +124,10 @@ export class Command extends BaseCommand {
         });
         sent.edit(
           embed
-            .setAuthor(`Inventory | ${user.tag} (page ${page}/${pageLimit})`)
+            .setAuthor(
+              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
+              msg.author.displayAvatarURL()
+            )
             .setDescription(desc + (await this.renderInventory(newCards)))
         );
       } else if (r.emoji.name === "delete") {
@@ -132,7 +141,10 @@ export class Command extends BaseCommand {
         });
         sent.edit(
           embed
-            .setAuthor(`Inventory | ${user.tag} (page ${page}/${pageLimit})`)
+            .setAuthor(
+              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
+              msg.author.displayAvatarURL()
+            )
             .setDescription(desc + (await this.renderInventory(newCards)))
         );
       } else if (r.emoji.name === "⏩" && page !== pageLimit) {
@@ -144,7 +156,10 @@ export class Command extends BaseCommand {
         });
         sent.edit(
           embed
-            .setAuthor(`Inventory | ${user.tag} (page ${page}/${pageLimit})`)
+            .setAuthor(
+              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
+              msg.author.displayAvatarURL()
+            )
             .setDescription(desc + (await this.renderInventory(newCards)))
         );
       }
