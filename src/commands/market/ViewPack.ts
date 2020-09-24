@@ -18,7 +18,7 @@ export class Command extends BaseCommand {
     const pack = await ShopService.getPackByFuzzySearch(packName);
     const packCards = await CardService.getCardsByPack(pack);
     const ownedByUser = await PlayerService.getCardsByProfile(executor, {
-      pack: pack.keyword,
+      pack: pack.title,
     });
 
     const count = ownedByUser.filter((c) => c.id === 1).length;
