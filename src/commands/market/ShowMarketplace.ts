@@ -43,7 +43,8 @@ export class Command extends BaseCommand {
 
     const embed = new MessageEmbed()
       .setAuthor(
-        `The Marketplace | ${msg.author.tag} (page ${page}/${pageLimit})`
+        `The Marketplace | ${msg.author.tag} (page ${page}/${pageLimit})`,
+        msg.author.displayAvatarURL()
       )
       .setDescription(
         ff.length === 0
