@@ -7,6 +7,7 @@ export class Profile {
   hearts: number;
   daily_streak: number;
   daily_last: number;
+  xp: number;
   badges?: Badge[];
   constructor(
     data: {
@@ -16,6 +17,7 @@ export class Profile {
       coins: number;
       hearts: number;
       blurb: string;
+      xp: number;
     },
     badges?: Badge[]
   ) {
@@ -26,5 +28,6 @@ export class Profile {
     this.daily_streak = data.daily_streak;
     this.daily_last = data.daily_last;
     this.badges = badges;
+    this.xp = data.xp;
   }
 }

@@ -63,6 +63,7 @@ export class CommandManager {
       setTimeout(() => {
         this.cooldown.delete(msg.author.id);
       }, 3000);
+
       const profile = await PlayerService.getProfileByDiscordId(msg.author.id);
       await cmd.run(msg, profile);
     } catch (e) {

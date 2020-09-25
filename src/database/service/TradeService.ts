@@ -7,6 +7,8 @@ import { UserCard } from "../../structures/player/UserCard";
 import { TradeFetch } from "../sql/trade/TradeFetch";
 import { UserCardService } from "./UserCardService";
 import { Card } from "../../structures/card/Card";
+import { StatsService } from "./StatsService";
+import { PlayerService } from "./PlayerService";
 
 export class TradeService {
   private static generateUniqueTradeId(): string {
@@ -104,6 +106,7 @@ export class TradeService {
   > {
     return await TradeFetch.getTradesByUniqueId(unique);
   }
+
   public static async acceptTrade(
     unique: string,
     sender: string
@@ -115,7 +118,6 @@ export class TradeService {
       throw new error.NotYourTradeToAcceptError();
 
     for (let trade of trades) {
-      console.log(trade);
       if (trade.senderCard !== 0) {
         const card = await UserCardService.getUserCardById(trade.senderCard);
         await UserCardService.transferCard(trade.recipient, card);
@@ -126,6 +128,11 @@ export class TradeService {
       }
     }
 
+    const recipient = await PlayerService.getProfileByDiscordId(
+      trades[0].recipient
+    );
+    const seller = await PlayerService.getProfileByDiscordId(trades[0].sender);
+    StatsService.tradeComplete(seller, recipient);
     await TradeUpdate.deleteTrade(unique);
     return true;
   }

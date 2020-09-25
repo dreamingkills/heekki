@@ -21,7 +21,7 @@ export class Command extends BaseCommand {
       (await PlayerService.getLastHeartBox(executor)) + 14400000
     );
     const timeUntilForfeitClaim = moment(
-      (await PlayerService.getLastOrphanClaim(executor)) + 10800000
+      (await PlayerService.getLastOrphanClaim(executor)) + 7200000
     );
 
     const embed = new MessageEmbed()

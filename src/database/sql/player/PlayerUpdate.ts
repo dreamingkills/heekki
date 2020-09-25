@@ -149,4 +149,11 @@ export class PlayerUpdate extends DBClass {
       [sender_id, receiver_id]
     );
   }
+
+  public static async addXp(discord_id: string, amount: number): Promise<void> {
+    await DB.query(`UPDATE user_profile SET xp=xp+? WHERE discord_id=?;`, [
+      amount,
+      discord_id,
+    ]);
+  }
 }

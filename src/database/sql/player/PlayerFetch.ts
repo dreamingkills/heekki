@@ -30,6 +30,7 @@ export class PlayerFetch extends DBClass {
       hearts: number;
       daily_streak: number;
       daily_last: number;
+      xp: number;
     }[];
     if (!user[0]) {
       const newProfile = await PlayerService.createNewProfile(discord_id);
@@ -41,12 +42,16 @@ export class PlayerFetch extends DBClass {
   public static async getOrphanedCardCount(options?: {
     [key: string]: string | number;
   }): Promise<number> {
-    let query = `SELECT COUNT(*) FROM card LEFT JOIN user_card ON user_card.card_id=card.id WHERE user_card.owner_id=0`;
+    let query = `SELECT COUNT(*) FROM card LEFT JOIN user_card ON user_card.card_id=card.id LEFT JOIN pack ON card.pack_id=pack.id LEFT JOIN shop ON shop.pack_id=pack.id WHERE user_card.owner_id=0`;
     let queryOptions = [];
 
     if (options?.pack)
       queryOptions.push(
-        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+        ` (REPLACE(pack.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.pack + `%`
+        )}, ' ', '') OR REPLACE(shop.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%${options.pack}%`
+        )}, ' ', ''))`
       );
     if (options?.member)
       queryOptions.push(
@@ -137,7 +142,11 @@ export class PlayerFetch extends DBClass {
 
     if (options?.pack)
       queryOptions.push(
-        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+        ` (REPLACE(pack.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.pack + `%`
+        )}, ' ', '') OR REPLACE(shop.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%${options.pack}%`
+        )}, ' ', ''))`
       );
     if (options?.member)
       queryOptions.push(
@@ -307,7 +316,11 @@ export class PlayerFetch extends DBClass {
 
     if (options?.pack)
       queryOptions.push(
-        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
+        ` (REPLACE(pack.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%` + options.pack + `%`
+        )}, ' ', '') OR REPLACE(shop.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
+          `%${options.pack}%`
+        )}, ' ', ''))`
       );
     if (options?.member)
       queryOptions.push(
@@ -369,5 +382,81 @@ export class PlayerFetch extends DBClass {
       [discord_id]
     )) as { "COUNT(*)": number }[];
     return query[0]["COUNT(*)"];
+  }
+
+  public static async getRichestUsers(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT * FROM user_profile ORDER BY coins DESC LIMIT ?;`,
+      [limit]
+    )) as {
+      discord_id: string;
+      blurb: string;
+      coins: number;
+      hearts: number;
+      daily_streak: number;
+      daily_last: number;
+      xp: number;
+    }[];
+
+    return query.map((p) => {
+      return new Profile(p);
+    });
+  }
+
+  public static async getMostHearts(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT * FROM user_profile ORDER BY hearts DESC LIMIT ?;`,
+      [limit]
+    )) as {
+      discord_id: string;
+      blurb: string;
+      coins: number;
+      hearts: number;
+      daily_streak: number;
+      daily_last: number;
+      xp: number;
+    }[];
+    return query.map((p) => {
+      return new Profile(p);
+    });
+  }
+
+  public static async getTopCollectors(
+    limit: number
+  ): Promise<{ profile: Profile; count: number }[]> {
+    const query = (await DB.query(
+      `SELECT user_profile.*, COUNT(*) AS counted FROM user_card LEFT JOIN user_profile ON user_card.owner_id=user_profile.discord_id WHERE NOT owner_id=0 GROUP BY owner_id ORDER BY counted DESC, owner_id LIMIT ?;`,
+      [limit]
+    )) as {
+      discord_id: string;
+      blurb: string;
+      coins: number;
+      hearts: number;
+      daily_streak: number;
+      daily_last: number;
+      xp: number;
+      counted: number;
+    }[];
+    return query.map((p) => {
+      return { profile: new Profile(p), count: p.counted };
+    });
+  }
+
+  public static async getTopXp(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT * FROM user_profile ORDER BY xp DESC LIMIT ?;`,
+      [limit]
+    )) as {
+      discord_id: string;
+      blurb: string;
+      coins: number;
+      hearts: number;
+      daily_streak: number;
+      daily_last: number;
+      xp: number;
+    }[];
+    return query.map((p) => {
+      return new Profile(p);
+    });
   }
 }

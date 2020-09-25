@@ -38,11 +38,22 @@ export class StatsUpdate extends DBClass {
   public static async saleComplete(
     buyer_id: string,
     seller_id: string,
-    card: string
+    card: string,
+    price: number
   ): Promise<void> {
     await DB.query(
-      `INSERT INTO sale (buyer_id, seller_id, card) VALUES (?, ?, ?);`,
-      [buyer_id, seller_id, card]
+      `INSERT INTO sale (buyer_id, seller_id, card, price) VALUES (?, ?, ?, ?);`,
+      [buyer_id, seller_id, card, price]
+    );
+  }
+
+  public static async tradeComplete(
+    sender_id: string,
+    receiver_id: string
+  ): Promise<void> {
+    await DB.query(
+      `INSERT INTO trade (sender_id, receiver_id) VALUES (?, ?);`,
+      [sender_id, receiver_id]
     );
   }
 }

@@ -6,6 +6,7 @@ import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import { PlayerService } from "../../database/service/PlayerService";
 import { UserCardService } from "../../database/service/UserCardService";
+import Chance from "chance";
 
 export class Command extends BaseCommand {
   names: string[] = ["buycard", "mpb"];
@@ -57,16 +58,21 @@ export class Command extends BaseCommand {
       await PlayerService.addCoinsToProfile(sellerProfile, forSale.price);
       await PlayerService.removeCoinsFromProfile(executor, forSale.price);
 
+      const chance = new Chance();
+      const xp = chance.integer({ min: 40, max: 71 });
+      PlayerService.addXp(sellerProfile, xp);
+
       StatsService.saleComplete(
         executor,
         card.ownerId,
-        `${card.abbreviation}#${card.serialNumber}`
+        `${card.abbreviation}#${card.serialNumber}`,
+        forSale.price
       );
 
       const seller = msg.client.users.resolve(card.ownerId);
       if (seller) {
         seller.send(
-          `:white_check_mark: Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**.`
+          `:white_check_mark: Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**\n+ **${xp}** XP`
         );
       }
 

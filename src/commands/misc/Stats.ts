@@ -2,49 +2,79 @@ import { Message, MessageEmbed } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
 import { StatsService } from "../../database/service/StatsService";
 import version from "../../version.json";
+import { Profile } from "../../structures/player/Profile";
+import moment from "moment";
 
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
-  exec = async (msg: Message) => {
-    /* if (this.options[0] === "me") {
-      const stats = await StatsService.getUserStats(msg.author.id);
+  exec = async (msg: Message, executor: Profile) => {
+    if (this.options[0] === "me") {
+      const stats = await StatsService.getUserStats(executor);
       const embed = new MessageEmbed()
-        .setAuthor(`Stats | ${msg.author.tag}`, msg.author.displayAvatarURL())
-        .setDescription(
-          `Trivia Correct: **${stats.triviaCorrect}**\nTrivia Incorrect: **${stats.triviaIncorrect}**\nMarket Purchases: **${stats.marketPurchases}**\nMarket Sales: **${stats.marketSales}**`
-        );
+        .setAuthor(
+          `User Stats | ${msg.author.tag}`,
+          msg.author.displayAvatarURL()
+        )
+        .setDescription(`Trades: **${stats.tradesComplete}**`)
+        .setColor(`#FFAACC`);
+      embed.addField(
+        `Trivia`,
+        `Correct: **${stats.triviaCorrect}**\nIncorrect: **${
+          stats.triviaIncorrect
+        }**\nTotal: **${stats.triviaIncorrect + stats.triviaCorrect}**`,
+        true
+      );
+      embed.addField(
+        `Marketplace`,
+        `Purchases: **${stats.marketPurchases}**\nSales: **${
+          stats.marketSales
+        }**\nTotal: **${stats.marketPurchases + stats.marketSales}**`,
+        true
+      );
+      embed.addField(
+        `Missions`,
+        `Successful: **${stats.missionsSuccessful}**\nFailed: **${
+          stats.missionsFailed
+        }**\nTotal: **${stats.missionsFailed + stats.missionsSuccessful}**`,
+        true
+      );
       msg.channel.send(embed);
       return;
     }
-    let stats = await StatsService.getGlobalStats();
+    const now = Date.now();
+    const diff = moment(now).diff(moment("20200906"), "days");
 
-    const uptime = msg.client.uptime! / 1000 / 60;
-    let embed = new MessageEmbed()
-      .setAuthor(`Global Statistics`)
-      .addField(
-        `Card stats`,
-        `Total cards: **${stats.totalCards.total}**\nForfeited cards: **${stats.totalOrphaned}**\n6 :star:: **${stats.totalCards.sixStars}**\n5 :star:: **${stats.totalCards.fiveStars}**\n4 :star:: **${stats.totalCards.fourStars}**\n3 :star:: **${stats.totalCards.threeStars}**\n2 :star:: **${stats.totalCards.twoStars}**\n1 :star:: **${stats.totalCards.oneStar}**`,
-        true
+    const totalCards = {
+      total: await StatsService.getNumberOfCards(),
+      six: await StatsService.getNumberOfCards(6),
+      five: await StatsService.getNumberOfCards(5),
+    };
+    const totalProfiles = await StatsService.getNumberOfProfiles();
+    const totalRelationships = await StatsService.getNumberOfRelationships();
+
+    const embed = new MessageEmbed()
+      .setAuthor(
+        `Heekki Stats | ${msg.author.tag}`,
+        msg.author.displayAvatarURL()
       )
-      .addField(
-        `Profile stats`,
-        `Total profiles: **${stats.totalProfiles}**\nRelationship count: **${stats.totalRelationships}**\nRichest user: <@${stats.richestUser.id}> (**${stats.richestUser.coins}** coins)\nTop collector: <@${stats.topCollector.id}> (**${stats.topCollector.cards}** cards)`,
-        true
-      )
-      .addField(
-        `Miscellaneous stats`,
-        `triviaCorrect: **${stats.triviaCorrect}**\ntriviaWrong: **${stats.triviaWrong}**\nmarketSales: **${stats.marketSales}**\ntradesComplete: **${stats.tradesComplete}**\nmissionsComplete: **${stats.missionsComplete}**\ntotalCoins: **${stats.totalCoins}**`,
-        true
-      )
-      .addField(
-        `Bot stats`,
-        `Guilds cached: **${msg.client.guilds.cache.size}**\nUsers cached: **${
-          msg.client.users.cache.size
-        }**\nUptime in minutes: **${uptime.toFixed(2)}**`,
-        true
-      )
-      .setColor("#40BD66")
-      .setFooter(`loonacards v${version.version}`);
-    msg.channel.send(embed); */
+      .setDescription(`Heekki is **${diff}** days old!`)
+      .setFooter(`loonacards v${version.version}`)
+      .setColor(`#FFAACC`);
+    embed.addField(
+      `Bot Stats`,
+      `Guilds cached: **${msg.client.guilds.cache.size}**\nUsers cached: **${msg.client.users.cache.size}**`,
+      true
+    );
+    embed.addField(
+      `Card Stats`,
+      `Total cards: **${totalCards.total}**\n:star: 6: **${totalCards.six}**\n:star: 5: **${totalCards.five}**`,
+      true
+    );
+    embed.addField(
+      `User Stats`,
+      `Registered users: **${totalProfiles}**\nRelationships: **${totalRelationships}**`,
+      true
+    );
+    msg.channel.send(embed);
   };
 }

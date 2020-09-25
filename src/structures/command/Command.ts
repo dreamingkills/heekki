@@ -40,4 +40,8 @@ export abstract class BaseCommand implements Command {
   public parseMention: (query: string) => string = (query: string): string => {
     return query.replace(/[\\<>@#&!]/g, "");
   };
+
+  public commafyNumber(num: number) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 }

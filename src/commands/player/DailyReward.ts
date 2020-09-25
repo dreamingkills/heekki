@@ -17,12 +17,12 @@ export class Command extends BaseCommand {
 
     const chance = new Chance();
     const type = chance.weighted(["card", "coins"], [0.1, 1]);
-    let reward = `:white_check_mark: You claimed your daily reward and received `;
+    let reward = `:white_check_mark: You claimed your daily reward.\n`;
     if (type === "card") {
       const randomCard = await CardService.getRandomCard();
       const starCount = chance.weighted(
         [1, 2, 3, 4, 5, 6],
-        [52.3, 31.7, 22.7, 11.9, 3.4, 0.72]
+        [52.3, 31.7, 24.7, 13.1, 3.4, 0.54]
       );
       const newCard = await UserCardService.createNewUserCard(
         executor,
@@ -30,19 +30,22 @@ export class Command extends BaseCommand {
         starCount,
         0
       );
-      reward += `**${newCard.abbreviation}#${newCard.serialNumber}**`;
+      reward += `+ **${newCard.abbreviation}#${newCard.serialNumber}**`;
     } else if (type === "coins") {
       await PlayerService.addCoinsToProfile(executor, 1000);
-      reward += `<:cash:757146832639098930> **1000**`;
+      reward += `+ <:cash:757146832639098930> **1000**`;
     }
 
     PlayerService.setLastDaily(executor, now);
+    const xp = chance.integer({ min: 180, max: 242 });
+    PlayerService.addXp(executor, xp);
+
     const embed = new MessageEmbed()
       .setAuthor(
         `Daily Reward | ${msg.author.tag}`,
         msg.author.displayAvatarURL()
       )
-      .setDescription(reward + `!`)
+      .setDescription(reward + `\n+ **${xp}** XP`)
       .setFooter(`You can claim your daily reward again in 24 hours.`)
       .setColor(`#FFAACC`);
     msg.channel.send(embed);

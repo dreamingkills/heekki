@@ -260,4 +260,26 @@ export class PlayerService {
   ): Promise<number> {
     return await PlayerFetch.getReputation(profile.discord_id);
   }
+
+  public static async getRichestUsers(limit: number = 15): Promise<Profile[]> {
+    return await PlayerFetch.getRichestUsers(limit);
+  }
+
+  public static async getTopCollectors(
+    limit: number = 15
+  ): Promise<{ profile: Profile; count: number }[]> {
+    return await PlayerFetch.getTopCollectors(limit);
+  }
+
+  public static async getTopHearts(limit: number = 15): Promise<Profile[]> {
+    return await PlayerFetch.getMostHearts(limit);
+  }
+
+  public static async getTopXp(limit: number = 15): Promise<Profile[]> {
+    return await PlayerFetch.getTopXp(limit);
+  }
+
+  public static async addXp(profile: Profile, amount: number): Promise<void> {
+    return await PlayerUpdate.addXp(profile.discord_id, amount);
+  }
 }

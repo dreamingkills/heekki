@@ -7,8 +7,8 @@ import { Pack } from "../../../structures/card/Pack";
 export class ShopFetch extends DBClass {
   public static async getPackByFuzzySearch(name: string): Promise<ShopItem> {
     const query = (await DB.query(
-      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE pack.title LIKE ?;`,
-      [`%${name}%`]
+      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE (pack.title LIKE ? OR shop.title LIKE ?);`,
+      [`%${name}%`, `%${name}%`]
     )) as {
       id: number;
       keyword: string;
