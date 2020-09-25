@@ -191,6 +191,7 @@ CREATE TABLE trivia
     id              INT(11) NOT NULL AUTO_INCREMENT,
     discord_id      VARCHAR(32) NOT NULL,
     correct         BOOLEAN NOT NULL,
+    time            BIGINT(20) NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT TriviaCompleter FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
 );
@@ -200,6 +201,7 @@ CREATE TABLE sale
     id              INT(11) NOT NULL AUTO_INCREMENT,
     buyer_id        VARCHAR(32) NOT NULL,
     seller_id       VARCHAR(32) NOT NULL,
+    time            BIGINT(20) NOT NULL,
     card            VARCHAR(32) NOT NULL,
     PRIMARY KEY(id)
 );
@@ -209,6 +211,7 @@ CREATE TABLE trade
     id              INT(11) NOT NULL AUTO_INCREMENT,
     sender_id       VARCHAR(32) NOT NULL,
     receiver_id     VARCHAR(32) NOT NULL,
+    time            BIGINT(20) NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -228,6 +231,7 @@ CREATE TABLE mission
     id              INT(11) NOT NULL AUTO_INCREMENT,
     discord_id      VARCHAR(32) NOT NULL,
     success         BOOLEAN,
+    time            BIGINT(20) NOT NULL,
     PRIMARY KEY(id)
 );
 

@@ -19,20 +19,20 @@ export class StatsUpdate extends DBClass {
     discord_id: string,
     correct: boolean
   ): Promise<void> {
-    await DB.query(`INSERT INTO trivia (discord_id, correct) VALUES (?, ?);`, [
-      discord_id,
-      correct,
-    ]);
+    await DB.query(
+      `INSERT INTO trivia (discord_id, correct, time) VALUES (?, ?, ?);`,
+      [discord_id, correct, Date.now()]
+    );
   }
 
   public static async missionComplete(
     discord_id: string,
     correct: boolean
   ): Promise<void> {
-    await DB.query(`INSERT INTO mission (discord_id, success) VALUES (?, ?);`, [
-      discord_id,
-      correct,
-    ]);
+    await DB.query(
+      `INSERT INTO mission (discord_id, success, time) VALUES (?, ?, ?);`,
+      [discord_id, correct, Date.now()]
+    );
   }
 
   public static async saleComplete(
@@ -42,8 +42,8 @@ export class StatsUpdate extends DBClass {
     price: number
   ): Promise<void> {
     await DB.query(
-      `INSERT INTO sale (buyer_id, seller_id, card, price) VALUES (?, ?, ?, ?);`,
-      [buyer_id, seller_id, card, price]
+      `INSERT INTO sale (buyer_id, seller_id, card, price, time) VALUES (?, ?, ?, ?, ?);`,
+      [buyer_id, seller_id, card, price, Date.now()]
     );
   }
 
@@ -52,8 +52,8 @@ export class StatsUpdate extends DBClass {
     receiver_id: string
   ): Promise<void> {
     await DB.query(
-      `INSERT INTO trade (sender_id, receiver_id) VALUES (?, ?);`,
-      [sender_id, receiver_id]
+      `INSERT INTO trade (sender_id, receiver_id, time) VALUES (?, ?, ?);`,
+      [sender_id, receiver_id, Date.now()]
     );
   }
 }
