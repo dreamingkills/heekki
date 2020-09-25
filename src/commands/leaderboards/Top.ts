@@ -75,7 +75,7 @@ export class Command extends BaseCommand {
         for (let profile of topXp) {
           const user = msg.client.users.cache.get(profile.discord_id);
           description += `${topXp.indexOf(profile) + 1}) **${
-            user?.username
+            user?.username || "Unknown User"
           }** (${this.commafyNumber(profile.xp)} XP)\n`;
         }
         embed.setAuthor(
