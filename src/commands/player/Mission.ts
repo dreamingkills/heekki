@@ -51,7 +51,7 @@ export class Command extends BaseCommand {
     PlayerService.setLastMission(executor, now);
 
     const xp = chance.integer({ min: 30, max: 72 });
-    PlayerService.addXp(executor, xp);
+    if (profit !== 0) PlayerService.addXp(executor, xp);
 
     const embed = new MessageEmbed()
       .setAuthor(`Mission | ${msg.author.tag}`, msg.author.displayAvatarURL())
