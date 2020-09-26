@@ -14,6 +14,8 @@ export class Command extends BaseCommand {
     const desc1 = desc.slice(0, 1900);
     const desc2 = desc.slice(1900, 3900);
     const desc3 = desc.slice(3900, 5900);
-    msg.channel.send(desc1 + desc2 + desc3);
+    await msg.channel.send(desc1);
+    await msg.channel.send(desc2);
+    await msg.channel.send(desc3);
   };
 }
