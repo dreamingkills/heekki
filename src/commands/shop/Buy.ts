@@ -9,7 +9,7 @@ import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
-  names: string[] = ["buy"];
+  names: string[] = ["buypack", "bp"];
   exec = async (msg: Message, executor: Profile) => {
     const packName = this.options.join(" ");
     if (!packName) {

@@ -9,7 +9,7 @@ import { UserCardService } from "../../database/service/UserCardService";
 import Chance from "chance";
 
 export class Command extends BaseCommand {
-  names: string[] = ["buycard", "mpb"];
+  names: string[] = ["buycard", "bc"];
   async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
