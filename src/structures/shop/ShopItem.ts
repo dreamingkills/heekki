@@ -5,6 +5,7 @@ export class ShopItem {
   price: number;
   active: boolean;
   credit: string;
+  cover: string;
   imageDataId: number;
   flavorText: string;
 
@@ -15,6 +16,7 @@ export class ShopItem {
     price: number;
     active: boolean;
     credit: string;
+    cover_url: string;
     image_data_id: number;
     flavor_text: string;
   }) {
@@ -24,6 +26,7 @@ export class ShopItem {
     this.price = data.price;
     this.active = data.active;
     this.credit = data.credit;
+    this.cover = data.cover_url;
     this.imageDataId = data.image_data_id;
     this.flavorText = data.flavor_text;
   }

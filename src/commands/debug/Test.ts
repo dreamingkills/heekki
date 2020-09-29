@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
       .createReadStream()
       .pipe(
         fs.createWriteStream(
-          "https://cdn.discordapp.com/attachments/742044748298190908/752513564413263872/chuu-cosmo-royale-gif.gif"
+          "https://cdn.discordapp.com/attachments/742044748298190908/752dsedsre 1513564413263872/chuu-cosmo-royale-gif.gif"
         )
       );
 
@@ -31,10 +31,6 @@ export class Command extends BaseCommand {
     ctx.fillStyle = "#ff0000";
     ctx.fillRect(0, 0, 700, 1000);
     ctx.font = "80px Impact";
-    ctx.fillStyle = "black";
-    ctx.textAlign = "center";
-    ctx.fillText("heejin", 350, 200);
-    ctx.font = "80px Impact";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("overlaying text on a gif woo", 375, 200);
@@ -44,10 +40,6 @@ export class Command extends BaseCommand {
     ctx.fillStyle = "#00ff00";
     ctx.fillRect(0, 0, 700, 1000);
     ctx.font = "80px Impact";
-    ctx.fillStyle = "black";
-    ctx.textAlign = "center";
-    ctx.fillText("heejin", 350, 200);
-    ctx.font = "80px Impact";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";
     ctx.fillText("i can change it too", 375, 200);
@@ -56,10 +48,6 @@ export class Command extends BaseCommand {
     // blue rectangle
     ctx.fillStyle = "#0000ff";
     ctx.fillRect(0, 0, 700, 1000);
-    ctx.font = "80px Impact";
-    ctx.fillStyle = "black";
-    ctx.textAlign = "center";
-    ctx.fillText("heejin", 350, 200);
     ctx.font = "80px Impact";
     ctx.fillStyle = "white";
     ctx.textAlign = "center";

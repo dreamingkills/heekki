@@ -24,6 +24,7 @@ export abstract class BaseCommand implements Command {
   deletable: boolean = false;
 
   options: string[] = [];
+  flags: { [key: string]: string } = {};
 
   abstract async exec(msg: Message, executor: Profile): Promise<void>;
   run: (msg: Message, executor: Profile) => Promise<void> = async (
@@ -34,6 +35,12 @@ export abstract class BaseCommand implements Command {
       .split(" ")
       .slice(1)
       .filter((e) => e);
+
+    const flags = this.options.filter((o) => {
+      if (o.includes("=")) return o;
+    });
+
+    console.log(flags);
     return this.exec(msg, executor);
   };
 
