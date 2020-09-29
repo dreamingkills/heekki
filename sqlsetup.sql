@@ -243,3 +243,4 @@ CREATE TABLE reputation
     PRIMARY KEY(id),
     CONSTRAINT UniqueRep UNIQUE(receiver_id, sender_id)
 );
+

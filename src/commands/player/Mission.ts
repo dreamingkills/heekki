@@ -35,13 +35,29 @@ export class Command extends BaseCommand {
       throw new error.MissionCooldownError(last + 2700000, now);
 
     const chance = new Chance();
-    const randomMission = chance.pickone(mission.missions);
-    const baseReward = randomMission.baseReward;
     const level = CardService.heartsToLevel(card.hearts);
+    const success = chance.weighted(
+      [false, true],
+      [0.125, 0.8 * (1 + (level.level / 100) * 2)]
+    );
+    let selected;
+    if (!success) {
+      selected = chance.pickone(
+        mission.missions.filter((m) => {
+          return m.baseReward === 0;
+        })
+      );
+    } else
+      selected = chance.pickone(
+        mission.missions.filter((m) => {
+          return m.baseReward > 0;
+        })
+      );
+
     const profit = Math.floor(
       chance.integer({
-        min: baseReward - baseReward / 10,
-        max: baseReward + baseReward / 10,
+        min: selected.baseReward - selected.baseReward / 10,
+        max: selected.baseReward + selected.baseReward / 10,
       }) *
         (1 + level.level / 100)
     );
@@ -58,7 +74,7 @@ export class Command extends BaseCommand {
       .setDescription(
         `${
           profit === 0 ? "<:red_x:741454361007357993>" : ":white_check_mark:"
-        } ${randomMission.text.replace(
+        } ${selected.text.replace(
           `%M`,
           `**${card.member.replace(/ *\([^)]*\) * /g, "")}**`
         )}\n${
