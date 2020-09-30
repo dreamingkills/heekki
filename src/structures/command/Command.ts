@@ -40,7 +40,6 @@ export abstract class BaseCommand implements Command {
       if (o.includes("=")) return o;
     });
 
-    console.log(flags);
     return this.exec(msg, executor);
   };
 

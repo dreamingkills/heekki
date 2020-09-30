@@ -54,10 +54,10 @@ export class Command extends BaseCommand {
       page,
     });
 
-    const sent = await msg.channel.send(
-      embed.addFields(await this.render(forfeited))
-    );
-    await Promise.all([sent.react(`◀️`), sent.react(`▶️`)]);
+    embed.fields = await this.render(forfeited);
+    const sent = await msg.channel.send(embed);
+
+    await Promise.all([await sent.react(`◀️`), await sent.react(`▶️`)]);
 
     const collector = sent.createReactionCollector(
       (r: MessageReaction, u: User) =>

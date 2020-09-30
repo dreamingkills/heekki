@@ -16,6 +16,12 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
+    if (!reference.serial) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please enter a valid card reference.`
+      );
+      return;
+    }
     let card = await CardService.getCardDataFromReference(reference);
 
     let conf = await msg.channel.send(

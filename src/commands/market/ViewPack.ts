@@ -49,11 +49,14 @@ export class Command extends BaseCommand {
       embed.addField(
         `Cards (1)`,
         out[0].map((c) => {
-          return `<:cards:757151797235286089> **${c.member}** (${
-            c.abbreviation
-          })\nOwned: **${
-            ownedByUser.filter((card) => card.id === c.id).length
-          }**${c.blurb ? `\n*"${c.blurb}"*` : ``}`;
+          const owned = ownedByUser.filter((card) => card.id === c.id).length;
+          return `${
+            owned > 0
+              ? `<:cards:757151797235286089>`
+              : `<:cards_dark:757771501335347311>`
+          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**${
+            c.blurb ? `\n*"${c.blurb}"*` : ``
+          }`;
         }),
         true
       );
@@ -61,11 +64,14 @@ export class Command extends BaseCommand {
       embed.addField(
         `Cards (2)`,
         out[1].map((c) => {
-          return `<:cards:757151797235286089> **${c.member}** (${
-            c.abbreviation
-          })\nOwned: **${
-            ownedByUser.filter((card) => card.id === c.id).length
-          }**${c.blurb ? `\n*"${c.blurb}"*` : ``}`;
+          const owned = ownedByUser.filter((card) => card.id === c.id).length;
+          return `${
+            owned > 0
+              ? `<:cards:757151797235286089>`
+              : `<:cards_dark:757771501335347311>`
+          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**${
+            c.blurb ? `\n*"${c.blurb}"*` : ``
+          }`;
         }),
         true
       );
@@ -73,11 +79,14 @@ export class Command extends BaseCommand {
       embed.addField(
         `Cards (3)`,
         out[2].map((c) => {
-          return `<:cards:757151797235286089> **${c.member}** (${
-            c.abbreviation
-          })\nOwned: **${
-            ownedByUser.filter((card) => card.id === c.id).length
-          }**${c.blurb ? `\n*"${c.blurb}"*` : ``}`;
+          const owned = ownedByUser.filter((card) => card.id === c.id).length;
+          return `${
+            owned > 0
+              ? `<:cards:757151797235286089>`
+              : `<:cards_dark:757771501335347311>`
+          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**${
+            c.blurb ? `\n*"${c.blurb}"*` : ``
+          }`;
         }),
         true
       );
