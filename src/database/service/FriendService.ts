@@ -3,79 +3,70 @@ import { FriendFetch } from "../sql/friend/FriendFetch";
 import { Profile } from "../../structures/player/Profile";
 import { FriendUpdate } from "../sql/friend/FriendUpdate";
 import * as error from "../../structures/Error";
+import { Friend } from "../../structures/player/Friend";
 
 export class FriendService {
-  public static async getProfilesFromRelationship(
-    friendOneId: string,
-    friendTwoId: string
-  ): Promise<{ friendOne: Profile; friendTwo: Profile; friends: boolean }> {
-    const friendOne = await PlayerService.getProfileByDiscordId(friendOneId);
-    const friendTwo = await PlayerService.getProfileByDiscordId(friendTwoId);
-    const relationshipExists = await FriendFetch.checkRelationshipExists(
+  public static async checkRelationshipExists(
+    friendOne: Profile,
+    friendTwo: Profile
+  ): Promise<"OK" | "ALREADY_FRIENDS" | "REQUESTED" | "ERROR" | "ACCEPTABLE"> {
+    return await FriendFetch.checkRelationshipExists(
       friendOne.discord_id,
       friendTwo.discord_id
     );
-
-    return { friendOne, friendTwo, friends: relationshipExists };
   }
-
-  public static async getFriendsByProfile(profile: Profile): Promise<string[]> {
-    let friends = await FriendFetch.getFriendIdsByDiscordId(profile.discord_id);
+  public static async getFriendsByProfile(
+    profile: Profile,
+    page: number = 1
+  ): Promise<Friend[]> {
+    let friends = await FriendFetch.getFriendsByDiscordId(
+      profile.discord_id,
+      page
+    );
     return friends;
   }
 
-  public static async addFriendByDiscordId(
+  public static async getNumberOfFriendsByProfile(
+    profile: Profile
+  ): Promise<number> {
+    return await FriendFetch.getNumberOfFriends(profile.discord_id);
+  }
+
+  public static async addFriend(
     sender: Profile,
     friend: Profile
-  ): Promise<{ sender: Profile; friend: Profile }> {
-    const relationship = await this.getProfilesFromRelationship(
+  ): Promise<void> {
+    await FriendUpdate.sendFriendRequest(sender.discord_id, friend.discord_id);
+  }
+
+  public static async acceptFriendRequest(
+    sender: Profile,
+    friend: Profile
+  ): Promise<void> {
+    await FriendUpdate.acceptFriendRequest(
       sender.discord_id,
       friend.discord_id
     );
-    if (relationship.friendOne.discord_id == relationship.friendTwo.discord_id)
-      throw new error.CannotAddYourselfError();
-    if (relationship.friends) throw new error.DuplicateRelationshipError();
-
-    await FriendUpdate.addFriendByDiscordId(
-      relationship.friendOne.discord_id,
-      relationship.friendTwo.discord_id
-    );
-    return { sender: relationship.friendOne, friend: relationship.friendTwo };
   }
 
-  public static async removeFriendByDiscordId(
+  public static async removeFriend(
     sender: Profile,
     friend: Profile
-  ): Promise<{ sender: Profile; friend: Profile }> {
-    const relationship = await this.getProfilesFromRelationship(
-      sender.discord_id,
-      friend.discord_id
-    );
-    if (relationship.friendOne.discord_id == relationship.friendTwo.discord_id)
-      throw new error.CannotRemoveYourselfError();
-    if (!relationship.friends) throw new error.NonexistentRelationshipError();
-
-    await FriendUpdate.removeFriendByDiscordId(
-      relationship.friendOne.discord_id,
-      relationship.friendTwo.discord_id
-    );
-    return { sender: relationship.friendOne, friend: relationship.friendTwo };
+  ): Promise<void> {
+    await FriendUpdate.removeFriend(sender.discord_id, friend.discord_id);
   }
 
-  public static async sendHeartsToFriends(profile: Profile): Promise<string[]> {
-    const friends = await this.getFriendsByProfile(profile);
-    const last = await PlayerService.getLastHeartSend(profile);
-    const until = last + 3600000;
-    const now = Date.now();
-    if (now < until) throw new error.SendHeartsCooldownError(until, now);
+  public static async sendHearts(
+    sender: Profile,
+    friends: string[]
+  ): Promise<void> {
+    await FriendUpdate.sendHearts(sender.discord_id, friends);
+  }
 
-    await Promise.all([
-      friends.forEach(async (f) => {
-        await PlayerService.addHeartsToDiscordId(f, 1);
-      }),
-    ]);
-    await PlayerService.setLastHeartSend(profile, now);
-
-    return friends;
+  public static async getTotalHeartsSent(
+    sender: Profile,
+    friends: string[]
+  ): Promise<{ sender_id: string; count: number }[]> {
+    return await FriendFetch.getTotalHeartsSent(sender.discord_id, friends);
   }
 }

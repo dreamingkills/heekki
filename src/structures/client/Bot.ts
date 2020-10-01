@@ -31,7 +31,12 @@ export class Bot extends Client {
     });
 
     this.on("guildMemberAdd", async (m: GuildMember | PartialGuildMember) => {
-      if (m.partial || !m.guild.available || m.guild.id != "752028821791703141")
+      if (
+        m.partial ||
+        !m.guild.available ||
+        m.guild.id != "752028821791703141" ||
+        this.user!.id !== "741836734135926885"
+      )
         return;
 
       /* Welcomer */

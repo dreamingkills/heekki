@@ -6,7 +6,12 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["fish"];
+  users: string[] = ["197186779843919877"];
   exec = async (msg: Message, executor: Profile) => {
+    if (this.options[0].toLowerCase() === "sell") {
+      // sell the damn fish
+      return;
+    }
     const fishRaw = await PlayerService.getFishByProfile(executor);
     const fishEmbed = new MessageEmbed()
       .setAuthor(`Fish | ${msg.author.tag}`, msg.author.displayAvatarURL())

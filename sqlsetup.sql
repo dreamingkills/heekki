@@ -132,10 +132,11 @@ CREATE TABLE user_card
 CREATE TABLE friend
 (
     relationship_id INT(11) NOT NULL AUTO_INCREMENT,
-    user_id         VARCHAR(32),
+    sender_id       VARCHAR(32),
     friend_id       VARCHAR(32),
+    confirmed       BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (relationship_id),
-    CONSTRAINT FriendUser FOREIGN KEY (user_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT FriendUser FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT Friend FOREIGN KEY (friend_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
 );
 
@@ -218,11 +219,11 @@ CREATE TABLE trade
 CREATE TABLE fish
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
-    discord_id        VARCHAR(32) NOT NULL,
-    fish_name       VARCHAR(255) NOT NULL,
+    owner_id        VARCHAR(32) NOT NULL,
+    fish_id         INT(11) NOT NULL,
     fish_weight     DOUBLE(11, 4) NOT NULL,
-    gender          ENUM('male', 'female', '???') NOT NULL,
-    CONSTRAINT FishOwner FOREIGN KEY (discord_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT FishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT Fish FOREIGN KEY (fish_id) REFERENCES fish_types (id) ON DELETE CASCADE,
     PRIMARY KEY(id)
 );
 
@@ -253,4 +254,23 @@ CREATE TABLE trophy_fish
     gender          ENUM('male', 'female', '???') NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT TrophyFishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+);
+
+CREATE TABLE friend_heart
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    sender_id       VARCHAR(32) NOT NULL,
+    friend_id       VARCHAR(32) NOT NULL,
+    time            BIGINT(20) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE fish_types
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    fish_name       VARCHAR(255) NOT NULL,
+    base_chance     INT(11) NOT NULL,
+    fish_weight     INT(11) NOT NULL,
+    emoji           VARCHAR(255) NOT NULL,
+    PRIMARY KEY(id),
 );

@@ -9,6 +9,20 @@ export abstract class ClientError extends Error {
     this.message = msg;
   }
 }
+export class UnknownError extends Error {
+  message: string;
+  name = "UnknownError";
+  constructor(msg: string) {
+    super(msg);
+    this.message = msg;
+  }
+}
+export class NoProfileError extends ClientError {
+  name = "NoProfileError";
+  constructor() {
+    super("That user doesn't have a profile.");
+  }
+}
 export class DuplicateProfileError extends ClientError {
   name = "DuplicateProfileError";
   constructor() {
@@ -288,5 +302,11 @@ export class CardInTradeError extends ClientError {
   name = "CardInTradeError";
   constructor() {
     super(`That card is currently in a trade.`);
+  }
+}
+export class PendingFriendRequestError extends ClientError {
+  name = "PendingFriendRequestError";
+  constructor() {
+    super(`You already have a pending friend request with them.`);
   }
 }

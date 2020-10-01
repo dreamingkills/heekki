@@ -8,14 +8,24 @@ import { PlayerService } from "../../database/service/PlayerService";
 export class Command extends BaseCommand {
   names: string[] = ["send"];
   exec = async (msg: Message, executor: Profile) => {
-    const sendHearts = await FriendService.sendHeartsToFriends(executor);
+    const friendsRaw = await FriendService.getFriendsByProfile(executor);
+    const friends = friendsRaw.map((f) => {
+      return f.sender === msg.author.id ? f.recipient : f.sender;
+    });
 
+    if (friends.length === 0) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> You can't send hearts because you have no friends!`
+      );
+      return;
+    }
+    await FriendService.sendHearts(executor, friends);
     const chance = new Chance();
     const xp = chance.integer({ min: 40, max: 85 });
     PlayerService.addXp(executor, xp);
 
     msg.channel.send(
-      `:white_check_mark: Hearts have been sent to **${sendHearts.length}** friends!\n+ **${xp}** XP`
+      `<:heekki_heart:757147742383505488> You've sent hearts to **${friends.length}** friends!\n+ **${xp}** XP`
     );
   };
 }

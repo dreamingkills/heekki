@@ -31,14 +31,49 @@ export class Command extends BaseCommand {
     }
 
     const friendProfile = await PlayerService.getProfileByDiscordId(friend);
-    const newFriend = await FriendService.addFriendByDiscordId(
+    if (executor.discord_id == friendProfile.discord_id) {
+      msg.channel.send(
+        "<:red_x:741454361007357993> You can't add yourself as a friend."
+      );
+      return;
+    }
+
+    const relationship = await FriendService.checkRelationshipExists(
       executor,
       friendProfile
     );
+    console.log(relationship);
+    switch (relationship) {
+      case "ACCEPTABLE": {
+        await FriendService.acceptFriendRequest(friendProfile, executor);
+        msg.channel.send(`:white_check_mark: Friend request accepted.`);
+        return;
+      }
+      case "REQUESTED": {
+        msg.channel.send(
+          `<:red_x:741454361007357993> You've already sent a friend request to that user!`
+        );
+        return;
+      }
+      case "ALREADY_FRIENDS": {
+        msg.channel.send(
+          `<:red_x:741454361007357993> You're already friends with them!`
+        );
+        return;
+      }
+      case "ERROR": {
+        msg.channel.send(
+          `<:red_x:741454361007357993> An unexpected error occurred! Please try again.`
+        );
+        return;
+      }
+    }
 
-    const newUser = await msg.client.users.fetch(newFriend.friend.discord_id);
+    const newFriend = await FriendService.addFriend(executor, friendProfile);
+
+    const newUser = await msg.client.users.fetch(friendProfile.discord_id);
     msg.channel.send(
-      `:white_check_mark: Added **${newUser?.tag}** as a friend!`
+      `:white_check_mark: Sent a friend request to **${newUser?.tag}**!`
     );
   };
 }

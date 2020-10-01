@@ -64,7 +64,10 @@ export class CommandManager {
         this.cooldown.delete(msg.author.id);
       }, 1500);
 
-      const profile = await PlayerService.getProfileByDiscordId(msg.author.id);
+      const profile = await PlayerService.getProfileByDiscordId(
+        msg.author.id,
+        true
+      );
       await cmd.run(msg, profile);
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);

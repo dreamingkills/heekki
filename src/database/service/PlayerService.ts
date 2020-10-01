@@ -20,9 +20,13 @@ export class PlayerService {
   }
 
   public static async getProfileByDiscordId(
-    discord_id: string
+    discord_id: string,
+    autoGenerate: boolean = false
   ): Promise<Profile> {
-    const user = await PlayerFetch.getProfileFromDiscordId(discord_id);
+    const user = await PlayerFetch.getProfileFromDiscordId(
+      discord_id,
+      autoGenerate
+    );
     return user;
   }
 
@@ -281,5 +285,14 @@ export class PlayerService {
 
   public static async addXp(profile: Profile, amount: number): Promise<void> {
     return await PlayerUpdate.addXp(profile.discord_id, amount);
+  }
+
+  /*
+      Fishing
+               */
+  public static async getNumberOfFishByprofile(
+    profile: Profile
+  ): Promise<number> {
+    return await PlayerFetch.getNumberOfFishByProfile(profile.discord_id);
   }
 }

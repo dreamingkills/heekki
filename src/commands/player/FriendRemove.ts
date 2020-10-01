@@ -5,11 +5,11 @@ import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
-  names: string[] = ["remove"];
+  names: string[] = ["unfriend"];
   exec = async (msg: Message, executor: Profile) => {
     if (!this.options[0]) {
       msg.channel.send(
-        `<:red_x:741454361007357993> Please specify a user to add!`
+        `<:red_x:741454361007357993> Please specify a user to unfriend!`
       );
       return;
     }
@@ -31,16 +31,30 @@ export class Command extends BaseCommand {
     }
 
     const friendProfile = await PlayerService.getProfileByDiscordId(friend);
-    const removedFriend = await FriendService.removeFriendByDiscordId(
+    const relationshipExists = await FriendService.checkRelationshipExists(
       executor,
       friendProfile
     );
-
-    const oldUser = await msg.client.users.fetch(
-      removedFriend.friend.discord_id
-    );
-    msg.channel.send(
-      `:white_check_mark: Removed **${oldUser?.tag}** from your friends list!`
-    );
+    switch (relationshipExists) {
+      case "OK": {
+        await msg.channel.send(
+          `<:red_x:741454361007357993> You aren't friends with them.`
+        );
+        return;
+      }
+      case "ERROR": {
+        msg.channel.send(
+          `<:red_x:741454361007357993> An unexpected error occurred! Please try again.`
+        );
+        return;
+      }
+      default: {
+        await FriendService.removeFriend(executor, friendProfile);
+        msg.channel.send(
+          `:white_check_mark: Removed them from your friends list.`
+        );
+        return;
+      }
+    }
   };
 }

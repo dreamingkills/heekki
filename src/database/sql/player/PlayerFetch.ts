@@ -18,7 +18,8 @@ export class PlayerFetch extends DBClass {
   }
 
   public static async getProfileFromDiscordId(
-    discord_id: string
+    discord_id: string,
+    autoGenerate: boolean
   ): Promise<Profile> {
     const user = (await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=?;`,
@@ -32,6 +33,7 @@ export class PlayerFetch extends DBClass {
       daily_last: number;
       xp: number;
     }[];
+    if (!user[0] && !autoGenerate) throw new error.NoProfileError();
     if (!user[0]) {
       const newProfile = await PlayerService.createNewProfile(discord_id);
       return newProfile;
@@ -458,5 +460,18 @@ export class PlayerFetch extends DBClass {
     return query.map((p) => {
       return new Profile(p);
     });
+  }
+
+  /*
+      Fishing
+                */
+  public static async getNumberOfFishByProfile(
+    discordId: string
+  ): Promise<number> {
+    const query = (await DB.query(
+      `SELECT COUNT(*) AS count FROM fish WHERE discord_id=?;`,
+      [discordId]
+    )) as { count: number }[];
+    return query[0].count;
   }
 }

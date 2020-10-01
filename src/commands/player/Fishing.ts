@@ -7,6 +7,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
+  users: string[] = ["197186779843919877"];
 
   private async generateFish(
     force?: string
@@ -57,6 +58,13 @@ export class Command extends BaseCommand {
   }
 
   exec = async (msg: Message, executor: Profile) => {
+    const numberOfFish = await PlayerService.getNumberOfFishByprofile(executor);
+    if (numberOfFish >= 10) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> You're holding too many fish!`
+      );
+      return;
+    }
     const fishingEmbed = new MessageEmbed()
       .setAuthor(`Fishing | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
