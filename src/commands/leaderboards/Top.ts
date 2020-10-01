@@ -13,6 +13,7 @@ export class Command extends BaseCommand {
     let embed = new MessageEmbed();
     let description = "";
     switch (this.options[0]?.toLowerCase()) {
+      case "cash":
       case "coins": {
         const richestUsers = await PlayerService.getRichestUsers();
         const totalCoins = await StatsService.getNumberOfCoins();
