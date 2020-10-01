@@ -34,8 +34,8 @@ export class Command extends BaseCommand {
       options[name.toLowerCase()] = value;
     }
 
-    const totalOrphaned = await MarketService.getMarketCount({ ...options });
-    const pageLimit = Math.ceil(totalOrphaned / 9);
+    const totalOnMarket = await MarketService.getMarketCount({ ...options });
+    const pageLimit = Math.ceil(totalOnMarket / 15);
     const pageRaw = isNaN(parseInt(options.page)) ? 1 : parseInt(options.page);
     let page = pageRaw > pageLimit ? pageLimit : pageRaw;
 
@@ -59,9 +59,11 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(
       embed.addFields(await this.renderMarket(ff))
     );
-    if (pageLimit > 1) await Promise.all([sent.react(`⏪`), sent.react(`◀️`)]);
+    if (pageLimit > 2) await sent.react(`⏪`);
+    if (pageLimit > 1) await sent.react(`◀️`);
     await sent.react(`754832389620105276`);
-    if (pageLimit > 1) await Promise.all([sent.react(`▶️`), sent.react(`⏩`)]);
+    if (pageLimit > 1) await sent.react(`▶️`);
+    if (pageLimit > 2) await sent.react(`⏩`);
 
     let filter;
     if (pageLimit > 1) {
@@ -82,7 +84,7 @@ export class Command extends BaseCommand {
         page = 1;
         const newCards = await MarketService.getMarket({
           ...options,
-          limit: 9,
+          limit: 15,
           page,
         });
         embed.fields = await this.renderMarket(newCards);
@@ -96,7 +98,7 @@ export class Command extends BaseCommand {
         page--;
         const newCards = await MarketService.getMarket({
           ...options,
-          limit: 9,
+          limit: 15,
           page,
         });
         embed.fields = await this.renderMarket(newCards);
@@ -107,12 +109,13 @@ export class Command extends BaseCommand {
           )
         );
       } else if (r.emoji.name === "delete") {
-        return (<TextChannel>msg.channel).bulkDelete([msg, sent]);
+        (<TextChannel>msg.channel).bulkDelete([msg, sent]);
+        return;
       } else if (r.emoji.name === "▶️" && page !== pageLimit) {
         page++;
         const newCards = await MarketService.getMarket({
           ...options,
-          limit: 9,
+          limit: 15,
           page,
         });
         embed.fields = await this.renderMarket(newCards);
@@ -126,7 +129,7 @@ export class Command extends BaseCommand {
         page = pageLimit;
         const newCards = await MarketService.getMarket({
           ...options,
-          limit: 9,
+          limit: 15,
           page,
         });
         embed.fields = await this.renderMarket(newCards);

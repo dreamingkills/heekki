@@ -107,7 +107,7 @@ export class Command extends BaseCommand {
           )
         );
       } else if (r.emoji.name === "delete") {
-        await (<TextChannel>msg.channel).bulkDelete([msg, sent]);
+        (<TextChannel>msg.channel).bulkDelete([msg, sent]);
         return;
       } else if (r.emoji.name === "▶️" && page !== pageLimit) {
         page++;
