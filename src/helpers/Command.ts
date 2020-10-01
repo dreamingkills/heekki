@@ -67,7 +67,7 @@ export class CommandManager {
 
     try {
       this.cooldown.add(msg.author.id);
-      this.concurrence.add(msg.author.id);
+      //this.concurrence.add(msg.author.id);
       setTimeout(() => {
         this.cooldown.delete(msg.author.id);
       }, 1500);
@@ -77,7 +77,7 @@ export class CommandManager {
         true
       );
       await cmd.run(msg, profile).then(() => {
-        this.concurrence.delete(msg.author.id);
+        //this.concurrence.delete(msg.author.id);
       });
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
