@@ -21,7 +21,8 @@ export class Command extends BaseCommand {
   ): Promise<string> {
     console.log(friends);
     const friendIds = friends.map((f) => {
-      return f.sender === sender.discord_id ? f.recipient : f.sender;
+      if (f.sender === sender.discord_id) return f.recipient;
+      return f.sender;
     });
     const friendCounts = await FriendService.getTotalHeartsSent(
       sender,
