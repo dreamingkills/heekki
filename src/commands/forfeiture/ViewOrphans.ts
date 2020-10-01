@@ -4,6 +4,7 @@ import {
   MessageReaction,
   User,
   EmbedField,
+  TextChannel,
 } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { StatsService } from "../../database/service/StatsService";
@@ -34,7 +35,7 @@ export class Command extends BaseCommand {
       ...options,
     });
 
-    const pageLimit = Math.ceil(totalOrphaned / 9);
+    const pageLimit = Math.ceil(totalOrphaned / 15);
     const pageRaw = isNaN(parseInt(options.page)) ? 1 : parseInt(options.page);
     let page = pageRaw > pageLimit ? pageLimit : pageRaw;
 
@@ -50,27 +51,38 @@ export class Command extends BaseCommand {
 
     let forfeited = await PlayerService.getOrphanedCards({
       ...options,
-      limit: 9,
+      limit: 15,
       page,
     });
 
     embed.fields = await this.render(forfeited);
     const sent = await msg.channel.send(embed);
+    if (pageLimit > 2) await sent.react(`⏪`);
+    if (pageLimit > 1) await sent.react(`◀️`);
+    sent.react(`754832389620105276`);
+    if (pageLimit > 1) await sent.react(`▶️`);
+    if (pageLimit > 2) await sent.react(`⏩`);
 
-    await Promise.all([await sent.react(`◀️`), await sent.react(`▶️`)]);
+    let filter;
+    if (pageLimit > 1) {
+      filter = (r: MessageReaction, u: User) =>
+        (r.emoji.name === "⏪" ||
+          r.emoji.name === "◀️" ||
+          r.emoji.name === "delete" ||
+          r.emoji.name === "▶️" ||
+          r.emoji.name === "⏩") &&
+        msg.author.id === u.id;
+    } else
+      filter = (r: MessageReaction, u: User) =>
+        r.emoji.name === "delete" && msg.author.id === u.id;
 
-    const collector = sent.createReactionCollector(
-      (r: MessageReaction, u: User) =>
-        (r.emoji.name === "◀️" || r.emoji.name === "▶️") &&
-        msg.author.id === u.id,
-      { time: 60000 }
-    );
+    const collector = sent.createReactionCollector(filter, { time: 60000 });
     collector.on("collect", async (r) => {
-      if (r.emoji.name === "◀️" && page !== 1) {
-        page--;
+      if (r.emoji.name === "⏪" && page !== 1) {
+        page = 1;
         const newCards = await PlayerService.getOrphanedCards({
           ...options,
-          limit: 9,
+          limit: 15,
           page,
         });
         embed.fields = await this.render(newCards);
@@ -80,11 +92,41 @@ export class Command extends BaseCommand {
             msg.author.displayAvatarURL()
           )
         );
+      } else if (r.emoji.name === "◀️" && page !== 1) {
+        page--;
+        const newCards = await PlayerService.getOrphanedCards({
+          ...options,
+          limit: 15,
+          page,
+        });
+        embed.fields = await this.render(newCards);
+        sent.edit(
+          embed.setAuthor(
+            `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
+            msg.author.displayAvatarURL()
+          )
+        );
+      } else if (r.emoji.name === "delete") {
+        await (<TextChannel>msg.channel).bulkDelete([msg, sent]);
       } else if (r.emoji.name === "▶️" && page !== pageLimit) {
         page++;
         const newCards = await PlayerService.getOrphanedCards({
           ...options,
-          limit: 9,
+          limit: 15,
+          page,
+        });
+        embed.fields = await this.render(newCards);
+        sent.edit(
+          embed.setAuthor(
+            `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
+            msg.author.displayAvatarURL()
+          )
+        );
+      } else if (r.emoji.name === "⏩") {
+        page = pageLimit;
+        const newCards = await PlayerService.getOrphanedCards({
+          ...options,
+          limit: 15,
           page,
         });
         embed.fields = await this.render(newCards);
