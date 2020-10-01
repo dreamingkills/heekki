@@ -3,9 +3,11 @@ import Chance from "chance";
 import fish from "../../assets/fish.json";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
+
   private async generateFish(
     force?: string
   ): Promise<{
@@ -31,8 +33,8 @@ export class Command extends BaseCommand {
 
     let gender = chance.pickone(Object.keys(randomFish.weight)) as
       | "male"
-      | "female"
-      | "???";
+      | "female";
+
     const weightRaw = chance.floating({
       fixed: 2,
       min: randomFish.weight[gender]!.min,
@@ -54,9 +56,9 @@ export class Command extends BaseCommand {
     };
   }
 
-  exec = async (msg: Message) => {
-    /* const fishingEmbed = new MessageEmbed()
-      .setAuthor(`Fishing | ${msg.author.tag}`)
+  exec = async (msg: Message, executor: Profile) => {
+    const fishingEmbed = new MessageEmbed()
+      .setAuthor(`Fishing | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         `:fishing_pole_and_fish: You cast your line into the water and wait...`
       )
@@ -108,14 +110,13 @@ export class Command extends BaseCommand {
                     : fishName
                 }__!\n**Gender**: ${
                   fish.genderEmoji[caught.gender]
-                }\n**Weight**: ${fishWeight}g`
+                }\n**Weight**: ${fishWeight}kg`
               )
               .setColor(`#40BD66`)
               .setFooter(``)
-              .setThumbnail(chance.pickone(fish.jinsoul))
           );
           PlayerService.createFishByDiscordId(
-            msg.author.id,
+            executor,
             fishName,
             fishWeight,
             caught.gender
@@ -148,6 +149,6 @@ export class Command extends BaseCommand {
           }
         });
       }
-    }, 3000); */
+    }, 3000);
   };
 }

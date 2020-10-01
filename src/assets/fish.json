@@ -38,92 +38,112 @@
   ],
   "fish": [
     {
-      "name": "JinSoul",
-      "baseChance": 0.0000125,
+      "name": "Test Fish",
+      "baseChance": 0,
       "weight": {
-        "female": { "min": 46000, "max": 46000 }
+        "male": { "min": 1, "max": 1 },
+        "female": { "min": 1, "max": 1 }
       },
-      "emoji": "<:jinsoul:754851445190164480>"
+      "emoji": ":robot"
     },
     {
-      "name": "Blue Betta",
-      "baseChance": 1,
+      "name": "Bluegill",
+      "baseChance": 10,
       "weight": {
-        "male": { "min": 2.12, "max": 3.08 },
-        "female": { "min": 1.95, "max": 2.93 }
+        "male": { "min": 0.91, "max": 1.45 },
+        "female": { "min": 0.91, "max": 1.45 }
       },
       "emoji": ":fish:"
     },
     {
-      "name": "Penang Betta",
-      "baseChance": 1,
+      "name": "Spotted Bass",
+      "baseChance": 10,
       "weight": {
-        "male": { "min": 2.12, "max": 3.08 },
-        "female": { "min": 1.95, "max": 2.93 }
+        "male": { "min": 0.69, "max": 3.67 },
+        "female": { "min": 0.69, "max": 3.67 }
+      },
+      "emoji": ":fish:"
+    },
+    {
+      "name": "Catfish",
+      "baseChance": 10,
+      "weight": {
+        "male": { "min": 0.59, "max": 3.38 },
+        "female": { "min": 0.59, "max": 3.38 }
+      },
+      "emoji": ":fish:"
+    },
+    {
+      "name": "Tuna",
+      "baseChance": 10,
+      "weight": {
+        "male": { "min": 1.4, "max": 2.1 },
+        "female": { "min": 1.4, "max": 2.1 }
+      },
+      "emoji": ":fish:"
+    },
+    {
+      "name": "Cod",
+      "baseChance": 10,
+      "weight": {
+        "male": { "min": 5, "max": 12 },
+        "female": { "min": 5, "max": 12 }
+      },
+      "emoji": ":fish:"
+    },
+    {
+      "name": "Clownfish",
+      "baseChance": 9.2,
+      "weight": {
+        "male": { "min": 0.19, "max": 0.32 },
+        "female": { "min": 0.19, "max": 0.32 }
       },
       "emoji": ":tropical_fish:"
     },
     {
-      "name": "Thinking Fish",
-      "baseChance": 0.33,
-      "weight": {
-        "male": { "min": 90, "max": 272 },
-        "female": { "min": 78, "max": 253 }
-      },
-      "emoji": "<:thinking_fish:754832350747164736>"
-    },
-    {
-      "name": "Pensive Fish",
-      "baseChance": 0.33,
-      "weight": {
-        "male": { "min": 90, "max": 272 },
-        "female": { "min": 78, "max": 253 }
-      },
-      "emoji": "<:pensive_fish:754832351040897154>"
-    },
-    {
-      "name": "Void Fish",
-      "baseChance": 0.0012,
-      "weight": {
-        "???": { "min": 0, "max": 0 }
-      },
-      "emoji": "<:void_fish:754855913139208272>"
-    },
-    {
       "name": "Pufferfish",
-      "baseChance": 0.4,
+      "baseChance": 8.1,
       "weight": {
-        "male": { "min": 9071, "max": 13608 },
-        "female": { "min": 9071, "max": 13608 }
+        "male": { "min": 8.87, "max": 9.27 },
+        "female": { "min": 8.87, "max": 9.27 }
       },
       "emoji": ":blowfish:"
     },
     {
-      "name": "Poggers Fish",
-      "baseChance": 0.05,
+      "name": "Sunfish",
+      "baseChance": 0.7,
       "weight": {
-        "male": { "min": 2000, "max": 14000 },
-        "female": { "min": 2000, "max": 14000 }
+        "male": { "min": 952.5, "max": 1043.26 },
+        "female": { "min": 952.5, "max": 1043.26 }
       },
-      "emoji": "<a:poggers_fish:754885089170685952>"
+      "emoji": ":blowfish:"
     },
     {
-      "name": "Blue Whale",
-      "baseChance": 0.0000125,
+      "name": "Japanese Spider Crab",
+      "baseChance": 3.2,
       "weight": {
-        "male": { "min": 49895160, "max": 149685482 },
-        "female": { "min": 49895160, "max": 136077711 }
+        "male": { "min": 18.14, "max": 20.86 },
+        "female": { "min": 18.14, "max": 20.86 }
       },
-      "emoji": ":whale2:"
+      "emoji": ":crab:"
     },
     {
-      "name": "Reaper Leviathan",
-      "baseChance": 0.000000000125,
+      "name": "Jellyfish",
+      "baseChance": 2.4,
       "weight": {
-        "male": { "min": 381017591, "max": 408233133 },
-        "female": { "min": 381017591, "max": 408233133 }
+        "male": { "min": 1.72, "max": 2.12 },
+        "female": { "min": 1.72, "max": 2.12 }
       },
-      "emoji": ":skull:"
+      "emoji": ":wind_chime:"
+    },
+    {
+      "name": "Manta Ray",
+      "baseChance": 0.69,
+      "weight": {
+        "male": { "min": 1587, "max": 1678 },
+        "female": { "min": 1587, "max": 1678 }
+      },
+      "emoji": ":tropical_fish:"
     }
   ],
   "jinsoul": [

@@ -19,15 +19,15 @@ export class Command extends BaseCommand {
       );
       return;
     }
-    let refsSender = refs[0].split(" ").filter((e) => e.includes("#"));
+    let refsSender = refs[0].split(" ").filter((e) => e.trim().includes("#"));
     if (!refsSender[0]) {
       msg.channel.send(
         `<:red_x:741454361007357993> You haven't specified any of your cards.`
       );
       return;
     }
-    let refsOther = refs[1].split(" ").filter((e) => e.includes("#"));
-    if (!refsSender[1]) {
+    let refsOther = refs[1].split(" ").filter((e) => e.trim().includes("#"));
+    if (!refsOther[0]) {
       msg.channel.send(
         `<:red_x:741454361007357993> You haven't specified any cards to trade for.`
       );
