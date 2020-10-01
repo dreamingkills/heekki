@@ -31,6 +31,58 @@
     {
       "text": "%M tried *Mad Dog 357* and lived to tell the tale.",
       "baseReward": 400
+    },
+    {
+      "text": "%M passed their graduation exam.",
+      "baseReward": 200
+    },
+    {
+      "text": "%M dropped out of school.",
+      "baseReward": 0
+    },
+    {
+      "text": "%M tried to cook a meal and started a fire instead.",
+      "baseReward": 0
+    },
+    {
+      "text": "%M overslept and missed dance practice.",
+      "baseReward": 0
+    },
+    {
+      "text": "%M was sponsored by a noodle company.",
+      "baseReward": 900
+    },
+    {
+      "text": "%M went busking.",
+      "baseReward": 250
+    },
+    {
+      "text": "%M appeared on King of Masked Singer and made it to the second round!",
+      "baseReward": 1400
+    },
+    {
+      "text": "%M was invited to Weekly Idol.",
+      "baseReward": 600
+    },
+    {
+      "text": "%M covered another group's choreography and gained some fans.",
+      "baseReward": 300
+    },
+    {
+      "text": "%M competed in ISAC and won a gold medal.",
+      "baseReward": 600
+    },
+    {
+      "text": "%M was selected to be the face of Fenty Beauty Korea.",
+      "baseReward": 1600
+    },
+    {
+      "text": "%M found some spare changed underneath the couch cushions.",
+      "baseReward": 100
+    },
+    {
+      "text": "%M got lost on her way back to the dorm.",
+      "baseReward": 0
     }
   ]
 }
