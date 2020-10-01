@@ -81,9 +81,11 @@ export class Command extends BaseCommand {
       .setColor(`#FFAACC`)
       .setThumbnail(user.displayAvatarURL());
     const sent = await msg.channel.send(embed);
-    if (pageLimit > 1) await Promise.all([sent.react(`⏪`), sent.react(`◀️`)]);
+    if (pageLimit > 2) await sent.react(`⏪`);
+    if (pageLimit > 1) await sent.react(`◀️`);
     await sent.react(`754832389620105276`);
-    if (pageLimit > 1) await Promise.all([sent.react(`▶️`), sent.react(`⏩`)]);
+    if (pageLimit > 1) await sent.react(`▶️`);
+    if (pageLimit > 2) await sent.react(`⏩`);
 
     let filter;
     if (pageLimit > 1) {
