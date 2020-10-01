@@ -182,6 +182,18 @@ export class Command extends BaseCommand {
           executor,
           page
         );
+        if (friendsRaw.length === 0) {
+          const embed = new MessageEmbed()
+            .setAuthor(
+              `Friends | ${msg.author.tag} (page 1/1)`,
+              msg.author.displayAvatarURL()
+            )
+            .setDescription(`You don't have any friends :(`)
+            .setThumbnail(msg.author.displayAvatarURL())
+            .setColor(`#FFAACC`);
+          msg.channel.send(embed);
+          return;
+        }
         const friends = await this.parseFriends(
           friendsRaw,
           executor,
