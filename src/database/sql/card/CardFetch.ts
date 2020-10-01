@@ -25,6 +25,7 @@ export class CardFetch extends DBClass {
       pack_id: number;
       serial_id: number;
       serial_limit: number;
+      image_data_id: number;
     }[];
     return new Card(query[0]);
   }
@@ -50,13 +51,13 @@ export class CardFetch extends DBClass {
     return new Pack(query[0]);
   }
 
-  public static async getImageDataFromPack(
-    pack: Pack | ShopItem | number
+  public static async getImageDataFromCard(
+    card: Card | UserCard
   ): Promise<ImageData> {
     let id;
-    if (typeof pack === "number") {
-      id = pack;
-    } else id = pack.imageDataId;
+    if (typeof card === "number") {
+      id = card;
+    } else id = card.imageDataId;
 
     let imageDataQuery = (await DB.query(
       `SELECT * FROM image_data WHERE id=?;`,
@@ -131,6 +132,7 @@ export class CardFetch extends DBClass {
       pack_id: number;
       serial_id: number;
       serial_limit: number;
+      image_data_id: number;
     }[];
     return query.map((c) => {
       return new Card(c);
@@ -154,6 +156,7 @@ export class CardFetch extends DBClass {
         card.pack_id,
         card.serial_id,
         card.serial_limit,
+        card.image_data_id,
         user_card.id AS user_card_id,
         user_card.serial_number,
         user_card.owner_id,
@@ -178,6 +181,7 @@ export class CardFetch extends DBClass {
       stars: number;
       hearts: number;
       is_favorite: boolean;
+      image_data_id: number;
     }[];
     if (!query[0]) throw new error.InvalidUserCardError(reference);
     return new UserCard(query[0]);
@@ -195,6 +199,7 @@ export class CardFetch extends DBClass {
         card.pack_id,
         card.serial_id,
         card.serial_limit,
+        card.image_data_id,
         user_card.id AS user_card_id,
         user_card.serial_number,
         user_card.owner_id,
@@ -219,6 +224,7 @@ export class CardFetch extends DBClass {
       stars: number;
       hearts: number;
       is_favorite: boolean;
+      image_data_id: number;
     }[];
     if (!query[0])
       throw new error.InvalidUserCardError({

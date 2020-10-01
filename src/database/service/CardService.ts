@@ -48,10 +48,10 @@ export class CardService {
     await CardUpdate.addHeartsToCard(card, amount);
   }
 
-  public static async getImageDataFromPack(
-    pack: Pack | ShopItem | number
+  public static async getImageDataFromCard(
+    card: Card | UserCard
   ): Promise<ImageData> {
-    return await CardFetch.getImageDataFromPack(pack);
+    return await CardFetch.getImageDataFromCard(card);
   }
 
   /*

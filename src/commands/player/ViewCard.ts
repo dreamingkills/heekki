@@ -23,7 +23,7 @@ export class Command extends BaseCommand {
     }
     const card = await CardService.getCardDataFromReference(reference);
     const pack = await ShopService.getPackById(card.packId);
-    const imageData = await CardService.getImageDataFromPack(pack);
+    const imageData = await CardService.getImageDataFromCard(card);
     const image = await CardService.generateCardImageFromUserCard(
       card,
       imageData

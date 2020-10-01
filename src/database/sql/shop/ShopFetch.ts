@@ -16,7 +16,6 @@ export class ShopFetch extends DBClass {
       active: boolean;
       title: string;
       credit: string;
-      image_data_id: number;
       cover_url: string;
       flavor_text: string;
     }[];
@@ -35,7 +34,6 @@ export class ShopFetch extends DBClass {
       active: boolean;
       title: string;
       credit: string;
-      image_data_id: number;
       cover_url: string;
       flavor_text: string;
     }[];
@@ -47,7 +45,6 @@ export class ShopFetch extends DBClass {
     const query = (await DB.query(`SELECT * FROM pack WHERE id=?;`, [id])) as {
       id: number;
       title: string;
-      image_data_id: number;
       credit: string;
       cover_url: string;
       flavor_text: string;
@@ -66,7 +63,6 @@ export class ShopFetch extends DBClass {
       active: boolean;
       title: string;
       credit: string;
-      image_data_id: number;
       cover_url: string;
       flavor_text: string;
     }[];
