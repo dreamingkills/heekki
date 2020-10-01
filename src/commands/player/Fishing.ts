@@ -81,6 +81,12 @@ export class Command extends BaseCommand {
           time: 3000,
         });
         collector.on("collect", async () => {
+          if (numberOfFish >= 10) {
+            msg.channel.send(
+              `<:red_x:741454361007357993> You're holding too many fish!`
+            );
+            return;
+          }
           clearInterval(interval);
           caughtFish = true;
           const caught = await this.generateFish();
