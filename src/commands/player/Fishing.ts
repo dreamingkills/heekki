@@ -80,10 +80,10 @@ export class Command extends BaseCommand {
           if (numberOfFish >= 10) {
             fishingMsg.edit(
               `<:red_x:741454361007357993> You're holding too many fish!`,
-              { embed: {} }
+              { embed: undefined }
             );
             clearInterval(interval);
-            return;
+            collector.stop("full");
           }
           clearInterval(interval);
           caughtFish = true;
@@ -114,7 +114,8 @@ export class Command extends BaseCommand {
 
           collector.stop("success");
         });
-        collector.on("end", () => {
+        collector.on("end", (reason: string) => {
+          if (reason === "full") return;
           if (!caughtFish) {
             successfulCatches++;
             fishingMsg.reactions.removeAll();
