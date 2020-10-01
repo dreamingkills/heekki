@@ -9,9 +9,10 @@ export class CardUpdate extends DBClass {
     owner_id: string,
     card: Card,
     stars: number,
-    hearts: number
+    hearts: number,
+    force: boolean
   ): Promise<UserCard> {
-    let newSerial = await SerialGenerator.queueSerialGen(card);
+    let newSerial = await SerialGenerator.queueSerialGen(card, force);
     let tries = 0;
     while (true) {
       try {

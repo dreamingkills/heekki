@@ -14,7 +14,7 @@ interface Reference {
 export class CardFetch extends DBClass {
   public static async getRandomCard(): Promise<Card> {
     const query = (await DB.query(
-      `SELECT card.* FROM card ORDER BY RAND() LIMIT 1;`
+      `SELECT card.* FROM card ORDER BY -LOG(1.0-RAND())/rarity LIMIT 1;`
     )) as {
       id: number;
       blurb: string;

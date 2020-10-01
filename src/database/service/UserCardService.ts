@@ -22,13 +22,15 @@ export class UserCardService {
     profile: Profile,
     card: Card,
     stars: number,
-    hearts: number
+    hearts: number,
+    force: boolean = false
   ): Promise<UserCard> {
     return await CardUpdate.createNewUserCard(
       profile.discord_id,
       card,
       stars,
-      hearts
+      hearts,
+      force
     );
   }
 

@@ -16,7 +16,7 @@ export class Command extends BaseCommand {
       throw new error.DailyCooldownError(last + 86400000, now);
 
     const chance = new Chance();
-    const type = chance.weighted(["card", "coins"], [0.1, 1]);
+    const type = chance.weighted(["card", "coins"], [1110.1, 1]);
     let reward = `:white_check_mark: You claimed your daily reward.\n`;
     if (type === "card") {
       const randomCard = await CardService.getRandomCard();
@@ -28,7 +28,8 @@ export class Command extends BaseCommand {
         executor,
         randomCard,
         starCount,
-        0
+        0,
+        true
       );
       reward += `+ **${newCard.abbreviation}#${newCard.serialNumber}**`;
     } else if (type === "coins") {

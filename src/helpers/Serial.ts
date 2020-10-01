@@ -6,7 +6,7 @@ export class SerialGenerator {
   public static queueSerialGen = (() => {
     let pending = Promise.resolve();
 
-    const run = async (card: Card): Promise<any> => {
+    const run = async (card: Card, force: boolean): Promise<any> => {
       try {
         await pending;
       } finally {
@@ -16,7 +16,8 @@ export class SerialGenerator {
         )) as { id: number; serial_number: number }[];
         if (
           card.serialLimit > 0 &&
-          serial[0].serial_number >= card.serialLimit
+          serial[0].serial_number >= card.serialLimit &&
+          force === false
         ) {
           throw new error.MaxSerialError();
         }
@@ -30,6 +31,6 @@ export class SerialGenerator {
       }
     };
 
-    return (card: Card) => (pending = run(card));
+    return (card: Card, force: boolean) => (pending = run(card, force));
   })();
 }
