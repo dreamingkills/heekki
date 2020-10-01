@@ -1,13 +1,11 @@
 import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
 import Chance from "chance";
-import fish from "../../assets/fish.json";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
-  users: string[] = ["197186779843919877"];
 
   private async generateFish(): Promise<{
     id: number;
@@ -18,11 +16,6 @@ export class Command extends BaseCommand {
     identifier: string;
   }> {
     const randomFish = await PlayerService.getRandomFish();
-
-    let gender = ["male", "female"][Math.floor(Math.random() * 2)] as
-      | "male"
-      | "female";
-
     const chance = new Chance();
     const weightRaw = chance.floating({
       fixed: 2,
