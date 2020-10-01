@@ -243,7 +243,7 @@ export class Command extends BaseCommand {
                   msg.author.displayAvatarURL()
                 )
                 .setDescription(
-                  this.parseFriends(newFriends, executor, msg.client)
+                  await this.parseFriends(newFriends, executor, msg.client)
                 )
             );
           } else if (r.emoji.name === "delete") {
@@ -260,7 +260,7 @@ export class Command extends BaseCommand {
                   msg.author.displayAvatarURL()
                 )
                 .setDescription(
-                  this.parseFriends(newFriends, executor, msg.client)
+                  await this.parseFriends(newFriends, executor, msg.client)
                 )
             );
           }
