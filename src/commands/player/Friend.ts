@@ -19,7 +19,6 @@ export class Command extends BaseCommand {
     sender: Profile,
     client: Client
   ): Promise<string> {
-    console.log(friends);
     const friendIds = friends.map((f) => {
       if (f.sender === sender.discord_id) return f.recipient;
       return f.sender;
@@ -29,12 +28,15 @@ export class Command extends BaseCommand {
       friendIds
     );
     let tags = [];
-    for (const friend of friendCounts) {
+    for (const friend of friendIds) {
       tags.push(
         `${
-          (await client.users.fetch(friend.sender_id)) ||
-          `Unknown User (${friend.sender_id})`
-        } - **${friend.count}** <:heekki_heart:757147742383505488> received`
+          (await client.users.fetch(friend)) || `Unknown User (${friend})`
+        } - **${
+          friendCounts.filter((r) => {
+            return r.sender_id === friend;
+          })[0]?.count || 0
+        }** <:heekki_heart:757147742383505488> received`
       );
     }
     return tags.join("\n");
