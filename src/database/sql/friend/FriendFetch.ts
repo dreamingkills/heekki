@@ -106,9 +106,9 @@ export class FriendFetch extends DBClass {
     friends: string[]
   ): Promise<{ sender_id: string; count: number }[]> {
     const query = (await DB.query(
-      `SELECT sender_id, friend_id, COUNT(*) AS count FROM friend_heart WHERE (sender_id IN(?) AND friend_id=?) OR (friend_id IN(?) AND sender_id=?) GROUP BY sender_id;`,
+      `SELECT sender_id, COUNT(*) AS count FROM friend_heart WHERE sender_id IN(?) AND friend_id=? GROUP BY sender_id;`,
       [friends, senderId]
-    )) as { sender_id: string; friend_id: string; count: number }[];
+    )) as { sender_id: string; count: number }[];
     return query;
   }
 }
