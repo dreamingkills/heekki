@@ -79,8 +79,10 @@ export class Command extends BaseCommand {
           );
           if (numberOfFish >= 10) {
             fishingMsg.edit(
-              `<:red_x:741454361007357993> You're holding too many fish!`
+              `<:red_x:741454361007357993> You're holding too many fish!`,
+              { embed: {} }
             );
+            clearInterval(interval);
             return;
           }
           clearInterval(interval);
