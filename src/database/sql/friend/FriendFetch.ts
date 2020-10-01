@@ -39,7 +39,7 @@ export class FriendFetch extends DBClass {
   ): Promise<Friend[]> {
     console.log(page);
     const friends = (await DB.query(
-      `SELECT * FROM friend WHERE (sender_id=? OR friend_id=?) AND confirmed=true LIMIT 20 OFFSET ${
+      `SELECT * FROM friend WHERE (sender_id=? OR friend_id=?) AND confirmed=1 LIMIT 20 OFFSET ${
         page * 20 - 20
       };`,
       [discord_id, discord_id]
