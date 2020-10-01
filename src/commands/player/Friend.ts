@@ -176,7 +176,7 @@ export class Command extends BaseCommand {
         if (page > pageLimit) page = pageLimit;
         const friendsRaw = await FriendService.getFriendsByProfile(
           executor,
-          isNaN(page) ? 1 : page
+          page
         );
         const friends = await this.parseFriends(
           friendsRaw,

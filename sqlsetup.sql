@@ -135,9 +135,7 @@ CREATE TABLE friend
     sender_id       VARCHAR(32),
     friend_id       VARCHAR(32),
     confirmed       BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (relationship_id),
-    CONSTRAINT FriendUser FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT Friend FOREIGN KEY (friend_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+    PRIMARY KEY (relationship_id)
 );
 
 CREATE TABLE badge
@@ -225,9 +223,6 @@ CREATE TABLE fish
     weight_mod      INT(11) NOT NULL,
     identifier      VARCHAR(32) NOT NULL,
     trophy_fish     BOOLEAN DEFAULT FALSE,
-    CONSTRAINT FishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT Fish FOREIGN KEY (fish_id) REFERENCES fish_types (id) ON DELETE CASCADE,
-    CONSTRAINT FishWeightMod FOREIGN KEY (weight_mod) REFERENCES weight_mod (id) ON DELETE CASCADE,
     CONSTRAINT FishIdentifier UNIQUE(identifier),
     PRIMARY KEY(id)
 );
@@ -248,20 +243,6 @@ CREATE TABLE reputation
     sender_id       VARCHAR(32) NOT NULL,
     PRIMARY KEY(id),
     CONSTRAINT UniqueRep UNIQUE(receiver_id, sender_id)
-);
-
-CREATE TABLE trophy_fish
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    owner_id        VARCHAR(32) NOT NULL,
-    fish_id         INT(11) NOT NULL,
-    fish_weight     DOUBLE(11, 4) NOT NULL,
-    weight_mod      INT(11) NOT NULL,
-    gender          ENUM('male', 'female', '???') NOT NULL,
-    PRIMARY KEY(id),
-    CONSTRAINT TrophyFishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT TrophyFishId FOREIGN KEY (fish_id) REFERENCES fish_types (id) ON DELETE CASCADE,
-    CONSTRAINT TrophyFishWeightMod FOREIGN KEY (weight_mod) REFERENCES weight_mod (id) ON DELETE CASCADE
 );
 
 CREATE TABLE friend_heart
@@ -289,5 +270,6 @@ CREATE TABLE weight_mod
     mod_name        VARCHAR(255) NOT NULL,
     multiplier      DOUBLE(11, 4) NOT NULL,
     base_chance     INT(11) NOT NULL,
+    price_multiplier INT(11) NOT NULL,
     PRIMARY KEY(id)
 );
