@@ -90,21 +90,27 @@ export class CardService {
 
     ctx.drawImage(background, 0, 0, size.width, size.height);
 
-    await this.generateText(
-      ctx,
-      { ...imageData.serialText },
-      `#${this.commafyNumber(card.serialNumber)}`
-    );
-    await this.generateText(
-      ctx,
-      { ...imageData.levelNum },
-      this.heartsToLevel(card.hearts).level.toString()
-    );
-    await this.generateText(
-      ctx,
-      { ...imageData.heartText },
-      this.commafyNumber(card.hearts)
-    );
+    if (imageData.serialText.size > 0) {
+      await this.generateText(
+        ctx,
+        { ...imageData.serialText },
+        `#${this.commafyNumber(card.serialNumber)}`
+      );
+    }
+    if (imageData.levelNum.size > 0) {
+      await this.generateText(
+        ctx,
+        { ...imageData.levelNum },
+        this.heartsToLevel(card.hearts).level.toString()
+      );
+    }
+    if (imageData.heartText.size > 0) {
+      await this.generateText(
+        ctx,
+        { ...imageData.heartText },
+        this.commafyNumber(card.hearts)
+      );
+    }
 
     let starData = await jimp.read(imageData.starImageUrl);
     let star = await canvas.loadImage(
