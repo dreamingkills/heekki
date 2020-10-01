@@ -234,7 +234,8 @@ export class Command extends BaseCommand {
           if (r.emoji.name === "◀️" && page !== 1) {
             page--;
             const newFriends = await FriendService.getFriendsByProfile(
-              executor
+              executor,
+              page
             );
             sent.edit(
               embed
@@ -251,7 +252,8 @@ export class Command extends BaseCommand {
           } else if (r.emoji.name === "▶️" && page !== pageLimit) {
             page++;
             const newFriends = await FriendService.getFriendsByProfile(
-              executor
+              executor,
+              page
             );
             sent.edit(
               embed
