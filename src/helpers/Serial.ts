@@ -1,5 +1,6 @@
 import { DB } from "../database";
 import { Card } from "../structures/card/Card";
+import * as error from "../structures/Error";
 
 export class SerialGenerator {
   public static queueSerialGen = (() => {
@@ -9,12 +10,17 @@ export class SerialGenerator {
       try {
         await pending;
       } finally {
-        console.log(card);
         const serial = (await DB.query(
           `SELECT * FROM serial_number WHERE id=?;`,
           [card.serialId]
         )) as { id: number; serial_number: number }[];
-        console.log(serial);
+        if (
+          card.serialLimit > 0 &&
+          serial[0].serial_number >= card.serialLimit
+        ) {
+          throw new error.MaxSerialError();
+        }
+
         await DB.query(`UPDATE serial_number SET serial_number=? WHERE id=?;`, [
           serial[0].serial_number + 1,
           card.serialId,

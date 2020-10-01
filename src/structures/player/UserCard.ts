@@ -25,6 +25,7 @@ export class UserCard extends Card {
     image_url: string;
     pack_id: number;
     serial_id: number;
+    serial_limit: number;
   }) {
     super({
       id: data.card_id,
@@ -35,6 +36,7 @@ export class UserCard extends Card {
       image_url: data.image_url,
       pack_id: data.pack_id,
       serial_id: data.serial_id,
+      serial_limit: data.serial_limit,
     });
     this.userCardId = data.user_card_id;
     this.serialNumber = data.serial_number;

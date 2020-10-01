@@ -316,3 +316,9 @@ export class InvalidFishError extends ClientError {
     super(`That fish does not exist.`);
   }
 }
+export class MaxSerialError extends ClientError {
+  name = "MaxSerialError";
+  constructor() {
+    super(`There cannot be any more issues of that card.`);
+  }
+}

@@ -7,6 +7,7 @@ export class Card {
   imageUrl: string;
   packId: number;
   serialId: number;
+  serialLimit: number;
 
   constructor(data: {
     id: number;
@@ -17,6 +18,7 @@ export class Card {
     image_url: string;
     pack_id: number;
     serial_id: number;
+    serial_limit: number;
   }) {
     this.id = data.id;
     this.blurb = data.blurb;
@@ -26,5 +28,6 @@ export class Card {
     this.imageUrl = data.image_url;
     this.packId = data.pack_id;
     this.serialId = data.serial_id;
+    this.serialLimit = data.serial_limit;
   }
 }

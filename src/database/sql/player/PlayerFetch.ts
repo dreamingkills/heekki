@@ -114,6 +114,7 @@ export class PlayerFetch extends DBClass {
                     card.image_url,
                     card.pack_id,
                     card.serial_id,
+                    card.serial_limit,
                     user_card.id AS user_card_id,
                     user_card.serial_number,
                     user_card.owner_id,
@@ -199,6 +200,7 @@ export class PlayerFetch extends DBClass {
       image_url: string;
       id: number;
       serial_number: number;
+      serial_limit: number;
       owner_id: string;
       stars: number;
       hearts: number;
