@@ -62,6 +62,23 @@ export class FriendFetch extends DBClass {
     return query[0]["COUNT(*)"];
   }
 
+  public static async getIncomingFriendRequests(
+    discord_id: string
+  ): Promise<Friend[]> {
+    const query = (await DB.query(
+      `SELECT * FROM friend WHERE friend_id=? AND confirmed=false;`,
+      [discord_id]
+    )) as {
+      relationship_id: number;
+      sender_id: string;
+      friend_id: string;
+      confirmed: boolean;
+    }[];
+    return query.map((f) => {
+      return new Friend(f);
+    });
+  }
+
   public static async checkRelationshipExists(
     friendOne: string,
     friendTwo: string
@@ -75,7 +92,6 @@ export class FriendFetch extends DBClass {
       friend_id: string;
       confirmed: boolean;
     }[];
-    console.log(relationship);
     if (!relationship[0]) return "OK";
     if (friendOne === relationship[0].friend_id && !relationship[0].confirmed)
       return "ACCEPTABLE";

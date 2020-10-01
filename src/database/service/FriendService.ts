@@ -32,6 +32,12 @@ export class FriendService {
     return await FriendFetch.getNumberOfFriends(profile.discord_id);
   }
 
+  public static async getIncomingFriendRequests(
+    profile: Profile
+  ): Promise<Friend[]> {
+    return await FriendFetch.getIncomingFriendRequests(profile.discord_id);
+  }
+
   public static async addFriend(
     sender: Profile,
     friend: Profile
