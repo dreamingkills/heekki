@@ -285,7 +285,7 @@ export class Command extends BaseCommand {
               .map((r) => {
                 return `<@${r.sender}>`;
               })
-              .join("\n")}\n\nUse \`!add <user>\` to accept the request!`
+              .join("\n")}\n\nUse \`!friend add <user>\` to accept the request!`
           )
           .setThumbnail(msg.author.displayAvatarURL())
           .setColor(`#FFAACC`);
