@@ -59,24 +59,24 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(
       embed.addFields(await this.renderMarket(ff))
     );
-    await Promise.all([
-      sent.react(`⏪`),
-      sent.react(`◀️`),
-      sent.react(`754832389620105276`),
-      sent.react(`▶️`),
-      sent.react(`⏩`),
-    ]);
+    if (pageLimit > 1) await Promise.all([sent.react(`⏪`), sent.react(`◀️`)]);
+    await sent.react(`754832389620105276`);
+    if (pageLimit > 1) await Promise.all([sent.react(`▶️`), sent.react(`⏩`)]);
 
-    const collector = sent.createReactionCollector(
-      (r: MessageReaction, u: User) =>
+    let filter;
+    if (pageLimit > 1) {
+      filter = (r: MessageReaction, u: User) =>
         (r.emoji.name === "⏪" ||
           r.emoji.name === "◀️" ||
           r.emoji.name === "delete" ||
           r.emoji.name === "▶️" ||
-          r.emoji.name == "⏩") &&
-        msg.author.id === u.id,
-      { time: 60000 }
-    );
+          r.emoji.name === "⏩") &&
+        msg.author.id === u.id;
+    } else
+      filter = (r: MessageReaction, u: User) =>
+        r.emoji.name === "delete" && msg.author.id === u.id;
+
+    const collector = sent.createReactionCollector(filter, { time: 60000 });
     collector.on("collect", async (r) => {
       if (r.emoji.name === "⏪" && page !== 1) {
         page = 1;
