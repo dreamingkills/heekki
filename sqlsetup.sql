@@ -222,8 +222,13 @@ CREATE TABLE fish
     owner_id        VARCHAR(32) NOT NULL,
     fish_id         INT(11) NOT NULL,
     fish_weight     DOUBLE(11, 4) NOT NULL,
+    weight_mod      INT(11) NOT NULL,
+    identifier      VARCHAR(32) NOT NULL,
+    trophy_fish     BOOLEAN DEFAULT FALSE,
     CONSTRAINT FishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
     CONSTRAINT Fish FOREIGN KEY (fish_id) REFERENCES fish_types (id) ON DELETE CASCADE,
+    CONSTRAINT FishWeightMod FOREIGN KEY (weight_mod) REFERENCES weight_mod (id) ON DELETE CASCADE,
+    CONSTRAINT FishIdentifier UNIQUE(identifier),
     PRIMARY KEY(id)
 );
 
@@ -249,11 +254,14 @@ CREATE TABLE trophy_fish
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
     owner_id        VARCHAR(32) NOT NULL,
-    fish_name       VARCHAR(255) NOT NULL,
+    fish_id         INT(11) NOT NULL,
     fish_weight     DOUBLE(11, 4) NOT NULL,
+    weight_mod      INT(11) NOT NULL,
     gender          ENUM('male', 'female', '???') NOT NULL,
     PRIMARY KEY(id),
-    CONSTRAINT TrophyFishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
+    CONSTRAINT TrophyFishOwner FOREIGN KEY (owner_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
+    CONSTRAINT TrophyFishId FOREIGN KEY (fish_id) REFERENCES fish_types (id) ON DELETE CASCADE,
+    CONSTRAINT TrophyFishWeightMod FOREIGN KEY (weight_mod) REFERENCES weight_mod (id) ON DELETE CASCADE
 );
 
 CREATE TABLE friend_heart
@@ -270,7 +278,16 @@ CREATE TABLE fish_types
     id              INT(11) NOT NULL AUTO_INCREMENT,
     fish_name       VARCHAR(255) NOT NULL,
     base_chance     INT(11) NOT NULL,
-    fish_weight     INT(11) NOT NULL,
+    fish_weight     DOUBLE(11, 4) NOT NULL,
     emoji           VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id),
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE weight_mod
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    mod_name        VARCHAR(255) NOT NULL,
+    multiplier      DOUBLE(11, 4) NOT NULL,
+    base_chance     INT(11) NOT NULL,
+    PRIMARY KEY(id)
 );

@@ -9,51 +9,41 @@ export class Command extends BaseCommand {
   names: string[] = ["fishing"];
   users: string[] = ["197186779843919877"];
 
-  private async generateFish(
-    force?: string
-  ): Promise<{
+  private async generateFish(): Promise<{
+    id: number;
     name: string;
-    gender: "male" | "female" | "???";
     weight: number;
-    weightMod: { name: string; multiplier: number; baseChance: number };
+    weightMod: { id: number; name: string; multiplier: number };
     emoji: string;
+    identifier: string;
   }> {
-    const fishBias = [];
-    for (let fishy of fish.fish) {
-      fishBias.push(fishy.baseChance);
-    }
-    const chance = new Chance();
-    let randomFish;
-    if (force) {
-      randomFish = fish.fish.filter((fishy) => {
-        return fishy.name === force;
-      })[0];
-    } else {
-      randomFish = chance.weighted(fish.fish, fishBias);
-    }
+    const randomFish = await PlayerService.getRandomFish();
 
-    let gender = chance.pickone(Object.keys(randomFish.weight)) as
+    let gender = ["male", "female"][Math.floor(Math.random() * 2)] as
       | "male"
       | "female";
 
+    const chance = new Chance();
     const weightRaw = chance.floating({
       fixed: 2,
-      min: randomFish.weight[gender]!.min,
-      max: randomFish.weight[gender]!.max,
+      min: randomFish.fish_weight - randomFish.fish_weight / 10,
+      max: randomFish.fish_weight + randomFish.fish_weight / 10,
     });
 
-    const weightBias = [];
-    for (let weightModChance of fish.weightModifiers) {
-      weightBias.push(weightModChance.baseChance);
-    }
-    const weightMod = chance.weighted(fish.weightModifiers, weightBias);
+    const weightMod = await PlayerService.getRandomWeightMod();
 
+    const identifier = chance.string({ length: 5, alpha: true });
     return {
-      name: randomFish.name,
-      gender,
-      weight: weightRaw,
-      weightMod,
+      id: randomFish.id,
+      name: randomFish.fish_name,
+      weight: weightRaw * weightMod.multiplier,
+      weightMod: {
+        id: weightMod.id,
+        name: weightMod.mod_name,
+        multiplier: weightMod.multiplier,
+      },
       emoji: randomFish.emoji,
+      identifier,
     };
   }
 
@@ -77,7 +67,7 @@ export class Command extends BaseCommand {
 
     const chance = new Chance();
     let caughtFish = false;
-    const lineBreakMultiplier = 1; // Upgradable lineBreakMultiplier to reduce chance of line breaking
+    const lineBreakMultiplier = 1; // Upgradable lineBreakMultiplier to reduce chance of line breaking?
     let successfulCatches = 0;
 
     const interval = setInterval(async () => {
@@ -101,37 +91,33 @@ export class Command extends BaseCommand {
           clearInterval(interval);
           caughtFish = true;
           const caught = await this.generateFish();
-          const fishName = `${caught.weightMod.name} ${caught.name}`.trim();
-          const fishWeight = parseFloat(
-            (caught.weight * caught.weightMod.multiplier).toFixed(4)
-          );
+
+          const xp = chance.integer({ min: 6, max: 14 });
+          PlayerService.addXp(executor, xp);
 
           fishingMsg.edit(
             fishingEmbed
               .setDescription(
-                `${caught.emoji} You caught a __${
-                  caught.weightMod.name !== ""
-                    ? fishName.replace(
-                        caught.weightMod.name,
-                        `**${caught.weightMod.name}**`
-                      )
-                    : fishName
-                }__!\n**Gender**: ${
-                  fish.genderEmoji[caught.gender]
-                }\n**Weight**: ${fishWeight}kg`
+                `:${caught.emoji}: You caught a __${
+                  caught.weightMod.name !== "" ? caught.weightMod.name : ""
+                } ${caught.name}__!\n**Weight**: ${caught.weight.toFixed(
+                  2
+                )}kg\n+ **${xp}** XP`
               )
               .setColor(`#40BD66`)
               .setFooter(``)
           );
           PlayerService.createFishByDiscordId(
             executor,
-            fishName,
-            fishWeight,
-            caught.gender
+            caught.id,
+            caught.weight,
+            caught.weightMod.id,
+            caught.identifier
           );
+
           collector.stop("success");
         });
-        collector.on("end", (reason: string) => {
+        collector.on("end", () => {
           if (!caughtFish) {
             successfulCatches++;
             fishingMsg.reactions.removeAll();

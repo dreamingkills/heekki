@@ -120,13 +120,14 @@ export class PlayerUpdate extends DBClass {
 
   public static async createFish(
     discord_id: string,
-    fish: string,
+    fish: number,
     weight: number,
-    gender: "male" | "female" | "???"
+    weightModId: number,
+    identifier: string
   ): Promise<void> {
     await DB.query(
-      `INSERT INTO fish (discord_id, fish_name, fish_weight, gender) VALUES (?, ?, ?, ?);`,
-      [discord_id, fish, weight, gender]
+      `INSERT INTO fish (owner_id, fish_id, fish_weight, weight_mod, identifier) VALUES (?, ?, ?, ?, ?);`,
+      [discord_id, fish, weight, weightModId, identifier]
     );
   }
 
@@ -154,6 +155,18 @@ export class PlayerUpdate extends DBClass {
     await DB.query(`UPDATE user_profile SET xp=xp+? WHERE discord_id=?;`, [
       amount,
       discord_id,
+    ]);
+  }
+
+  public static async makeFishTrophy(id: string): Promise<void> {
+    await DB.query(`UPDATE fish SET trophy_fish=true WHERE identifier=?;`, [
+      id,
+    ]);
+  }
+
+  public static async clearFish(ownerId: string): Promise<void> {
+    await DB.query(`DELETE FROM fish WHERE owner_id=? AND trophy_fish=false;`, [
+      ownerId,
     ]);
   }
 }

@@ -218,20 +218,25 @@ export class PlayerService {
     return await PlayerFetch.getLastOrphanClaimByDiscordId(profile.discord_id);
   }
 
-  public static async getFishByProfile(profile: Profile): Promise<Fish[]> {
-    return await PlayerFetch.getFishByDiscordId(profile.discord_id);
+  public static async getFishByProfile(
+    profile: Profile,
+    trophy: boolean = false
+  ): Promise<Fish[]> {
+    return await PlayerFetch.getFishByDiscordId(profile.discord_id, trophy);
   }
   public static async createFishByDiscordId(
     profile: Profile,
-    fish: string,
+    fishId: number,
     weight: number,
-    gender: "male" | "female" | "???"
+    weightModId: number,
+    identifier: string
   ): Promise<void> {
     return await PlayerUpdate.createFish(
       profile.discord_id,
-      fish,
+      fishId,
       weight,
-      gender
+      weightModId,
+      identifier
     );
   }
 
@@ -290,9 +295,37 @@ export class PlayerService {
   /*
       Fishing
                */
+  public static async getRandomFish(): Promise<{
+    id: number;
+    fish_name: string;
+    fish_weight: number;
+    emoji: string;
+  }> {
+    return await PlayerFetch.getRandomFish();
+  }
+
+  public static async getFishByUniqueId(id: string): Promise<Fish> {
+    return await PlayerFetch.getFishByUniqueId(id);
+  }
+  public static async getRandomWeightMod(): Promise<{
+    id: number;
+    mod_name: string;
+    multiplier: number;
+  }> {
+    return await PlayerFetch.getRandomWeightMod();
+  }
+
   public static async getNumberOfFishByprofile(
     profile: Profile
   ): Promise<number> {
     return await PlayerFetch.getNumberOfFishByProfile(profile.discord_id);
+  }
+
+  public static async makeFishTrophy(id: string): Promise<void> {
+    return await PlayerUpdate.makeFishTrophy(id);
+  }
+
+  public static async clearFish(owner: Profile): Promise<void> {
+    return await PlayerUpdate.clearFish(owner.discord_id);
   }
 }

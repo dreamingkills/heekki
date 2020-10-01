@@ -310,3 +310,9 @@ export class PendingFriendRequestError extends ClientError {
     super(`You already have a pending friend request with them.`);
   }
 }
+export class InvalidFishError extends ClientError {
+  name = "InvalidFishError";
+  constructor() {
+    super(`That fish does not exist.`);
+  }
+}

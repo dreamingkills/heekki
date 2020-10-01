@@ -1,18 +1,31 @@
 export class Fish {
-  ownerId: string;
+  identifier: string;
+  owner: string;
   name: string;
   weight: number;
   emoji: string;
+  modName: string;
+  multiplier: number;
+  price: number;
 
   constructor(data: {
-    discord_id: string;
-    fish_name: string;
-    fish_weight: number;
+    identifier: string;
+    owner: string;
+    name: string;
+    weight: number;
     emoji: string;
+    mod_name: string;
+    multiplier: number;
+    base_price: number;
+    price_multiplier: number;
   }) {
-    this.ownerId = data.discord_id;
-    this.name = data.fish_name;
-    this.weight = data.fish_weight;
+    this.identifier = data.identifier;
+    this.owner = data.owner;
+    this.name = data.name;
+    this.weight = data.weight;
     this.emoji = data.emoji;
+    this.modName = data.mod_name;
+    this.multiplier = data.multiplier;
+    this.price = Math.round(data.base_price * data.price_multiplier);
   }
 }
