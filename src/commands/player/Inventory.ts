@@ -20,7 +20,8 @@ export class Command extends BaseCommand {
       const { forSale } = await MarketService.cardIsOnMarketplace(c);
       const { level } = CardService.heartsToLevel(c.hearts);
       desc += `__**${c.abbreviation}#${c.serialNumber}**__ - ${c.member} ${
-        (c.isFavorite ? ":heart:" : "") + (forSale ? ":dollar:" : "")
+        (c.isFavorite ? "<:heekki_heart:757147742383505488>" : "") +
+        (forSale ? "<:cash:757146832639098930>" : "")
       }\nLevel **${level}** / ${":star:".repeat(c.stars)}\n`;
     }
     return desc;
