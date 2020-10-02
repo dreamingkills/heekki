@@ -11,8 +11,9 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    let price = parseInt(this.options[1]);
+    let price = parseFloat(this.options[1]);
     if (this.options[1].toLowerCase().endsWith("k")) price = price * 1000;
+    price = Math.round(price);
     if (!reference.serial) {
       msg.channel.send(
         `<:red_x:741454361007357993> Please specify a valid card reference.`

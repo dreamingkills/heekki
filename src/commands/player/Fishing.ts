@@ -71,6 +71,7 @@ export class Command extends BaseCommand {
 
     const interval = setInterval(async () => {
       if (fishingMsg.deleted) {
+        this.currentlyFishing.delete(msg.author.id);
         clearInterval(interval);
         return;
       }
@@ -120,6 +121,10 @@ export class Command extends BaseCommand {
         });
         collector.on("end", () => {
           this.currentlyFishing.delete(msg.author.id);
+          if (fishingMsg.deleted) {
+            clearInterval(interval);
+            return;
+          }
           if (!caughtFish) {
             successfulCatches++;
             fishingMsg.reactions.removeAll();
