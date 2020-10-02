@@ -8,7 +8,16 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["trivia"];
+  currentlyPlaying: Set<string> = new Set<string>();
+
   async exec(msg: Message, executor: Profile) {
+    if (this.currentlyPlaying.has(msg.author.id)) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Finish your current trivia before starting another!`
+      );
+      return;
+    }
+    this.currentlyPlaying.add(msg.author.id);
     const chance = new Chance();
     const triviaSelect = chance.pickone(trivia.trivia);
     const channel = msg.channel as TextChannel;
@@ -61,6 +70,7 @@ export class Command extends BaseCommand {
         executor,
         reason === "correct" ? true : false
       );
+      this.currentlyPlaying.delete(msg.author.id);
     });
   }
 }
