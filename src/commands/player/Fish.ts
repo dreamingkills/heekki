@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["fish"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     if (this.options[0]?.toLowerCase() === "sell") {
       const fish = await PlayerService.getFishByProfile(executor);
       if (fish.length === 0) {
@@ -44,7 +44,7 @@ export class Command extends BaseCommand {
         );
       } else {
         conf.edit(
-          `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
+          `<:red_x:741454361007357993> You did not react in time, so the transaction has been cancelled.`
         );
       }
       conf.reactions.removeAll();
@@ -155,5 +155,5 @@ export class Command extends BaseCommand {
       );
 
     await msg.channel.send(fishEmbed);
-  };
+  }
 }

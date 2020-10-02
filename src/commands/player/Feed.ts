@@ -6,7 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["upgrade"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
@@ -62,5 +62,5 @@ export class Command extends BaseCommand {
       .setFooter(`You now have ${executor.hearts - amount} hearts.`)
       .setColor("#FFAACC");
     msg.channel.send(embed);
-  };
+  }
 }

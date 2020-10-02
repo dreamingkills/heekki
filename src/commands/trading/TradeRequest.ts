@@ -2,10 +2,11 @@ import { Message } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { TradeService } from "../../database/service/TradeService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["trade"];
-  exec = async (msg: Message) => {
+  async exec(msg: Message, executor: Profile) {
     const refs = this.options.join(" ")?.split("for");
     if (!refs[0]) {
       msg.channel.send(
@@ -61,5 +62,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:white_check_mark: Created a trade request with **<@${tradeRequest.recipient}>**.\nTo accept the trade, they can run \`!accept ${tradeRequest.unique}\``
     );
-  };
+  }
 }

@@ -9,7 +9,7 @@ import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends BaseCommand {
   names: string[] = ["daily"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const last = await PlayerService.getLastDaily(executor);
     const now = Date.now();
     if (now < last + 86400000)
@@ -50,5 +50,5 @@ export class Command extends BaseCommand {
       .setFooter(`You can claim your daily reward again in 24 hours.`)
       .setColor(`#FFAACC`);
     msg.channel.send(embed);
-  };
+  }
 }

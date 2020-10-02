@@ -3,9 +3,9 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["docs", "help"];
-  exec = async function (msg: Message) {
+  async exec(msg: Message) {
     msg.channel.send(
       "**Heekki Documentation**\nhttps://olivia-hye.github.io/heekki-docs/"
     );
-  };
+  }
 }

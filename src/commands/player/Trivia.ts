@@ -8,7 +8,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["trivia"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const chance = new Chance();
     const triviaSelect = chance.pickone(trivia.trivia);
     const channel = msg.channel as TextChannel;
@@ -62,5 +62,5 @@ export class Command extends BaseCommand {
         reason === "correct" ? true : false
       );
     });
-  };
+  }
 }

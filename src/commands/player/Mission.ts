@@ -10,7 +10,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["mission"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     if (!this.options[0]) {
       msg.channel.send("<:red_x:741454361007357993> Please specify a card.");
       return;
@@ -86,5 +86,5 @@ export class Command extends BaseCommand {
       .setFooter(`You can do another mission in 45 minutes.`)
       .setColor(`FFAACC`);
     msg.channel.send(embed);
-  };
+  }
 }

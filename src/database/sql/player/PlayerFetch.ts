@@ -534,7 +534,7 @@ export class PlayerFetch extends DBClass {
     discordId: string
   ): Promise<number> {
     const query = (await DB.query(
-      `SELECT COUNT(*) AS count FROM fish WHERE owner_id=?;`,
+      `SELECT COUNT(*) AS count FROM fish WHERE owner_id=? AND trophy_fish=false;`,
       [discordId]
     )) as { count: number }[];
     return query[0].count;

@@ -27,26 +27,17 @@ export abstract class BaseCommand implements Command {
   flags: { [key: string]: string } = {};
 
   abstract async exec(msg: Message, executor: Profile): Promise<void>;
-  run: (msg: Message, executor: Profile) => Promise<void> = async (
-    msg: Message,
-    executor: Profile
-  ) => {
+  run = async (msg: Message, executor: Profile): Promise<void> => {
     this.options = msg.content
       .split(" ")
       .slice(1)
       .filter((e) => e);
-
-    const flags = this.options.filter((o) => {
-      if (o.includes("=")) return o;
-    });
-
     return this.exec(msg, executor);
   };
 
   public parseMention: (query: string) => string = (query: string): string => {
     return query.replace(/[\\<>@#&!]/g, "");
   };
-
   public commafyNumber(num: number) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }

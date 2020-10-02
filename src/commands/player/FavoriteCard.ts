@@ -7,11 +7,17 @@ import { UserCard } from "../../structures/player/UserCard";
 
 export class Command extends BaseCommand {
   names: string[] = ["favorite", "fav"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
+    if (!reference.serial) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Please specify a valid card reference.`
+      );
+      return;
+    }
 
     const card = await CardService.getCardDataFromReference(reference);
     if (card.ownerId !== executor.discord_id) {
@@ -29,5 +35,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:white_check_mark: ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
     );
-  };
+  }
 }

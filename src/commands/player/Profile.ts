@@ -6,7 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["profile", "p"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     let userQuery: Profile;
     if (this.options[0]) {
       if (msg.mentions.users.first()) {
@@ -48,5 +48,5 @@ export class Command extends BaseCommand {
       cardCount
     );
     msg.channel.send(embed);
-  };
+  }
 }

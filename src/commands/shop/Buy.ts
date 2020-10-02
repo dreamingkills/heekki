@@ -10,7 +10,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
   names: string[] = ["buypack", "bp"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const packName = this.options.join(" ");
     if (!packName) {
       msg.channel.send(
@@ -71,5 +71,5 @@ export class Command extends BaseCommand {
     embed.attachFiles([{ name: "card.png", attachment: image }]);
 
     msg.channel.send(embed);
-  };
+  }
 }

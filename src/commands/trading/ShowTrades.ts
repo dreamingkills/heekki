@@ -1,10 +1,11 @@
 import { Message, MessageEmbed } from "discord.js";
 import { TradeService } from "../../database/service/TradeService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["trades"];
-  exec = async (msg: Message) => {
+  async exec(msg: Message, executor: Profile) {
     const trades = await TradeService.getTradeRequests(msg.author.id);
 
     const singleTrades = trades.filter(
@@ -32,5 +33,5 @@ export class Command extends BaseCommand {
       .setFooter(`To accept a trade, use !accept <trade id>`)
       .setColor(`#FFAACC`);
     msg.channel.send(embed);
-  };
+  }
 }

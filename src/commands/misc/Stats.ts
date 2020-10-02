@@ -7,7 +7,7 @@ import moment from "moment";
 
 export class Command extends BaseCommand {
   names: string[] = ["stats"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     if (this.options[0] === "me") {
       const stats = await StatsService.getUserStats(executor);
       const embed = new MessageEmbed()
@@ -76,5 +76,5 @@ export class Command extends BaseCommand {
       true
     );
     msg.channel.send(embed);
-  };
+  }
 }

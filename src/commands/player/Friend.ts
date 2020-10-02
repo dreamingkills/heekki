@@ -42,7 +42,7 @@ export class Command extends BaseCommand {
     return tags.join("\n");
   }
 
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     switch (this.options[0]?.toLowerCase()) {
       case "add": {
         if (!this.options[1]) {
@@ -248,7 +248,7 @@ export class Command extends BaseCommand {
                 )
             );
           } else if (r.emoji.name === "delete") {
-            return (<TextChannel>msg.channel).bulkDelete([msg, sent]);
+            (<TextChannel>msg.channel).bulkDelete([msg, sent]);
           } else if (r.emoji.name === "▶️" && page !== pageLimit) {
             page++;
             const newFriends = await FriendService.getFriendsByProfile(
@@ -308,5 +308,6 @@ export class Command extends BaseCommand {
         `**Friends on Heekki**\nYou can add friends to receive hearts from them whenever they send them. To send your friends some hearts, you can use \`!send\` - this comes at no cost to you.\n- To send or accept a friend request, use \`!friend add\`.\n- To unfriend or reject a friend request, use \`!friend remove\`.\n\n**Subcommands**\n\`\`\`!friend add <user>\n!friend remove <user>\n!friend list\n!friend requests\`\`\``
       );
     msg.channel.send(helpEmbed);
-  };
+    return;
+  }
 }

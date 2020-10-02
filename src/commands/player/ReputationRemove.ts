@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["unrep"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
       msg.channel.send(`:x: Please mention a user!`);
       return;
@@ -33,5 +33,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:white_check_mark: You revoked your reputation point from **${receiverUser.tag}**!`
     );
-  };
+  }
 }

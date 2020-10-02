@@ -6,7 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["timers", "t"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const now = moment(Date.now());
     const timeUntilDaily = moment(
       (await PlayerService.getLastDaily(executor)) + 86400000
@@ -55,5 +55,5 @@ export class Command extends BaseCommand {
       );
 
     msg.channel.send(embed);
-  };
+  }
 }

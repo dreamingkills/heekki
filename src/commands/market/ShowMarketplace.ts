@@ -25,7 +25,7 @@ export class Command extends BaseCommand {
     });
   }
 
-  exec = async (msg: Message) => {
+  async exec(msg: Message) {
     const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
@@ -146,5 +146,6 @@ export class Command extends BaseCommand {
     collector.on("end", async () => {
       if (!sent.deleted) sent.reactions.removeAll();
     });
-  };
+    return;
+  }
 }

@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["packs"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     let page = this.options[0] ? parseInt(this.options[0]) : 1;
 
     let packsRaw = await ShopService.getAllShopItems(true);
@@ -32,5 +32,5 @@ export class Command extends BaseCommand {
       .setThumbnail(msg.author.displayAvatarURL());
 
     msg.channel.send(embed);
-  };
+  }
 }

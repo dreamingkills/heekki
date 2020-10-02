@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["bulkforfeit", "bff"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     let starCount = parseInt(this.options[0]?.split("<")[1]);
 
     if (isNaN(starCount)) {
@@ -50,5 +50,5 @@ export class Command extends BaseCommand {
       );
       conf.reactions.removeAll();
     }
-  };
+  }
 }

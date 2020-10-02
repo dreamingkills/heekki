@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["desc"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     let user = await PlayerService.changeProfileDescriptionByDiscordId(
       executor,
       this.options.join(" ")
@@ -14,5 +14,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:white_check_mark: Your description was updated to:\n\`${user.new}\``
     );
-  };
+  }
 }

@@ -11,7 +11,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
   names: string[] = ["claimforfeit", "cf"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const lastForfeit = await PlayerService.getLastOrphanClaim(executor);
     const now = Date.now();
     if (now < lastForfeit + 7200000)
@@ -33,9 +33,8 @@ export class Command extends BaseCommand {
 
     await UserCardService.transferCardToProfile(executor, targetCard);
     await PlayerService.setLastOrphanClaim(executor, now);
-
     msg.channel.send(
       `:white_check_mark: You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **2 hours**.`
     );
-  };
+  }
 }

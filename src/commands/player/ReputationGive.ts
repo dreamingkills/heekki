@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["rep"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
       msg.channel.send(`:x: Please mention a user!`);
       return;
@@ -35,5 +35,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:white_check_mark: You gave a reputation point to **${receiverUser.tag}**!`
     );
-  };
+  }
 }

@@ -1,15 +1,12 @@
-import { Cipher } from "crypto";
-import { Message, MessageAttachment, MessageEmbed } from "discord.js";
-import { CardService } from "../../database/service/CardService";
+import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
-import { ShopService } from "../../database/service/ShopService";
 import { StatsService } from "../../database/service/StatsService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["top"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     let embed = new MessageEmbed();
     let description = "";
     switch (this.options[0]?.toLowerCase()) {
@@ -91,5 +88,5 @@ export class Command extends BaseCommand {
     embed.setDescription(description);
     embed.setColor(`#FFAACC`);
     msg.channel.send(embed);
-  };
+  }
 }

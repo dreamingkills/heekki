@@ -2,16 +2,11 @@ import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
-import {
-  NotYourCardError,
-  CardOnMarketplaceError,
-  CardInTradeError,
-} from "../../structures/Error";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["forfeit", "ff"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
@@ -49,5 +44,5 @@ export class Command extends BaseCommand {
       );
     }
     conf.reactions.removeAll();
-  };
+  }
 }

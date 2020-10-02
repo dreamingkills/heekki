@@ -12,7 +12,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["card", "show"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
@@ -58,5 +58,5 @@ export class Command extends BaseCommand {
         (<TextChannel>msg.channel).bulkDelete([sent, msg])
       );
     }
-  };
+  }
 }

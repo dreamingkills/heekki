@@ -6,7 +6,7 @@ import Chance from "chance";
 
 export class Command extends BaseCommand {
   names: string[] = ["heartbox", "hb"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const hb = await PlayerService.openHeartBoxes(executor);
 
     const chance = new Chance();
@@ -25,5 +25,5 @@ export class Command extends BaseCommand {
       )
       .setColor(`#FFAACC`);
     msg.channel.send(embed);
-  };
+  }
 }

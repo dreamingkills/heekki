@@ -3,7 +3,7 @@ import { Message } from "discord.js";
 
 export class Command extends BaseCommand {
   names: string[] = ["ping", "pong"];
-  exec = async function (msg: Message) {
+  async exec(msg: Message) {
     msg.channel.send("Hello!");
-  };
+  }
 }

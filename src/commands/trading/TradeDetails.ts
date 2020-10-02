@@ -2,10 +2,11 @@ import { Message, MessageEmbed } from "discord.js";
 import { TradeService } from "../../database/service/TradeService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["showtrade", "st"];
-  exec = async (msg: Message) => {
+  async exec(msg: Message, executor: Profile) {
     const tradeCards = await TradeService.getTradeByUnique(this.options[0]);
     let transferData = [];
     for (let trade of tradeCards) {
@@ -51,5 +52,5 @@ export class Command extends BaseCommand {
       .setColor(`#FFAACC`);
 
     msg.channel.send(embed);
-  };
+  }
 }

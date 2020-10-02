@@ -8,7 +8,7 @@ import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["send"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const last = await PlayerService.getLastHeartSend(executor);
     const now = Date.now();
     if (now < last + 3600000) {
@@ -35,5 +35,6 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `<:heekki_heart:757147742383505488> You've sent hearts to **${friends.length}** friends!\n+ **${xp}** XP`
     );
-  };
+    return;
+  }
 }

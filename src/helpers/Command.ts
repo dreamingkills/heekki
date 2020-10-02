@@ -8,7 +8,6 @@ import { PlayerService } from "../database/service/PlayerService";
 export class CommandManager {
   commands: BaseCommand[] = [];
   cooldown: Set<string> = new Set<string>();
-  concurrence: Set<string> = new Set<string>();
 
   constructor() {}
   async init(): Promise<BaseCommand[]> {
@@ -58,16 +57,9 @@ export class CommandManager {
       );
       return;
     }
-    if (this.concurrence.has(msg.author.id)) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> Wait for the current command to finish before using another.`
-      );
-      return;
-    }
 
     try {
       this.cooldown.add(msg.author.id);
-      //this.concurrence.add(msg.author.id);
       setTimeout(() => {
         this.cooldown.delete(msg.author.id);
       }, 1500);
@@ -76,9 +68,7 @@ export class CommandManager {
         msg.author.id,
         true
       );
-      await cmd.run(msg, profile).then(() => {
-        //this.concurrence.delete(msg.author.id);
-      });
+      await cmd.run(msg, profile);
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
       if (!e.isClientFacing) console.log(`${e.message}\n${e.stack}`);

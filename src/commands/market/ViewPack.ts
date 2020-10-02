@@ -9,7 +9,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["pack", "viewpack", "vp"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     if (!this.options[0]) {
       msg.channel.send(
         "<:red_x:741454361007357993> Please specify a pack to view."
@@ -111,5 +111,6 @@ export class Command extends BaseCommand {
       embed,
       files: [{ attachment: pack.cover, name: "cover.png" }],
     });
-  };
+    return;
+  }
 }

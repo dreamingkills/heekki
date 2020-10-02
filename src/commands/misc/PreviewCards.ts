@@ -12,7 +12,7 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["preview"];
-  exec = async (msg: Message) => {
+  async exec(msg: Message) {
     const references = this.options.filter((p) => p.includes("#")).slice(0, 9);
     const cardList = await Promise.all(
       references.map(async (p) => {
@@ -60,5 +60,5 @@ export class Command extends BaseCommand {
         (<TextChannel>msg.channel).bulkDelete([sent, msg])
       );
     }
-  };
+  }
 }

@@ -9,7 +9,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["gift"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const references = this.options.filter((p) => p.includes("#"));
     const cardList = await Promise.all(
       references.map(async (p) => {
@@ -93,5 +93,5 @@ export class Command extends BaseCommand {
     confirmation.edit(
       `:white_check_mark: Gifted **${validCards.length}** cards to **${mention.tag}**!`
     );
-  };
+  }
 }

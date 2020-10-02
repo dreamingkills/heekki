@@ -6,6 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
+  currentlyFishing: Set<string> = new Set<string>();
 
   private async generateFish(): Promise<{
     id: number;
@@ -40,7 +41,20 @@ export class Command extends BaseCommand {
     };
   }
 
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
+    if (this.currentlyFishing.has(msg.author.id)) {
+      msg.channel.send("<:red_x:741454361007357993> You're already fishing!");
+      return;
+    }
+    const numberOfFish = await PlayerService.getNumberOfFishByprofile(executor);
+    if (numberOfFish >= 10) {
+      msg.channel.send(
+        `<:red_x:741454361007357993> Your fish inventory is full!\nUse \`!fish sell\` to sell your fish.`
+      );
+      return;
+    }
+
+    this.currentlyFishing.add(msg.author.id);
     const fishingEmbed = new MessageEmbed()
       .setAuthor(`Fishing | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
@@ -53,11 +67,13 @@ export class Command extends BaseCommand {
 
     const chance = new Chance();
     let caughtFish = false;
-    const lineBreakMultiplier = 1; // Upgradable lineBreakMultiplier to reduce chance of line breaking?
     let successfulCatches = 0;
 
     const interval = setInterval(async () => {
-      if (fishingMsg.deleted) clearInterval(interval);
+      if (fishingMsg.deleted) {
+        clearInterval(interval);
+        return;
+      }
 
       const isFish = chance.integer({ min: 1, max: 4 }) === 2 ? true : false;
       if (isFish) {
@@ -74,18 +90,6 @@ export class Command extends BaseCommand {
           time: 3000,
         });
         collector.on("collect", async () => {
-          const numberOfFish = await PlayerService.getNumberOfFishByprofile(
-            executor
-          );
-          if (numberOfFish >= 10) {
-            fishingMsg.edit(
-              `<:red_x:741454361007357993> You're holding too many fish!`,
-              { embed: undefined }
-            );
-            clearInterval(interval);
-            collector.stop("full");
-            return;
-          }
           clearInterval(interval);
           caughtFish = true;
           const caught = await this.generateFish();
@@ -103,7 +107,7 @@ export class Command extends BaseCommand {
                 )}kg\n+ **${xp}** XP`
               )
               .setColor(`#40BD66`)
-              .setFooter(``)
+              .setFooter(`You now have ${numberOfFish + 1} fish.`)
           );
           PlayerService.createFishByDiscordId(
             executor,
@@ -112,11 +116,10 @@ export class Command extends BaseCommand {
             caught.weightMod.id,
             caught.identifier
           );
-
-          collector.stop("success");
+          collector.stop();
         });
-        collector.on("end", (reason: string) => {
-          if (reason === "full") return;
+        collector.on("end", () => {
+          this.currentlyFishing.delete(msg.author.id);
           if (!caughtFish) {
             successfulCatches++;
             fishingMsg.reactions.removeAll();
@@ -129,7 +132,6 @@ export class Command extends BaseCommand {
                   )
                   .setColor(`#D90011`)
               );
-              return;
             } else {
               fishingMsg.edit(
                 fishingEmbed
@@ -143,5 +145,5 @@ export class Command extends BaseCommand {
         });
       }
     }, 3000);
-  };
+  }
 }

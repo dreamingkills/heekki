@@ -5,7 +5,7 @@ import { Chance } from "chance";
 export class Command extends BaseCommand {
   names: string[] = ["sim"];
   users: string[] = ["197186779843919877"];
-  exec = async (msg: Message) => {
+  async exec(msg: Message) {
     const loopTime = parseInt(this.options[0]);
     if (isNaN(loopTime)) {
       msg.channel.send("Enter a valid number.");
@@ -48,5 +48,5 @@ export class Command extends BaseCommand {
         after - now
       }**ms.`
     );
-  };
+  }
 }

@@ -7,7 +7,6 @@ import {
   TextChannel,
 } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
-import { StatsService } from "../../database/service/StatsService";
 import { UserCard } from "../../structures/player/UserCard";
 import { BaseCommand } from "../../structures/command/Command";
 
@@ -24,7 +23,7 @@ export class Command extends BaseCommand {
     }
     return temp.fields;
   }
-  exec = async (msg: Message) => {
+  async exec(msg: Message) {
     const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
@@ -144,5 +143,5 @@ export class Command extends BaseCommand {
     collector.on("end", async () => {
       if (!sent.deleted) sent.reactions.removeAll();
     });
-  };
+  }
 }

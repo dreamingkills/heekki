@@ -6,11 +6,13 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["sell"];
-  exec = async (msg: Message, executor: Profile) => {
+  async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
+    let price = parseInt(this.options[1]);
+    if (this.options[1].toLowerCase().endsWith("k")) price = price * 1000;
     if (!reference.serial) {
       msg.channel.send(
         `<:red_x:741454361007357993> Please specify a valid card reference.`
@@ -37,15 +39,15 @@ export class Command extends BaseCommand {
       );
       return;
     }
-    if (isNaN(parseInt(this.options[1]))) {
+    if (isNaN(price)) {
       msg.channel.send("<:red_x:741454361007357993> Please specify a price.");
       return;
     }
 
-    await MarketService.sellCard(parseInt(this.options[1]), card);
+    await MarketService.sellCard(price, card);
 
     msg.channel.send(
-      `:white_check_mark: You've listed **${card.abbreviation}#${card.serialNumber}** on the Marketplace for <:cash:757146832639098930> **${this.options[1]}**.`
+      `:white_check_mark: You've listed **${card.abbreviation}#${card.serialNumber}** on the Marketplace for <:cash:757146832639098930> **${price}**.`
     );
-  };
+  }
 }

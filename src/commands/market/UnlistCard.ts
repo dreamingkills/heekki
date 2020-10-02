@@ -6,7 +6,7 @@ import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["unlist"];
-  exec = async (msg: Message) => {
+  async exec(msg: Message) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
@@ -28,5 +28,5 @@ export class Command extends BaseCommand {
     msg.channel.send(
       `:white_check_mark: You've removed the listing for **${card.abbreviation}#${card.serialNumber}** from the Marketplace.`
     );
-  };
+  }
 }
