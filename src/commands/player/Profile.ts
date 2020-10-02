@@ -19,7 +19,7 @@ export class Command extends BaseCommand {
         });
         if (!member?.firstKey()) {
           msg.channel.send(
-            `<:no:757129594246791290> Sorry, but I couldn't find that user.`
+            `<:red_x:741454361007357993> Sorry, but I couldn't find that user.`
           );
           return;
         }
@@ -31,7 +31,9 @@ export class Command extends BaseCommand {
 
     const discordUser = msg.client.users.resolve(userQuery.discord_id);
     if (!discordUser) {
-      msg.channel.send(`:x: Sorry, but I couldn't find that user.`);
+      msg.channel.send(
+        `<:red_x:741454361007357993> Sorry, but I couldn't find that user.`
+      );
       return;
     }
     const badges = await PlayerService.getBadgesByProfile(userQuery);

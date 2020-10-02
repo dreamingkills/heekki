@@ -84,6 +84,7 @@ export class Command extends BaseCommand {
             );
             clearInterval(interval);
             collector.stop("full");
+            return;
           }
           clearInterval(interval);
           caughtFish = true;
