@@ -37,11 +37,26 @@ export class FriendFetch extends DBClass {
     discord_id: string,
     page: number
   ): Promise<Friend[]> {
-    console.log(page);
     const friends = (await DB.query(
       `SELECT * FROM friend WHERE (sender_id=? OR friend_id=?) AND confirmed=1 LIMIT 20 OFFSET ${
         page * 20 - 20
       };`,
+      [discord_id, discord_id]
+    )) as {
+      relationship_id: number;
+      sender_id: string;
+      friend_id: string;
+      confirmed: boolean;
+    }[];
+
+    return friends.map((f) => {
+      return new Friend(f);
+    });
+  }
+
+  public static async getAllFriends(discord_id: string): Promise<Friend[]> {
+    const friends = (await DB.query(
+      `SELECT * FROM friend WHERE (sender_id=? OR friend_id=?) AND confirmed=1;`,
       [discord_id, discord_id]
     )) as {
       relationship_id: number;

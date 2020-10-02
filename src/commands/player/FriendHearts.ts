@@ -14,7 +14,7 @@ export class Command extends BaseCommand {
     if (now < last + 3600000) {
       throw new error.SendHeartsCooldownError(last + 3600000, now);
     }
-    const friendsRaw = await FriendService.getFriendsByProfile(executor);
+    const friendsRaw = await FriendService.getAllFriends(executor);
     const friends = friendsRaw.map((f) => {
       return f.sender === msg.author.id ? f.recipient : f.sender;
     });

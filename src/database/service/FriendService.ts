@@ -15,6 +15,7 @@ export class FriendService {
       friendTwo.discord_id
     );
   }
+
   public static async getFriendsByProfile(
     profile: Profile,
     page: number = 1
@@ -24,6 +25,10 @@ export class FriendService {
       page
     );
     return friends;
+  }
+
+  public static async getAllFriends(profile: Profile): Promise<Friend[]> {
+    return await FriendFetch.getAllFriends(profile.discord_id);
   }
 
   public static async getNumberOfFriendsByProfile(
