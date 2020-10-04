@@ -2,12 +2,12 @@ import { Message, MessageEmbed } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
-  names: string[] = ["docs", "help"];
+  names: string[] = ["help", "docs"];
   async exec(msg: Message): Promise<void> {
     const topic = this.options.join(" ").toLowerCase();
     let header;
     let description;
-    let footer;
+    let footer = "";
 
     switch (topic) {
       case "overview":
@@ -20,6 +20,8 @@ export class Command extends BaseCommand {
           `\n!help friends` +
           `\n!help hearts` +
           `\n!help xp` +
+          `\n!help marketplace` +
+          `\n!help trading` +
           `\n\`\`\`` +
           `\nYou can use \`!help topics\` to see a complete list.\n` +
           `\n:warning: **Find a bug? Need further help?**` +
@@ -27,7 +29,6 @@ export class Command extends BaseCommand {
           `\nYou can also attach an image to your ticket.` +
           `\n:scientist: **Official Heekki Server**` +
           `\nhttps://discord.gg/KbcQjRG`;
-        footer = "";
         break;
       }
       case "friends": {
@@ -43,7 +44,6 @@ export class Command extends BaseCommand {
           `\n\`\`\`` +
           `\n**Sending Hearts**` +
           `\nTo send hearts to your friends, you can use \`!send\` once per hour. Hearts that your friends have sent to you will automatically be deposited into your profile!`;
-        footer = "";
         break;
       }
       case "topics": {
@@ -51,8 +51,7 @@ export class Command extends BaseCommand {
         description =
           `You can use \`!help <topic>\` to learn more information about something!\n` +
           `\n__**Profile**__` +
-          `\n\`friends\`, \`hearts\`, \`xp\``;
-        footer = "";
+          `\n\`friends\`, \`hearts\`, \`xp\`, \`marketplace\``;
         break;
       }
       case "hearts": {
@@ -66,7 +65,6 @@ export class Command extends BaseCommand {
           `\n__**How do I use hearts?**__` +
           `\nYou can upgrade your cards by using \`!upgrade <card> <amount>\`.` +
           `\nExample: \`!upgrade DLHJ#32 300\``;
-        footer = "";
         break;
       }
       case "xp": {
@@ -77,7 +75,26 @@ export class Command extends BaseCommand {
           `\nExperience points do not currently do anything.\n` +
           `\n__**Who has the most XP?**__` +
           `\nYou can see the top users by XP by using \`!top xp\`!`;
-        footer = "";
+        break;
+      }
+      case "marketplace": {
+        header = "Marketplace";
+        description =
+          `The **Marketplace** (MP) is a place where you can sell your cards to other users for <:cash:757146832639098930> Cash.\n` +
+          `\n**Command List**` +
+          `\n\`\`\`` +
+          `\n!mp - Shows you the MP.` +
+          `\n!mp sell <card> <price> - Lists a card on MP.` +
+          `\n!mp unsell <card> - Removes a card listing from the MP.` +
+          `\n!mp buy <card> - Buys a card from the MP.` +
+          `\n\`\`\``;
+        break;
+      }
+      case "trading": {
+        header = "Trading";
+        description =
+          `**Trading** is a means to exchange cards between you and someone else.` +
+          `\n:warning: **Notice**: Trading is temporarily disabled for bug fixing and revamping.`;
         break;
       }
       default: {
@@ -85,7 +102,6 @@ export class Command extends BaseCommand {
         description =
           `\nSorry, I couldn't find that topic.` +
           `\nUse \`!help topics\` to see a list of topics.`;
-        footer = "";
       }
     }
 
