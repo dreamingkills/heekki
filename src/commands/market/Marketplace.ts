@@ -46,7 +46,7 @@ export class Command extends BaseCommand {
         })
       )
       .setFooter(
-        `To buy a card, use !bc <card reference>.\nTo change pages, click the arrow reactions.`
+        `To buy a card, use !mp buy <card reference>.\nTo change pages, click the arrow reactions.`
       )
       .setColor(`#FFAACC`);
     return embed;
