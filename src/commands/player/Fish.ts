@@ -38,9 +38,7 @@ export class Command extends BaseCommand {
         conf.edit(
           `:white_check_mark: Sold **${
             fish.length
-          }** fish on the market.\n+ <:cash:757146832639098930> **${this.commafyNumber(
-            totalPrice
-          )}**`
+          }** fish on the market.\n+ <:cash:757146832639098930> **${totalPrice.toLocaleString()}**`
         );
       } else {
         conf.edit(

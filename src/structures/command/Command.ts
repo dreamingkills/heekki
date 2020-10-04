@@ -7,38 +7,32 @@ export interface Command {
 
   exec(msg: Message, executor: Profile): Promise<void>;
 
-  hidden?: boolean;
   disabled?: boolean;
   roles?: string[];
   users?: string[];
-  deletable?: boolean;
 }
 
 export abstract class BaseCommand implements Command {
   names: string[] = [];
 
-  hidden: boolean = false;
   disabled: boolean = false;
-  roles: string[] | undefined = undefined;
-  users: string[] | undefined = undefined;
-  deletable: boolean = false;
+  roles?: string[];
+  users?: string[];
 
   options: string[] = [];
   flags: { [key: string]: string } = {};
 
   abstract async exec(msg: Message, executor: Profile): Promise<void>;
-  run = async (msg: Message, executor: Profile): Promise<void> => {
+
+  public async run(msg: Message, executor: Profile): Promise<void> {
     this.options = msg.content
       .split(" ")
       .slice(1)
       .filter((e) => e);
-    return this.exec(msg, executor);
-  };
+    return await this.exec(msg, executor);
+  }
 
-  public parseMention: (query: string) => string = (query: string): string => {
+  public parseMention(query: string): string {
     return query.replace(/[\\<>@#&!]/g, "");
-  };
-  public commafyNumber(num: number) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 }

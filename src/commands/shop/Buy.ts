@@ -66,7 +66,8 @@ export class Command extends BaseCommand {
         `${newCard.abbreviation + "#" + newCard.serialNumber} • Rolled by ${
           msg.author.tag
         } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
-      );
+      )
+      .setThumbnail(`attachment://card.png`);
 
     embed.attachFiles([{ name: "card.png", attachment: image }]);
 

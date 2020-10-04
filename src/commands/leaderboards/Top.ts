@@ -18,14 +18,14 @@ export class Command extends BaseCommand {
           const user = msg.client.users.cache.get(profile.discord_id);
           description += `${richestUsers.indexOf(profile) + 1}) **${
             user?.username
-          }** (${this.commafyNumber(profile.coins)} cash)\n`;
+          }** (${profile.coins.toLocaleString()} cash)\n`;
         }
         embed.setAuthor(
           `Coins Leaderboard | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         );
         embed.setFooter(
-          `There are ${this.commafyNumber(totalCoins)} coins in circulation.`
+          `There are ${totalCoins.toLocaleString()} coins in circulation.`
         );
         break;
       }
@@ -36,14 +36,14 @@ export class Command extends BaseCommand {
           const user = msg.client.users.cache.get(profile.profile.discord_id);
           description += `${topCollectors.indexOf(profile) + 1}) **${
             user?.username
-          }** (${this.commafyNumber(profile.count)} cards)\n`;
+          }** (${profile.count.toLocaleString()} cards)\n`;
         }
         embed.setAuthor(
           `Cards Leaderboard | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         );
         embed.setFooter(
-          `There are ${this.commafyNumber(totalCards)} cards in existence.`
+          `There are ${totalCards.toLocaleString()} cards in existence.`
         );
         break;
       }
@@ -54,16 +54,14 @@ export class Command extends BaseCommand {
           const user = msg.client.users.cache.get(profile.discord_id);
           description += `${topHearts.indexOf(profile) + 1}) **${
             user?.username
-          }** (${this.commafyNumber(profile.hearts)} hearts)\n`;
+          }** (${profile.hearts.toLocaleString()} hearts)\n`;
         }
         embed.setAuthor(
           `Hearts Leaderboard | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         );
         embed.setFooter(
-          `There are ${this.commafyNumber(
-            totalHearts
-          )} hearts in existence (excluding card hearts)`
+          `There are ${totalHearts.toLocaleString()} hearts in existence (excluding card hearts)`
         );
         break;
       }
@@ -74,14 +72,14 @@ export class Command extends BaseCommand {
           const user = msg.client.users.cache.get(profile.discord_id);
           description += `${topXp.indexOf(profile) + 1}) **${
             user?.username || "Unknown User"
-          }** (${this.commafyNumber(profile.xp)} XP)\n`;
+          }** (${profile.xp.toLocaleString()} XP)\n`;
         }
         embed.setAuthor(
           `XP Leaderboard | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         );
         embed.setFooter(
-          `There are ${this.commafyNumber(totalXp)} total experience points.`
+          `There are ${totalXp.toLocaleString()} total experience points.`
         );
       }
     }

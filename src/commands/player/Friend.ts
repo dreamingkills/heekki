@@ -31,7 +31,7 @@ export class Command extends BaseCommand {
     for (const friend of friendIds) {
       tags.push(
         `${
-          (await client.users.fetch(friend)) || `Unknown User (${friend})`
+          (await client.users.fetch(friend)).tag || `Unknown User (${friend})`
         } - **${
           friendCounts.filter((r) => {
             return r.sender_id === friend;

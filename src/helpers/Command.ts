@@ -20,7 +20,7 @@ export class CommandManager {
       if (current.Command) {
         let cmd = new current.Command();
         if (cmd.disabled) continue;
-        this.commands.push({ ...cmd });
+        this.commands.push(cmd);
       }
     }
     return this.commands;
