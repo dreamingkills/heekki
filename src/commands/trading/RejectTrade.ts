@@ -6,9 +6,9 @@ import { Profile } from "../../structures/player/Profile";
 export class Command extends BaseCommand {
   names: string[] = ["reject"];
   async exec(msg: Message, executor: Profile) {
-    const tradeId = this.options[0];
+    /*const tradeId = this.options[0];
 
     await TradeService.cancelTrade(tradeId, msg.author.id);
-    msg.channel.send(`:white_check_mark: Cancelled trade **${tradeId}**!`);
+    msg.channel.send(`:white_check_mark: Cancelled trade **${tradeId}**!`);*/
   }
 }

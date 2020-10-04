@@ -6,7 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 export class Command extends BaseCommand {
   names: string[] = ["trades"];
   async exec(msg: Message, executor: Profile) {
-    const trades = await TradeService.getTradeRequests(msg.author.id);
+    /*const trades = await TradeService.getTradeRequests(msg.author.id);
 
     const singleTrades = trades.filter(
       (v, i, a) => a.findIndex((t) => t.unique === v.unique) === i
@@ -32,6 +32,6 @@ export class Command extends BaseCommand {
       )
       .setFooter(`To accept a trade, use !accept <trade id>`)
       .setColor(`#FFAACC`);
-    msg.channel.send(embed);
+    msg.channel.send(embed);*/
   }
 }

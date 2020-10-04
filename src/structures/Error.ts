@@ -19,6 +19,16 @@ export class UnknownError extends Error {
 }
 
 /*
+    Discord Errors
+                    */
+export class InvalidMemberError extends ClientError {
+  name = "InvalidMemberError";
+  constructor() {
+    super("Sorry, but I couldn't find that person.");
+  }
+}
+
+/*
     Profile Errors
                     */
 export class NoProfileError extends ClientError {

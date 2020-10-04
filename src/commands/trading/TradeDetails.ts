@@ -7,7 +7,7 @@ import { Profile } from "../../structures/player/Profile";
 export class Command extends BaseCommand {
   names: string[] = ["showtrade", "st"];
   async exec(msg: Message, executor: Profile) {
-    const tradeCards = await TradeService.getTradeByUnique(this.options[0]);
+    /*const tradeCards = await TradeService.getTradeByUnique(this.options[0]);
     let transferData = [];
     for (let trade of tradeCards) {
       if (trade.senderCard === 0) {
@@ -51,6 +51,6 @@ export class Command extends BaseCommand {
       )
       .setColor(`#FFAACC`);
 
-    msg.channel.send(embed);
+    msg.channel.send(embed);*/
   }
 }

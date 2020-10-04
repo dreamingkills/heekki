@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+/*import { Message } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { TradeService } from "../../database/service/TradeService";
 import { BaseCommand } from "../../structures/command/Command";
@@ -64,3 +64,4 @@ export class Command extends BaseCommand {
     );
   }
 }
+*/
