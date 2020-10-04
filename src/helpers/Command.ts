@@ -4,6 +4,7 @@ import glob from "glob";
 import { Message } from "discord.js";
 import { promisify } from "util";
 import { PlayerService } from "../database/service/PlayerService";
+import * as error from "../structures/Error";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
@@ -68,6 +69,8 @@ export class CommandManager {
         msg.author.id,
         true
       );
+      if (profile.restricted) throw new error.RestrictedUserError();
+
       await cmd.run(msg, profile);
     } catch (e) {
       msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);

@@ -23,14 +23,16 @@ export class UserCardService {
     card: Card,
     stars: number,
     hearts: number,
-    force: boolean = false
+    force: boolean = false,
+    price: number
   ): Promise<UserCard> {
     return await CardUpdate.createNewUserCard(
-      profile.discord_id,
+      profile,
       card,
       stars,
       hearts,
-      force
+      force,
+      price
     );
   }
 
@@ -38,15 +40,8 @@ export class UserCardService {
     await CardUpdate.toggleCardAsFavorite(card.userCardId);
   }
 
-  public static async forfeitCard(
-    user: string,
-    card: UserCard
-  ): Promise<UserCard> {
-    if (user != card.ownerId) throw new error.NotYourCardError();
-    if (card.isFavorite) throw new error.FavoriteCardError();
-
+  public static async forfeitCard(user: string, card: UserCard): Promise<void> {
     await CardUpdate.forfeitCard(card);
-    return card;
   }
 
   public static async forfeitBulkUnderStars(

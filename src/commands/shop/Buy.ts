@@ -43,9 +43,10 @@ export class Command extends BaseCommand {
       executor,
       randomCard,
       starCount,
-      0
+      0,
+      false,
+      pack.price
     );
-    await PlayerService.removeCoinsFromProfile(executor, pack.price);
 
     const imageData = await CardService.getImageDataFromCard(newCard);
     const image = await CardService.generateCardImageFromUserCard(

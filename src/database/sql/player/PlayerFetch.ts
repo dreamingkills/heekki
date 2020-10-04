@@ -32,6 +32,7 @@ export class PlayerFetch extends DBClass {
       daily_streak: number;
       daily_last: number;
       xp: number;
+      restricted: boolean;
     }[];
     if (!user[0] && !autoGenerate) throw new error.NoProfileError();
     if (!user[0]) {
@@ -409,6 +410,7 @@ export class PlayerFetch extends DBClass {
       daily_streak: number;
       daily_last: number;
       xp: number;
+      restricted: boolean;
     }[];
 
     return query.map((p) => {
@@ -428,6 +430,7 @@ export class PlayerFetch extends DBClass {
       daily_streak: number;
       daily_last: number;
       xp: number;
+      restricted: boolean;
     }[];
     return query.map((p) => {
       return new Profile(p);
@@ -449,6 +452,7 @@ export class PlayerFetch extends DBClass {
       daily_last: number;
       xp: number;
       counted: number;
+      restricted: boolean;
     }[];
     return query.map((p) => {
       return { profile: new Profile(p), count: p.counted };
@@ -467,6 +471,7 @@ export class PlayerFetch extends DBClass {
       daily_streak: number;
       daily_last: number;
       xp: number;
+      restricted: boolean;
     }[];
     return query.map((p) => {
       return new Profile(p);

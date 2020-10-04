@@ -169,4 +169,18 @@ export class PlayerUpdate extends DBClass {
       ownerId,
     ]);
   }
+
+  public static async restrictUser(discordId: string): Promise<void> {
+    await DB.query(
+      `UPDATE user_profile SET restricted=true WHERE discord_id=?;`,
+      [discordId]
+    );
+  }
+
+  public static async unrestrictUser(discordId: string): Promise<void> {
+    await DB.query(
+      `UPDATE user_profile SET restricted=false WHERE discord_id=?;`,
+      discordId
+    );
+  }
 }

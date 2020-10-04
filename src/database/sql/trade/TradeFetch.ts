@@ -1,6 +1,20 @@
 import { DBClass, DB } from "../..";
 
 export class TradeFetch extends DBClass {
+  public static async cardIsForTrade(id: number): Promise<boolean> {
+    const query = (await DB.query(
+      `SELECT * FROM trade_request WHERE (sender_card=? OR recipient_card=?);`,
+      [id, id]
+    )) as {
+      unique_id: string;
+      sender_id: string;
+      recipient_id: string;
+      sender_card: number;
+      recipient_card: number;
+    }[];
+    return !!query[0];
+  }
+
   public static async getTradesByUniqueId(
     unique: string
   ): Promise<

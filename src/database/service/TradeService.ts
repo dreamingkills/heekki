@@ -21,50 +21,11 @@ export class TradeService {
     });
   }
 
-  private static async validateCards(
-    cards: UserCard[],
-    sender: string,
-    idShouldBe: string,
-    perspective: "recipient" | "sender"
-  ): Promise<boolean> {
-    for (let i = 0; i < cards.length; i++) {
-      if (cards[i].ownerId === "0")
-        throw new error.CannotTradeForOrphanedCardError();
-      if (perspective === "recipient" && cards[i].ownerId === sender)
-        throw new error.CannotTradeWithYourselfError();
-      if (cards[i].ownerId != idShouldBe) {
-        if (perspective === "recipient")
-          throw new error.InconsistentCardOwnerOnRightSideOfTradeError();
-        throw new error.NotYourCardInTradeError();
-      }
-      const isForSale = await MarketService.cardIsOnMarketplace(cards[i]);
-      if (isForSale.forSale) {
-        if (perspective === "recipient")
-          throw new error.RightSideCardIsOnMarketplaceError();
-        throw new error.LeftSideCardIsOnMarketplaceError();
-      }
-      if (cards[i].isFavorite) {
-        if (perspective === "recipient")
-          throw new error.FavoriteCardOnRightSideOfTradeError();
-        throw new error.FavoriteCardOnLeftSideOfTradeError();
-      }
-    }
-    return true;
-  }
-
   public static async createNewTradeRequest(
     senderCards: UserCard[],
     recipientCards: UserCard[],
     senderId: string
   ): Promise<{ recipient: string; unique: string }> {
-    await this.validateCards(senderCards, senderId, senderId, "sender");
-    await this.validateCards(
-      recipientCards,
-      senderId,
-      recipientCards[0].ownerId,
-      "recipient"
-    );
-
     const uniqueId = this.generateUniqueTradeId();
     await TradeUpdate.createTrade(
       senderId,
@@ -112,7 +73,7 @@ export class TradeService {
     sender: string
   ): Promise<boolean> {
     const trades = await TradeFetch.getTradesByUniqueId(unique);
-    if (trades.length == 0) throw new error.TradeDoesNotExistError();
+    if (trades.length == 0) throw new error.InvalidTradeError(unique);
 
     if (sender !== trades[0].recipient)
       throw new error.NotYourTradeToAcceptError();
@@ -142,12 +103,16 @@ export class TradeService {
     sender: string
   ): Promise<boolean> {
     const trades = await TradeFetch.getTradesByUniqueId(unique);
-    if (trades.length == 0) throw new error.TradeDoesNotExistError();
+    if (trades.length == 0) throw new error.InvalidTradeError(unique);
 
     if (sender !== trades[0].sender && sender !== trades[0].recipient)
       throw new error.NotYourTradeToRejectError();
 
     await TradeUpdate.deleteTrade(unique);
     return true;
+  }
+
+  public static async cardIsForTrade(card: UserCard): Promise<boolean> {
+    return await TradeFetch.cardIsForTrade(card.id);
   }
 }

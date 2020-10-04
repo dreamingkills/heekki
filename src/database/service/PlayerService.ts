@@ -9,10 +9,6 @@ import { Fish } from "../../structures/game/Fish";
 
 export class PlayerService {
   public static async createNewProfile(discord_id: string): Promise<Profile> {
-    if (await PlayerFetch.checkIfUserExists(discord_id)) {
-      throw new error.DuplicateProfileError();
-    }
-
     await PlayerUpdate.createNewProfile(discord_id);
     const user = await this.getProfileByDiscordId(discord_id);
 
@@ -327,5 +323,13 @@ export class PlayerService {
 
   public static async clearFish(owner: Profile): Promise<void> {
     return await PlayerUpdate.clearFish(owner.discord_id);
+  }
+
+  public static async toggleRestriction(profile: Profile): Promise<void> {
+    if (profile.restricted) {
+      await PlayerUpdate.unrestrictUser(profile.discord_id);
+    } else {
+      await PlayerUpdate.restrictUser(profile.discord_id);
+    }
   }
 }

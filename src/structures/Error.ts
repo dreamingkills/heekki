@@ -17,23 +17,102 @@ export class UnknownError extends Error {
     this.message = msg;
   }
 }
+
+/*
+    Profile Errors
+                    */
 export class NoProfileError extends ClientError {
   name = "NoProfileError";
   constructor() {
     super("That user doesn't have a profile.");
   }
 }
-export class DuplicateProfileError extends ClientError {
-  name = "DuplicateProfileError";
+export class RestrictedUserError extends ClientError {
+  name = "RestrictedUserError";
   constructor() {
-    super("You've already set up a profile! Use `!profile` to view it.");
+    super("You've been restricted from Heekki.");
   }
 }
+export class NotEnoughCoinsError extends ClientError {
+  name = "NotEnoughCoinsError";
+  constructor(has: number, needed: number) {
+    super("You don't have enough coins to buy that!");
+  }
+}
+export class NotEnoughHeartsError extends ClientError {
+  name = "NotEnoughHeartsError";
+  constructor(has: number, needed: number) {
+    super("You don't have enough hearts to do that!");
+  }
+}
+
+/*
+    Timer Errors
+                  */
+export class SendHeartsCooldownError extends ClientError {
+  name = "SendHeartsCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `Please wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before sending hearts again.`
+    );
+  }
+}
+export class HeartBoxCooldownError extends ClientError {
+  name = "HeartBoxCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `Please wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before opening your heart boxes again.`
+    );
+  }
+}
+export class OrphanCooldownError extends ClientError {
+  name = "OrphanCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `Please wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before claiming another forfeited card.`
+    );
+  }
+}
+export class MissionCooldownError extends ClientError {
+  name = "MissionCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `Please wait **${moment(until).diff(
+        now,
+        "minutes"
+      )} minutes** before embarking upon another mission.`
+    );
+  }
+}
+export class DailyCooldownError extends ClientError {
+  name = "DailyCooldownError";
+  constructor(until: number, now: number) {
+    super(
+      `Please wait **${moment(until).diff(now, "hours")} hours and ${
+        moment(until).diff(now, "minutes") -
+        moment(until).diff(now, "hours") * 60
+      } minutes** before claiming your daily reward again.`
+    );
+  }
+}
+
+/*
+    Pack Errors
+                 */
 export class InvalidPackError extends ClientError {
   name = "InvalidPackError";
   constructor() {
     super(
-      "That pack does not exist!\nIf you were trying to buy from the Marketplace, use `!mpb <card reference>`."
+      "Sorry, but I couldn't find that pack. Make sure you entered it correctly.\n**TIP**: You can use `!packs` to see all available packs."
     );
   }
 }
@@ -43,43 +122,57 @@ export class ExpiredPackError extends ClientError {
     super("That pack is no longer available for purchase!");
   }
 }
-export class InvalidShopItemError extends ClientError {
-  name = "InvalidShopItemError";
+
+/*
+    Friend Errors
+                   */
+export class CantAddYourselfError extends ClientError {
+  name = "CantAddYourselfError";
   constructor() {
-    super("That pack does not have a collection attached to it!");
+    super("You can't add yourself as a friend. :pensive:");
   }
 }
-export class NotEnoughCoinsError extends ClientError {
-  name = "NotEnoughCoinsError";
+export class AlreadyFriendsError extends ClientError {
+  name = "AlreadyFriendsError";
   constructor() {
-    super("You don't have enough coins to buy that!");
+    super("You're already friends with them.");
   }
 }
-export class EmptyPackError extends ClientError {
-  name = " EmptyPackError";
+export class CantUnfriendYourselfError extends ClientError {
+  name = "CantUnfriendYourselfError";
   constructor() {
-    super("That pack is empty!");
+    super("You're your own friend... forever!");
   }
 }
-export class NotANumberError extends ClientError {
-  name = "NotANumberError";
+export class NotFriendsError extends ClientError {
+  name = "NotFriendsError";
   constructor() {
-    super("Please use a valid number!");
+    super("You aren't friends with that user anyway. :person_shrugging:");
   }
 }
-export class NotEnoughHeartsError extends ClientError {
-  name = "NotEnoughHeartsError";
+export class PendingFriendRequestError extends ClientError {
+  name = "PendingFriendRequestError";
   constructor() {
-    super("You don't have enough hearts to do that!");
+    super(`You already have a pending friend request with them.`);
+  }
+}
+
+/*
+    Card Errors
+                 */
+export class InvalidCardReferenceError extends ClientError {
+  name = "InvalidCardReferenceError";
+  constructor() {
+    super(`Please enter a valid card reference (e.g. **DLHJ#6**)`);
   }
 }
 export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
   constructor(reference: { identifier: string; serial: number }) {
     super(
-      `I couldn't find **${reference.identifier.toUpperCase()}#${
-        isNaN(reference.serial) ? "????" : reference.serial
-      }**! Please make sure you entered it correctly.`
+      `The card **${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** doesn't exist!`
     );
   }
 }
@@ -91,203 +184,36 @@ export class InvalidImageDataError extends ClientError {
     );
   }
 }
-export class CannotAddYourselfError extends ClientError {
-  name = "CannotAddYourselfError";
+export class MaxSerialError extends ClientError {
+  name = "MaxSerialError";
   constructor() {
-    super("You can't add yourself as a friend! :pensive:");
+    super(`There cannot be any more issues of that card.`);
   }
 }
-export class DuplicateRelationshipError extends ClientError {
-  name = "DuplicateRelationshipError";
-  constructor() {
-    super("You're already friends with that person!");
-  }
-}
-export class CannotRemoveYourselfError extends ClientError {
-  name = "CannotRemoveYourselfError";
-  constructor() {
-    super("Why would you want to do that? :broken_heart:");
-  }
-}
-export class NonexistentRelationshipError extends ClientError {
-  name = "NonexistentRelationshipError";
-  constructor() {
-    super("You aren't friends with that user anyway. :person_shrugging:");
-  }
-}
-export class SendHeartsCooldownError extends ClientError {
-  name = "SendHeartsCooldownError";
-  constructor(until: number, now: number) {
-    super(
-      `You must wait **${moment(until).diff(now, "hours")} hours and ${
-        moment(until).diff(now, "minutes") -
-        moment(until).diff(now, "hours") * 60
-      } minutes** before sending hearts again.`
-    );
-  }
-}
-export class HeartBoxCooldownError extends ClientError {
-  name = "HeartBoxCooldownError";
-  constructor(until: number, now: number) {
-    super(
-      `You must wait **${moment(until).diff(now, "hours")} hours and ${
-        moment(until).diff(now, "minutes") -
-        moment(until).diff(now, "hours") * 60
-      } minutes** before opening your heart boxes again.`
-    );
-  }
-}
+
+/*
+    Card Manipulation Errors
+                              */
 export class NotYourCardError extends ClientError {
   name = "NotYourCardError";
-  constructor() {
-    super("That card doesn't belong to you!");
-  }
-}
-export class OrphanCooldownError extends ClientError {
-  name = "OrphanCooldownError";
-  constructor(until: number, now: number) {
+  constructor(reference: { identifier: string; serial: number }) {
     super(
-      `You must wait **${moment(until).diff(now, "hours")} hours and ${
-        moment(until).diff(now, "minutes") -
-        moment(until).diff(now, "hours") * 60
-      } minutes** before claiming another forfeited card.`
+      `**${reference.identifier}#${reference.serial}** doesn't belong to you.`
     );
   }
 }
 export class CardNotOrphanedError extends ClientError {
   name = "CardNotOrphanedError";
-  constructor() {
-    super(`That card belongs to someone already.`);
+  constructor(reference: { identifier: string; serial: number }) {
+    super(`**${reference.identifier}#${reference.serial}** is not forfeited.`);
   }
 }
-export class CardNotForSaleError extends ClientError {
-  name = "CardNotForSaleError";
-  constructor() {
-    super(`That card isn't for sale.`);
-  }
-}
-export class CardAlreadyForSaleError extends ClientError {
-  name = "CardAlreadyForSaleError";
-  constructor() {
-    super(`You've already listed that card for sale.`);
-  }
-}
-export class InvalidPriceError extends ClientError {
-  name = "InvalidPriceError";
-  constructor() {
+export class CardFavoritedError extends ClientError {
+  name = "CardFavoritedError";
+  constructor(reference: { identifier: string; serial: number }) {
     super(
-      `Please enter a valid price, above 0 Coins and below 2,147,483,647 Coins.`
+      `**${reference.identifier}#${reference.serial}** is favorited!\nUse \`!fav ${reference.identifier}#${reference.serial}\` to unfavorite.`
     );
-  }
-}
-export class MissionCooldownError extends ClientError {
-  name = "MissionCooldownError";
-  constructor(until: number, now: number) {
-    super(
-      `You must wait **${moment(until).diff(
-        now,
-        "minutes"
-      )} minutes** before embarking upon another mission.`
-    );
-  }
-}
-export class NotYourCardInTradeError extends ClientError {
-  name = "NotYourCardInTradeError";
-  constructor() {
-    super(
-      `One or more of the cards you specified on your side of the trade do not belong to you.`
-    );
-  }
-}
-export class InconsistentCardOwnerOnRightSideOfTradeError extends ClientError {
-  name = "InconsistentCardOwnerOnRightSideOfTradeError";
-  constructor() {
-    super(
-      `The cards you specified on the right side of the trade do not all belong to the same person.`
-    );
-  }
-}
-export class CannotTradeWithYourselfError extends ClientError {
-  name = "CannotTradeWithYourselfError";
-  constructor() {
-    super(`You can't trade with yourself!`);
-  }
-}
-export class LeftSideCardIsOnMarketplaceError extends ClientError {
-  name = "LeftSideCardIsOnMarketplaceError";
-  constructor() {
-    super(
-      `One or more of the cards you specified the left side of your trade are currently on the marketplace and cannot be traded.`
-    );
-  }
-}
-export class RightSideCardIsOnMarketplaceError extends ClientError {
-  name = "RightSideCardIsOnMarketplaceError";
-  constructor() {
-    super(
-      `One or more of the cards you specified on the right side of your trade are currently on the marketplace and cannot be traded.`
-    );
-  }
-}
-export class TradeDoesNotExistError extends ClientError {
-  name = "TradeDoesNotExistError";
-  constructor() {
-    super(
-      "That trade does not exist. It may already have been accepted.\nPlease verify that you entered the ID correctly."
-    );
-  }
-}
-export class NotYourTradeToAcceptError extends ClientError {
-  name = "NotYourTradeToAcceptError";
-  constructor() {
-    super(`That is not your trade to accept.`);
-  }
-}
-export class NotYourTradeToRejectError extends ClientError {
-  name = "NotYourTradeToRejectError";
-  constructor() {
-    super(`That is not your trade to reject or cancel.`);
-  }
-}
-export class CannotTradeForOrphanedCardError extends ClientError {
-  name = "CannotTradeForOrphanedCardError";
-  constructor() {
-    super(
-      `You can't trade for an orphaned card. Use \`!cf <card reference>\` instead.`
-    );
-  }
-}
-export class DailyCooldownError extends ClientError {
-  name = "DailyCooldownError";
-  constructor(until: number, now: number) {
-    super(
-      `You must wait **${moment(until).diff(now, "hours")} hours and ${
-        moment(until).diff(now, "minutes") -
-        moment(until).diff(now, "hours") * 60
-      } minutes** before claiming your daily reward again.`
-    );
-  }
-}
-export class FavoriteCardError extends ClientError {
-  name = "FavoriteCardError";
-  constructor() {
-    super(
-      `That card is favorited!\nUse \`!favorite <card reference>\` to unfavorite.`
-    );
-  }
-}
-export class FavoriteCardOnLeftSideOfTradeError extends ClientError {
-  name = "FavoriteCardOnLeftSideOfTradeError";
-  constructor() {
-    super(
-      `One of the cards on the left side of your trade is favorited!\nUse \`!favorite <card reference>\` to unfavorite.`
-    );
-  }
-}
-export class FavoriteCardOnRightSideOfTradeError extends ClientError {
-  name = "FavoriteCardOnRightSideOfTradeError";
-  constructor() {
-    super(`One of the cards on the right side of your trade is favorited!`);
   }
 }
 export class CardOnMarketplaceError extends ClientError {
@@ -304,21 +230,78 @@ export class CardInTradeError extends ClientError {
     super(`That card is currently in a trade.`);
   }
 }
-export class PendingFriendRequestError extends ClientError {
-  name = "PendingFriendRequestError";
-  constructor() {
-    super(`You already have a pending friend request with them.`);
+
+/*
+    Marketplace Errors
+                        */
+
+export class CardNotForSaleError extends ClientError {
+  name = "CardNotForSaleError";
+  constructor(reference: { identifier: string; serial: number }) {
+    super(`**${reference.identifier}#${reference.serial}** isn't for sale.`);
   }
 }
+export class CardAlreadyForSaleError extends ClientError {
+  name = "CardAlreadyForSaleError";
+  constructor(reference: { identifier: string; serial: number }) {
+    super(
+      `**${reference.identifier}#${reference.serial}** is already on the Marketplace.`
+    );
+  }
+}
+export class InvalidPriceError extends ClientError {
+  name = "InvalidPriceError";
+  constructor() {
+    super(
+      `Please enter a valid price, above 0 Coins and below 2,147,483,647 Coins.`
+    );
+  }
+}
+
+/*
+    Trading Errors
+                    */
+export class InvalidTradeError extends ClientError {
+  name = "InvalidTradeError";
+  constructor(id: string) {
+    super(
+      `I couldn't find Trade \`${id}\`.\nIt may have been accepted already.`
+    );
+  }
+}
+export class InvalidTradeFormatError extends ClientError {
+  name = "InvalidTradeFormatError";
+  constructor() {
+    super(
+      `The format of your trade is not valid. Please use \`!help trading\` for the correct format.`
+    );
+  }
+}
+export class CannotTradeWithYourselfError extends ClientError {
+  name = "CannotTradeWithYourselfError";
+  constructor() {
+    super(`You can't trade with yourself!`);
+  }
+}
+export class NotYourTradeToAcceptError extends ClientError {
+  name = "NotYourTradeToAcceptError";
+  constructor() {
+    super(`That trade is not yours to accept.`);
+  }
+}
+export class NotYourTradeToRejectError extends ClientError {
+  name = "NotYourTradeToRejectError";
+  constructor() {
+    super(`That trade is not yours to cancel.`);
+  }
+}
+
+/*
+    Fishing Errors
+                    */
 export class InvalidFishError extends ClientError {
   name = "InvalidFishError";
   constructor() {
     super(`That fish does not exist.`);
-  }
-}
-export class MaxSerialError extends ClientError {
-  name = "MaxSerialError";
-  constructor() {
-    super(`There cannot be any more issues of that card.`);
   }
 }

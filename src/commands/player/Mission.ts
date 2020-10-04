@@ -11,23 +11,15 @@ import { Profile } from "../../structures/player/Profile";
 export class Command extends BaseCommand {
   names: string[] = ["mission"];
   async exec(msg: Message, executor: Profile) {
-    if (!this.options[0]) {
-      msg.channel.send("<:red_x:741454361007357993> Please specify a card.");
-      return;
-    }
     const reference = {
-      identifier: this.options[0].split("#")[0],
-      serial: parseInt(this.options[0].split("#")[1]),
+      identifier: this.options[0]?.split("#")[0],
+      serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    if (!reference.identifier || isNaN(reference.serial)) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> That serial number is invalid.`
-      );
-      return;
-    }
+    if (!reference.serial) throw new error.InvalidCardReferenceError();
     const card = await CardService.getCardDataFromReference(reference);
 
-    if (card.ownerId !== msg.author.id) throw new error.NotYourCardError();
+    if (card.ownerId !== msg.author.id)
+      throw new error.NotYourCardError(reference);
 
     const last = await PlayerService.getLastMission(executor);
     const now = Date.now();

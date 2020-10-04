@@ -8,6 +8,7 @@ export class Profile {
   daily_streak: number;
   daily_last: number;
   xp: number;
+  restricted: boolean;
   badges?: Badge[];
   constructor(
     data: {
@@ -18,6 +19,7 @@ export class Profile {
       hearts: number;
       blurb: string;
       xp: number;
+      restricted: boolean;
     },
     badges?: Badge[]
   ) {
@@ -29,5 +31,6 @@ export class Profile {
     this.daily_last = data.daily_last;
     this.badges = badges;
     this.xp = data.xp;
+    this.restricted = data.restricted;
   }
 }

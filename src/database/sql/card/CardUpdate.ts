@@ -3,14 +3,17 @@ import { UserCard } from "../../../structures/player/UserCard";
 import { CardFetch } from "./CardFetch";
 import { Card } from "../../../structures/card/Card";
 import { SerialGenerator } from "../../../helpers/Serial";
+import { Profile } from "../../../structures/player/Profile";
+import { PlayerService } from "../../service/PlayerService";
 
 export class CardUpdate extends DBClass {
   public static async createNewUserCard(
-    owner_id: string,
+    owner: Profile,
     card: Card,
     stars: number,
     hearts: number,
-    force: boolean
+    force: boolean,
+    price: number
   ): Promise<UserCard> {
     let newSerial = await SerialGenerator.queueSerialGen(card, force);
     let tries = 0;
@@ -18,8 +21,10 @@ export class CardUpdate extends DBClass {
       try {
         await DB.query(
           `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
-          [newSerial, owner_id, stars, hearts, card.id]
+          [newSerial, owner.discord_id, stars, hearts, card.id]
         );
+        await PlayerService.removeCoinsFromProfile(owner, price);
+
         return await CardFetch.getUserCardByReference({
           identifier: card.abbreviation,
           serial: newSerial,
