@@ -26,6 +26,8 @@ export class Command extends BaseCommand {
 
     const tradee = await PlayerService.getProfileByDiscordId(tradeeUser.id);
 
+    this.currentlyTrading.add(msg.author.id);
+    this.currentlyTrading.add(tradeeUser.id);
     const spaceOnLeftSide = msg.author.username.length + 8;
 
     const description = [
@@ -74,6 +76,8 @@ export class Command extends BaseCommand {
       console.log(submitter);
       if (sent.deleted) {
         collector.stop("deleted");
+        this.currentlyTrading.delete(msg.author.id);
+        this.currentlyTrading.delete(tradeeUser.id);
         return;
       }
       if (
@@ -202,6 +206,8 @@ export class Command extends BaseCommand {
             `<:red_x:741454361007357993> This trade has expired.`
           )
         );
+        this.currentlyTrading.delete(msg.author.id);
+        this.currentlyTrading.delete(tradeeUser.id);
         return;
       }
       if (reason === "ok") {
@@ -238,10 +244,15 @@ export class Command extends BaseCommand {
             sent.edit(
               panel.setDescription(`:white_check_mark: Trade completed!`)
             );
+            this.currentlyTrading.delete(msg.author.id);
+            this.currentlyTrading.delete(tradeeUser.id);
             return;
           }
         });
-        conf.on("end", () => {
+        conf.on("end", (reason: string) => {
+          if (reason !== "time") return;
+          this.currentlyTrading.delete(msg.author.id);
+          this.currentlyTrading.delete(tradeeUser.id);
           sent.edit(
             panel.setDescription(
               `<:red_x:741454361007357993> This trade has expired.`
