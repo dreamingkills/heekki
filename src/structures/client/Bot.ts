@@ -43,7 +43,7 @@ export class Bot extends Client {
       const embed = new MessageEmbed()
         .setAuthor(`New Member | ${m.user.tag}`)
         .setDescription(
-          `Welcome, ${m}!\nPlease read <#752050389632811059> for information on how to play.`
+          `Welcome, ${m}!\nFeel free to ask any questions or leave <#752046973082665031>!`
         )
         .setThumbnail(m.user.displayAvatarURL())
         .setColor("#FFAFA6")
@@ -52,6 +52,8 @@ export class Bot extends Client {
       (<TextChannel>m.guild.channels.resolve("752028822274179145")!).send(
         embed
       );
+
+      m.roles.add("753014710084960327");
     });
     this.login(config.botToken);
   }
