@@ -15,7 +15,7 @@ export class UserCardService {
     receiver: Profile,
     card: UserCard
   ): Promise<void> {
-    await CardUpdate.transferCardToUser(receiver.discord_id, card);
+    await CardUpdate.transferCardsToUser(receiver.discord_id, [card]);
   }
 
   public static async createNewUserCard(
@@ -65,10 +65,10 @@ export class UserCardService {
     await CardUpdate.incrementCardStars(card_id);
   }
 
-  public static async transferCard(
+  public static async transferCards(
     recipient: string,
-    card: UserCard
+    cards: UserCard[]
   ): Promise<void> {
-    await CardUpdate.transferCardToUser(recipient, card);
+    await CardUpdate.transferCardsToUser(recipient, cards);
   }
 }

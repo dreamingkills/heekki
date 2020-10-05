@@ -91,8 +91,7 @@ export class Command extends BaseCommand {
         await MarketService.sellCard(price, card);
 
         msg.channel.send(
-          `:white_check_mark: You've listed **${card.abbreviation}#${
-            card.serialNumber
+          `:white_check_mark: You've listed **${card.abbreviation}#${card.serialNumber
           }** on the Marketplace for <:cash:757146832639098930> **${price.toLocaleString()}**.`
         );
         break;
@@ -191,10 +190,8 @@ export class Command extends BaseCommand {
           }
 
           conf.edit(
-            `:white_check_mark: Successfully purchased **${card.abbreviation}#${
-              card.serialNumber
-            }**!\nYour new balance is <:cash:757146832639098930> **${
-              executor.coins - forSale.price
+            `:white_check_mark: Successfully purchased **${card.abbreviation}#${card.serialNumber
+            }**!\nYour new balance is <:cash:757146832639098930> **${executor.coins - forSale.price
             }**.`
           );
           return;

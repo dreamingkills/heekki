@@ -279,33 +279,24 @@ export class InvalidTradeError extends ClientError {
     );
   }
 }
-export class InvalidTradeFormatError extends ClientError {
-  name = "InvalidTradeFormatError";
-  constructor() {
-    super(
-      `The format of your trade is not valid. Please use \`!help trading\` for the correct format.`
-    );
-  }
-}
 export class CannotTradeWithYourselfError extends ClientError {
   name = "CannotTradeWithYourselfError";
   constructor() {
     super(`You can't trade with yourself!`);
   }
 }
-export class NotYourTradeToAcceptError extends ClientError {
-  name = "NotYourTradeToAcceptError";
+export class InTradeError extends ClientError {
+  name = "InTradeError";
   constructor() {
-    super(`That trade is not yours to accept.`);
+    super(`You're already trading with someone.`);
   }
 }
-export class NotYourTradeToRejectError extends ClientError {
-  name = "NotYourTradeToRejectError";
+export class UserInTradeError extends ClientError {
+  name = "UserInTradeError";
   constructor() {
-    super(`That trade is not yours to cancel.`);
+    super(`That user is currently trading with someone else.`);
   }
 }
-
 /*
     Fishing Errors
                     */

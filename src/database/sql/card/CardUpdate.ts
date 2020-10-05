@@ -57,13 +57,15 @@ export class CardUpdate extends DBClass {
    * @param receiver Discord ID of the user who the card is being transferred to.
    * @param id `id` of the `user_card` which is being transferred.
    */
-  public static async transferCardToUser(
+  public static async transferCardsToUser(
     receiver: string,
-    card: UserCard
+    cards: UserCard[]
   ): Promise<void> {
-    await DB.query(`UPDATE user_card SET owner_id=? WHERE id=?;`, [
+    await DB.query(`UPDATE user_card SET owner_id=? WHERE id IN (?);`, [
       receiver,
-      card.userCardId,
+      cards.map((c) => {
+        return c.userCardId;
+      }),
     ]);
   }
 
