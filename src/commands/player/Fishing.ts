@@ -91,6 +91,7 @@ export class Command extends BaseCommand {
           time: 3000,
         });
         collector.on("collect", async () => {
+          this.currentlyFishing.delete(msg.author.id);
           clearInterval(interval);
           caughtFish = true;
           const caught = await this.generateFish();
@@ -120,7 +121,6 @@ export class Command extends BaseCommand {
           collector.stop();
         });
         collector.on("end", () => {
-          this.currentlyFishing.delete(msg.author.id);
           if (fishingMsg.deleted) {
             clearInterval(interval);
             return;
@@ -129,6 +129,7 @@ export class Command extends BaseCommand {
             successfulCatches++;
             fishingMsg.reactions.removeAll();
             if (successfulCatches === 3) {
+              this.currentlyFishing.delete(msg.author.id);
               clearInterval(interval);
               fishingMsg.edit(
                 fishingEmbed
