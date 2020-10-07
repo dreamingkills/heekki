@@ -261,7 +261,7 @@ export class Command extends BaseCommand {
             const newCards = await MarketService.getMarket({
               ...options,
               limit: 15,
-              newPage,
+              page: newPage,
             });
             sent.edit(
               await this.renderMarket(newCards, newPage, pageLimit, msg.author)
