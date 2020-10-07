@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    if (!reference.serial) throw new error.InvalidCardReferenceError();
+    if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
     const card = await CardService.getCardDataFromReference(reference);
 
     if (card.ownerId !== msg.author.id)
