@@ -68,7 +68,8 @@ export class Command extends BaseCommand {
           identifier: this.options[1]?.split("#")[0],
           serial: parseInt(this.options[1]?.split("#")[1]),
         };
-        if (!reference.serial) throw new error.InvalidCardReferenceError();
+        if (isNaN(reference.serial))
+          throw new error.InvalidCardReferenceError();
 
         const card = await CardService.getCardDataFromReference(reference);
         if (card.ownerId !== msg.author.id)
@@ -102,12 +103,8 @@ export class Command extends BaseCommand {
           identifier: this.options[1]?.split("#")[0],
           serial: parseInt(this.options[1]?.split("#")[1]),
         };
-        if (isNaN(reference.serial)) {
-          msg.channel.send(
-            "<:red_x:741454361007357993> Please enter a valid card reference."
-          );
-          return;
-        }
+        if (isNaN(reference.serial))
+          throw new error.InvalidCardReferenceError();
 
         const card = await CardService.getCardDataFromReference(reference);
         if (card.ownerId !== msg.author.id)

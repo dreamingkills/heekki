@@ -3,6 +3,7 @@ import { CardService } from "../../database/service/CardService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["upgrade"];
@@ -18,26 +19,13 @@ export class Command extends BaseCommand {
       );
       return;
     }
-    if (isNaN(reference.serial)) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> Please enter a valid card reference.`
-      );
-      return;
-    }
+    if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
     const card = await CardService.getCardDataFromReference(reference);
 
-    if (card.ownerId !== msg.author.id) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> That card does not belong to you.`
-      );
-      return;
-    }
-    if (amount > executor.hearts) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> You don't have enough hearts to do that.\nYou have <:heekki_heart:757147742383505488> **${executor.hearts}**.`
-      );
-      return;
-    }
+    if (card.ownerId !== msg.author.id)
+      throw new error.NotYourCardError(reference);
+    if (amount > executor.hearts)
+      throw new error.NotEnoughHeartsError(executor.hearts, amount);
     await CardService.upgradeCard(amount, card);
     await PlayerService.removeHeartsFromProfile(executor, amount);
 

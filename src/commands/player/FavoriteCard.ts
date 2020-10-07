@@ -4,6 +4,7 @@ import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import { UserCard } from "../../structures/player/UserCard";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["favorite", "fav"];
@@ -12,20 +13,12 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    if (!reference.serial) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> Please specify a valid card reference.`
-      );
-      return;
-    }
+    if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
 
     const card = await CardService.getCardDataFromReference(reference);
-    if (card.ownerId !== executor.discord_id) {
-      msg.channel.send(
-        "<:red_x:741454361007357993> That card doesn't belong to you."
-      );
-      return;
-    }
+    if (card.ownerId !== executor.discord_id)
+      throw new error.NotYourCardError(reference);
+
     await UserCardService.toggleCardAsFavorite(card);
 
     const pre = !card.isFavorite ? "Favorited" : "Unfavorited";
