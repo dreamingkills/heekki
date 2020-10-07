@@ -70,6 +70,10 @@ export class MarketFetch extends DBClass {
       queryOptions.push(
         ` user_card.stars=${DB.connection.escape(options.stars)}`
       );
+    if (options?.owner)
+      queryOptions.push(
+        ` user_card.owner_id=${DB.connection.escape(options.owner)}`
+      );
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
@@ -148,6 +152,10 @@ export class MarketFetch extends DBClass {
     if (options?.stars)
       queryOptions.push(
         ` user_card.stars=${DB.connection.escape(options.stars)}`
+      );
+    if (options?.owner)
+      queryOptions.push(
+        ` user_card.owner_id=${DB.connection.escape(options.owner)}`
       );
 
     query +=
