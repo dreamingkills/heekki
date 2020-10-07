@@ -220,7 +220,7 @@ export class Command extends BaseCommand {
           : parseInt(options.page);
         let page = pageRaw > pageLimit ? pageLimit : pageRaw;
 
-        const ff = await MarketService.getMarket(options);
+        const ff = await MarketService.getMarket({ ...options, page });
         const sent = await msg.channel.send(
           await this.renderMarket(ff, page, pageLimit, msg.author)
         );

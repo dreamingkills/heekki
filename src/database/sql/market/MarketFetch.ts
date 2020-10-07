@@ -161,13 +161,13 @@ export class MarketFetch extends DBClass {
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
       queryOptions.join(" AND") +
-      ` ORDER BY marketplace.id DESC LIMIT 9 OFFSET ${
-        (<number>options?.page || 1) * 9 - 9
-      };`;
+      `;`;
 
     let forSale = (await DB.query(query)) as {
       "COUNT(*)": number;
     }[];
+    console.log(query);
+    console.log(forSale);
     return forSale[0]["COUNT(*)"];
   }
 
