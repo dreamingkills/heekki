@@ -166,8 +166,6 @@ export class MarketFetch extends DBClass {
     let forSale = (await DB.query(query)) as {
       "COUNT(*)": number;
     }[];
-    console.log(query);
-    console.log(forSale);
     return forSale[0]["COUNT(*)"];
   }
 
