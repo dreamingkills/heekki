@@ -98,10 +98,10 @@ export class Command extends BaseCommand {
           `**Trading** is a means to exchange cards between you and someone else.\n` +
           `\n__**How do I trade?**__` +
           `\nTo begin trading with someone, simply type \`!trade <@user>\`. The bot will then guide you through the following steps:` +
-          `\n1) Enter up to five of **your cards** (type OK if you have less than 5 cards)` +
-          `\n2) Whoever you're trading with enters up to five of **their cards** (again, type OK if there are less than 5 cards)` +
-          `\n3) Both of you will confirm the trade.` +
-          `\n4) Success!\n` +
+          `\n**1)** Enter up to five of **your cards** (type OK if you have less than 5 cards)` +
+          `\n**2)** Whoever you're trading with enters up to five of **their cards** (again, type OK if there are less than 5 cards)` +
+          `\n**3)** Both of you will confirm the trade.` +
+          `\n**4)** Success!\n` +
           `\n__**Can I reverse a trade?**__` +
           `\nNo, you cannot reverse a trade; be careful who you're trading with!`;
         break;
