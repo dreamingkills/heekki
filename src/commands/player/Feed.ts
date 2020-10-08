@@ -26,6 +26,7 @@ export class Command extends BaseCommand {
       throw new error.NotYourCardError(reference);
     if (amount > executor.hearts)
       throw new error.NotEnoughHeartsError(executor.hearts, amount);
+
     await CardService.upgradeCard(amount, card);
     await PlayerService.removeHeartsFromProfile(executor, amount);
 
