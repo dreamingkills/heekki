@@ -44,16 +44,16 @@ export class Command extends BaseCommand {
         triviaMessage.edit(
           `:tada: **Correct!**\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
         );
-        msg.react("✅");
 
         //await PlayerService.addCoinsToProfile(executor, profit);
-        return collect.stop("correct");
-      } else m.react("741454361007357993");
+        collect.stop("correct");
+        if (this.permissions.ADD_REACTIONS) msg.react("✅");
+      } else await m.react("741454361007357993");
     });
     collect.on("end", async (collected, reason) => {
+      this.currentlyPlaying.delete(msg.author.id);
       if (reason != "correct") {
         msg.react("741454361007357993");
-
         triviaMessage.edit(
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
@@ -63,7 +63,6 @@ export class Command extends BaseCommand {
         executor,
         reason === "correct" ? true : false
       );
-      this.currentlyPlaying.delete(msg.author.id);
     });
   }
 }
