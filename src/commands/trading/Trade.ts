@@ -251,7 +251,7 @@ export class Command extends BaseCommand {
             return;
           }
         });
-        conf.on("end", (reason: string) => {
+        conf.on("end", (collected, reason: string) => {
           if (reason !== "time") return;
           this.currentlyTrading.delete(msg.author.id);
           this.currentlyTrading.delete(tradeeUser.id);
