@@ -73,7 +73,6 @@ export class Command extends BaseCommand {
     let tradeeCollected = 0;
     let submitter: "sender" | "tradee" = "sender";
     collector.on("collect", async (m: Message) => {
-      console.log(submitter);
       if (sent.deleted) {
         collector.stop("deleted");
         this.currentlyTrading.delete(msg.author.id);
@@ -237,8 +236,10 @@ export class Command extends BaseCommand {
           if (u.id === tradeeUser.id) tradeeConfirmed = true;
 
           if (senderConfirmed && tradeeConfirmed) {
-            await UserCardService.transferCards(tradeeUser.id, senderCards);
-            await UserCardService.transferCards(msg.author.id, tradeeCards);
+            if (senderCards.length > 0)
+              await UserCardService.transferCards(tradeeUser.id, senderCards);
+            if (tradeeCards.length > 0)
+              await UserCardService.transferCards(msg.author.id, tradeeCards);
 
             await StatsService.tradeComplete(executor, tradee);
             console.log("test");
