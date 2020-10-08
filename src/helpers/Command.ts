@@ -72,7 +72,7 @@ export class CommandManager {
       );
       if (profile.restricted) throw new error.RestrictedUserError();
 
-      await cmd.exec(msg, profile);
+      await cmd.run(msg, profile);
       Logger.log(cmd, msg);
     } catch (e) {
       Logger.log(cmd, msg, e);
