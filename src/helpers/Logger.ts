@@ -35,13 +35,14 @@ export class Logger {
       )}}`
     );
 
+    //Errors
+    if (error) logString.push(``, chalk`{red Error: ${error.message}}`);
+
     //Ending
     logString.push(
       chalk`{white ${"=".repeat(32 + 2 + command.names[0].length)}}`,
       ``
     );
-
-    if (error) logString.push(``, chalk`{red Error: ${error.message}}`);
 
     console.log(logString.join("\n"));
   }
