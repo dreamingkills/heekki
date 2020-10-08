@@ -84,6 +84,7 @@ export class Command extends BaseCommand {
           `\n**Command List**` +
           `\n\`\`\`` +
           `\n!mp - Shows you the MP.` +
+          `\n!mp <@user> - Shows you the cards someone is selling.` +
           `\n!mp sell <card> <price> - Lists a card on MP.` +
           `\n!mp unsell <card> - Removes a card listing from the MP.` +
           `\n!mp buy <card> - Buys a card from the MP.` +
