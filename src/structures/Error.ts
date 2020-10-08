@@ -27,7 +27,12 @@ export class InvalidMemberError extends ClientError {
     super("Sorry, but I couldn't find that person.");
   }
 }
-
+export class MissingPermissionError extends ClientError {
+  name = "MissingPermissionError";
+  constructor(permission: string) {
+    super(`I am missing the following permission: \`${permission}\``);
+  }
+}
 /*
     Profile Errors
                     */

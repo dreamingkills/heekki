@@ -19,7 +19,11 @@ export abstract class BaseCommand implements Command {
   users?: string[];
 
   options: string[] = [];
-  permissions!: { MANAGE_MESSAGES: boolean };
+  permissions!: {
+    MANAGE_MESSAGES: boolean;
+    ADD_REACTIONS: boolean;
+    USE_EXTERNAL_EMOJI: boolean;
+  };
   flags: { [key: string]: string } = {};
 
   abstract async exec(msg: Message, executor: Profile): Promise<void>;
@@ -33,6 +37,12 @@ export abstract class BaseCommand implements Command {
       MANAGE_MESSAGES: msg.guild
         ?.member(msg.client.user!)
         ?.hasPermission("MANAGE_MESSAGES")!,
+      ADD_REACTIONS: msg.guild
+        ?.member(msg.client.user!)
+        ?.hasPermission("ADD_REACTIONS")!,
+      USE_EXTERNAL_EMOJI: msg.guild
+        ?.member(msg.client.user!)
+        ?.hasPermission("USE_EXTERNAL_EMOJIS")!,
     };
 
     return await this.exec(msg, executor);

@@ -3,6 +3,7 @@ import Chance from "chance";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
@@ -42,6 +43,8 @@ export class Command extends BaseCommand {
   }
 
   async exec(msg: Message, executor: Profile) {
+    if (!this.permissions.ADD_REACTIONS)
+      throw new error.MissingPermissionError("ADD_REACTIONS");
     if (this.currentlyFishing.has(msg.author.id)) {
       msg.channel.send("<:red_x:741454361007357993> You're already fishing!");
       return;
