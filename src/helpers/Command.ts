@@ -5,6 +5,7 @@ import { Message } from "discord.js";
 import { promisify } from "util";
 import { PlayerService } from "../database/service/PlayerService";
 import * as error from "../structures/Error";
+import { Logger } from "../helpers/Logger";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
@@ -71,10 +72,13 @@ export class CommandManager {
       );
       if (profile.restricted) throw new error.RestrictedUserError();
 
-      await cmd.run(msg, profile);
+      await cmd.exec(msg, profile);
+      Logger.log(cmd, msg);
     } catch (e) {
-      msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
-      if (!e.isClientFacing) console.log(`${e.message}\n${e.stack}`);
+      Logger.log(cmd, msg, e);
+      msg.channel.send(
+        `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
+      );
     }
   }
 }

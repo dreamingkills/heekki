@@ -1,5 +1,4 @@
 import { Message } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
 import { Profile } from "../player/Profile";
 
 export interface Command {

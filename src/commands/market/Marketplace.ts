@@ -200,7 +200,13 @@ export class Command extends BaseCommand {
           conf.edit(
             `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
           );
-          conf.reactions.removeAll();
+          if (
+            msg.guild
+              ?.member(msg.client.user!)
+              ?.hasPermission("MANAGE_MESSAGES")
+          ) {
+            conf.reactions.removeAll();
+          }
         });
         break;
       }
@@ -268,7 +274,13 @@ export class Command extends BaseCommand {
         });
 
         collector.on("end", async () => {
-          if (!sent.deleted) sent.reactions.removeAll();
+          if (
+            !sent.deleted &&
+            msg.guild
+              ?.member(msg.client.user!)
+              ?.hasPermission("MANAGE_MESSAGES")
+          )
+            sent.reactions.removeAll();
         });
         return;
       }
