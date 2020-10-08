@@ -208,21 +208,31 @@ export class NotYourCardError extends ClientError {
   name = "NotYourCardError";
   constructor(reference: { identifier: string; serial: number }) {
     super(
-      `**${reference.identifier}#${reference.serial}** doesn't belong to you.`
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** doesn't belong to you.`
     );
   }
 }
 export class CardNotOrphanedError extends ClientError {
   name = "CardNotOrphanedError";
   constructor(reference: { identifier: string; serial: number }) {
-    super(`**${reference.identifier}#${reference.serial}** is not forfeited.`);
+    super(
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** is not forfeited.`
+    );
   }
 }
 export class CardFavoritedError extends ClientError {
   name = "CardFavoritedError";
   constructor(reference: { identifier: string; serial: number }) {
     super(
-      `**${reference.identifier}#${reference.serial}** is favorited!\nUse \`!fav ${reference.identifier}#${reference.serial}\` to unfavorite.`
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** is favorited!\nUse \`!fav ${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }\` to unfavorite.`
     );
   }
 }
@@ -248,14 +258,20 @@ export class CardInTradeError extends ClientError {
 export class CardNotForSaleError extends ClientError {
   name = "CardNotForSaleError";
   constructor(reference: { identifier: string; serial: number }) {
-    super(`**${reference.identifier}#${reference.serial}** isn't for sale.`);
+    super(
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** isn't for sale.`
+    );
   }
 }
 export class CardAlreadyForSaleError extends ClientError {
   name = "CardAlreadyForSaleError";
   constructor(reference: { identifier: string; serial: number }) {
     super(
-      `**${reference.identifier}#${reference.serial}** is already on the Marketplace.`
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** is already on the Marketplace.`
     );
   }
 }
