@@ -36,7 +36,11 @@ export class Logger {
     );
 
     //Errors
-    if (error) logString.push(``, chalk`{red Error: ${error.message}}`);
+    if (error)
+      logString.push(
+        ``,
+        chalk`{red Error: ${error.name + " - " + error.message}}`
+      );
 
     //Ending
     logString.push(
