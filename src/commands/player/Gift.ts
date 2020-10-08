@@ -79,19 +79,24 @@ export class Command extends BaseCommand {
     const filter = (reaction: MessageReaction, user: User) => {
       return reaction.emoji.name === "✅" && user.id == msg.author.id;
     };
-    const reactions = await confirmation.awaitReactions(filter, {
+    const reactions = confirmation.createReactionCollector(filter, {
       max: 1,
       time: 15000,
     });
 
-    if (reactions.first()) {
-      for (let c of validCards) {
-        await UserCardService.transferCardToProfile(profile, c);
-      }
-    }
-
-    confirmation.edit(
-      `:white_check_mark: Gifted **${validCards.length}** cards to **${mention.tag}**!`
-    );
+    reactions.on("collect", async () => {
+      await UserCardService.transferCards(profile.discord_id, validCards);
+      confirmation.edit(
+        `:white_check_mark: Gifted **${validCards.length}** cards to **${mention.tag}**!`
+      );
+      reactions.stop("ok");
+      return;
+    });
+    reactions.on("end", async (reason: string) => {
+      confirmation.edit(
+        `<:red_x:741454361007357993> You didn't react in time!`
+      );
+      confirmation.reactions.removeAll();
+    });
   }
 }

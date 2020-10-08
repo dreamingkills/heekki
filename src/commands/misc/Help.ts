@@ -31,6 +31,14 @@ export class Command extends BaseCommand {
           `\nhttps://discord.gg/KbcQjRG`;
         break;
       }
+      case "topics": {
+        header = "Topics";
+        description =
+          `You can use \`!help <topic>\` to learn more information about something!\n` +
+          `\n__**Profile**__` +
+          `\n\`friends\`, \`hearts\`, \`xp\`, \`marketplace\``;
+        break;
+      }
       case "friends": {
         header = "Friends";
         description =
@@ -44,14 +52,6 @@ export class Command extends BaseCommand {
           `\n\`\`\`` +
           `\n**Sending Hearts**` +
           `\nTo send hearts to your friends, you can use \`!send\` once per hour. Hearts that your friends have sent to you will automatically be deposited into your profile!`;
-        break;
-      }
-      case "topics": {
-        header = "Topics";
-        description =
-          `You can use \`!help <topic>\` to learn more information about something!\n` +
-          `\n__**Profile**__` +
-          `\n\`friends\`, \`hearts\`, \`xp\`, \`marketplace\``;
         break;
       }
       case "hearts": {
