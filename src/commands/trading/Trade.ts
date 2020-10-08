@@ -242,11 +242,9 @@ export class Command extends BaseCommand {
               await UserCardService.transferCards(msg.author.id, tradeeCards);
 
             await StatsService.tradeComplete(executor, tradee);
-            console.log("test");
             sent.edit(
               panel.setDescription(`:white_check_mark: Trade completed!`)
             );
-            console.log("test2");
             this.currentlyTrading.delete(msg.author.id);
             this.currentlyTrading.delete(tradeeUser.id);
             return;
