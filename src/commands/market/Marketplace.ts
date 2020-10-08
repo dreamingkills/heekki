@@ -258,7 +258,12 @@ export class Command extends BaseCommand {
             (<TextChannel>msg.channel).bulkDelete([msg, sent]);
             return;
           }
-          r.users.remove(msg.author);
+          if (
+            msg.guild
+              ?.member(msg.client.user!)
+              ?.hasPermission("MANAGE_MESSAGES")
+          )
+            r.users.remove(msg.author);
 
           if (newPage !== 0 && newPage !== page) {
             const newCards = await MarketService.getMarket({
