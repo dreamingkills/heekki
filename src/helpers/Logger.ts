@@ -5,7 +5,7 @@ import { ClientError } from "../structures/Error";
 import moment from "moment";
 
 export class Logger {
-  static log(command: BaseCommand, msg: Message, error?: ClientError): void {
+  static log(command: BaseCommand, msg: Message, error?: Error): void {
     const params = msg.content
       .split(" ")
       .splice(1)

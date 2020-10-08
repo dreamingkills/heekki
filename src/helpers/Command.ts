@@ -76,9 +76,12 @@ export class CommandManager {
       Logger.log(cmd, msg);
     } catch (e) {
       Logger.log(cmd, msg, e);
-      msg.channel.send(
-        `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
-      );
+      if (e.isClientFacing) {
+        msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
+      } else
+        msg.channel.send(
+          `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
+        );
     }
   }
 }
