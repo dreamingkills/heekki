@@ -79,6 +79,7 @@ export class Command extends BaseCommand {
         this.currentlyTrading.delete(tradeeUser.id);
         return;
       }
+
       if (
         (submitter === "sender" && m.author.id === msg.author.id) ||
         (submitter === "tradee" && m.author.id === tradeeUser.id)
@@ -141,7 +142,7 @@ export class Command extends BaseCommand {
                     senderCollected,
                     1,
                     `\n${" ".repeat(spaceOnLeftSide - refLength)}${
-                      reference.identifier + `#` + reference.serial
+                      card.abbreviation + `#` + card.serialNumber
                     } |`
                   );
                   senderCards.push(card);
@@ -151,7 +152,7 @@ export class Command extends BaseCommand {
                     tradeeCollected,
                     1,
                     description[tradeeCollected] +
-                      ` ${reference.identifier + `#` + reference.serial}`
+                      ` ${card.abbreviation + `#` + card.serialNumber}`
                   );
                   tradeeCards.push(card);
                   tradeeCollected++;
