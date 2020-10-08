@@ -77,6 +77,7 @@ export class Command extends BaseCommand {
           `\nYou can see the top users by XP by using \`!top xp\`!`;
         break;
       }
+      case "mp":
       case "marketplace": {
         header = "Marketplace";
         description =
