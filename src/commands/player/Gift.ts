@@ -93,10 +93,12 @@ export class Command extends BaseCommand {
       return;
     });
     reactions.on("end", async (reason: string) => {
-      confirmation.edit(
-        `<:red_x:741454361007357993> You didn't react in time!`
-      );
-      confirmation.reactions.removeAll();
+      if (reason !== "ok") {
+        confirmation.edit(
+          `<:red_x:741454361007357993> You didn't react in time!`
+        );
+        confirmation.reactions.removeAll();
+      }
     });
   }
 }
