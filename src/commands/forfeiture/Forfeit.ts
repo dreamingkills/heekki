@@ -43,6 +43,6 @@ export class Command extends BaseCommand {
         `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
       );
     }
-    conf.reactions.removeAll();
+    if (this.permissions.MANAGE_MESSAGES) conf.reactions.removeAll();
   }
 }

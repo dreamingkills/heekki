@@ -2,6 +2,7 @@ import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["fish"];
@@ -45,7 +46,7 @@ export class Command extends BaseCommand {
           `<:red_x:741454361007357993> You did not react in time, so the transaction has been cancelled.`
         );
       }
-      conf.reactions.removeAll();
+      if (this.permissions.MANAGE_MESSAGES) conf.reactions.removeAll();
       return;
     }
     if (this.options[0]?.toLowerCase() === "trophies") {
@@ -74,12 +75,8 @@ export class Command extends BaseCommand {
       return;
     }
     if (this.options[0]?.toLowerCase() === "trophy") {
-      if (executor.coins < 10000) {
-        msg.channel.send(
-          `<:red_x:741454361007357993> You don't have enough coins to do that.`
-        );
-        return;
-      }
+      if (executor.coins < 10000)
+        throw new error.NotEnoughCoinsError(executor.coins, 10000);
       const fishId = this.options[1];
       if (!fishId) {
         msg.channel.send(
@@ -127,7 +124,7 @@ export class Command extends BaseCommand {
           `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
         );
       }
-      conf.reactions.removeAll();
+      if (this.permissions.MANAGE_MESSAGES) conf.reactions.removeAll();
       return;
     }
     const fishRaw = await PlayerService.getFishByProfile(executor);

@@ -58,14 +58,7 @@ export class Command extends BaseCommand {
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
       }
-      try {
-        if (
-          msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")
-        )
-          await channel.bulkDelete(collected);
-      } catch (e) {
-        // Ignore 'Unknown Message' - doesn't matter
-      }
+      if (this.permissions.MANAGE_MESSAGES) await channel.bulkDelete(collected);
       StatsService.triviaComplete(
         executor,
         reason === "correct" ? true : false

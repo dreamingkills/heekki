@@ -125,27 +125,14 @@ export class Command extends BaseCommand {
           identifier: this.options[1]?.split("#")[0],
           serial: parseInt(this.options[1]?.split("#")[1]),
         };
-        if (isNaN(reference.serial)) {
-          msg.channel.send(
-            `<:red_x:741454361007357993> Please enter a valid card reference.`
-          );
-          return;
-        }
+        if (isNaN(reference.serial))
+          throw new error.InvalidCardReferenceError();
         const card = await CardService.getCardDataFromReference(reference);
 
         const forSale = await MarketService.cardIsOnMarketplace(card);
-        if (!forSale.forSale) {
-          await msg.channel.send(
-            `<:red_x:741454361007357993> **${card.abbreviation}#${card.serialNumber}** isn't listed on the Marketplace.`
-          );
-          return;
-        }
-        if (forSale.price > executor.coins) {
-          msg.channel.send(
-            `<:red_x:741454361007357993> You don't have enough coins to do that.\nListing Price: <:cash:757146832639098930> **${forSale.price}**\nYour Balance: <:cash:757146832639098930> **${executor.coins}**`
-          );
-          return;
-        }
+        if (!forSale.forSale) throw new error.CardNotForSaleError(reference);
+        if (forSale.price > executor.coins)
+          throw new error.NotEnoughCoinsError(executor.coins, forSale.price);
 
         const conf = await msg.channel.send(
           `:warning: Are you sure you want to purchase **${card.abbreviation}#${card.serialNumber}** for <:cash:757146832639098930> **${forSale.price}**?\nThis card has :star: **${card.stars}** and :heart: **${card.hearts}**. React with :white_check_mark: to confirm.`
@@ -200,13 +187,7 @@ export class Command extends BaseCommand {
           conf.edit(
             `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
           );
-          if (
-            msg.guild
-              ?.member(msg.client.user!)
-              ?.hasPermission("MANAGE_MESSAGES")
-          ) {
-            conf.reactions.removeAll();
-          }
+          if (this.permissions.MANAGE_MESSAGES) conf.reactions.removeAll();
         });
         break;
       }
@@ -230,7 +211,8 @@ export class Command extends BaseCommand {
 
         if (pageLimit > 2) await sent.react(`⏪`);
         if (pageLimit > 1) await sent.react(`◀️`);
-        await sent.react(`754832389620105276`);
+        if (this.permissions.MANAGE_MESSAGES)
+          await sent.react(`754832389620105276`);
         if (pageLimit > 1) await sent.react(`▶️`);
         if (pageLimit > 2) await sent.react(`⏩`);
 
@@ -254,16 +236,12 @@ export class Command extends BaseCommand {
           if (r.emoji.name === "◀️" && page !== 1) newPage = page - 1;
           if (r.emoji.name === "▶️" && page !== pageLimit) newPage = page + 1;
           if (r.emoji.name === "⏩" && page !== pageLimit) newPage = pageLimit;
-          if (r.emoji.name === "delete") {
+          if (r.emoji.name === "delete" && this.permissions.MANAGE_MESSAGES) {
             (<TextChannel>msg.channel).bulkDelete([msg, sent]);
             return;
           }
-          if (
-            msg.guild
-              ?.member(msg.client.user!)
-              ?.hasPermission("MANAGE_MESSAGES")
-          )
-            r.users.remove(msg.author);
+
+          if (this.permissions.MANAGE_MESSAGES) r.users.remove(msg.author);
 
           if (newPage !== 0 && newPage !== page) {
             const newCards = await MarketService.getMarket({

@@ -127,7 +127,8 @@ export class Command extends BaseCommand {
           }
           if (!caughtFish) {
             successfulCatches++;
-            fishingMsg.reactions.removeAll();
+            if (this.permissions.MANAGE_MESSAGES)
+              fishingMsg.reactions.removeAll();
             if (successfulCatches === 3) {
               this.currentlyFishing.delete(msg.author.id);
               clearInterval(interval);

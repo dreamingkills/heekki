@@ -11,7 +11,7 @@ import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
-  names: string[] = ["card", "show"];
+  names: string[] = ["card", "show", "view"];
   async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
@@ -47,7 +47,7 @@ export class Command extends BaseCommand {
       );
     const sent = await msg.channel.send({ embed: embed, files: [image] });
 
-    if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")) {
+    if (this.permissions.MANAGE_MESSAGES) {
       sent.react(`753019858932727868`);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>

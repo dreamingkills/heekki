@@ -13,7 +13,6 @@ export class Logger {
     const logString = [
       ``,
       chalk`{white ================} {hex('#ffbfbf') ${command.names[0]}} {white ================}`,
-      ``,
       chalk`{white  Run by:} {hex('#1fb7cf') ${msg.author.tag}} {white (${msg.author.id})}`,
       chalk`{white   Guild:} {hex('#1fb7cf') ${msg.guild!.name}} {white (${
         msg.guild!.id
@@ -38,7 +37,8 @@ export class Logger {
 
     //Ending
     logString.push(
-      chalk`{white ${"=".repeat(32 + 2 + command.names[0].length)}}`
+      chalk`{white ${"=".repeat(32 + 2 + command.names[0].length)}}`,
+      ``
     );
 
     if (error) logString.push(``, chalk`{red Error: ${error.message}}`);

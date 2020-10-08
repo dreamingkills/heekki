@@ -189,7 +189,7 @@ export class Command extends BaseCommand {
                 }
                 if (tradeeCollected === 5) collector.stop("ok");
 
-                m.delete();
+                if (this.permissions.MANAGE_MESSAGES) m.delete();
               }
             } catch (e) {
               msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
@@ -260,7 +260,7 @@ export class Command extends BaseCommand {
               `<:red_x:741454361007357993> This trade has expired.`
             )
           );
-          sent.reactions.removeAll();
+          if (this.permissions.MANAGE_MESSAGES) sent.reactions.removeAll();
         });
       }
     });

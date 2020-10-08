@@ -84,7 +84,8 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(embed);
     if (pageLimit > 2) await sent.react(`⏪`);
     if (pageLimit > 1) await sent.react(`◀️`);
-    await sent.react(`754832389620105276`);
+    if (this.permissions.MANAGE_MESSAGES)
+      await sent.react(`754832389620105276`);
     if (pageLimit > 1) await sent.react(`▶️`);
     if (pageLimit > 2) await sent.react(`⏩`);
 
@@ -133,7 +134,10 @@ export class Command extends BaseCommand {
             )
             .setDescription(desc + (await this.renderInventory(newCards)))
         );
-      } else if (r.emoji.name === "delete") {
+      } else if (
+        r.emoji.name === "delete" &&
+        this.permissions.MANAGE_MESSAGES
+      ) {
         return (<TextChannel>msg.channel).bulkDelete([msg, sent]);
       } else if (r.emoji.name === "▶️" && page !== pageLimit) {
         page++;
@@ -169,7 +173,8 @@ export class Command extends BaseCommand {
       r.users.remove(msg.author);
     });
     collector.on("end", async () => {
-      if (!sent.deleted) sent.reactions.removeAll();
+      if (!sent.deleted && this.permissions.MANAGE_MESSAGES)
+        sent.reactions.removeAll();
     });
   }
 }

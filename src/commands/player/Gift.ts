@@ -97,7 +97,8 @@ export class Command extends BaseCommand {
         confirmation.edit(
           `<:red_x:741454361007357993> You didn't react in time!`
         );
-        confirmation.reactions.removeAll();
+        if (this.permissions.MANAGE_MESSAGES)
+          confirmation.reactions.removeAll();
       }
     });
   }

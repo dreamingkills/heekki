@@ -49,7 +49,7 @@ export class Command extends BaseCommand {
     }
 
     const sent = await msg.channel.send(embed);
-    if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES")) {
+    if (this.permissions.MANAGE_MESSAGES) {
       sent.react(`753019858932727868`);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>

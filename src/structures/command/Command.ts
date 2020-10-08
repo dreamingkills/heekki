@@ -19,6 +19,7 @@ export abstract class BaseCommand implements Command {
   users?: string[];
 
   options: string[] = [];
+  permissions!: { MANAGE_MESSAGES: boolean };
   flags: { [key: string]: string } = {};
 
   abstract async exec(msg: Message, executor: Profile): Promise<void>;
@@ -28,6 +29,12 @@ export abstract class BaseCommand implements Command {
       .split(" ")
       .slice(1)
       .filter((e) => e);
+    this.permissions = {
+      MANAGE_MESSAGES: msg.guild
+        ?.member(msg.client.user!)
+        ?.hasPermission("MANAGE_MESSAGES")!,
+    };
+
     return await this.exec(msg, executor);
   }
 

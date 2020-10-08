@@ -137,7 +137,8 @@ export class Command extends BaseCommand {
           )
         );
       }
-      r.users.remove(msg.author);
+      if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES"))
+        r.users.remove(msg.author);
     });
 
     collector.on("end", async () => {
