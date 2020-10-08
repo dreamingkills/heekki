@@ -60,6 +60,7 @@ export class CommandManager {
       return;
     }
 
+    const staged = Date.now();
     try {
       this.cooldown.add(msg.author.id);
       setTimeout(() => {
@@ -73,9 +74,9 @@ export class CommandManager {
       if (profile.restricted) throw new error.RestrictedUserError();
 
       await cmd.run(msg, profile);
-      Logger.log(cmd, msg);
+      Logger.log(cmd, msg, staged);
     } catch (e) {
-      Logger.log(cmd, msg, e);
+      Logger.log(cmd, msg, staged, e);
       if (e.isClientFacing) {
         msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
       } else
