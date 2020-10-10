@@ -183,7 +183,8 @@ export class Command extends BaseCommand {
           );
           return;
         });
-        reactions.on("end", () => {
+        reactions.on("end", (collected, reason) => {
+          if (reason !== "time") return;
           conf.edit(
             `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
           );

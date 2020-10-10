@@ -248,7 +248,7 @@ export class Command extends BaseCommand {
             );
             this.currentlyTrading.delete(msg.author.id);
             this.currentlyTrading.delete(tradeeUser.id);
-            return;
+            return conf.stop("ok");
           }
         });
         conf.on("end", (collected, reason: string) => {

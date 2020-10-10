@@ -54,7 +54,7 @@ export class ShopFetch extends DBClass {
 
   public static async getAllShopItems(active?: boolean): Promise<ShopItem[]> {
     const query = (await DB.query(
-      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE active=?`,
+      `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.image_data_id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE active=? ORDER BY shop.id DESC`,
       [active]
     )) as {
       id: number;
