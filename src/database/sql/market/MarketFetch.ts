@@ -19,6 +19,7 @@ export class MarketFetch extends DBClass {
                   card.serial_id,
                   card.pack_id,
                   card.serial_limit,
+                  card.image_data_id,
                   user_card.id AS user_card_id,
                   user_card.serial_number,
                   user_card.owner_id,
@@ -27,7 +28,6 @@ export class MarketFetch extends DBClass {
                   user_card.is_favorite,
                   pack.title,
                   pack.credit,
-                  pack.image_data_id,
                   marketplace.price
                 FROM
                   marketplace
