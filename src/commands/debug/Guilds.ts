@@ -6,7 +6,7 @@ export class Command extends BaseCommand {
   users: string[] = ["197186779843919877"];
   async exec(msg: Message) {
     const desc = msg.client.guilds.cache.map((g) => {
-      return `__**${g.name}**__\n**${g.memberCount}** members\n**Owner**: <@${g.ownerID}>`;
+      return `__**${g.name}**__ - ${g.memberCount}/<@${g.ownerID}>`;
     });
     msg.channel.send(desc);
   }
