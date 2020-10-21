@@ -44,6 +44,13 @@ export class Command extends BaseCommand {
 
   async exec(msg: Message, executor: Profile) {
     switch (this.options[0]?.toLowerCase()) {
+      case "all": {
+        await FriendService.acceptAllFriendRequests(executor);
+        await msg.channel.send(
+          `:white_check_mark: Accepted all friend requests!`
+        );
+        return;
+      }
       case "add": {
         if (!this.options[1]) {
           msg.channel.send(
@@ -310,7 +317,7 @@ export class Command extends BaseCommand {
       )
       .setColor(`#FFAACC`)
       .setDescription(
-        `**Friends on Heekki**\nYou can add friends to receive hearts from them whenever they send them. To send your friends some hearts, you can use \`!send\` - this comes at no cost to you.\n- To send or accept a friend request, use \`!friend add\`.\n- To unfriend or reject a friend request, use \`!friend remove\`.\n\n**Subcommands**\n\`\`\`!friend add <user>\n!friend remove <user>\n!friend list\n!friend requests\`\`\``
+        `**Friends on Heekki**\nYou can add friends to receive hearts from them whenever they send them. To send your friends some hearts, you can use \`!send\` - this comes at no cost to you.\n- To send or accept a friend request, use \`!friend add\`.\n- To unfriend or reject a friend request, use \`!friend remove\`.\n\n**Subcommands**\n\`\`\`!friend add <user>\n!friend remove <user>\n!friend list\n!friend requests\n!friend all\`\`\``
       );
     msg.channel.send(helpEmbed);
     return;

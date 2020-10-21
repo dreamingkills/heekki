@@ -10,6 +10,7 @@ export class FriendUpdate extends DBClass {
       senderId,
       friendId,
     ]);
+    return;
   }
 
   public static async acceptFriendRequest(
@@ -20,6 +21,14 @@ export class FriendUpdate extends DBClass {
       `UPDATE friend SET confirmed=true WHERE (sender_id=? AND friend_id=?) OR (sender_id=? AND friend_id=?);`,
       [senderId, friendId, friendId, senderId]
     );
+    return;
+  }
+
+  public static async acceptAllFriendRequests(senderId: string): Promise<void> {
+    await DB.query(`UPDATE friend SET confirmed=true WHERE friend_id=?;`, [
+      senderId,
+    ]);
+    return;
   }
 
   public static async removeFriend(
@@ -30,6 +39,7 @@ export class FriendUpdate extends DBClass {
       `DELETE FROM friend WHERE (sender_id=? AND friend_id=?) OR (sender_id=? AND friend_id=?);`,
       [senderId, friendId, friendId, senderId]
     );
+    return;
   }
 
   public static async sendHearts(
@@ -52,5 +62,6 @@ export class FriendUpdate extends DBClass {
         ", "
       )};`
     );
+    return;
   }
 }

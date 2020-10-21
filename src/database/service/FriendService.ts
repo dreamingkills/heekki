@@ -1,8 +1,6 @@
-import { PlayerService } from "./PlayerService";
 import { FriendFetch } from "../sql/friend/FriendFetch";
 import { Profile } from "../../structures/player/Profile";
 import { FriendUpdate } from "../sql/friend/FriendUpdate";
-import * as error from "../../structures/Error";
 import { Friend } from "../../structures/player/Friend";
 
 export class FriendService {
@@ -47,17 +45,24 @@ export class FriendService {
     sender: Profile,
     friend: Profile
   ): Promise<void> {
-    await FriendUpdate.sendFriendRequest(sender.discord_id, friend.discord_id);
+    return await FriendUpdate.sendFriendRequest(
+      sender.discord_id,
+      friend.discord_id
+    );
   }
 
   public static async acceptFriendRequest(
     sender: Profile,
     friend: Profile
   ): Promise<void> {
-    await FriendUpdate.acceptFriendRequest(
+    return await FriendUpdate.acceptFriendRequest(
       sender.discord_id,
       friend.discord_id
     );
+  }
+
+  public static async acceptAllFriendRequests(sender: Profile): Promise<void> {
+    return await FriendUpdate.acceptAllFriendRequests(sender.discord_id);
   }
 
   public static async removeFriend(
@@ -71,7 +76,7 @@ export class FriendService {
     sender: Profile,
     friends: string[]
   ): Promise<void> {
-    await FriendUpdate.sendHearts(sender.discord_id, friends);
+    return await FriendUpdate.sendHearts(sender.discord_id, friends);
   }
 
   public static async getTotalHeartsSent(
