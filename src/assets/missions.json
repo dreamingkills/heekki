@@ -6,11 +6,11 @@
     },
     {
       "text": "%M was paid for an earring CF.",
-      "baseReward": 600
+      "baseReward": 400
     },
     {
       "text": "%M stole from BlockBerry Creative - but was it really stealing?",
-      "baseReward": 600
+      "baseReward": 200
     },
     {
       "text": "%M sold some albums.",
@@ -18,7 +18,7 @@
     },
     {
       "text": "%M received a birthday gift from Orbits.",
-      "baseReward": 500
+      "baseReward": 150
     },
     {
       "text": "%M was scared by a pigeon.",
@@ -27,10 +27,6 @@
     {
       "text": "%M went fishing and came back with nothing.",
       "baseReward": 0
-    },
-    {
-      "text": "%M tried *Mad Dog 357* and lived to tell the tale.",
-      "baseReward": 400
     },
     {
       "text": "%M passed their graduation exam.",
@@ -50,7 +46,7 @@
     },
     {
       "text": "%M was sponsored by a noodle company.",
-      "baseReward": 900
+      "baseReward": 300
     },
     {
       "text": "%M went busking.",
@@ -58,11 +54,11 @@
     },
     {
       "text": "%M appeared on King of Masked Singer and made it to the second round!",
-      "baseReward": 700
+      "baseReward": 450
     },
     {
       "text": "%M was invited to Weekly Idol.",
-      "baseReward": 600
+      "baseReward": 100
     },
     {
       "text": "%M covered another group's choreography and gained some fans.",
@@ -70,11 +66,11 @@
     },
     {
       "text": "%M competed in ISAC and won a gold medal.",
-      "baseReward": 600
+      "baseReward": 150
     },
     {
       "text": "%M was selected to be the face of Fenty Beauty Korea.",
-      "baseReward": 650
+      "baseReward": 300
     },
     {
       "text": "%M found some spare changed underneath the couch cushions.",
