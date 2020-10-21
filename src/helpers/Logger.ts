@@ -4,6 +4,7 @@ import { BaseCommand } from "../structures/command/Command";
 import stripAnsi from "strip-ansi";
 import moment from "moment";
 import version from "../version.json";
+import { ClientError } from "../structures/Error";
 
 export class Logger {
   static log(

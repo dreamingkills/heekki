@@ -7,7 +7,7 @@ import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
-  names: string[] = ["trivia"];
+  names: string[] = ["trivia", "tr"];
   currentlyPlaying: Set<string> = new Set<string>();
 
   async exec(msg: Message, executor: Profile) {

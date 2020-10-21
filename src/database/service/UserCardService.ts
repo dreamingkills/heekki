@@ -15,7 +15,7 @@ export class UserCardService {
     receiver: Profile,
     card: UserCard
   ): Promise<void> {
-    await CardUpdate.transferCardsToUser(receiver.discord_id, [card]);
+    return await CardUpdate.transferCardsToUser(receiver.discord_id, [card]);
   }
 
   public static async createNewUserCard(
@@ -37,11 +37,11 @@ export class UserCardService {
   }
 
   public static async toggleCardAsFavorite(card: UserCard): Promise<void> {
-    await CardUpdate.toggleCardAsFavorite(card.userCardId);
+    return await CardUpdate.toggleCardAsFavorite(card.userCardId);
   }
 
   public static async forfeitCard(user: string, card: UserCard): Promise<void> {
-    await CardUpdate.forfeitCard(card);
+    return await CardUpdate.forfeitCard(card);
   }
 
   public static async forfeitBulkUnderStars(
@@ -61,14 +61,21 @@ export class UserCardService {
     return numberForfeited;
   }
 
-  public static async incrementCardStars(card_id: number): Promise<void> {
-    await CardUpdate.incrementCardStars(card_id);
+  public static async incrementCardStars(card: UserCard): Promise<void> {
+    return await CardUpdate.incrementCardStars(card);
   }
 
   public static async transferCards(
     recipient: string,
     cards: UserCard[]
   ): Promise<void> {
-    await CardUpdate.transferCardsToUser(recipient, cards);
+    return await CardUpdate.transferCardsToUser(recipient, cards);
+  }
+
+  public static async removeHeartsFromCard(
+    card: UserCard,
+    amount: number
+  ): Promise<void> {
+    return await CardUpdate.removeHeartsFromCard(card, amount);
   }
 }

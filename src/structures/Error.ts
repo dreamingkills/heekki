@@ -205,7 +205,30 @@ export class MaxSerialError extends ClientError {
     super(`There cannot be any more issues of that card.`);
   }
 }
-
+export class NotEnoughHeartsToPrestigeError extends ClientError {
+  name = "NotEnoughHeartsToPrestigeError";
+  constructor(
+    has: number,
+    required: number,
+    reference: { identifier: string; serial: number }
+  ) {
+    super(
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** doesn't have enough hearts to prestige.\n**${required}** :heart: are required to prestige, but your card only has **${has}**.`
+    );
+  }
+}
+export class MaxPrestigeError extends ClientError {
+  name = "MaxPrestigeError";
+  constructor(reference: { identifier: string; serial: number }) {
+    super(
+      `**${reference.identifier.toUpperCase()}#${
+        reference.serial
+      }** is already at 6 stars!`
+    );
+  }
+}
 /*
     Card Manipulation Errors
                               */

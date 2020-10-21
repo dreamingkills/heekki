@@ -44,12 +44,25 @@ export class CardUpdate extends DBClass {
       amount,
       card.userCardId,
     ]);
+    return;
+  }
+
+  public static async removeHeartsFromCard(
+    card: UserCard,
+    amount: number
+  ): Promise<void> {
+    await DB.query(`UPDATE user_card SET hearts=hearts-? WHERE id=?;`, [
+      amount,
+      card.userCardId,
+    ]);
+    return;
   }
 
   public static async forfeitCard(card: UserCard): Promise<void> {
     await DB.query(`UPDATE user_card SET owner_id=0 WHERE id=?;`, [
       card.userCardId,
     ]);
+    return;
   }
 
   /**
@@ -67,15 +80,20 @@ export class CardUpdate extends DBClass {
         return c.userCardId;
       }),
     ]);
+    return;
   }
 
-  public static async incrementCardStars(card_id: number): Promise<void> {
-    await DB.query(`UPDATE user_card SET stars=stars+1 WHERE id=?;`, [card_id]);
+  public static async incrementCardStars(card: UserCard): Promise<void> {
+    await DB.query(`UPDATE user_card SET stars=stars+1 WHERE id=?;`, [
+      card.userCardId,
+    ]);
+    return;
   }
 
   public static async toggleCardAsFavorite(card_id: number): Promise<void> {
     await DB.query(
       `UPDATE user_card SET is_favorite=1-is_favorite WHERE id=${card_id};`
     );
+    return;
   }
 }
