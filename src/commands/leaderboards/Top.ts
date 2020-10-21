@@ -21,11 +21,11 @@ export class Command extends BaseCommand {
           }** (${profile.coins.toLocaleString()} cash)\n`;
         }
         embed.setAuthor(
-          `Coins Leaderboard | ${msg.author.tag}`,
+          `Cash Leaderboard | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         );
         embed.setFooter(
-          `There are ${totalCoins.toLocaleString()} coins in circulation.`
+          `There is ${totalCoins.toLocaleString()} cash in circulation.`
         );
         break;
       }
