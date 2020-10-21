@@ -273,3 +273,11 @@ CREATE TABLE weight_mod
     price_multiplier INT(11) NOT NULL,
     PRIMARY KEY(id)
 );
+
+CREATE TABLE supporter
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    supporter_name  VARCHAR(255) NOT NULL,
+    discord_id      VARCHAR(32) NOT NULL,
+    PRIMARY KEY(id)
+);

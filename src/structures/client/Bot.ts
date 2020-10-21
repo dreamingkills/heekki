@@ -9,10 +9,22 @@ import {
   TextChannel,
 } from "discord.js";
 import { DB } from "../../database/index";
+import { Chance } from "chance";
+import { PlayerService } from "../../database/service/PlayerService";
 
 export class Bot extends Client {
   public config: Object = config;
   public cmdMan: CommandManager = new CommandManager();
+  public chance: Chance.Chance = new Chance();
+
+  public async updateStatus() {
+    const supporters = await PlayerService.getSupporters();
+    const lucky = this.chance.pickone(supporters);
+
+    this.user!.setPresence({
+      activity: { name: `with cards - ❤️ ${lucky.name}`, type: "PLAYING" },
+    });
+  }
 
   public async init() {
     await this.cmdMan.init();
@@ -23,7 +35,9 @@ export class Bot extends Client {
         `SELECT COUNT(*) FROM user_profile;`
       )) as { "COUNT(*)": number }[];
       console.log(`Ready - ${userCount[0]["COUNT(*)"]} users in database`);
-      this.user.setPresence({ activity: { name: "with cards - !help" } });
+
+      this.updateStatus();
+      setInterval(async () => this.updateStatus(), 900000);
     });
 
     this.on("message", async (msg: Message) => {

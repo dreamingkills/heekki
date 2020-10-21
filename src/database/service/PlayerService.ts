@@ -332,4 +332,8 @@ export class PlayerService {
       await PlayerUpdate.restrictUser(profile.discord_id);
     }
   }
+
+  public static async getSupporters(): Promise<{ name: string; id: string }[]> {
+    return await PlayerFetch.fetchSupporters();
+  }
 }

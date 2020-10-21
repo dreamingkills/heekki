@@ -544,4 +544,17 @@ export class PlayerFetch extends DBClass {
     )) as { count: number }[];
     return query[0].count;
   }
+
+  public static async fetchSupporters(): Promise<
+    { name: string; id: string }[]
+  > {
+    const query = (await DB.query(`SELECT * FROM supporter;`)) as {
+      id: number;
+      supporter_name: string;
+      discord_id: string;
+    }[];
+    return query.map((s) => {
+      return { name: s.supporter_name, id: s.discord_id };
+    });
+  }
 }
