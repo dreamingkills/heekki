@@ -99,17 +99,15 @@ export class Command extends BaseCommand {
           caughtFish = true;
           const caught = await this.generateFish();
 
-          const xp = chance.integer({ min: 6, max: 14 });
-          PlayerService.addXp(executor, xp);
+          //const xp = chance.integer({ min: 6, max: 14 });
+          //PlayerService.addXp(executor, xp);
 
           fishingMsg.edit(
             fishingEmbed
               .setDescription(
                 `:${caught.emoji}: You caught a __${
                   caught.weightMod.name !== "" ? caught.weightMod.name : ""
-                } ${caught.name}__!\n**Weight**: ${caught.weight.toFixed(
-                  2
-                )}kg\n+ **${xp}** XP`
+                } ${caught.name}__!\n**Weight**: ${caught.weight.toFixed(2)}kg` //\n+ **${xp}** XP`
               )
               .setColor(`#40BD66`)
               .setFooter(`You now have ${numberOfFish + 1} fish.`)

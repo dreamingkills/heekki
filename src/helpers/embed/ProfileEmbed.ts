@@ -17,9 +17,9 @@ export class ProfileEmbed {
       .setAuthor(`Profile | ${user.tag}`, avatar)
       .setThumbnail(avatar || "")
       .setDescription(
-        `${profile.blurb || "No description set!"}\n\n:bookmark: **XP**: ${
-          profile.xp
-        }\n<:cash:757146832639098930> **Cash**: ${
+        `${
+          profile.blurb || "No description set!"
+        }\n\n<:cash:757146832639098930> **Cash**: ${
           profile.coins
         }\n<:heekki_heart:757147742383505488> **Hearts**: ${
           profile.hearts

@@ -29,11 +29,11 @@ export class Command extends BaseCommand {
     await FriendService.sendHearts(executor, friends);
     PlayerService.setLastHeartSend(executor, now);
     const chance = new Chance();
-    const xp = chance.integer({ min: 40, max: 85 });
-    PlayerService.addXp(executor, xp);
+    //const xp = chance.integer({ min: 40, max: 85 });
+    //PlayerService.addXp(executor, xp);
 
     msg.channel.send(
-      `<:heekki_heart:757147742383505488> You've sent hearts to **${friends.length}** friends!\n+ **${xp}** XP`
+      `<:heekki_heart:757147742383505488> You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
     );
     return;
   }

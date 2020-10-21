@@ -157,8 +157,8 @@ export class Command extends BaseCommand {
           await PlayerService.removeCoinsFromProfile(executor, forSale.price);
 
           const chance = new Chance();
-          const xp = chance.integer({ min: 40, max: 71 });
-          PlayerService.addXp(sellerProfile, xp);
+          //const xp = chance.integer({ min: 40, max: 71 });
+          //PlayerService.addXp(sellerProfile, xp);
 
           StatsService.saleComplete(
             executor,
@@ -170,7 +170,7 @@ export class Command extends BaseCommand {
           const seller = msg.client.users.resolve(card.ownerId);
           if (seller) {
             seller.send(
-              `:white_check_mark: Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**\n+ **${xp}** XP`
+              `:white_check_mark: Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**` //\n+ **${xp}** XP`
             );
           }
 

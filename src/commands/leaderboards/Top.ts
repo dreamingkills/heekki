@@ -10,25 +10,6 @@ export class Command extends BaseCommand {
     let embed = new MessageEmbed();
     let description = "";
     switch (this.options[0]?.toLowerCase()) {
-      case "cash":
-      case "coins": {
-        const richestUsers = await PlayerService.getRichestUsers();
-        const totalCoins = await StatsService.getNumberOfCoins();
-        for (let profile of richestUsers) {
-          const user = msg.client.users.cache.get(profile.discord_id);
-          description += `${richestUsers.indexOf(profile) + 1}) **${
-            user?.username
-          }** (${profile.coins.toLocaleString()} cash)\n`;
-        }
-        embed.setAuthor(
-          `Cash Leaderboard | ${msg.author.tag}`,
-          msg.author.displayAvatarURL()
-        );
-        embed.setFooter(
-          `There is ${totalCoins.toLocaleString()} cash in circulation.`
-        );
-        break;
-      }
       case "cards": {
         const topCollectors = await PlayerService.getTopCollectors();
         const totalCards = await StatsService.getNumberOfCards();
@@ -66,6 +47,24 @@ export class Command extends BaseCommand {
         break;
       }
       default: {
+        const richestUsers = await PlayerService.getRichestUsers();
+        const totalCoins = await StatsService.getNumberOfCoins();
+        for (let profile of richestUsers) {
+          const user = msg.client.users.cache.get(profile.discord_id);
+          description += `${richestUsers.indexOf(profile) + 1}) **${
+            user?.username
+          }** (${profile.coins.toLocaleString()} cash)\n`;
+        }
+        embed.setAuthor(
+          `Cash Leaderboard | ${msg.author.tag}`,
+          msg.author.displayAvatarURL()
+        );
+        embed.setFooter(
+          `There is ${totalCoins.toLocaleString()} cash in circulation.`
+        );
+        break;
+      }
+      /*default: {
         const topXp = await PlayerService.getTopXp();
         const totalXp = await StatsService.getNumberOfXp();
         for (let profile of topXp) {
@@ -81,7 +80,7 @@ export class Command extends BaseCommand {
         embed.setFooter(
           `There are ${totalXp.toLocaleString()} total experience points.`
         );
-      }
+      }*/
     }
     embed.setDescription(description);
     embed.setColor(`#FFAACC`);

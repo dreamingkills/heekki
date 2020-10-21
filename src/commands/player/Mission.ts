@@ -58,8 +58,8 @@ export class Command extends BaseCommand {
     PlayerService.addCoinsToProfile(executor, profit);
     PlayerService.setLastMission(executor, now);
 
-    const xp = chance.integer({ min: 30, max: 72 });
-    if (profit !== 0) PlayerService.addXp(executor, xp);
+    //const xp = chance.integer({ min: 30, max: 72 });
+    //if (profit !== 0) PlayerService.addXp(executor, xp);
 
     const embed = new MessageEmbed()
       .setAuthor(`Mission | ${msg.author.tag}`, msg.author.displayAvatarURL())
@@ -70,9 +70,7 @@ export class Command extends BaseCommand {
           `%M`,
           `**${card.member.replace(/ *\([^)]*\) * /g, "")}**`
         )}\n${
-          profit === 0
-            ? ``
-            : `+ <:cash:757146832639098930> **${profit}**\n+ **${xp}** XP`
+          profit === 0 ? `` : `+ <:cash:757146832639098930> **${profit}**` //\n+ **${xp}** XP`
         }`
       )
       .setFooter(`You can do another mission in 45 minutes.`)

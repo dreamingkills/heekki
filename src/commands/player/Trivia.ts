@@ -39,10 +39,10 @@ export class Command extends BaseCommand {
     );
     collect.on("collect", async (m: Message) => {
       if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
-        const xp = chance.integer({ min: 2, max: 6 });
-        PlayerService.addXp(executor, xp);
+        //const xp = chance.integer({ min: 2, max: 6 });
+        //PlayerService.addXp(executor, xp);
         triviaMessage.edit(
-          `:tada: **Correct!**\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
+          `:tada: **Correct!**` //\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
         );
 
         //await PlayerService.addCoinsToProfile(executor, profit);

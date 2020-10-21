@@ -39,15 +39,15 @@ export class Command extends BaseCommand {
     }
 
     PlayerService.setLastDaily(executor, now);
-    const xp = chance.integer({ min: 180, max: 242 });
-    PlayerService.addXp(executor, xp);
+    //const xp = chance.integer({ min: 180, max: 242 });
+    //PlayerService.addXp(executor, xp);
 
     const embed = new MessageEmbed()
       .setAuthor(
         `Daily Reward | ${msg.author.tag}`,
         msg.author.displayAvatarURL()
       )
-      .setDescription(reward + `\n+ **${xp}** XP`)
+      .setDescription(reward) // + `\n+ **${xp}** XP`)
       .setFooter(`You can claim your daily reward again in 24 hours.`)
       .setColor(`#FFAACC`);
     msg.channel.send(embed);
