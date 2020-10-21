@@ -2,7 +2,7 @@
   "trivia": [
     {
       "question": "What is the shortest LOONA song, excluding intros?",
-      "answer": ["one & only", "one and only"],
+      "answer": ["oops"],
       "reward": { "min": 5, "max": 15 }
     },
     {
