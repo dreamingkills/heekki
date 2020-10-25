@@ -74,17 +74,16 @@ export class CommandManager {
       if (profile.restricted) throw new error.RestrictedUserError();
 
       let err;
-      await cmd.run(msg, profile).catch((e) => {
+      await cmd.run(msg, profile).catch(async (e) => {
         err = e;
+        if (e.isClientFacing) {
+          await msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
+        } else
+          await msg.channel.send(
+            `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
+          );
       });
       Logger.log(cmd, msg, staged, err);
-    } catch (e) {
-      if (e.isClientFacing) {
-        await msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
-      } else
-        await msg.channel.send(
-          `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
-        );
-    }
+    } catch (e) {}
   }
 }

@@ -155,6 +155,13 @@ export class PlayerService {
     await PlayerUpdate.removeCoins(profile.discord_id, amount);
   }
 
+  public static async addToWell(
+    profile: Profile,
+    amount: number
+  ): Promise<void> {
+    await PlayerUpdate.addToWell(profile.discord_id, amount);
+  }
+
   /* 
       Timers Get & Set 
                         */

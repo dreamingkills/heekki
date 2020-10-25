@@ -6,6 +6,7 @@ export class PlayerUpdate extends DBClass {
       `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${300});`,
       [discord_id]
     );
+    return;
   }
   public static async changeDescription(
     discord_id: string,
@@ -15,6 +16,7 @@ export class PlayerUpdate extends DBClass {
       description,
       discord_id,
     ]);
+    return;
   }
   public static async addCoins(
     discord_id: string,
@@ -24,6 +26,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET coins=coins+? WHERE discord_id=?;`,
       [amount, discord_id]
     );
+    return;
   }
   public static async removeCoins(
     discord_id: string,
@@ -33,6 +36,7 @@ export class PlayerUpdate extends DBClass {
       amount,
       discord_id,
     ]);
+    return;
   }
   public static async addHearts(
     discord_id: string,
@@ -42,6 +46,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET hearts=hearts+? WHERE discord_id=?;`,
       [amount, discord_id]
     );
+    return;
   }
   public static async removeHearts(
     discord_id: string,
@@ -51,6 +56,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET hearts=hearts-? WHERE discord_id=?`,
       [amount, discord_id]
     );
+    return;
   }
   public static async setHeartSendTimestamp(
     discord_id: string,
@@ -60,6 +66,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET hearts_last=? WHERE discord_id=?;`,
       [time, discord_id]
     );
+    return;
   }
   public static async setHeartBoxTimestamp(
     discord_id: string,
@@ -69,6 +76,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET heart_box_last=? WHERE discord_id=?;`,
       [time, discord_id]
     );
+    return;
   }
   public static async giveBadge(
     discord_id: string,
@@ -78,6 +86,7 @@ export class PlayerUpdate extends DBClass {
       `INSERT INTO user_badge (discord_id, badge_id) VALUES (?, ?);`,
       [discord_id, badge_id]
     );
+    return;
   }
 
   public static async removeBadge(
@@ -88,6 +97,7 @@ export class PlayerUpdate extends DBClass {
       `DELETE FROM user_badge WHERE discord_id=? AND badge_id=?;`,
       [discord_id, badge_id]
     );
+    return;
   }
 
   public static async setOrphanTimestamp(
@@ -98,6 +108,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET last_orphan=? WHERE discord_id=?;`,
       [time, discord_id]
     );
+    return;
   }
   public static async setMissionTimestamp(
     discord_id: string,
@@ -107,6 +118,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET mission_last=? WHERE discord_id=?;`,
       [time, discord_id]
     );
+    return;
   }
   public static async setDailyTimestamp(
     discord_id: string,
@@ -116,6 +128,7 @@ export class PlayerUpdate extends DBClass {
       time,
       discord_id,
     ]);
+    return;
   }
 
   public static async createFish(
@@ -129,6 +142,7 @@ export class PlayerUpdate extends DBClass {
       `INSERT INTO fish (owner_id, fish_id, fish_weight, weight_mod, identifier) VALUES (?, ?, ?, ?, ?);`,
       [discord_id, fish, weight, weightModId, identifier]
     );
+    return;
   }
 
   public static async giveReputation(
@@ -139,6 +153,7 @@ export class PlayerUpdate extends DBClass {
       `INSERT INTO reputation (sender_id, receiver_id) VALUES (?, ?);`,
       [sender_id, receiver_id]
     );
+    return;
   }
 
   public static async removeReputation(
@@ -149,6 +164,7 @@ export class PlayerUpdate extends DBClass {
       `DELETE FROM reputation WHERE sender_id=? AND receiver_id=?;`,
       [sender_id, receiver_id]
     );
+    return;
   }
 
   public static async addXp(discord_id: string, amount: number): Promise<void> {
@@ -156,18 +172,21 @@ export class PlayerUpdate extends DBClass {
       amount,
       discord_id,
     ]);
+    return;
   }
 
   public static async makeFishTrophy(id: string): Promise<void> {
     await DB.query(`UPDATE fish SET trophy_fish=true WHERE identifier=?;`, [
       id,
     ]);
+    return;
   }
 
   public static async clearFish(ownerId: string): Promise<void> {
     await DB.query(`DELETE FROM fish WHERE owner_id=? AND trophy_fish=false;`, [
       ownerId,
     ]);
+    return;
   }
 
   public static async restrictUser(discordId: string): Promise<void> {
@@ -175,6 +194,7 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET restricted=true WHERE discord_id=?;`,
       [discordId]
     );
+    return;
   }
 
   public static async unrestrictUser(discordId: string): Promise<void> {
@@ -182,5 +202,17 @@ export class PlayerUpdate extends DBClass {
       `UPDATE user_profile SET restricted=false WHERE discord_id=?;`,
       discordId
     );
+    return;
+  }
+
+  public static async addToWell(
+    discordId: string,
+    amount: number
+  ): Promise<void> {
+    await DB.query(`UPDATE user_profile SET well=well+? WHERE discord_id=?;`, [
+      amount,
+      discordId,
+    ]);
+    return;
   }
 }

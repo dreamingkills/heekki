@@ -89,11 +89,9 @@ export class Command extends BaseCommand {
       confirmation.edit(
         `:white_check_mark: Gifted **${validCards.length}** cards to **${mention.tag}**!`
       );
-      reactions.stop("ok");
-      return;
     });
-    reactions.on("end", async (reason: string) => {
-      if (reason !== "ok") {
+    reactions.on("end", async (reaction, reason: string) => {
+      if (reason !== "limit") {
         confirmation.edit(
           `<:red_x:741454361007357993> You didn't react in time!`
         );

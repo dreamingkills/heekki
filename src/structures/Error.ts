@@ -33,6 +33,13 @@ export class MissingPermissionError extends ClientError {
     super(`I am missing the following permission: \`${permission}\``);
   }
 }
+export class NotANumberError extends ClientError {
+  name = "NotANumberError";
+  constructor() {
+    super("Please enter a valid number.");
+  }
+}
+
 /*
     Profile Errors
                     */

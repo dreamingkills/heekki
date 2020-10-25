@@ -16,7 +16,7 @@ export class Logger {
     command: BaseCommand,
     msg: Message,
     staged: number,
-    error?: Error
+    error?: any
   ): void {
     const now = Date.now();
     const params = msg.content
@@ -50,7 +50,7 @@ export class Logger {
       logString.push(chalk`{white Options:} {hex('#1fb7cf') ${params}}`);
 
     //Errors
-    if (error)
+    if (error && !error.isClientFacing)
       logString.push(
         ``,
         chalk`{red Error: ${error.name + " - " + error.message}}${
@@ -71,7 +71,7 @@ export class Logger {
       } =}`,
     ].join("\n");
 
-    if (error) {
+    if (error && !error.isClientFacing) {
       this.stream.write(stripAnsi(final));
       console.error(final);
     } else console.log(final);

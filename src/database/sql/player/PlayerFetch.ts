@@ -6,18 +6,7 @@ import { Badge } from "../../../structures/player/Badge";
 import * as error from "../../../structures/Error";
 import { Fish } from "../../../structures/game/Fish";
 import { PlayerService } from "../../service/PlayerService";
-
-interface ProfileInterface {
-  discord_id: string;
-  blurb: string;
-  coins: number;
-  hearts: number;
-  daily_streak: number;
-  daily_last: number;
-  xp: number;
-  restricted: boolean;
-  well: number;
-}
+import { ProfileInterface } from "../../../structures/interface/ProfileInterface";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -561,5 +550,13 @@ export class PlayerFetch extends DBClass {
     return query.map((s) => {
       return { name: s.supporter_name, id: s.discord_id };
     });
+  }
+
+  public static async getHeartsSent(discordId: string): Promise<number> {
+    const query = (await DB.query(
+      `SELECT COUNT(*) AS total FROM friend_heart WHERE sender_id=?;`,
+      [discordId]
+    )) as { total: number }[];
+    return query[0]?.total;
   }
 }
