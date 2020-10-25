@@ -5,8 +5,13 @@ import stripAnsi from "strip-ansi";
 import moment from "moment";
 import version from "../version.json";
 import { ClientError } from "../structures/Error";
+import "fs";
+import { createWriteStream } from "fs";
+import through = require("through2");
 
 export class Logger {
+  static stream = createWriteStream("./error-file.txt", { flags: "a" });
+
   static log(
     command: BaseCommand,
     msg: Message,
@@ -48,7 +53,9 @@ export class Logger {
     if (error)
       logString.push(
         ``,
-        chalk`{red Error: ${error.name + " - " + error.message}}`
+        chalk`{red Error: ${error.name + " - " + error.message}}${
+          error.stack ? `\nStack: ${error.stack}` : ""
+        }`
       );
 
     const longest = Math.max(...logString.map((e) => stripAnsi(e).length));
@@ -57,13 +64,16 @@ export class Logger {
     }} {white ${"=".repeat(longest - 3 - command.names[0].length)}}`;
 
     const versionLength = 11 + version.version.length;
-    console.log(
-      [
-        ...logString,
-        chalk`{white ${"=".repeat(longest - versionLength)} Heekki v${
-          version.version
-        } =}`,
-      ].join("\n")
-    );
+    const final = [
+      ...logString,
+      chalk`{white ${"=".repeat(longest - versionLength)} Heekki v${
+        version.version
+      } =}`,
+    ].join("\n");
+
+    if (error) {
+      this.stream.write(stripAnsi(final));
+      console.error(final);
+    } else console.log(final);
   }
 }

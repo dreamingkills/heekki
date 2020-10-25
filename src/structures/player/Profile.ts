@@ -9,6 +9,7 @@ export class Profile {
   daily_last: number;
   xp: number;
   restricted: boolean;
+  well: number;
   badges?: Badge[];
   constructor(
     data: {
@@ -19,6 +20,7 @@ export class Profile {
       hearts: number;
       blurb: string;
       xp: number;
+      well: number;
       restricted: boolean;
     },
     badges?: Badge[]
@@ -32,5 +34,6 @@ export class Profile {
     this.badges = badges;
     this.xp = data.xp;
     this.restricted = data.restricted;
+    this.well = data.well;
   }
 }

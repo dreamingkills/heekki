@@ -647,6 +647,13 @@
   resolved "https://registry.yarnpkg.com/@types/sqlstring/-/sqlstring-2.2.1.tgz#5c1459ce14be0e74bd9648097bbee58f5c669f20"
   integrity sha512-aoPCWl1XeUuVXslgwN06FKhVyJq8rqlKk2czbEnk9+R0OQd+JPJDmOjySnULGTeZzr6YB6+3VyFrEiOlFoMgYA==
 
+"@types/through2@^2.0.36":
+  version "2.0.36"
+  resolved "https://registry.yarnpkg.com/@types/through2/-/through2-2.0.36.tgz#35fda0db635827d44c0e08e2c94653e647574a00"
+  integrity sha512-vuifQksQHJXhV9McpVsXKuhnf3lsoX70PnhcqIAbs9dqLH2NgrGz0DzZPDY3+Yh6eaRqcE1gnCQ6QhBn1/PT5A==
+  dependencies:
+    "@types/node" "*"
+
 "@types/type-is@^1.6.3":
   version "1.6.3"
   resolved "https://registry.yarnpkg.com/@types/type-is/-/type-is-1.6.3.tgz#45285b3be846a4afc9d488910a8e4b7bc2e8a169"

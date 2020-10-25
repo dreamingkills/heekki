@@ -61,26 +61,28 @@ export class CommandManager {
     }
 
     const staged = Date.now();
-    try {
-      this.cooldown.add(msg.author.id);
-      setTimeout(() => {
-        this.cooldown.delete(msg.author.id);
-      }, 1500);
+    this.cooldown.add(msg.author.id);
+    setTimeout(() => {
+      this.cooldown.delete(msg.author.id);
+    }, 1500);
 
+    try {
       const profile = await PlayerService.getProfileByDiscordId(
         msg.author.id,
         true
       );
       if (profile.restricted) throw new error.RestrictedUserError();
 
-      await cmd.run(msg, profile);
-      Logger.log(cmd, msg, staged);
+      let err;
+      await cmd.run(msg, profile).catch((e) => {
+        err = e;
+      });
+      Logger.log(cmd, msg, staged, err);
     } catch (e) {
-      Logger.log(cmd, msg, staged, e);
       if (e.isClientFacing) {
-        msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
+        await msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
       } else
-        msg.channel.send(
+        await msg.channel.send(
           `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
         );
     }

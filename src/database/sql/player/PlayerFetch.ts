@@ -7,6 +7,18 @@ import * as error from "../../../structures/Error";
 import { Fish } from "../../../structures/game/Fish";
 import { PlayerService } from "../../service/PlayerService";
 
+interface ProfileInterface {
+  discord_id: string;
+  blurb: string;
+  coins: number;
+  hearts: number;
+  daily_streak: number;
+  daily_last: number;
+  xp: number;
+  restricted: boolean;
+  well: number;
+}
+
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
     let clean = this.cleanMention(discord_id);
@@ -33,6 +45,7 @@ export class PlayerFetch extends DBClass {
       daily_last: number;
       xp: number;
       restricted: boolean;
+      well: number;
     }[];
     if (!user[0] && !autoGenerate) throw new error.NoProfileError();
     if (!user[0]) {
@@ -411,6 +424,7 @@ export class PlayerFetch extends DBClass {
       daily_last: number;
       xp: number;
       restricted: boolean;
+      well: number;
     }[];
 
     return query.map((p) => {
@@ -422,16 +436,7 @@ export class PlayerFetch extends DBClass {
     const query = (await DB.query(
       `SELECT * FROM user_profile ORDER BY hearts DESC LIMIT ?;`,
       [limit]
-    )) as {
-      discord_id: string;
-      blurb: string;
-      coins: number;
-      hearts: number;
-      daily_streak: number;
-      daily_last: number;
-      xp: number;
-      restricted: boolean;
-    }[];
+    )) as ProfileInterface[];
     return query.map((p) => {
       return new Profile(p);
     });
@@ -451,8 +456,9 @@ export class PlayerFetch extends DBClass {
       daily_streak: number;
       daily_last: number;
       xp: number;
-      counted: number;
+      well: number;
       restricted: boolean;
+      counted: number;
     }[];
     return query.map((p) => {
       return { profile: new Profile(p), count: p.counted };
@@ -463,19 +469,18 @@ export class PlayerFetch extends DBClass {
     const query = (await DB.query(
       `SELECT * FROM user_profile ORDER BY xp DESC LIMIT ?;`,
       [limit]
-    )) as {
-      discord_id: string;
-      blurb: string;
-      coins: number;
-      hearts: number;
-      daily_streak: number;
-      daily_last: number;
-      xp: number;
-      restricted: boolean;
-    }[];
+    )) as ProfileInterface[];
     return query.map((p) => {
       return new Profile(p);
     });
+  }
+
+  public static async getTopWellDonators(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT * FROM user_profile ORDER BY well DESC LIMIT ?;`,
+      [limit]
+    )) as ProfileInterface[];
+    return query.map((p) => new Profile(p));
   }
 
   /*

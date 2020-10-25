@@ -41,7 +41,9 @@ export class Bot extends Client {
     });
 
     this.on("message", async (msg: Message) => {
-      if (msg.channel.type == "text") this.cmdMan.handle(msg);
+      if (msg.channel.type == "text") {
+        this.cmdMan.handle(msg);
+      }
     });
 
     this.on("guildMemberAdd", async (m: GuildMember | PartialGuildMember) => {
