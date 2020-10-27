@@ -37,7 +37,7 @@ export class Command extends BaseCommand {
     const level = CardService.heartsToLevel(card.hearts);
     const success = chance.weighted(
       [false, true],
-      [0.125, 0.8 * (1 + (level.level / 100) * 2)]
+      [0.125, (level.level / 100) * 0.25 + card.stars * 0.6]
     );
     let selected;
     if (!success) {
@@ -53,13 +53,14 @@ export class Command extends BaseCommand {
         })
       );
 
+    const multiplier = 1 + (level.level / 100) * 0.3 + card.stars * 0.2;
     const profit = Math.floor(
       chance.integer({
         min: selected.baseReward - selected.baseReward / 10,
         max: selected.baseReward + selected.baseReward / 10,
-      }) *
-        (1 + level.level / 100)
+      }) * (multiplier > 2.5 ? 2.5 : multiplier)
     );
+    console.log(profit);
 
     StatsService.missionComplete(executor, profit === 0 ? false : true);
     PlayerService.addCoinsToProfile(executor, profit);
