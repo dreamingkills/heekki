@@ -116,7 +116,6 @@ export class PlayerFetch extends DBClass {
               <number>options.limit
           )}`
         : ``);
-    console.log(query);
 
     const cards = (await DB.query(query + ";")) as UserCardInterface[];
 
