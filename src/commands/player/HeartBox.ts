@@ -36,7 +36,7 @@ export class Command extends BaseCommand {
         msg.author.displayAvatarURL()
       )
       .setDescription(
-        `:gift_heart: You opened some heart boxes and received **${total}** <:heekki_heart:757147742383505488>` //\n+ **${xp}** XP`
+        `:gift_heart: You opened some heart boxes and received **${total}** <:heekki_heart:757147742383505488>!` //\n+ **${xp}** XP`
       )
       .setFooter(
         `You now have ${
