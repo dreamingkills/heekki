@@ -4,10 +4,6 @@ import { UserCard } from "../../../structures/player/UserCard";
 import { OptionsParser } from "../OptionsParser";
 
 export class MarketFetch extends DBClass {
-  /**
-   * SQL - Fetches an array of user_card IDs that are currently for sale in the marketplace.
-   * @param options An Object of search options.
-   */
   public static async fetchCardIdsInMarketplace(options?: {
     [key: string]: string | number;
   }): Promise<{ card: UserCard; price: number }[]> {
@@ -84,10 +80,6 @@ export class MarketFetch extends DBClass {
     return forSale[0]["COUNT(*)"];
   }
 
-  /**
-   * SQL - Fetches from marketplace where user_card ID == id.
-   * @param id An ID of a user_card.
-   */
   public static async fetchCardIsForSale(
     id: number
   ): Promise<{ forSale: boolean; price: number }> {

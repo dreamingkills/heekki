@@ -68,7 +68,7 @@ export class Command extends BaseCommand {
               const user = msg.client.users.cache.get(t.discord_id);
               return `**${topDonators.indexOf(t) + 1})** ${
                 user?.username || "Unknown User"
-              } - **${t.well.toLocaleString()}**`;
+              } - **${t.well.toLocaleString()}** `;
             })
           )
           .setFooter(`You're ranked #${userRank}/${total}.`)

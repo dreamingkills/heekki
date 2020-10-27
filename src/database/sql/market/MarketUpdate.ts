@@ -1,11 +1,6 @@
 import { DBClass, DB } from "../..";
 
 export class MarketUpdate extends DBClass {
-  /**
-   * SQL - Adds a card to the marketplace..
-   * @param id The ID of the `user_card` being sold.
-   * @param price The price of the `user_card` being sold.
-   */
   public static async listCardOnMarketplace(
     id: number,
     price: number
