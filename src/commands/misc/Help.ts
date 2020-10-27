@@ -38,7 +38,7 @@ export class Command extends BaseCommand {
         description =
           `You can use \`!help <topic>\` to learn more information about something!\n` +
           `\n__**Profile**__` +
-          `\n\`friends\`, \`hearts\`, \`xp\`\n` +
+          `\n\`profile\`, \`friends\`, \`hearts\`, \`xp\`\n` +
           `\n__**Economy**__` +
           `\n\`cash\`, \`marketplace\`, \`trading\`, \`missions\`, \`cards\`\n`;
         break;
@@ -55,6 +55,14 @@ export class Command extends BaseCommand {
           `\n__**What do stars do?**__` +
           `\nStars increase the success rate and reward of missions.` +
           `\nHigher stars are rarer, but you can add a star to your card at level 99 by using \`!prestige <card>\`!`;
+        break;
+      }
+      case "profile": {
+        header = "Profile";
+        description =
+          `Your **Profile** displays information about you, including how many hearts, cards, cash, and reputation you have.\n` +
+          `\n__**How do I set my description?**__` +
+          `\nYou can use \`!desc description goes here!\` to set your description.`;
         break;
       }
       case "missions": {
