@@ -12,12 +12,15 @@ export class Command extends BaseCommand {
     switch (this.options[0]?.toLowerCase()) {
       case "cards": {
         const topCollectors = await PlayerService.getTopCollectors();
-        const totalCards = await PlayerService.getCardCountByProfile(executor);
+        const totalCards = await StatsService.getNumberOfCards();
         for (let profile of topCollectors) {
           const user = msg.client.users.cache.get(profile.profile.discord_id);
+          const count = await PlayerService.getCardCountByProfile(
+            profile.profile
+          );
           description += `${topCollectors.indexOf(profile) + 1}) **${
             user?.username || "Unknown User"
-          }** (${totalCards.toLocaleString()} cards)\n`;
+          }** (${count.toLocaleString()} cards)\n`;
         }
         embed.setAuthor(
           `Cards Leaderboard | ${msg.author.tag}`,

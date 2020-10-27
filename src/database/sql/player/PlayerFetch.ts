@@ -9,6 +9,7 @@ import { PlayerService } from "../../service/PlayerService";
 import { ProfileInterface } from "../../../structures/interface/ProfileInterface";
 import { OptionsParser } from "../OptionsParser";
 import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
+import { FishInterface } from "../../../structures/interface/FishInterface";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -202,17 +203,7 @@ export class PlayerFetch extends DBClass {
       `SELECT owner_id AS owner, fish.fish_weight AS weight, fish_name AS name, emoji, weight_mod.mod_name, weight_mod.multiplier, identifier, base_price, price_multiplier
        FROM fish LEFT JOIN fish_types ON fish_types.id=fish.fish_id LEFT JOIN weight_mod ON weight_mod.id=fish.weight_mod WHERE owner_id=? AND trophy_fish=?;`,
       [discord_id, trophy]
-    )) as {
-      identifier: string;
-      owner: string;
-      name: string;
-      weight: number;
-      emoji: string;
-      mod_name: string;
-      multiplier: number;
-      base_price: number;
-      price_multiplier: number;
-    }[];
+    )) as FishInterface[];
     return fishRaw.map((fishy) => {
       return new Fish(fishy);
     });
@@ -314,17 +305,7 @@ export class PlayerFetch extends DBClass {
       `SELECT owner_id AS owner, fish.fish_weight AS weight, fish_name AS name, emoji, weight_mod.mod_name, weight_mod.multiplier, identifier, price_multiplier, base_price
     FROM fish LEFT JOIN fish_types ON fish_types.id=fish.fish_id LEFT JOIN weight_mod ON weight_mod.id=fish.weight_mod WHERE identifier=?;`,
       [id]
-    )) as {
-      identifier: string;
-      owner: string;
-      name: string;
-      weight: number;
-      emoji: string;
-      mod_name: string;
-      multiplier: number;
-      base_price: number;
-      price_multiplier: number;
-    }[];
+    )) as FishInterface[];
     if (!query[0]) throw new error.InvalidFishError();
     return new Fish(query[0]);
   }
