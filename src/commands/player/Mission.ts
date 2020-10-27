@@ -10,7 +10,7 @@ import { Profile } from "../../structures/player/Profile";
 import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends BaseCommand {
-  names: string[] = ["mission"];
+  names: string[] = ["mission", "m"];
   async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
