@@ -1,8 +1,6 @@
 import { Message } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
-import * as error from "../../structures/Error";
 import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends BaseCommand {

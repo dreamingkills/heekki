@@ -7,12 +7,14 @@ export class Command extends BaseCommand {
   names: string[] = ["unrep"];
   async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
-      msg.channel.send(`:x: Please mention a user!`);
+      msg.channel.send(`<:red_x:741454361007357993> Please mention a user!`);
       return;
     }
     const receiverUser = msg.mentions.users.first()!;
     if (receiverUser.id === msg.author.id) {
-      msg.channel.send(`:x: Why would you want to do that? :broken_heart:`);
+      msg.channel.send(
+        `<:red_x:741454361007357993> Why would you want to do that? :broken_heart:`
+      );
       return;
     }
 
@@ -25,7 +27,9 @@ export class Command extends BaseCommand {
       receiverProfile
     );
     if (!reputationExists) {
-      msg.channel.send(`:x: You haven't given them a reputation point.`);
+      msg.channel.send(
+        `<:red_x:741454361007357993> You haven't given them a reputation point.`
+      );
       return;
     }
 

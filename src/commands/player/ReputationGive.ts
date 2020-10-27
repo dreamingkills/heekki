@@ -7,12 +7,14 @@ export class Command extends BaseCommand {
   names: string[] = ["rep"];
   async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
-      msg.channel.send(`:x: Please mention a user!`);
+      msg.channel.send(`<:red_x:741454361007357993> Please mention a user!`);
       return;
     }
     const receiverUser = msg.mentions.users.first()!;
     if (receiverUser.id === msg.author.id) {
-      msg.channel.send(`:x: You can't give reputation to yourself.`);
+      msg.channel.send(
+        `<:red_x:741454361007357993> You can't give reputation to yourself.`
+      );
       return;
     }
 
@@ -26,7 +28,7 @@ export class Command extends BaseCommand {
     );
     if (reputationExists) {
       msg.channel.send(
-        `:x: You've already given a reputation point to **${receiverUser.tag}**!`
+        `<:red_x:741454361007357993> You've already given a reputation point to **${receiverUser.tag}**!`
       );
       return;
     }
