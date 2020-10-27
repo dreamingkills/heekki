@@ -39,7 +39,9 @@ export class Command extends BaseCommand {
         `:gift_heart: You opened some heart boxes and received **${total}** <:heekki_heart:757147742383505488>` //\n+ **${xp}** XP`
       )
       .setFooter(
-        `You now have ${total} hearts.\nYou can open heart boxes again in 4 hours.`
+        `You now have ${
+          executor.hearts + total
+        } hearts.\nYou can open heart boxes again in 4 hours.`
       )
       .setColor(`#FFAACC`);
     await msg.channel.send(embed);
