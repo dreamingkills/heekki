@@ -100,7 +100,6 @@ export class PlayerFetch extends DBClass {
                   LEFT JOIN
                     marketplace ON
                       marketplace.card_id=user_card.id
-
                   WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
     const queryOptions = await OptionsParser.parsePlayerOptions(options);

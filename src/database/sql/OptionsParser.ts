@@ -10,11 +10,11 @@ export class OptionsParser {
 
     if (options?.pack)
       queryOptions.push(
-        ` alphanum(pack.title) LIKE CONCAT("%",alphanum(${DB.connection.escape(
+        ` (alphanum(pack.title) LIKE CONCAT("%",alphanum(${DB.connection.escape(
           options.pack
         )}),"%") OR alphanum(shop.title) LIKE CONCAT("%",alphanum(${DB.connection.escape(
           `${options.pack}`
-        )}),"%")`
+        )}),"%"))`
       );
     if (options?.member)
       queryOptions.push(
@@ -23,7 +23,6 @@ export class OptionsParser {
         )}),"%")`
       );
     if (options?.stars) {
-      console.log(options.stars);
       if (options.stars.toString().startsWith(">")) {
         queryOptions.push(
           ` user_card.stars>${DB.connection.escape(
@@ -95,11 +94,11 @@ export class OptionsParser {
     }
     if (options?.pack)
       queryOptions.push(
-        ` alphanum(pack.title) LIKE CONCAT("%",alphanum(${DB.connection.escape(
+        ` (alphanum(pack.title) LIKE CONCAT("%",alphanum(${DB.connection.escape(
           options.pack
         )}),"%") OR alphanum(shop.title) LIKE CONCAT("%",alphanum(${DB.connection.escape(
           `${options.pack}`
-        )}),"%")`
+        )}),"%"))`
       );
     if (options?.member)
       queryOptions.push(
@@ -125,7 +124,6 @@ export class OptionsParser {
           ` user_card.serial_number=${DB.connection.escape(options.serial)}`
         );
     if (options?.stars) {
-      console.log(options.stars);
       if (options.stars.toString().startsWith(">")) {
         queryOptions.push(
           ` user_card.stars>${DB.connection.escape(
