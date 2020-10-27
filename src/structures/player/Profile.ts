@@ -1,11 +1,14 @@
+import { UserCardService } from "../../database/service/UserCardService";
 import { ProfileInterface } from "../interface/ProfileInterface";
 import { Badge } from "./Badge";
+import { UserCard } from "./UserCard";
 
 export class Profile {
   discord_id: string;
   blurb: string;
   coins: number;
   hearts: number;
+  cardPriority: number;
 
   xp: number;
   restricted: boolean;
@@ -26,6 +29,7 @@ export class Profile {
     this.xp = data.xp;
     this.restricted = data.restricted;
     this.well = data.well;
+    this.cardPriority = data.use_card;
 
     this.lastDaily = data.daily_last;
     this.lastHeartBox = data.heart_box_last;

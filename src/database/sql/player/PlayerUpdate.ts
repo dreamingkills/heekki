@@ -215,4 +215,15 @@ export class PlayerUpdate extends DBClass {
     ]);
     return;
   }
+
+  public static async useCard(
+    discordId: string,
+    cardId: number
+  ): Promise<void> {
+    await DB.query(`UPDATE user_profile SET use_card=? WHERE discord_id=?;`, [
+      cardId,
+      discordId,
+    ]);
+    return;
+  }
 }

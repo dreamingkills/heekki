@@ -53,6 +53,7 @@ export class PlayerService {
   ): Promise<void> {
     await PlayerUpdate.giveBadge(profile.discord_id, badge.id);
   }
+
   public static async getCardsByProfile(
     profile: Profile,
     options?: { [key: string]: string | number }
@@ -74,6 +75,10 @@ export class PlayerService {
       profile.discord_id,
       options
     );
+  }
+
+  public static async useCard(card: UserCard, profile: Profile): Promise<void> {
+    return await PlayerUpdate.useCard(profile.discord_id, card.userCardId);
   }
 
   public static async getOrphanedCardCount(options?: {

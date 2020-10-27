@@ -281,3 +281,5 @@ CREATE TABLE supporter
     discord_id      VARCHAR(32) NOT NULL,
     PRIMARY KEY(id)
 );
+
+ALTER TABLE user_profile ADD COLUMN use_card INT(11) DEFAULT 0;

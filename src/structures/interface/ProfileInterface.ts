@@ -6,6 +6,7 @@ export interface ProfileInterface {
   xp: number;
   restricted: boolean;
   well: number;
+  use_card: number;
 
   daily_last: number;
   hearts_last: number;

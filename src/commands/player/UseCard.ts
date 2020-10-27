@@ -1,12 +1,12 @@
 import { Message } from "discord.js";
-import { CardService } from "../../database/service/CardService";
-import { UserCardService } from "../../database/service/UserCardService";
+import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
+import { CardService } from "../../database/service/CardService";
 
 export class Command extends BaseCommand {
-  names: string[] = ["favorite", "fav"];
+  names: string[] = ["use"];
   async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
@@ -18,14 +18,10 @@ export class Command extends BaseCommand {
     if (card.ownerId !== executor.discord_id)
       throw new error.NotYourCardError(reference);
 
-    await UserCardService.toggleCardAsFavorite(card);
+    await PlayerService.useCard(card, executor);
 
-    const pre = !card.isFavorite ? "Favorited" : "Unfavorited";
-    const post = !card.isFavorite
-      ? "You are no longer able to trade, sell, or forfeit that card."
-      : "You are now able to trade, sell, and forfeit that card.";
     msg.channel.send(
-      `:white_check_mark: ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
+      `:white_check_mark: Now using **${card.abbreviation}#${card.serialNumber}** by default.`
     );
   }
 }

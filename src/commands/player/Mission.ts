@@ -7,6 +7,7 @@ import mission from "../../assets/missions.json";
 import { Chance } from "chance";
 import * as error from "../../structures/Error";
 import { Profile } from "../../structures/player/Profile";
+import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends BaseCommand {
   names: string[] = ["mission"];
@@ -15,8 +16,14 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
-    const card = await CardService.getCardDataFromReference(reference);
+    let card;
+    if (!reference.identifier && executor.cardPriority !== 0) {
+      card = await UserCardService.getUserCardById(executor.cardPriority);
+    } else {
+      if (isNaN(reference.serial) && executor.cardPriority === 0)
+        throw new error.InvalidCardReferenceError();
+      card = await CardService.getCardDataFromReference(reference);
+    }
 
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
