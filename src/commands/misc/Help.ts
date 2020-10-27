@@ -18,6 +18,7 @@ export class Command extends BaseCommand {
           `\n**Popular Topics**` +
           `\n\`\`\`` +
           `\n!help cash` +
+          `\n!help cards` +
           `\n!help friends` +
           `\n!help hearts` +
           `\n!help xp` +
@@ -39,7 +40,21 @@ export class Command extends BaseCommand {
           `\n__**Profile**__` +
           `\n\`friends\`, \`hearts\`, \`xp\`\n` +
           `\n__**Economy**__` +
-          `\n\`cash\`, \`marketplace\`, \`trading\`, \`missions\`\n`;
+          `\n\`cash\`, \`marketplace\`, \`trading\`, \`missions\`, \`cards\`\n`;
+        break;
+      }
+      case "cards": {
+        header = "Cards";
+        description =
+          `**Cards** are the main focus of Heekki - images with various designs about LOONA!\n` +
+          `\n__**How do I get cards?**__` +
+          `\n**1)** Use \`!daily\` once per day for a free card` +
+          `\n**2)** Use \`!bp <pack>\` to buy a random card from a pack - use \`!packs\` to see all packs` +
+          `\n**3)** \`!trade\` with other players` +
+          `\n**4)** Purchase from the Marketplace (\`!mp\`)\n` +
+          `\n__**What do stars do?**__` +
+          `\nStars increase the success rate and reward of missions.` +
+          `\nHigher stars are rarer, but you can add a star to your card at level 99 by using \`!prestige <card>\`!`;
         break;
       }
       case "missions": {
