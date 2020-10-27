@@ -81,6 +81,10 @@ export class PlayerService {
     return await PlayerUpdate.useCard(profile.discord_id, card.userCardId);
   }
 
+  public static async unsetDefaultCard(profile: Profile): Promise<void> {
+    return await PlayerUpdate.unsetDefaultCard(profile.discord_id);
+  }
+
   public static async getOrphanedCardCount(options?: {
     [key: string]: string | number;
   }): Promise<number> {

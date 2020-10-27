@@ -12,6 +12,13 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
+    if (!reference.identifier) {
+      await PlayerService.unsetDefaultCard(executor);
+      await msg.channel.send(
+        `:white_check_mark: You're no longer using a card by default.`
+      );
+      return;
+    }
     if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
 
     const card = await CardService.getCardDataFromReference(reference);
