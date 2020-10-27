@@ -75,6 +75,7 @@ export class CommandManager {
 
       let err;
       await cmd.run(msg, profile).catch(async (e) => {
+        if (e.message === "Unknown Message") return;
         err = e;
         if (e.isClientFacing) {
           await msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);

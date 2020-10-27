@@ -50,7 +50,7 @@ export class Logger {
       logString.push(chalk`{white Options:} {hex('#1fb7cf') ${params}}`);
 
     //Errors
-    if (error && !error.isClientFacing)
+    if (error && !error.isClientFacing && error.message !== "Unknown Message")
       logString.push(
         ``,
         chalk`{red Error: ${error.name + " - " + error.message}}${
@@ -71,7 +71,7 @@ export class Logger {
       } =}`,
     ].join("\n");
 
-    if (error && !error.isClientFacing) {
+    if (error && !error.isClientFacing && error.message !== "Unknown Message") {
       this.stream.write(stripAnsi(final));
       console.error(final);
     } else console.log(final);
