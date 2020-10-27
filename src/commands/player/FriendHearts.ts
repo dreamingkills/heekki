@@ -9,7 +9,7 @@ import * as error from "../../structures/Error";
 export class Command extends BaseCommand {
   names: string[] = ["send"];
   async exec(msg: Message, executor: Profile) {
-    const last = await PlayerService.getLastHeartSend(executor);
+    const last = executor.lastHeartSend;
     const now = Date.now();
     if (now < last + 3600000) {
       throw new error.SendHeartsCooldownError(last + 3600000, now);

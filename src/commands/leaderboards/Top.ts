@@ -12,12 +12,12 @@ export class Command extends BaseCommand {
     switch (this.options[0]?.toLowerCase()) {
       case "cards": {
         const topCollectors = await PlayerService.getTopCollectors();
-        const totalCards = await StatsService.getNumberOfCards();
+        const totalCards = await PlayerService.getCardCountByProfile(executor);
         for (let profile of topCollectors) {
           const user = msg.client.users.cache.get(profile.profile.discord_id);
           description += `${topCollectors.indexOf(profile) + 1}) **${
-            user?.username
-          }** (${profile.count.toLocaleString()} cards)\n`;
+            user?.username || "Unknown User"
+          }** (${totalCards.toLocaleString()} cards)\n`;
         }
         embed.setAuthor(
           `Cards Leaderboard | ${msg.author.tag}`,
@@ -34,7 +34,7 @@ export class Command extends BaseCommand {
         for (let profile of topHearts) {
           const user = msg.client.users.cache.get(profile.discord_id);
           description += `${topHearts.indexOf(profile) + 1}) **${
-            user?.username
+            user?.username || "Unknown User"
           }** (${profile.hearts.toLocaleString()} hearts)\n`;
         }
         embed.setAuthor(
@@ -52,7 +52,7 @@ export class Command extends BaseCommand {
         for (let profile of richestUsers) {
           const user = msg.client.users.cache.get(profile.discord_id);
           description += `${richestUsers.indexOf(profile) + 1}) **${
-            user?.username
+            user?.username || "Unknown User"
           }** (${profile.coins.toLocaleString()} cash)\n`;
         }
         embed.setAuthor(

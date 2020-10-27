@@ -7,14 +7,15 @@ import * as error from "../../../structures/Error";
 import { Fish } from "../../../structures/game/Fish";
 import { PlayerService } from "../../service/PlayerService";
 import { ProfileInterface } from "../../../structures/interface/ProfileInterface";
+import { OptionsParser } from "../OptionsParser";
+import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
-    let clean = this.cleanMention(discord_id);
-    let query = (await DB.query(
+    const query = (await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=?;`,
-      [clean]
-    )) as { discord_id: string }[];
+      [this.cleanMention(discord_id)]
+    )) as ProfileInterface[];
     return query[0] ? true : false;
   }
 
@@ -25,17 +26,7 @@ export class PlayerFetch extends DBClass {
     const user = (await DB.query(
       `SELECT * FROM user_profile WHERE discord_id=?;`,
       [discord_id]
-    )) as {
-      discord_id: string;
-      blurb: string;
-      coins: number;
-      hearts: number;
-      daily_streak: number;
-      daily_last: number;
-      xp: number;
-      restricted: boolean;
-      well: number;
-    }[];
+    )) as ProfileInterface[];
     if (!user[0] && !autoGenerate) throw new error.NoProfileError();
     if (!user[0]) {
       const newProfile = await PlayerService.createNewProfile(discord_id);
@@ -48,41 +39,7 @@ export class PlayerFetch extends DBClass {
     [key: string]: string | number;
   }): Promise<number> {
     let query = `SELECT COUNT(*) FROM card LEFT JOIN user_card ON user_card.card_id=card.id LEFT JOIN pack ON card.pack_id=pack.id LEFT JOIN shop ON shop.pack_id=pack.id WHERE user_card.owner_id=0`;
-    let queryOptions = [];
-
-    if (options?.pack)
-      queryOptions.push(
-        ` (REPLACE(pack.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.pack + `%`
-        )}, ' ', '') OR REPLACE(shop.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%${options.pack}%`
-        )}, ' ', ''))`
-      );
-    if (options?.member)
-      queryOptions.push(
-        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.member + `%`
-        )}, ' ', '')`
-      );
-    if (options?.minstars)
-      queryOptions.push(
-        ` user_card.stars>=${DB.connection.escape(options.minstars)}`
-      );
-    if (options?.maxstarsnoninclusive)
-      queryOptions.push(
-        ` user_card.stars<${DB.connection.escape(options.maxstarsnoninclusive)}`
-      );
-    if (options?.serial)
-      queryOptions.push(
-        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
-      );
-    if (options?.stars)
-      queryOptions.push(
-        ` user_card.stars=${DB.connection.escape(options.stars)}`
-      );
-    if (options?.forsale === "true")
-      queryOptions.push(` marketplace.price IS NOT NULL`);
-
+    const queryOptions = await OptionsParser.parsePlayerOptions(options);
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
@@ -144,41 +101,8 @@ export class PlayerFetch extends DBClass {
                       marketplace.card_id=user_card.id
 
                   WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
-    let queryOptions = [];
 
-    if (options?.pack)
-      queryOptions.push(
-        ` (REPLACE(pack.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.pack + `%`
-        )}, ' ', '') OR REPLACE(shop.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%${options.pack}%`
-        )}, ' ', ''))`
-      );
-    if (options?.member)
-      queryOptions.push(
-        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.member + `%`
-        )}, ' ', '')`
-      );
-    if (options?.minstars)
-      queryOptions.push(
-        ` user_card.stars>=${DB.connection.escape(options.minstars)}`
-      );
-    if (options?.maxstarsnoninclusive)
-      queryOptions.push(
-        ` user_card.stars<${DB.connection.escape(options.maxstarsnoninclusive)}`
-      );
-    if (options?.serial)
-      queryOptions.push(
-        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
-      );
-    if (options?.stars)
-      queryOptions.push(
-        ` user_card.stars=${DB.connection.escape(options.stars)}`
-      );
-    if (options?.forsale === "true")
-      queryOptions.push(` marketplace.price IS NOT NULL`);
-
+    const queryOptions = await OptionsParser.parsePlayerOptions(options);
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
@@ -191,70 +115,13 @@ export class PlayerFetch extends DBClass {
               <number>options.limit
           )}`
         : ``);
+    console.log(query);
 
-    const cards = (await DB.query(query + ";")) as {
-      card_id: number;
-      user_card_id: number;
-      pack_id: number;
-      blurb: string;
-      member: string;
-      abbreviation: string;
-      rarity: number;
-      image_url: string;
-      id: number;
-      serial_number: number;
-      serial_limit: number;
-      owner_id: string;
-      stars: number;
-      hearts: number;
-      is_favorite: boolean;
-      title: string;
-      credit: string;
-      serial_id: number;
-      image_data_id: number;
-    }[];
+    const cards = (await DB.query(query + ";")) as UserCardInterface[];
 
     return cards.map((c) => {
       return new UserCard(c);
     });
-  }
-
-  public static async getLastDailyByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    let query = (await DB.query(
-      `SELECT daily_last FROM user_profile WHERE discord_id=?;`,
-      [discord_id]
-    )) as { daily_last: number }[];
-    return query[0].daily_last;
-  }
-
-  public static async getLastHeartSendByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    let query = (await DB.query(
-      `SELECT hearts_last FROM user_profile WHERE discord_id=?;`,
-      [discord_id]
-    )) as { hearts_last: number }[];
-    return query[0].hearts_last;
-  }
-  public static async getLastHeartBoxByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    let query = (await DB.query(
-      `SELECT heart_box_last FROM user_profile WHERE discord_id=?;`,
-      [discord_id]
-    )) as { heart_box_last: number }[];
-    return query[0].heart_box_last;
-  }
-  public static async getLastOrphanClaimByDiscordId(
-    discord_id: string
-  ): Promise<number> {
-    let query = (await DB.query(
-      `SELECT last_orphan FROM user_profile WHERE discord_id=?;`,
-      [discord_id]
-    )) as { last_orphan: number }[];
-    return query[0].last_orphan;
   }
 
   public static async getBadgeByBadgeId(badge_id: number): Promise<Badge> {
@@ -319,37 +186,7 @@ export class PlayerFetch extends DBClass {
                     marketplace.card_id=user_card.id
                 WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
-    let queryOptions = [];
-
-    if (options?.pack)
-      queryOptions.push(
-        ` (REPLACE(pack.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.pack + `%`
-        )}, ' ', '') OR REPLACE(shop.title, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%${options.pack}%`
-        )}, ' ', ''))`
-      );
-    if (options?.member)
-      queryOptions.push(
-        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.member + `%`
-        )}, ' ', '')`
-      );
-    if (options?.minstars)
-      queryOptions.push(
-        ` user_card.stars>=${DB.connection.escape(options.minstars)}`
-      );
-    if (options?.serial)
-      queryOptions.push(
-        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
-      );
-    if (options?.stars)
-      queryOptions.push(
-        ` user_card.stars=${DB.connection.escape(options.stars)}`
-      );
-    if (options?.forsale === "true")
-      queryOptions.push(` marketplace.price IS NOT NULL`);
-
+    const queryOptions = await OptionsParser.parsePlayerOptions(options);
     query +=
       (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
 
@@ -404,17 +241,7 @@ export class PlayerFetch extends DBClass {
     const query = (await DB.query(
       `SELECT * FROM user_profile ORDER BY coins DESC LIMIT ?;`,
       [limit]
-    )) as {
-      discord_id: string;
-      blurb: string;
-      coins: number;
-      hearts: number;
-      daily_streak: number;
-      daily_last: number;
-      xp: number;
-      restricted: boolean;
-      well: number;
-    }[];
+    )) as ProfileInterface[];
 
     return query.map((p) => {
       return new Profile(p);
@@ -433,24 +260,13 @@ export class PlayerFetch extends DBClass {
 
   public static async getTopCollectors(
     limit: number
-  ): Promise<{ profile: Profile; count: number }[]> {
+  ): Promise<{ profile: Profile }[]> {
     const query = (await DB.query(
       `SELECT user_profile.*, COUNT(*) AS counted FROM user_card LEFT JOIN user_profile ON user_card.owner_id=user_profile.discord_id WHERE NOT owner_id=0 GROUP BY owner_id ORDER BY counted DESC, owner_id LIMIT ?;`,
       [limit]
-    )) as {
-      discord_id: string;
-      blurb: string;
-      coins: number;
-      hearts: number;
-      daily_streak: number;
-      daily_last: number;
-      xp: number;
-      well: number;
-      restricted: boolean;
-      counted: number;
-    }[];
+    )) as ProfileInterface[];
     return query.map((p) => {
-      return { profile: new Profile(p), count: p.counted };
+      return { profile: new Profile(p) };
     });
   }
 

@@ -3,9 +3,13 @@ export interface ProfileInterface {
   blurb: string;
   coins: number;
   hearts: number;
-  daily_streak: number;
-  daily_last: number;
   xp: number;
   restricted: boolean;
   well: number;
+
+  daily_last: number;
+  hearts_last: number;
+  heart_box_last: number;
+  last_orphan: number;
+  mission_last: number;
 }

@@ -64,19 +64,13 @@ export class ProfileController {
     console.log(id);
     try {
       const profile = await PlayerService.getProfileByDiscordId(id);
-
-      const timerDaily = await PlayerService.getLastDaily(profile);
-      const timerHeartBox = await PlayerService.getLastHeartBox(profile);
-      const timerSend = await PlayerService.getLastHeartSend(profile);
-      const timerMission = await PlayerService.getLastMission(profile);
-      const timerOrphan = await PlayerService.getLastOrphanClaim(profile);
       return {
         timers: [
-          { daily: timerDaily },
-          { heart_box: timerHeartBox },
-          { send_hearts: timerSend },
-          { mission: timerMission },
-          { claim_forfeit: timerOrphan },
+          { daily: profile.lastDaily },
+          { heart_box: profile.lastHeartBox },
+          { send_hearts: profile.lastHeartSend },
+          { mission: profile.lastMission },
+          { claim_forfeit: profile.lastMission },
         ],
       };
     } catch (e) {

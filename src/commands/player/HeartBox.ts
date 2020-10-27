@@ -3,13 +3,31 @@ import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import Chance from "chance";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["heartbox", "hb"];
-  async exec(msg: Message, executor: Profile) {
-    const hb = await PlayerService.openHeartBoxes(executor);
+  async exec(msg: Message, executor: Profile): Promise<void> {
+    const last = executor.lastHeartBox;
+
+    const now = Date.now();
+    if (now < last + 14400000)
+      throw new error.HeartBoxCooldownError(last + 14400000, now);
 
     const chance = new Chance();
+    let generated: number[] = [];
+    for (let i = 0; i < 7; i++) {
+      generated.push(chance.weighted([7, 20, 100, 1000], [100, 25, 5, 0.1]));
+    }
+
+    const total = generated.reduce((a, b) => {
+      return a + b;
+    });
+    await Promise.all([
+      PlayerService.addHeartsToProfile(executor, total),
+      PlayerService.setLastHeartBox(executor, now),
+    ]);
+
     //const xp = chance.integer({ min: 30, max: 65 });
     //PlayerService.addXp(executor, xp);
     const embed = new MessageEmbed()
@@ -18,12 +36,12 @@ export class Command extends BaseCommand {
         msg.author.displayAvatarURL()
       )
       .setDescription(
-        `:gift_heart: You opened some heart boxes and received **${hb.added}** <:heekki_heart:757147742383505488>` //\n+ **${xp}** XP`
+        `:gift_heart: You opened some heart boxes and received **${total}** <:heekki_heart:757147742383505488>` //\n+ **${xp}** XP`
       )
       .setFooter(
-        `You now have ${hb.total} hearts.\nYou can open heart boxes again in 4 hours.`
+        `You now have ${total} hearts.\nYou can open heart boxes again in 4 hours.`
       )
       .setColor(`#FFAACC`);
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

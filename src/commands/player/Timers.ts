@@ -8,21 +8,11 @@ export class Command extends BaseCommand {
   names: string[] = ["timers", "t"];
   async exec(msg: Message, executor: Profile) {
     const now = moment(Date.now());
-    const timeUntilDaily = moment(
-      (await PlayerService.getLastDaily(executor)) + 86400000
-    );
-    const timeUntilMission = moment(
-      (await PlayerService.getLastMission(executor)) + 2700000
-    );
-    const timeUntilSend = moment(
-      (await PlayerService.getLastHeartSend(executor)) + 3600000
-    );
-    const timeUntilHeartBox = moment(
-      (await PlayerService.getLastHeartBox(executor)) + 14400000
-    );
-    const timeUntilForfeitClaim = moment(
-      (await PlayerService.getLastOrphanClaim(executor)) + 7200000
-    );
+    const timeUntilDaily = moment(executor.lastDaily + 86400000);
+    const timeUntilMission = moment(executor.lastMission + 2700000);
+    const timeUntilSend = moment(executor.lastHeartSend + 3600000);
+    const timeUntilHeartBox = moment(executor.lastHeartBox + 14400000);
+    const timeUntilForfeitClaim = moment(executor.lastOrphan + 7200000);
 
     const embed = new MessageEmbed()
       .setAuthor(`Timers | ${msg.author.tag}`)

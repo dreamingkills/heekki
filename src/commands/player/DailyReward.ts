@@ -10,7 +10,7 @@ import { UserCardService } from "../../database/service/UserCardService";
 export class Command extends BaseCommand {
   names: string[] = ["daily"];
   async exec(msg: Message, executor: Profile) {
-    const last = await PlayerService.getLastDaily(executor);
+    const last = executor.lastDaily;
     const now = Date.now();
     if (now < last + 86400000)
       throw new error.DailyCooldownError(last + 86400000, now);

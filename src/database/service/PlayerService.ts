@@ -76,35 +76,6 @@ export class PlayerService {
     );
   }
 
-  public static async openHeartBoxes(
-    profile: Profile
-  ): Promise<{ added: number; total: number; individual: number[] }> {
-    const last = await this.getLastHeartBox(profile);
-
-    const now = Date.now();
-    if (now < last + 14400000)
-      throw new error.HeartBoxCooldownError(last + 14400000, now);
-
-    const chance = new Chance();
-    let generated: number[] = [];
-    for (let i = 0; i < 7; i++) {
-      generated.push(chance.weighted([7, 20, 100, 1000], [100, 25, 5, 0.1]));
-    }
-
-    const total = generated.reduce((a, b) => {
-      return a + b;
-    });
-    await Promise.all([
-      this.addHeartsToProfile(profile, total),
-      this.setLastHeartBox(profile, now),
-    ]);
-    return {
-      added: total,
-      total: profile.hearts + total,
-      individual: generated,
-    };
-  }
-
   public static async getOrphanedCardCount(options?: {
     [key: string]: string | number;
   }): Promise<number> {
@@ -173,19 +144,11 @@ export class PlayerService {
     await PlayerUpdate.setHeartSendTimestamp(profile.discord_id, time);
   }
 
-  public static async getLastHeartSend(profile: Profile): Promise<number> {
-    return await PlayerFetch.getLastHeartSendByDiscordId(profile.discord_id);
-  }
-
   public static async setLastMission(
     profile: Profile,
     time: number
   ): Promise<void> {
     await PlayerUpdate.setMissionTimestamp(profile.discord_id, time);
-  }
-
-  public static async getLastMission(profile: Profile): Promise<number> {
-    return await PlayerFetch.getLastMissionByDiscordId(profile.discord_id);
   }
 
   public static async setLastDaily(
@@ -195,10 +158,6 @@ export class PlayerService {
     await PlayerUpdate.setDailyTimestamp(profile.discord_id, time);
   }
 
-  public static async getLastDaily(profile: Profile): Promise<number> {
-    return await PlayerFetch.getLastDailyByDiscordId(profile.discord_id);
-  }
-
   public static async setLastHeartBox(
     profile: Profile,
     time: number
@@ -206,19 +165,11 @@ export class PlayerService {
     await PlayerUpdate.setHeartBoxTimestamp(profile.discord_id, time);
   }
 
-  public static async getLastHeartBox(profile: Profile): Promise<number> {
-    return await PlayerFetch.getLastHeartBoxByDiscordId(profile.discord_id);
-  }
-
   public static async setLastOrphanClaim(
     profile: Profile,
     time: number
   ): Promise<void> {
     await PlayerUpdate.setOrphanTimestamp(profile.discord_id, time);
-  }
-
-  public static async getLastOrphanClaim(profile: Profile): Promise<number> {
-    return await PlayerFetch.getLastOrphanClaimByDiscordId(profile.discord_id);
   }
 
   public static async getFishByProfile(
@@ -279,7 +230,7 @@ export class PlayerService {
 
   public static async getTopCollectors(
     limit: number = 15
-  ): Promise<{ profile: Profile; count: number }[]> {
+  ): Promise<{ profile: Profile }[]> {
     return await PlayerFetch.getTopCollectors(limit);
   }
 

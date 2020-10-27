@@ -9,7 +9,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 export class Command extends BaseCommand {
   names: string[] = ["claimforfeit", "cf"];
   async exec(msg: Message, executor: Profile) {
-    const lastForfeit = await PlayerService.getLastOrphanClaim(executor);
+    const lastForfeit = executor.lastOrphan;
     const now = Date.now();
     if (now < lastForfeit + 7200000)
       throw new error.OrphanCooldownError(lastForfeit + 7200000, now);

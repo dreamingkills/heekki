@@ -21,7 +21,7 @@ export class Command extends BaseCommand {
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
 
-    const last = await PlayerService.getLastMission(executor);
+    const last = executor.lastMission;
     const now = Date.now();
     if (now < last + 2700000)
       throw new error.MissionCooldownError(last + 2700000, now);
