@@ -42,7 +42,7 @@ export class Command extends BaseCommand {
       return;
     }
     const now = Date.now();
-    const diff = moment(now).diff(moment("20200906"), "days");
+    const diff = moment(now).diff(new Date(1599368400000), "days");
 
     const totalCards = {
       total: await StatsService.getNumberOfCards(),
@@ -57,7 +57,9 @@ export class Command extends BaseCommand {
         `Heekki Stats | ${msg.author.tag}`,
         msg.author.displayAvatarURL()
       )
-      .setDescription(`Heekki is **${diff}** days old!`)
+      .setDescription(
+        `Heekki is **${diff}** days old!\n*since 2020-09-06 @ 1AM EST*`
+      )
       .setFooter(`loonacards v${version.version}`)
       .setColor(`#FFAACC`);
     embed.addField(
