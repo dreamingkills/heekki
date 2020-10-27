@@ -1,5 +1,7 @@
 import { DBClass, DB } from "../..";
+import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
 import { UserCard } from "../../../structures/player/UserCard";
+import { OptionsParser } from "../OptionsParser";
 
 export class MarketFetch extends DBClass {
   /**
@@ -39,41 +41,7 @@ export class MarketFetch extends DBClass {
                   pack ON pack.id=card.pack_id
                 LEFT JOIN
                   shop ON shop.pack_id=pack.id`;
-    let queryOptions: string[] = [];
-    if (options?.minprice)
-      queryOptions.push(
-        ` marketplace.price>${DB.connection.escape(options?.minprice)}`
-      );
-    if (options?.maxprice)
-      queryOptions.push(
-        ` marketplace.price<${DB.connection.escape(options?.maxprice)}`
-      );
-    if (options?.pack)
-      queryOptions.push(
-        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
-      );
-    if (options?.minstars)
-      queryOptions.push(
-        ` user_card.stars>=${DB.connection.escape(<number>options?.minstars)}`
-      );
-    if (options?.member)
-      queryOptions.push(
-        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.member + `%`
-        )}, ' ', '')`
-      );
-    if (options?.serial)
-      queryOptions.push(
-        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
-      );
-    if (options?.stars)
-      queryOptions.push(
-        ` user_card.stars=${DB.connection.escape(options.stars)}`
-      );
-    if (options?.owner)
-      queryOptions.push(
-        ` user_card.owner_id=${DB.connection.escape(options.owner)}`
-      );
+    const queryOptions = await OptionsParser.parseMarketOptions(options);
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
@@ -82,30 +50,9 @@ export class MarketFetch extends DBClass {
         (<number>options?.page || 1) * 9 - 9
       };`;
 
-    let forSale = (await DB.query(query)) as {
-      card_id: number;
-      user_card_id: number;
-      serial_id: number;
-      serial_limit: number;
-      id: number;
-      blurb: string;
-      member: string;
-      credit: string;
-      pack_id: number;
-      abbreviation: string;
-      rarity: number;
-      is_favorite: boolean;
-      image_url: string;
-      serial_number: number;
-      owner_id: string;
-      stars: number;
-      hearts: number;
-      title: string;
-      image_data_id: number;
-      price: number;
-    }[];
+    let forSale = (await DB.query(query)) as UserCardInterface[];
     return forSale.map((c) => {
-      return { card: new UserCard(c), price: c.price };
+      return { card: new UserCard(c), price: c.price! };
     });
   }
 
@@ -121,42 +68,10 @@ export class MarketFetch extends DBClass {
                 LEFT JOIN
                   card ON user_card.card_id=card.id
                 LEFT JOIN
-                  pack ON card.pack_id=pack.id`;
-    let queryOptions: string[] = [];
-    if (options?.minprice)
-      queryOptions.push(
-        ` marketplace.price>${DB.connection.escape(options?.minprice)}`
-      );
-    if (options?.maxprice)
-      queryOptions.push(
-        ` marketplace.price<${DB.connection.escape(options?.maxprice)}`
-      );
-    if (options?.pack)
-      queryOptions.push(
-        ` pack.title LIKE ${DB.connection.escape(`%` + options.pack + `%`)}`
-      );
-    if (options?.minstars)
-      queryOptions.push(
-        ` user_card.stars>=${DB.connection.escape(<number>options?.minstars)}`
-      );
-    if (options?.member)
-      queryOptions.push(
-        ` REPLACE(card.member, ' ', '') LIKE REPLACE(${DB.connection.escape(
-          `%` + options.member + `%`
-        )}, ' ', '')`
-      );
-    if (options?.serial)
-      queryOptions.push(
-        ` user_card.serial_number=${DB.connection.escape(options.serial)}`
-      );
-    if (options?.stars)
-      queryOptions.push(
-        ` user_card.stars=${DB.connection.escape(options.stars)}`
-      );
-    if (options?.owner)
-      queryOptions.push(
-        ` user_card.owner_id=${DB.connection.escape(options.owner)}`
-      );
+                  pack ON card.pack_id=pack.id
+                LEFT JOIN
+                  shop ON shop.pack_id=pack.id`;
+    const queryOptions = await OptionsParser.parseMarketOptions(options);
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
