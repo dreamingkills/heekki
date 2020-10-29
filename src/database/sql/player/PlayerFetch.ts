@@ -25,7 +25,7 @@ export class PlayerFetch extends DBClass {
     autoGenerate: boolean
   ): Promise<Profile> {
     const user = (await DB.query(
-      `SELECT * FROM user_profile WHERE discord_id=?;`,
+      `SELECT user_profile.*, COUNT(reputation.receiver_id) AS reputation FROM user_profile LEFT JOIN reputation ON reputation.receiver_id=user_profile.discord_id WHERE discord_id=?;`,
       [discord_id]
     )) as ProfileInterface[];
     if (!user[0] && !autoGenerate) throw new error.NoProfileError();
@@ -216,14 +216,6 @@ export class PlayerFetch extends DBClass {
       [sender_id, receiver_id]
     )) as { id: number; sender_id: number; receiver_id: number }[];
     return query[0] ? true : false;
-  }
-
-  public static async getReputation(discord_id: string): Promise<number> {
-    const query = (await DB.query(
-      `SELECT COUNT(*) FROM reputation WHERE receiver_id=?;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-    return query[0]["COUNT(*)"];
   }
 
   public static async getRichestUsers(limit: number): Promise<Profile[]> {

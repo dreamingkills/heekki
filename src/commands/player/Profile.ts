@@ -37,14 +37,13 @@ export class Command extends BaseCommand {
       return;
     }
     const badges = await PlayerService.getBadgesByProfile(userQuery);
-    const reputation = await PlayerService.getReputationByProfile(userQuery);
     const cardCount = await PlayerService.getCardCountByProfile(userQuery);
     const embed = new ProfileEmbed(
       userQuery,
       badges,
       discordUser,
       discordUser.displayAvatarURL(),
-      reputation,
+      executor.reputation,
       cardCount
     );
     msg.channel.send(embed);

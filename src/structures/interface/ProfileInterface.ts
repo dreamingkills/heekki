@@ -7,6 +7,7 @@ export interface ProfileInterface {
   restricted: boolean;
   well: number;
   use_card: number;
+  reputation: number;
 
   daily_last: number;
   hearts_last: number;

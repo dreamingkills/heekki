@@ -227,12 +227,6 @@ export class PlayerService {
     );
   }
 
-  public static async getReputationByProfile(
-    profile: Profile
-  ): Promise<number> {
-    return await PlayerFetch.getReputation(profile.discord_id);
-  }
-
   public static async getRichestUsers(limit: number = 15): Promise<Profile[]> {
     return await PlayerFetch.getRichestUsers(limit);
   }

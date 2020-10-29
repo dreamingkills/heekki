@@ -9,6 +9,7 @@ export class Profile {
   coins: number;
   hearts: number;
   cardPriority: number;
+  reputation: number;
 
   xp: number;
   restricted: boolean;
@@ -30,6 +31,7 @@ export class Profile {
     this.restricted = data.restricted;
     this.well = data.well;
     this.cardPriority = data.use_card;
+    this.reputation = data.reputation;
 
     this.lastDaily = data.daily_last;
     this.lastHeartBox = data.heart_box_last;
