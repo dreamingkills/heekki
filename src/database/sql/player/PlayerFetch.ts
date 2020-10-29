@@ -10,6 +10,7 @@ import { ProfileInterface } from "../../../structures/interface/ProfileInterface
 import { OptionsParser } from "../OptionsParser";
 import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
 import { FishInterface } from "../../../structures/interface/FishInterface";
+import { BadgeInterface } from "../../../structures/interface/BadgeInterface";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -126,7 +127,7 @@ export class PlayerFetch extends DBClass {
   public static async getBadgeByBadgeId(badge_id: number): Promise<Badge> {
     const query = (await DB.query(`SELECT * FROM badge WHERE badge.id=?;`, [
       badge_id,
-    ])) as { id: number; title: string; blurb: string; emoji: string }[];
+    ])) as BadgeInterface[];
     return new Badge(query[0]);
   }
 
@@ -148,7 +149,7 @@ export class PlayerFetch extends DBClass {
       WHERE
         user_badge.discord_id=?;`,
       [discord_id]
-    )) as { id: number; title: string; blurb: string; emoji: string }[];
+    )) as BadgeInterface[];
     return query.map((b) => {
       return new Badge(b);
     });

@@ -143,8 +143,8 @@ export class PlayerService {
   }
 
   /* 
-      Timers Get & Set 
-                        */
+      Timers 
+              */
 
   public static async setLastHeartSend(
     profile: Profile,
