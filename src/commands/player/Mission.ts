@@ -60,7 +60,6 @@ export class Command extends BaseCommand {
         max: selected.baseReward + selected.baseReward / 10,
       }) * (multiplier > 2.5 ? 2.5 : multiplier)
     );
-    console.log(profit);
 
     StatsService.missionComplete(executor, profit === 0 ? false : true);
     PlayerService.addCoinsToProfile(executor, profit);
