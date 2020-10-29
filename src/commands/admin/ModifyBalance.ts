@@ -4,7 +4,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
-  names: string[] = ["$give"];
+  names: string[] = ["$mb"];
   users: string[] = ["197186779843919877"];
   async exec(msg: Message) {
     const victim = msg.mentions.members!.first();
