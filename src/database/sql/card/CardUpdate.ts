@@ -5,6 +5,7 @@ import { Card } from "../../../structures/card/Card";
 import { SerialGenerator } from "../../../helpers/Serial";
 import { Profile } from "../../../structures/player/Profile";
 import { PlayerService } from "../../service/PlayerService";
+import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
 
 export class CardUpdate extends DBClass {
   public static async createNewUserCard(
@@ -21,7 +22,7 @@ export class CardUpdate extends DBClass {
       try {
         await DB.query(
           `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
-          [newSerial, owner.discord_id, stars, hearts, card.id]
+          [newSerial, owner.discord_id, stars, hearts, card.cardId]
         );
         await PlayerService.removeCoinsFromProfile(owner, price);
 

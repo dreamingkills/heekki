@@ -2,9 +2,12 @@ import { DBClass, DB } from "../..";
 import { UserCard } from "../../../structures/player/UserCard";
 import { ImageData } from "../../../structures/card/ImageData";
 import * as error from "../../../structures/Error";
-import { Card } from "../../../structures/card/Card";
 import { Pack } from "../../../structures/card/Pack";
 import { ShopItem } from "../../../structures/shop/ShopItem";
+import { Card } from "../../../structures/card/Card";
+import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
+import { ImageDataInterface } from "../../../structures/interface/image/ImageDataInterface";
+import { TextInterface } from "../../../structures/interface/image/TextInterface";
 
 interface Reference {
   identifier: string;
@@ -14,30 +17,23 @@ interface Reference {
 export class CardFetch extends DBClass {
   public static async getRandomCard(): Promise<Card> {
     const query = (await DB.query(
-      `SELECT card.* FROM card WHERE rarity>0 ORDER BY -LOG(1.0-RAND())/rarity LIMIT 1;`
-    )) as {
-      id: number;
-      blurb: string;
-      member: string;
-      abbreviation: string;
-      rarity: number;
-      image_url: string;
-      pack_id: number;
-      serial_id: number;
-      serial_limit: number;
-      image_data_id: number;
-    }[];
+      `SELECT 
+        id AS card_id,
+        blurb,
+        member,
+        abbreviation,
+        rarity,
+        image_url,
+        pack_id,
+        serial_id,
+        serial_limit,
+        image_data_id
+      FROM card WHERE rarity>0 ORDER BY -LOG(1.0-RAND())/rarity LIMIT 1;`
+    )) as UserCardInterface[];
     return new Card(query[0]);
   }
 
-  public static async getCardDataByCardId(card_id: number): Promise<Card> {
-    const query = (await DB.query(`SELECT * FROM card WHERE card_id=?;`, [
-      card_id,
-    ])) as Card;
-    return query;
-  }
-
-  public static async getPackDataFromCard(card: Card): Promise<Pack> {
+  public static async getPackDataFromCard(card: UserCard): Promise<Pack> {
     const query = (await DB.query(`SELECT * FROM pack WHERE id=?;`, [
       card.packId,
     ])) as {
@@ -51,9 +47,7 @@ export class CardFetch extends DBClass {
     return new Pack(query[0]);
   }
 
-  public static async getImageDataFromCard(
-    card: Card | UserCard
-  ): Promise<ImageData> {
+  public static async getImageDataFromCard(card: UserCard): Promise<ImageData> {
     let id;
     if (typeof card === "number") {
       id = card;
@@ -62,54 +56,18 @@ export class CardFetch extends DBClass {
     let imageDataQuery = (await DB.query(
       `SELECT * FROM image_data WHERE id=?;`,
       [id]
-    )) as {
-      id: number;
-      star_image_url: string;
-      star_starting_x: number;
-      star_starting_y: number;
-      star_height: number;
-      star_length: number;
-      star_x_inc: number;
-      star_y_inc: number;
-      serial_text_id: number;
-      level_num_id: number;
-      heart_text_id: number;
-    }[];
+    )) as ImageDataInterface[];
 
     if (!imageDataQuery[0]) throw new error.InvalidImageDataError();
     let serialText = (await DB.query(`SELECT * FROM serial_text WHERE id=?;`, [
       imageDataQuery[0].serial_text_id,
-    ])) as {
-      id: number;
-      font: string;
-      size: number;
-      color: string;
-      align: "left" | "right" | "center";
-      x: number;
-      y: number;
-    }[];
+    ])) as TextInterface[];
     let levelNum = (await DB.query(`SELECT * FROM level_num WHERE id=?;`, [
       imageDataQuery[0].level_num_id,
-    ])) as {
-      id: number;
-      font: string;
-      size: number;
-      color: string;
-      align: "left" | "right" | "center";
-      x: number;
-      y: number;
-    }[];
+    ])) as TextInterface[];
     let heartText = (await DB.query(`SELECT * FROM heart_text WHERE id=?;`, [
       imageDataQuery[0].heart_text_id,
-    ])) as {
-      id: number;
-      font: string;
-      size: number;
-      color: string;
-      align: "left" | "right" | "center";
-      x: number;
-      y: number;
-    }[];
+    ])) as TextInterface[];
 
     return new ImageData(
       imageDataQuery[0],
@@ -120,20 +78,21 @@ export class CardFetch extends DBClass {
   }
 
   public static async getCardsByPack(pack: Pack | ShopItem): Promise<Card[]> {
-    let query = (await DB.query(`SELECT * FROM card WHERE pack_id=?;`, [
-      pack.id,
-    ])) as {
-      id: number;
-      blurb: string;
-      member: string;
-      abbreviation: string;
-      rarity: number;
-      image_url: string;
-      pack_id: number;
-      serial_id: number;
-      serial_limit: number;
-      image_data_id: number;
-    }[];
+    let query = (await DB.query(
+      `SELECT 
+        id AS card_id,
+        blurb,
+        member,
+        abbreviation,
+        rarity,
+        image_url,
+        pack_id,
+        serial_id,
+        serial_limit,
+        image_data_id
+      FROM card WHERE pack_id=?;`,
+      [pack.id]
+    )) as UserCardInterface[];
     return query.map((c) => {
       return new Card(c);
     });
@@ -165,24 +124,7 @@ export class CardFetch extends DBClass {
         user_card.is_favorite
       FROM card LEFT JOIN user_card ON user_card.serial_number=? WHERE card.abbreviation=? AND user_card.card_id=card.id;`,
       [reference.serial, reference.identifier]
-    )) as {
-      card_id: number;
-      blurb: string;
-      member: string;
-      abbreviation: string;
-      rarity: number;
-      image_url: string;
-      pack_id: number;
-      serial_id: number;
-      serial_limit: number;
-      user_card_id: number;
-      serial_number: number;
-      owner_id: string;
-      stars: number;
-      hearts: number;
-      is_favorite: boolean;
-      image_data_id: number;
-    }[];
+    )) as UserCardInterface[];
     if (!query[0]) throw new error.InvalidUserCardError(reference);
     return new UserCard(query[0]);
   }
@@ -208,24 +150,7 @@ export class CardFetch extends DBClass {
         user_card.is_favorite
       FROM user_card LEFT JOIN card ON user_card.card_id=card.id WHERE user_card.id=?;`,
       [id]
-    )) as {
-      card_id: number;
-      blurb: string;
-      member: string;
-      abbreviation: string;
-      rarity: number;
-      image_url: string;
-      pack_id: number;
-      serial_id: number;
-      serial_limit: number;
-      user_card_id: number;
-      serial_number: number;
-      owner_id: string;
-      stars: number;
-      hearts: number;
-      is_favorite: boolean;
-      image_data_id: number;
-    }[];
+    )) as UserCardInterface[];
     if (!query[0])
       throw new error.InvalidUserCardError({
         identifier: "ERROR",

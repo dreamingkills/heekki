@@ -4,9 +4,10 @@ import { UserCard } from "../../structures/player/UserCard";
 import { CardFetch } from "../sql/card/CardFetch";
 import { ImageData } from "../../structures/card/ImageData";
 import { CardUpdate } from "../sql/card/CardUpdate";
-import { Card } from "../../structures/card/Card";
 import { Pack } from "../../structures/card/Pack";
 import { ShopItem } from "../../structures/shop/ShopItem";
+import { Card } from "../../structures/card/Card";
+import { TextInterface } from "../../structures/interface/image/TextInterface";
 
 interface Reference {
   identifier: string;
@@ -48,9 +49,7 @@ export class CardService {
     await CardUpdate.addHeartsToCard(card, amount);
   }
 
-  public static async getImageDataFromCard(
-    card: Card | UserCard
-  ): Promise<ImageData> {
+  public static async getImageDataFromCard(card: UserCard): Promise<ImageData> {
     return await CardFetch.getImageDataFromCard(card);
   }
 
@@ -59,14 +58,7 @@ export class CardService {
                         */
   public static async generateText(
     ctx: CanvasRenderingContext2D,
-    part: {
-      font: string;
-      size: number;
-      color: string;
-      align: "left" | "center" | "right";
-      x: number;
-      y: number;
-    },
+    part: TextInterface,
     text: string
   ) {
     ctx.font = `${part.size}px ${part.font}`;

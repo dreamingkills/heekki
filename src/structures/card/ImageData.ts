@@ -1,4 +1,4 @@
-import { TextData } from "./TextData";
+import { TextInterface } from "../interface/image/TextInterface";
 
 export class ImageData {
   starImageUrl: string;
@@ -9,9 +9,9 @@ export class ImageData {
   starXInc: number;
   starYInc: number;
 
-  serialText: TextData;
-  levelNum: TextData;
-  heartText: TextData;
+  serialText: TextInterface;
+  levelNum: TextInterface;
+  heartText: TextInterface;
 
   constructor(
     imageData: {
@@ -23,9 +23,9 @@ export class ImageData {
       star_x_inc: number;
       star_y_inc: number;
     },
-    serialText: TextData,
-    levelNum: TextData,
-    heartText: TextData
+    serialText: TextInterface,
+    levelNum: TextInterface,
+    heartText: TextInterface
   ) {
     this.starImageUrl = imageData.star_image_url;
     this.starStartingX = imageData.star_starting_x;

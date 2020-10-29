@@ -1,14 +1,7 @@
 import { Chance } from "chance";
-import { CardService } from "./CardService";
-import * as error from "../../structures/Error";
 import { TradeUpdate } from "../sql/trade/TradeUpdate";
-import { MarketService } from "./MarketService";
 import { UserCard } from "../../structures/player/UserCard";
 import { TradeFetch } from "../sql/trade/TradeFetch";
-import { UserCardService } from "./UserCardService";
-import { Card } from "../../structures/card/Card";
-import { StatsService } from "./StatsService";
-import { PlayerService } from "./PlayerService";
 
 export class TradeService {
   private static generateUniqueTradeId(): string {

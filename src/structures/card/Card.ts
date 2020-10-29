@@ -1,5 +1,5 @@
 export class Card {
-  id: number;
+  cardId: number;
   blurb: string;
   member: string;
   abbreviation: string;
@@ -11,7 +11,7 @@ export class Card {
   imageDataId: number;
 
   constructor(data: {
-    id: number;
+    card_id: number;
     blurb: string;
     member: string;
     abbreviation: string;
@@ -22,7 +22,7 @@ export class Card {
     serial_limit: number;
     image_data_id: number;
   }) {
-    this.id = data.id;
+    this.cardId = data.card_id;
     this.blurb = data.blurb;
     this.member = data.member;
     this.abbreviation = data.abbreviation;

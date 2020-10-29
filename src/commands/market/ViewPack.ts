@@ -49,7 +49,8 @@ export class Command extends BaseCommand {
       embed.addField(
         `Cards (1)`,
         out[0].map((c) => {
-          const owned = ownedByUser.filter((card) => card.id === c.id).length;
+          const owned = ownedByUser.filter((card) => card.cardId === c.cardId)
+            .length;
           return `${
             owned > 0
               ? `<:cards:757151797235286089>`
@@ -64,7 +65,8 @@ export class Command extends BaseCommand {
       embed.addField(
         `Cards (2)`,
         out[1].map((c) => {
-          const owned = ownedByUser.filter((card) => card.id === c.id).length;
+          const owned = ownedByUser.filter((card) => card.cardId === c.cardId)
+            .length;
           return `${
             owned > 0
               ? `<:cards:757151797235286089>`
@@ -79,7 +81,8 @@ export class Command extends BaseCommand {
       embed.addField(
         `Cards (3)`,
         out[2].map((c) => {
-          const owned = ownedByUser.filter((card) => card.id === c.id).length;
+          const owned = ownedByUser.filter((card) => card.cardId === c.cardId)
+            .length;
           return `${
             owned > 0
               ? `<:cards:757151797235286089>`

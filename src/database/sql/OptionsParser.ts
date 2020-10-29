@@ -97,6 +97,7 @@ export class OptionsParser {
           ` user_card.owner_id=${DB.connection.escape(options.owner)}`
         );
     }
+
     return queryOptions;
   }
 }
