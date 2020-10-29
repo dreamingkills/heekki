@@ -30,7 +30,7 @@ export class Command extends BaseCommand {
       options[option.split("=")[0].toLowerCase()] = option.split("=")[1];
     }
 
-    const totalOrphaned = await PlayerService.getOrphanedCardCount({
+    const totalOrphaned = await PlayerService.getForfeitedCardCount({
       ...options,
     });
 

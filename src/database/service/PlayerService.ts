@@ -56,7 +56,7 @@ export class PlayerService {
 
   public static async getCardsByProfile(
     profile: Profile,
-    options?: { [key: string]: string | number }
+    options: { [key: string]: string | number } = {}
   ): Promise<UserCard[]> {
     const user = await this.getProfileByDiscordId(profile.discord_id);
     const cardList = await PlayerFetch.getUserCardsByDiscordId(
@@ -69,12 +69,18 @@ export class PlayerService {
 
   public static async getCardCountByProfile(
     profile: Profile,
-    options?: { [key: string]: string | number }
+    options: { [key: string]: string | number } = {}
   ): Promise<number> {
     return await PlayerFetch.getCardCountByDiscordId(
       profile.discord_id,
       options
     );
+  }
+
+  public static async getForfeitedCardCount(
+    options: { [key: string]: string | number } = {}
+  ): Promise<number> {
+    return await PlayerFetch.getCardCountByDiscordId("0", options);
   }
 
   public static async useCard(card: UserCard, profile: Profile): Promise<void> {
@@ -85,14 +91,11 @@ export class PlayerService {
     return await PlayerUpdate.unsetDefaultCard(profile.discord_id);
   }
 
-  public static async getOrphanedCardCount(options?: {
-    [key: string]: string | number;
-  }): Promise<number> {
-    return await PlayerFetch.getOrphanedCardCount(options);
-  }
-  public static async getOrphanedCards(options?: {
-    [key: string]: string | number;
-  }): Promise<UserCard[]> {
+  public static async getOrphanedCards(
+    options: {
+      [key: string]: string | number;
+    } = {}
+  ): Promise<UserCard[]> {
     let cardList = await PlayerFetch.getUserCardsByDiscordId("0", options);
     return cardList;
   }

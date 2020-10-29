@@ -4,15 +4,19 @@ import { MarketUpdate } from "../sql/market/MarketUpdate";
 import { Profile } from "../../structures/player/Profile";
 
 export class MarketService {
-  public static async getMarket(options?: {
-    [key: string]: string | number;
-  }): Promise<{ card: UserCard; price: number }[]> {
+  public static async getMarket(
+    options: {
+      [key: string]: string | number;
+    } = {}
+  ): Promise<{ card: UserCard; price: number }[]> {
     return await MarketFetch.fetchCardIdsInMarketplace(options);
   }
 
-  public static async getMarketCount(options?: {
-    [key: string]: string | number;
-  }): Promise<number> {
+  public static async getMarketCount(
+    options: {
+      [key: string]: string | number;
+    } = {}
+  ): Promise<number> {
     return await MarketFetch.fetchMarketplaceCardCount(options);
   }
 

@@ -37,33 +37,9 @@ export class PlayerFetch extends DBClass {
     return new Profile(user[0]);
   }
 
-  public static async getOrphanedCardCount(options?: {
-    [key: string]: string | number;
-  }): Promise<number> {
-    let query = `SELECT COUNT(*) FROM card LEFT JOIN user_card ON user_card.card_id=card.id LEFT JOIN pack ON card.pack_id=pack.id LEFT JOIN shop ON shop.pack_id=pack.id WHERE user_card.owner_id=0`;
-    const queryOptions = await OptionsParser.parsePlayerOptions(options);
-    query +=
-      (queryOptions.length > 0 ? " AND" : "") +
-      queryOptions.join(" AND") +
-      " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts DESC, user_card.id DESC" +
-      (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
-      (options?.page && options.limit
-        ? ` OFFSET ${DB.connection.escape(
-            (isNaN(<number>options.page) ? 1 : <number>options.page) *
-              <number>options.limit -
-              <number>options.limit
-          )}`
-        : ``);
-
-    const cards = (await DB.query(query + ";")) as {
-      "COUNT(*)": number;
-    }[];
-
-    return cards[0]["COUNT(*)"];
-  }
   public static async getUserCardsByDiscordId(
     discord_id: string,
-    options?: {
+    options: {
       [key: string]: string | number;
     }
   ): Promise<UserCard[]> {
@@ -103,7 +79,7 @@ export class PlayerFetch extends DBClass {
                       marketplace.card_id=user_card.id
                   WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
-    const queryOptions = await OptionsParser.parsePlayerOptions(options);
+    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
@@ -118,7 +94,6 @@ export class PlayerFetch extends DBClass {
         : ``);
 
     const cards = (await DB.query(query + ";")) as UserCardInterface[];
-
     return cards.map((c) => {
       return new UserCard(c);
     });
@@ -157,7 +132,7 @@ export class PlayerFetch extends DBClass {
 
   public static async getCardCountByDiscordId(
     discord_id: string,
-    options?: { [key: string]: string | number }
+    options: { [key: string]: string | number }
   ): Promise<number> {
     let query = `SELECT 
                   COUNT(*)
@@ -177,7 +152,7 @@ export class PlayerFetch extends DBClass {
                     marketplace.card_id=user_card.id
                 WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
-    const queryOptions = await OptionsParser.parsePlayerOptions(options);
+    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
     query +=
       (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
 

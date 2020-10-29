@@ -4,7 +4,7 @@ import { UserCard } from "../../../structures/player/UserCard";
 import { OptionsParser } from "../OptionsParser";
 
 export class MarketFetch extends DBClass {
-  public static async fetchCardIdsInMarketplace(options?: {
+  public static async fetchCardIdsInMarketplace(options: {
     [key: string]: string | number;
   }): Promise<{ card: UserCard; price: number }[]> {
     let query = `SELECT 
@@ -37,7 +37,10 @@ export class MarketFetch extends DBClass {
                   pack ON pack.id=card.pack_id
                 LEFT JOIN
                   shop ON shop.pack_id=pack.id`;
-    const queryOptions = await OptionsParser.parseMarketOptions(options);
+    const queryOptions = await OptionsParser.parseOptions(
+      "MARKETPLACE",
+      options
+    );
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
@@ -52,7 +55,7 @@ export class MarketFetch extends DBClass {
     });
   }
 
-  public static async fetchMarketplaceCardCount(options?: {
+  public static async fetchMarketplaceCardCount(options: {
     [key: string]: string | number;
   }): Promise<number> {
     let query = `SELECT 
@@ -67,7 +70,10 @@ export class MarketFetch extends DBClass {
                   pack ON card.pack_id=pack.id
                 LEFT JOIN
                   shop ON shop.pack_id=pack.id`;
-    const queryOptions = await OptionsParser.parseMarketOptions(options);
+    const queryOptions = await OptionsParser.parseOptions(
+      "MARKETPLACE",
+      options
+    );
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
