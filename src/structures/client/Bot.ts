@@ -11,6 +11,7 @@ import {
 import { DB } from "../../database/index";
 import { Chance } from "chance";
 import { PlayerService } from "../../database/service/PlayerService";
+import { HeartSpawner } from "../../helpers/HeartSpawner";
 
 export class Bot extends Client {
   public config: Object = config;
@@ -24,6 +25,8 @@ export class Bot extends Client {
     this.user!.setPresence({
       activity: { name: `with cards - ❤️ ${lucky.name}`, type: "PLAYING" },
     });
+
+    setTimeout(async () => this.updateStatus(), 900000);
   }
 
   public async init() {
@@ -37,7 +40,13 @@ export class Bot extends Client {
       console.log(`Ready - ${userCount[0]["COUNT(*)"]} users in database`);
 
       this.updateStatus();
-      setInterval(async () => this.updateStatus(), 900000);
+
+      try {
+        const lounge = await this.channels.fetch("752028822274179145");
+        HeartSpawner.spawn(<TextChannel>lounge);
+      } catch (e) {
+        //ignore
+      }
     });
 
     this.on("message", async (msg: Message) => {
