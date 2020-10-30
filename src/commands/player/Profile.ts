@@ -43,7 +43,7 @@ export class Command extends BaseCommand {
       badges,
       discordUser,
       discordUser.displayAvatarURL(),
-      executor.reputation,
+      userQuery.reputation,
       cardCount
     );
     msg.channel.send(embed);
