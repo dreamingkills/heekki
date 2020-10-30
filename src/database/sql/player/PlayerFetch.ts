@@ -32,8 +32,8 @@ export class PlayerFetch extends DBClass {
       [discord_id]
     )) as ProfileInterface[];
     console.log(user);
-    if (!user[0] && !autoGenerate) throw new error.NoProfileError();
-    if (!user[0]) {
+    if (!user[0]?.discord_id && !autoGenerate) throw new error.NoProfileError();
+    if (!user[0]?.discord_id) {
       console.log("ooga");
       const newProfile = await PlayerService.createNewProfile(discord_id);
       console.log(newProfile);
