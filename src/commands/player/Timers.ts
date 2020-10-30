@@ -8,7 +8,7 @@ export class Command extends BaseCommand {
   names: string[] = ["timers", "t"];
   async exec(msg: Message, executor: Profile) {
     const now = moment(Date.now());
-    const timeUntilDaily = moment(executor.lastDaily + 86400000);
+    const timeUntilDaily = moment(executor.lastDaily + (86400000 - 1800000));
     const timeUntilMission = moment(executor.lastMission + 2700000);
     const timeUntilSend = moment(executor.lastHeartSend + 3600000);
     const timeUntilHeartBox = moment(executor.lastHeartBox + 14400000);
