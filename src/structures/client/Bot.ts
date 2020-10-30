@@ -51,6 +51,7 @@ export class Bot extends Client {
 
     this.on("message", async (msg: Message) => {
       if (msg.channel.type == "text") {
+        const author = this.users.fetch(msg.author.id);
         this.cmdMan.handle(msg);
       }
     });
