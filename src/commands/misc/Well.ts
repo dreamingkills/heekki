@@ -77,7 +77,7 @@ export class Command extends BaseCommand {
         break;
       }
       default: {
-        const requirement = 15000000;
+        const requirement = 7500000;
         const current = await WellService.getWellTotal();
         const percentage = (current / requirement) * 100;
         const steps = Math.floor((current / requirement) * 100) / 10;

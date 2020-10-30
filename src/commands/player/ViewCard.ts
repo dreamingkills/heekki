@@ -22,6 +22,12 @@ export class Command extends BaseCommand {
       return;
     }
     const card = await CardService.getCardDataFromReference(reference);
+    if (card.ownerId !== msg.author.id) {
+      await msg.channel.send(
+        `<:red_x:741454361007357993> That card doesn't belong to you.`
+      );
+      return;
+    }
     const pack = await ShopService.getPackById(card.packId);
     const imageData = await CardService.getImageDataFromCard(card);
     const image = await CardService.generateCardImageFromUserCard(
