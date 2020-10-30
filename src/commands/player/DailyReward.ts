@@ -12,8 +12,8 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     const last = executor.lastDaily;
     const now = Date.now();
-    if (now < last + 86400000)
-      throw new error.DailyCooldownError(last + 86400000, now);
+    if (now < last + (86400000 - 1800000))
+      throw new error.DailyCooldownError(last + (86400000 - 1800000), now);
 
     const chance = new Chance();
     const type = "card"; // chance.weighted(["card", "coins"], [0.1, 1]);
