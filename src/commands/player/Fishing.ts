@@ -67,6 +67,10 @@ export class Command extends BaseCommand {
       .setColor(`#55acee`);
 
     const fishingMsg = await msg.channel.send(fishingEmbed);
+    process.on("SIGINT", async () => {
+      await fishingMsg.delete();
+      return;
+    });
 
     const chance = new Chance();
     let caughtFish = false;
