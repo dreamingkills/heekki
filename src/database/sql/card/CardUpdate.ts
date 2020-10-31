@@ -14,9 +14,16 @@ export class CardUpdate extends DBClass {
     stars: number,
     hearts: number,
     force: boolean,
-    price: number
+    price: number,
+    free: boolean
   ): Promise<UserCard> {
-    let newSerial = await SerialGenerator.queueSerialGen(card, force);
+    let newSerial = await SerialGenerator.queueSerialGen(
+      card,
+      force,
+      owner.discord_id,
+      price,
+      free
+    );
     let tries = 0;
     while (true) {
       try {

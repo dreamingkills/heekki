@@ -30,7 +30,8 @@ export class Command extends BaseCommand {
         starCount,
         0,
         true,
-        0
+        0,
+        true
       );
       reward += `+ **${newCard.abbreviation}#${newCard.serialNumber}**`;
     } else if (type === "coins") {

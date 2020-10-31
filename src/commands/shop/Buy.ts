@@ -27,7 +27,7 @@ export class Command extends BaseCommand {
     }
     if (pack.price > executor.coins) {
       msg.channel.send(
-        `<:red_x:741454361007357993>   You don't have enough coins to buy that.`
+        `<:red_x:741454361007357993> You don't have enough coins to buy that.`
       );
       return;
     }

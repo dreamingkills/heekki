@@ -24,7 +24,8 @@ export class UserCardService {
     stars: number,
     hearts: number,
     force: boolean = false,
-    price: number
+    price: number,
+    free: boolean = false
   ): Promise<UserCard> {
     return await CardUpdate.createNewUserCard(
       profile,
@@ -32,7 +33,8 @@ export class UserCardService {
       stars,
       hearts,
       force,
-      price
+      price,
+      free
     );
   }
 
