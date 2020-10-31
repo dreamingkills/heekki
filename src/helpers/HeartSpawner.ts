@@ -33,11 +33,13 @@ export class HeartSpawner {
         console.log(e);
         // ignore
       }
-      await sent.edit(
-        embed.setDescription(
+      const successEmbed = new MessageEmbed()
+        .setAuthor(`Heart Spawns`, `https://i.imgur.com/KTkUpIn.png`)
+        .setDescription(
           `**${u.tag}** was awarded **${random}** <:heekki_heart:757147742383505488>!`
         )
-      );
+        .setColor(`#FFAACC`);
+      await sent.edit(successEmbed);
     });
     collector.on("end", async (collected, reason) => {
       if (reason === "time") {
