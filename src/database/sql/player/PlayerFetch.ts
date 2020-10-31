@@ -25,18 +25,13 @@ export class PlayerFetch extends DBClass {
     discord_id: string,
     autoGenerate: boolean
   ): Promise<Profile> {
-    console.log(autoGenerate);
-    console.log(discord_id);
     const user = (await DB.query(
       `SELECT user_profile.*, COUNT(reputation.receiver_id) AS reputation FROM user_profile LEFT JOIN reputation ON reputation.receiver_id=user_profile.discord_id WHERE discord_id=?;`,
       [discord_id]
     )) as ProfileInterface[];
-    console.log(user);
     if (!user[0]?.discord_id && !autoGenerate) throw new error.NoProfileError();
     if (!user[0]?.discord_id) {
-      console.log("ooga");
       const newProfile = await PlayerService.createNewProfile(discord_id);
-      console.log(newProfile);
       return newProfile;
     }
     return new Profile(user[0]);
