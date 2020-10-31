@@ -5,7 +5,7 @@ import { PlayerService } from "../database/service/PlayerService";
 export class HeartSpawner {
   static chance = new Chance();
   public static async spawn(spawnChannel: TextChannel): Promise<void> {
-    const random = this.chance.integer({ min: 14, max: 38 });
+    const random = this.chance.integer({ min: 32, max: 71 });
 
     const embed = new MessageEmbed()
       .setAuthor(`Heart Spawns`, `https://i.imgur.com/KTkUpIn.png`)
@@ -33,7 +33,11 @@ export class HeartSpawner {
         console.log(e);
         // ignore
       }
-      await sent.delete();
+      await sent.edit(
+        embed.setDescription(
+          `**${u.tag}** was awarded **${random}** <:heekki_heart:757147742383505488>!`
+        )
+      );
     });
     collector.on("end", async (collected, reason) => {
       if (reason === "time") {
@@ -44,7 +48,7 @@ export class HeartSpawner {
         () => this.spawn(spawnChannel),
         this.chance.integer({
           min: 420000,
-          max: 1800000,
+          max: 1140000,
         })
       );
     });
