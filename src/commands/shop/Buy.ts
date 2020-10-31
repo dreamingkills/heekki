@@ -27,7 +27,7 @@ export class Command extends BaseCommand {
     }
     if (pack.price > executor.coins) {
       msg.channel.send(
-        `<:red_x:741454361007357993> You don't have enough coins to buy that.`
+        `<:red_x:741454361007357993>   You don't have enough coins to buy that.`
       );
       return;
     }
@@ -52,11 +52,11 @@ export class Command extends BaseCommand {
       pack.price
     );
 
-    const imageData = await CardService.getImageDataFromCard(newCard);
-    const image = await CardService.generateCardImageFromUserCard(
+    //const imageData = await CardService.getImageDataFromCard(newCard);
+    /*const image = await CardService.generateCardImageFromUserCard(
       newCard,
       imageData
-    );
+    );*/
     let embed = new MessageEmbed()
       .setAuthor(`You rolled the ${pack.title} pack and got...`)
       .setDescription(
@@ -74,7 +74,7 @@ export class Command extends BaseCommand {
       )
       .setThumbnail(`attachment://card.png`);
 
-    embed.attachFiles([{ name: "card.png", attachment: image }]);
+    //embed.attachFiles([{ name: "card.png", attachment: image }]);
 
     msg.channel.send(embed);
   }
