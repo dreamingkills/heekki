@@ -43,9 +43,10 @@ export class Command extends BaseCommand {
     for (let card of cards) {
       const isInMarketplace = await MarketService.cardIsOnMarketplace(card);
       const pack = await ShopService.getPackById(card.packId);
+      const owner = await msg.client.users.fetch(card.ownerId);
       embed.addField(
         `${card.abbreviation}#${card.serialNumber}`,
-        `Owner: <@${card.ownerId}>\n**${pack.title}**\n${
+        `Owner: **${owner?.tag || "Unknown User"}**\n**${pack.title}**\n${
           card.member
         }\n:star: **${
           card.stars
