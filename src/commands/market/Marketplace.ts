@@ -26,6 +26,16 @@ export class Command extends BaseCommand {
     limit: number,
     sender: User
   ): Promise<MessageEmbed> {
+    const formatted: { name: string; value: string }[] = [];
+    for (let listing of cards) {
+      const seller = await sender.client.users.fetch(listing.card.ownerId);
+      formatted.push({
+        name: `${listing.card.abbreviation}#${listing.card.serialNumber}`,
+        value: `:star: ${listing.card.stars}\n<:cash:757146832639098930> ${
+          listing.price
+        }\nSeller: **${seller?.tag || "Unknown User"}**`,
+      });
+    }
     const embed = new MessageEmbed()
       .setAuthor(
         `The Marketplace | ${sender.tag} (page ${page}/${limit})`,
@@ -36,15 +46,7 @@ export class Command extends BaseCommand {
           ? ":mag_right: There's nothing here... Try searching for something else!"
           : ""
       )
-      .addFields(
-        cards.map((c) => {
-          return {
-            name: `${c.card.abbreviation}#${c.card.serialNumber}`,
-            value: `:star: ${c.card.stars}\n<:cash:757146832639098930> ${c.price}\nSeller: <@${c.card.ownerId}>`,
-            inline: true,
-          };
-        })
-      )
+      .addFields(formatted)
       .setFooter(
         `To buy a card, use !mp buy <card reference>.\nTo change pages, click the arrow reactions.`
       )
