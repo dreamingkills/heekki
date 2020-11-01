@@ -7,7 +7,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
-  names: string[] = ["send"];
+  names: string[] = ["send", "s"];
   async exec(msg: Message, executor: Profile) {
     const last = executor.lastHeartSend;
     const now = Date.now();
