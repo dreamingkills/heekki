@@ -106,7 +106,7 @@ export class Command extends BaseCommand {
 
     await msg.channel.send({
       embed,
-      files: [{ attachment: pack.cover, name: "cover.png" }],
+      files: pack.cover ? [{ attachment: pack.cover, name: "cover.png" }] : [],
     });
     return;
   }
