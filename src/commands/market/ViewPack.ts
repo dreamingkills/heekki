@@ -47,7 +47,7 @@ export class Command extends BaseCommand {
     );
     if (out[0])
       embed.addField(
-        `Cards (1)`,
+        `\u200b`,
         out[0].map((c) => {
           const owned = ownedByUser.filter((card) => card.cardId === c.cardId)
             .length;
@@ -61,7 +61,7 @@ export class Command extends BaseCommand {
       );
     if (out[1])
       embed.addField(
-        `Cards (2)`,
+        `\u200b`,
         out[1].map((c) => {
           const owned = ownedByUser.filter((card) => card.cardId === c.cardId)
             .length;
@@ -75,7 +75,7 @@ export class Command extends BaseCommand {
       );
     if (out[2])
       embed.addField(
-        `Cards (3)`,
+        `\u200b`,
         out[2].map((c) => {
           const owned = ownedByUser.filter((card) => card.cardId === c.cardId)
             .length;

@@ -31,7 +31,6 @@ export class CardUpdate extends DBClass {
           `INSERT INTO user_card (serial_number, owner_id, stars, hearts, card_id) VALUES (?, ?, ?, ?, ?);`,
           [newSerial, owner.discord_id, stars, hearts, card.cardId]
         );
-        await PlayerService.removeCoinsFromProfile(owner, price);
 
         return await CardFetch.getUserCardByReference({
           identifier: card.abbreviation,
