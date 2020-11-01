@@ -11,8 +11,8 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     const lastForfeit = executor.lastOrphan;
     const now = Date.now();
-    if (now < lastForfeit + 7200000)
-      throw new error.OrphanCooldownError(lastForfeit + 7200000, now);
+    if (now < lastForfeit + 1800000)
+      throw new error.OrphanCooldownError(lastForfeit + 1800000, now);
 
     const reference = {
       identifier: this.options[0]?.split("#")[0],
@@ -27,7 +27,7 @@ export class Command extends BaseCommand {
     await UserCardService.transferCardToProfile(executor, targetCard);
     await PlayerService.setLastOrphanClaim(executor, now);
     msg.channel.send(
-      `:white_check_mark: You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **2 hours**.`
+      `:white_check_mark: You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **30 minutes**.`
     );
   }
 }

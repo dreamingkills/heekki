@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
     const timeUntilMission = moment(executor.lastMission + 2700000);
     const timeUntilSend = moment(executor.lastHeartSend + 3600000);
     const timeUntilHeartBox = moment(executor.lastHeartBox + 14400000);
-    const timeUntilForfeitClaim = moment(executor.lastOrphan + 7200000);
+    const timeUntilForfeitClaim = moment(executor.lastOrphan + 1800000);
 
     const embed = new MessageEmbed()
       .setAuthor(`Timers | ${msg.author.tag}`)
