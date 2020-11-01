@@ -80,7 +80,11 @@ export class Command extends BaseCommand {
           profit === 0 ? `` : `+ <:cash:757146832639098930> **${profit}**` //\n+ **${xp}** XP`
         }`
       )
-      .setFooter(`You can do another mission in 45 minutes.`)
+      .setFooter(
+        `You now have ${
+          executor.coins + profit
+        } cash.\nYou can do another mission in 45 minutes.`
+      )
       .setColor(`FFAACC`);
     msg.channel.send(embed);
   }
