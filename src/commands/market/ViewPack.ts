@@ -55,9 +55,7 @@ export class Command extends BaseCommand {
             owned > 0
               ? `<:cards:757151797235286089>`
               : `<:cards_dark:757771501335347311>`
-          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**${
-            c.blurb ? `\n*"${c.blurb}"*` : ``
-          }`;
+          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
       );
@@ -71,9 +69,7 @@ export class Command extends BaseCommand {
             owned > 0
               ? `<:cards:757151797235286089>`
               : `<:cards_dark:757771501335347311>`
-          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**${
-            c.blurb ? `\n*"${c.blurb}"*` : ``
-          }`;
+          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
       );
@@ -87,9 +83,7 @@ export class Command extends BaseCommand {
             owned > 0
               ? `<:cards:757151797235286089>`
               : `<:cards_dark:757771501335347311>`
-          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**${
-            c.blurb ? `\n*"${c.blurb}"*` : ``
-          }`;
+          } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
       );
