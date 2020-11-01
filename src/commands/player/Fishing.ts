@@ -8,6 +8,7 @@ import * as error from "../../structures/Error";
 export class Command extends BaseCommand {
   names: string[] = ["fishing"];
   currentlyFishing: Set<string> = new Set<string>();
+  disabled: boolean = true;
 
   private async generateFish(): Promise<{
     id: number;

@@ -6,6 +6,7 @@ import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["fish"];
+  disabled: boolean = true;
   async exec(msg: Message, executor: Profile) {
     if (this.options[0]?.toLowerCase() === "sell") {
       const fish = await PlayerService.getFishByProfile(executor);
