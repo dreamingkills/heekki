@@ -25,7 +25,6 @@ export class Command extends BaseCommand {
   }
 
   async exec(msg: Message, executor: Profile) {
-    console.log((await msg.guild?.members.fetch(msg.author.id))?.user);
     if (this.playing.has(msg.author.id)) {
       await msg.channel.send(
         `<:red_x:741454361007357993> You're already playing Jumble.`
@@ -59,14 +58,14 @@ export class Command extends BaseCommand {
 
     collector.on("collect", async (m: Message) => {
       if (m.content.toLowerCase() === random.toLowerCase()) {
-        await PlayerService.addCoinsToProfile(executor, 15);
+        await PlayerService.addCoinsToProfile(executor, 40);
         const successEmbed = new MessageEmbed()
           .setAuthor(
             `Jumble | ${msg.author.tag}`,
             msg.author.displayAvatarURL()
           )
           .setDescription(
-            `:white_check_mark: **Correct!**\nYou've been given <:cash:757146832639098930> **15**!`
+            `:white_check_mark: **Correct!**\nYou've been given <:cash:757146832639098930> **40**!`
           )
           .setColor(`#FFAACC`);
         await m.react("✅");
