@@ -13,35 +13,45 @@ import { BaseCommand } from "../../structures/command/Command";
 export class Command extends BaseCommand {
   names: string[] = ["preview"];
   async exec(msg: Message) {
-    const references = this.options.filter((p) => p.includes("#")).slice(0, 9);
-    const cardList = await Promise.all(
-      references.map(async (p) => {
-        return await CardService.getCardDataFromReference({
-          identifier: p.split("#")[0],
-          serial: parseInt(p.split("#")[1]),
-        });
-      })
-    );
+    const referencesRaw = this.options
+      .filter((p) => p.includes("#"))
+      .slice(0, 9);
+    const cards = [];
+    for (let ref of referencesRaw) {
+      const reference = {
+        identifier: ref.split("#")[0],
+        serial: parseInt(ref.split("#")[1]),
+      };
+      if (!reference.identifier || isNaN(reference.serial)) continue;
+      const card = await CardService.getCardDataFromReference(reference);
+      cards.push(card);
+    }
 
+    if (cards.length === 0) {
+      await msg.channel.send(
+        `<:red_x:741454361007357993> You didn't enter any valid cards.`
+      );
+      return;
+    }
     const embed = new MessageEmbed()
       .setAuthor(
         `Card Previews | ${msg.author.tag}`,
         msg.author.displayAvatarURL()
       )
-      .setDescription(`**${cardList.length}** cards requested...`)
+      .setDescription(`**${cards.length}** cards requested...`)
       .setColor(`#FFAACC`);
-    for (let card of cardList) {
+    for (let card of cards) {
       const isInMarketplace = await MarketService.cardIsOnMarketplace(card);
       const pack = await ShopService.getPackById(card.packId);
       embed.addField(
         `${card.abbreviation}#${card.serialNumber}`,
         `Owner: <@${card.ownerId}>\n**${pack.title}**\n${
           card.member
-        }\n:star: **${card.stars}**\n<:heekki_heart:757147742383505488> **${
-          card.hearts
-        }**\n\n${
+        }\n:star: **${
+          card.stars
+        }**\n<:heekki_heart:757147742383505488> **${card.hearts.toLocaleString()}**\n${
           isInMarketplace.forSale
-            ? `:dollar: For Sale: **${isInMarketplace.price}** <:cash:757146832639098930>`
+            ? `<:cash:757146832639098930> For Sale: **${isInMarketplace.price.toLocaleString()}**`
             : ""
         }`,
         true

@@ -11,7 +11,7 @@ export class Command extends BaseCommand {
   names: string[] = ["pack", "viewpack", "vp"];
   async exec(msg: Message, executor: Profile) {
     if (!this.options[0]) {
-      msg.channel.send(
+      await msg.channel.send(
         "<:red_x:741454361007357993> Please specify a pack to view."
       );
       return;
