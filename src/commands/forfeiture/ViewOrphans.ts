@@ -58,7 +58,7 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(embed);
     if (pageLimit > 2) await sent.react(`⏪`);
     if (pageLimit > 1) await sent.react(`◀️`);
-    sent.react(`754832389620105276`);
+    await sent.react(`754832389620105276`);
     if (pageLimit > 1) await sent.react(`▶️`);
     if (pageLimit > 2) await sent.react(`⏩`);
 
@@ -85,7 +85,7 @@ export class Command extends BaseCommand {
           page,
         });
         embed.fields = await this.render(newCards);
-        sent.edit(
+        await sent.edit(
           embed.setAuthor(
             `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
             msg.author.displayAvatarURL()
@@ -99,7 +99,7 @@ export class Command extends BaseCommand {
           page,
         });
         embed.fields = await this.render(newCards);
-        sent.edit(
+        await sent.edit(
           embed.setAuthor(
             `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
             msg.author.displayAvatarURL()
@@ -116,7 +116,7 @@ export class Command extends BaseCommand {
           page,
         });
         embed.fields = await this.render(newCards);
-        sent.edit(
+        await sent.edit(
           embed.setAuthor(
             `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
             msg.author.displayAvatarURL()
@@ -130,7 +130,7 @@ export class Command extends BaseCommand {
           page,
         });
         embed.fields = await this.render(newCards);
-        sent.edit(
+        await sent.edit(
           embed.setAuthor(
             `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
             msg.author.displayAvatarURL()
@@ -138,11 +138,11 @@ export class Command extends BaseCommand {
         );
       }
       if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES"))
-        r.users.remove(msg.author);
+        await r.users.remove(msg.author);
     });
 
     collector.on("end", async () => {
-      if (!sent.deleted) sent.reactions.removeAll();
+      if (!sent.deleted) await sent.reactions.removeAll();
     });
   }
 }

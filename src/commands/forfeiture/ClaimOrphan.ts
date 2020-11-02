@@ -26,7 +26,7 @@ export class Command extends BaseCommand {
 
     await UserCardService.transferCardToProfile(executor, targetCard);
     await PlayerService.setLastOrphanClaim(executor, now);
-    msg.channel.send(
+    await msg.channel.send(
       `:white_check_mark: You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **30 minutes**.`
     );
   }

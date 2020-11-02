@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
 
   async exec(msg: Message, executor: Profile) {
     if (this.currentlyPlaying.has(msg.author.id)) {
-      msg.channel.send(
+      await msg.channel.send(
         `<:red_x:741454361007357993> Finish your current trivia before starting another!`
       );
       return;
@@ -41,7 +41,7 @@ export class Command extends BaseCommand {
       if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
         //const xp = chance.integer({ min: 2, max: 6 });
         //PlayerService.addXp(executor, xp);
-        triviaMessage.edit(
+        await triviaMessage.edit(
           `:tada: **Correct!**` //\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
         );
 
@@ -53,13 +53,13 @@ export class Command extends BaseCommand {
     collect.on("end", async (collected, reason) => {
       this.currentlyPlaying.delete(msg.author.id);
       if (reason != "correct") {
-        msg.react("741454361007357993");
-        triviaMessage.edit(
+        await msg.react("741454361007357993");
+        await triviaMessage.edit(
           `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
         );
       }
       if (this.permissions.MANAGE_MESSAGES) await channel.bulkDelete(collected);
-      StatsService.triviaComplete(
+      await StatsService.triviaComplete(
         executor,
         reason === "correct" ? true : false
       );

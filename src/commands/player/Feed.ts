@@ -50,6 +50,6 @@ export class Command extends BaseCommand {
       )
       .setFooter(`You now have ${executor.hearts - amount} hearts.`)
       .setColor("#FFAACC");
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

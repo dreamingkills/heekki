@@ -61,9 +61,9 @@ export class Command extends BaseCommand {
       }) * (multiplier > 2.5 ? 2.5 : multiplier)
     );
 
-    StatsService.missionComplete(executor, profit === 0 ? false : true);
-    PlayerService.addCoinsToProfile(executor, profit);
-    PlayerService.setLastMission(executor, now);
+    await StatsService.missionComplete(executor, profit === 0 ? false : true);
+    await PlayerService.addCoinsToProfile(executor, profit);
+    await PlayerService.setLastMission(executor, now);
 
     //const xp = chance.integer({ min: 30, max: 72 });
     //if (profit !== 0) PlayerService.addXp(executor, xp);
@@ -86,6 +86,6 @@ export class Command extends BaseCommand {
         } cash.\nYou can do another mission in 45 minutes.`
       )
       .setColor(`FFAACC`);
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

@@ -111,7 +111,7 @@ export class Command extends BaseCommand {
           limit: 10,
           page: page,
         });
-        sent.edit(
+        await sent.edit(
           embed
             .setAuthor(
               `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
@@ -126,7 +126,7 @@ export class Command extends BaseCommand {
           limit: 10,
           page: page,
         });
-        sent.edit(
+        await sent.edit(
           embed
             .setAuthor(
               `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
@@ -138,7 +138,7 @@ export class Command extends BaseCommand {
         r.emoji.name === "delete" &&
         this.permissions.MANAGE_MESSAGES
       ) {
-        return (<TextChannel>msg.channel).bulkDelete([msg, sent]);
+        return await (<TextChannel>msg.channel).bulkDelete([msg, sent]);
       } else if (r.emoji.name === "▶️" && page !== pageLimit) {
         page++;
         const newCards = await PlayerService.getCardsByProfile(profile, {
@@ -161,7 +161,7 @@ export class Command extends BaseCommand {
           limit: 10,
           page: page,
         });
-        sent.edit(
+        await sent.edit(
           embed
             .setAuthor(
               `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
@@ -170,11 +170,11 @@ export class Command extends BaseCommand {
             .setDescription(desc + (await this.renderInventory(newCards)))
         );
       }
-      r.users.remove(msg.author);
+      await r.users.remove(msg.author);
     });
     collector.on("end", async () => {
       if (!sent.deleted && this.permissions.MANAGE_MESSAGES)
-        sent.reactions.removeAll();
+        await sent.reactions.removeAll();
     });
   }
 }

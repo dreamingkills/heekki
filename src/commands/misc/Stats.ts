@@ -38,7 +38,7 @@ export class Command extends BaseCommand {
         }**\nTotal: **${stats.missionsFailed + stats.missionsSuccessful}**`,
         true
       );
-      msg.channel.send(embed);
+      await msg.channel.send(embed);
       return;
     }
     const now = Date.now();
@@ -77,6 +77,6 @@ export class Command extends BaseCommand {
       `Registered users: **${totalProfiles}**\nRelationships: **${totalRelationships}**`,
       true
     );
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

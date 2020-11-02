@@ -7,14 +7,14 @@ export class Command extends BaseCommand {
   async exec(msg: Message) {
     const description = this.options.join(" ");
     if (description.length < 30) {
-      msg.channel.send(
+      await msg.channel.send(
         `<:red_x:741454361007357993> Please describe your issue in at least 30 characters.`
       );
       return;
     }
 
     const ticketronChannel = <TextChannel>(
-      msg.client.channels.cache.get("761790125243105320")
+      await msg.client.channels.fetch("761790125243105320")
     );
     const embed = new MessageEmbed()
       .setAuthor(`New Ticket | ${msg.author.tag} (${msg.author.id})`)
@@ -36,6 +36,6 @@ export class Command extends BaseCommand {
         `:white_check_mark: I've submitted your ticket for review by the developer.\n**Please do not submit another ticket about the same subject.**`
       )
       .setColor(`#FFAACC`);
-    msg.channel.send(successEmbed);
+    await msg.channel.send(successEmbed);
   }
 }

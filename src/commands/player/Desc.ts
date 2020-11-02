@@ -11,7 +11,7 @@ export class Command extends BaseCommand {
       this.options.join(" ")
     );
 
-    msg.channel.send(
+    await msg.channel.send(
       `:white_check_mark: Your description was updated to:\n\`${user.new}\``
     );
   }

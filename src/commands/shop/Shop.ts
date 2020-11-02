@@ -31,6 +31,6 @@ export class Command extends BaseCommand {
       .setColor("#FFAACC")
       .setThumbnail(msg.author.displayAvatarURL());
 
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

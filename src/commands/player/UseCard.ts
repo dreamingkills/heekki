@@ -27,7 +27,7 @@ export class Command extends BaseCommand {
 
     await PlayerService.useCard(card, executor);
 
-    msg.channel.send(
+    await msg.channel.send(
       `:white_check_mark: Now using **${card.abbreviation}#${card.serialNumber}** by default.`
     );
   }

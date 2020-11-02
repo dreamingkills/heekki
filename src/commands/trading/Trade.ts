@@ -87,7 +87,7 @@ export class Command extends BaseCommand {
         if (m.content.toLowerCase() === "ok") {
           if (submitter === "sender") {
             submitter = "tradee";
-            sent.edit(
+            await sent.edit(
               panel.setDescription(
                 `\`\`\`` +
                   tradePanel.header +
@@ -127,8 +127,8 @@ export class Command extends BaseCommand {
                   })
                   .indexOf(card.userCardId) > -1
               ) {
-                m.react(`741454361007357993`);
-                m.channel.send(
+                await m.react(`741454361007357993`);
+                await m.channel.send(
                   `<:red_x:741454361007357993> That card is already in the trade.`
                 );
               } else {
@@ -163,7 +163,7 @@ export class Command extends BaseCommand {
                 }
 
                 if (submitter === "tradee") {
-                  sent.edit(
+                  await sent.edit(
                     panel.setDescription(
                       `\`\`\`` +
                         tradePanel.header +
@@ -175,7 +175,7 @@ export class Command extends BaseCommand {
                     )
                   );
                 } else if (submitter === "sender") {
-                  sent.edit(
+                  await sent.edit(
                     panel.setDescription(
                       `\`\`\`` +
                         tradePanel.header +
@@ -189,19 +189,21 @@ export class Command extends BaseCommand {
                 }
                 if (tradeeCollected === 5) collector.stop("ok");
 
-                if (this.permissions.MANAGE_MESSAGES) m.delete();
+                if (this.permissions.MANAGE_MESSAGES) await m.delete();
               }
             } catch (e) {
-              msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
+              await msg.channel.send(
+                `<:red_x:741454361007357993> ${e.message}`
+              );
             }
           }
         }
       }
     });
 
-    collector.on("end", (collected, reason: string) => {
+    collector.on("end", async (collected, reason: string) => {
       if (reason === "time") {
-        sent.edit(
+        await sent.edit(
           panel.setDescription(
             `<:red_x:741454361007357993> This trade has expired.`
           )
@@ -211,7 +213,7 @@ export class Command extends BaseCommand {
         return;
       }
       if (reason === "ok") {
-        sent.edit(
+        await sent.edit(
           panel.setDescription(
             `\`\`\`` +
               tradePanel.header +
@@ -225,7 +227,7 @@ export class Command extends BaseCommand {
               `\nPlease review the trade and confirm it by clicking the :white_check_mark: reaction.`
           )
         );
-        sent.react("✅");
+        await sent.react("✅");
 
         const rxnFilter = (r: MessageReaction, u: User) =>
           r.emoji.name === "✅" &&
@@ -243,7 +245,7 @@ export class Command extends BaseCommand {
               await UserCardService.transferCards(msg.author.id, tradeeCards);
 
             await StatsService.tradeComplete(executor, tradee);
-            sent.edit(
+            await sent.edit(
               panel.setDescription(`:white_check_mark: Trade completed!`)
             );
             this.currentlyTrading.delete(msg.author.id);
@@ -251,11 +253,11 @@ export class Command extends BaseCommand {
             return conf.stop("ok");
           }
         });
-        conf.on("end", (collected, reason: string) => {
+        conf.on("end", async (collected, reason: string) => {
           if (reason !== "time") return;
           this.currentlyTrading.delete(msg.author.id);
           this.currentlyTrading.delete(tradeeUser.id);
-          sent.edit(
+          await sent.edit(
             panel.setDescription(
               `<:red_x:741454361007357993> This trade has expired.`
             )

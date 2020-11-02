@@ -24,7 +24,7 @@ export class Command extends BaseCommand {
     const post = !card.isFavorite
       ? "You are no longer able to trade, sell, or forfeit that card."
       : "You are now able to trade, sell, and forfeit that card.";
-    msg.channel.send(
+    await msg.channel.send(
       `:white_check_mark: ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
     );
   }

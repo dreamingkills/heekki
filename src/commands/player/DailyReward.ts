@@ -51,6 +51,6 @@ export class Command extends BaseCommand {
       .setDescription(reward) // + `\n+ **${xp}** XP`)
       .setFooter(`You can claim your daily reward again in 24 hours.`)
       .setColor(`#FFAACC`);
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

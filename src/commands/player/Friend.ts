@@ -320,7 +320,7 @@ export class Command extends BaseCommand {
       .setDescription(
         `**Friends on Heekki**\nYou can add friends to receive hearts from them whenever they send them. To send your friends some hearts, you can use \`!send\` - this comes at no cost to you.\n- To send or accept a friend request, use \`!friend add\`.\n- To unfriend or reject a friend request, use \`!friend remove\`.\n\n**Subcommands**\n\`\`\`!friend add <user>\n!friend remove <user>\n!friend list\n!friend requests\n!friend all\`\`\``
       );
-    msg.channel.send(helpEmbed);
+    await msg.channel.send(helpEmbed);
     return;
   }
 }

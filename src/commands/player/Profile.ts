@@ -46,6 +46,6 @@ export class Command extends BaseCommand {
       userQuery.reputation,
       cardCount
     );
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

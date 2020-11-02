@@ -7,12 +7,14 @@ export class Command extends BaseCommand {
   names: string[] = ["unrep"];
   async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
-      msg.channel.send(`<:red_x:741454361007357993> Please mention a user!`);
+      await msg.channel.send(
+        `<:red_x:741454361007357993> Please mention a user!`
+      );
       return;
     }
     const receiverUser = msg.mentions.users.first()!;
     if (receiverUser.id === msg.author.id) {
-      msg.channel.send(
+      await msg.channel.send(
         `<:red_x:741454361007357993> Why would you want to do that? :broken_heart:`
       );
       return;
@@ -27,14 +29,14 @@ export class Command extends BaseCommand {
       receiverProfile
     );
     if (!reputationExists) {
-      msg.channel.send(
+      await msg.channel.send(
         `<:red_x:741454361007357993> You haven't given them a reputation point.`
       );
       return;
     }
 
     await PlayerService.removeReputation(executor, receiverProfile);
-    msg.channel.send(
+    await msg.channel.send(
       `:white_check_mark: You revoked your reputation point from **${receiverUser.tag}**!`
     );
   }

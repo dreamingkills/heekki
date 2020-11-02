@@ -87,6 +87,6 @@ export class Command extends BaseCommand {
     }
     embed.setDescription(description);
     embed.setColor(`#FFAACC`);
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }

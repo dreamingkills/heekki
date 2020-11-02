@@ -85,7 +85,7 @@ export class Command extends BaseCommand {
         if (this.options[2]?.toLowerCase().endsWith("k")) price = price * 1000;
         price = Math.round(price);
         if (isNaN(price)) {
-          msg.channel.send(
+          await msg.channel.send(
             "<:red_x:741454361007357993> Please specify a price."
           );
           return;
@@ -93,7 +93,7 @@ export class Command extends BaseCommand {
 
         await MarketService.sellCard(price, card);
 
-        msg.channel.send(
+        await msg.channel.send(
           `:white_check_mark: You've listed **${card.abbreviation}#${
             card.serialNumber
           }** on the Marketplace for <:cash:757146832639098930> **${price.toLocaleString()}**.`
@@ -117,7 +117,7 @@ export class Command extends BaseCommand {
           throw new error.CardNotForSaleError(reference);
 
         await MarketService.removeListing(card);
-        msg.channel.send(
+        await msg.channel.send(
           `:white_check_mark: You've removed the listing for **${card.abbreviation}#${card.serialNumber}** from the Marketplace.`
         );
         break;
@@ -139,7 +139,7 @@ export class Command extends BaseCommand {
         const conf = await msg.channel.send(
           `:warning: Are you sure you want to purchase **${card.abbreviation}#${card.serialNumber}** for <:cash:757146832639098930> **${forSale.price}**?\nThis card has :star: **${card.stars}** and :heart: **${card.hearts}**. React with :white_check_mark: to confirm.`
         );
-        conf.react("✅");
+        await conf.react("✅");
 
         let filter = (reaction: MessageReaction, user: User) => {
           return reaction.emoji.name == "✅" && user.id == msg.author.id;
@@ -162,7 +162,7 @@ export class Command extends BaseCommand {
           //const xp = chance.integer({ min: 40, max: 71 });
           //PlayerService.addXp(sellerProfile, xp);
 
-          StatsService.saleComplete(
+          await StatsService.saleComplete(
             executor,
             card.ownerId,
             `${card.abbreviation}#${card.serialNumber}`,
@@ -171,12 +171,12 @@ export class Command extends BaseCommand {
 
           const seller = msg.client.users.resolve(card.ownerId);
           if (seller) {
-            seller.send(
+            await seller.send(
               `:white_check_mark: Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**` //\n+ **${xp}** XP`
             );
           }
 
-          conf.edit(
+          await conf.edit(
             `:white_check_mark: Successfully purchased **${card.abbreviation}#${
               card.serialNumber
             }**!\nYour new balance is <:cash:757146832639098930> **${
@@ -185,12 +185,13 @@ export class Command extends BaseCommand {
           );
           return;
         });
-        reactions.on("end", (collected, reason) => {
+        reactions.on("end", async (collected, reason) => {
           if (reason !== "time") return;
-          conf.edit(
+          await conf.edit(
             `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
           );
-          if (this.permissions.MANAGE_MESSAGES) conf.reactions.removeAll();
+          if (this.permissions.MANAGE_MESSAGES)
+            await conf.reactions.removeAll();
         });
         break;
       }
@@ -252,7 +253,7 @@ export class Command extends BaseCommand {
               limit: 15,
               page: newPage,
             });
-            sent.edit(
+            await sent.edit(
               await this.renderMarket(newCards, newPage, pageLimit, msg.author)
             );
             page = newPage;
@@ -266,7 +267,7 @@ export class Command extends BaseCommand {
               ?.member(msg.client.user!)
               ?.hasPermission("MANAGE_MESSAGES")
           )
-            sent.reactions.removeAll();
+            await sent.reactions.removeAll();
         });
         return;
       }

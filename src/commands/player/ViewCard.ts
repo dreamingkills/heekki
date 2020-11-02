@@ -18,7 +18,9 @@ export class Command extends BaseCommand {
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
     if (isNaN(reference.serial)) {
-      msg.channel.send(`:x: That isn't a valid card reference.`);
+      await msg.channel.send(
+        `<:red_x:741454361007357993> That isn't a valid card reference.`
+      );
       return;
     }
     const card = await CardService.getCardDataFromReference(reference);
@@ -54,15 +56,15 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send({ embed: embed, files: [image] });
 
     if (this.permissions.MANAGE_MESSAGES) {
-      sent.react(`753019858932727868`);
+      await sent.react(`753019858932727868`);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>
           reaction.emoji.id === "753019858932727868" &&
           user.id === msg.author.id
       );
-      collector.on("collect", (r) =>
-        (<TextChannel>msg.channel).bulkDelete([sent, msg])
-      );
+      collector.on("collect", async (r) => {
+        await (<TextChannel>msg.channel).bulkDelete([sent, msg]);
+      });
     }
   }
 }
