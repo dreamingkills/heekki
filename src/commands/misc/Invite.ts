@@ -9,7 +9,7 @@ export class Command extends BaseCommand {
       "EMBED_LINKS",
       "USE_EXTERNAL_EMOJIS",
     ]);
-    msg.channel.send(
+    await msg.channel.send(
       `<:heekki_heart:757147742383505488> You can invite Heekki to your server with the following link:\n<${invite}>\nYou can find the official Heekki server at https://discord.gg/KbcQjRG`
     );
   }
