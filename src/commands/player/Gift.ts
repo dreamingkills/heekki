@@ -20,7 +20,7 @@ export class Command extends BaseCommand {
       })
     );
     if (cardList.length < 1) {
-      msg.channel.send(
+      await msg.channel.send(
         "<:red_x:741454361007357993> You haven't specified any cards!"
       );
       return;
@@ -28,11 +28,13 @@ export class Command extends BaseCommand {
 
     const mention = msg.mentions.users.first();
     if (!mention) {
-      msg.channel.send(`<:red_x:741454361007357993> Please mention a user.`);
+      await msg.channel.send(
+        `<:red_x:741454361007357993> Please mention a user.`
+      );
       return;
     }
     if (mention.id === msg.author.id) {
-      msg.channel.send(
+      await msg.channel.send(
         `<:red_x:741454361007357993> You can't gift cards to yourself!`
       );
       return;
@@ -75,7 +77,7 @@ export class Command extends BaseCommand {
         .join("\n")}`
     );
 
-    confirmation.react("✅");
+    await confirmation.react("✅");
     const filter = (reaction: MessageReaction, user: User) => {
       return reaction.emoji.name === "✅" && user.id == msg.author.id;
     };
@@ -86,18 +88,19 @@ export class Command extends BaseCommand {
 
     reactions.on("collect", async () => {
       await UserCardService.transferCards(profile.discord_id, validCards);
-      confirmation.edit(
+      await confirmation.edit(
         `:white_check_mark: Gifted **${validCards.length}** cards to **${mention.tag}**!`
       );
     });
     reactions.on("end", async (reaction, reason: string) => {
       if (reason !== "limit") {
-        confirmation.edit(
+        await confirmation.edit(
           `<:red_x:741454361007357993> You didn't react in time!`
         );
         if (this.permissions.MANAGE_MESSAGES)
           confirmation.reactions.removeAll();
       }
+      return;
     });
   }
 }
