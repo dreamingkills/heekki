@@ -61,7 +61,7 @@ export class Command extends BaseCommand {
 
     const sent = await msg.channel.send(embed);
     if (this.permissions.MANAGE_MESSAGES) {
-      sent.react(`753019858932727868`);
+      await sent.react(`753019858932727868`);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>
           reaction.emoji.id === "753019858932727868" &&
