@@ -29,10 +29,9 @@ export class Command extends BaseCommand {
     );
     let tags = [];
     for (const friend of friendIds) {
+      const user = await client.users.fetch(friend);
       tags.push(
-        `${
-          (await client.users.fetch(friend)).tag || `Unknown User (${friend})`
-        } - **${
+        `${user?.tag || `Unknown User (${friend})`} - **${
           friendCounts.filter((r) => {
             return r.sender_id === friend;
           })[0]?.count || 0
@@ -53,7 +52,7 @@ export class Command extends BaseCommand {
       }
       case "add": {
         if (!this.options[1]) {
-          msg.channel.send(
+          await msg.channel.send(
             `<:red_x:741454361007357993> Please specify a user to add!`
           );
           return;
@@ -91,40 +90,42 @@ export class Command extends BaseCommand {
         switch (relationship) {
           case "ACCEPTABLE": {
             await FriendService.acceptFriendRequest(friendProfile, executor);
-            msg.channel.send(`:white_check_mark: Friend request accepted.`);
+            await msg.channel.send(
+              `:white_check_mark: Friend request accepted.`
+            );
             return;
           }
           case "REQUESTED": {
-            msg.channel.send(
+            await msg.channel.send(
               `<:red_x:741454361007357993> You've already sent a friend request to that user!`
             );
             return;
           }
           case "ALREADY_FRIENDS": {
-            msg.channel.send(
+            await msg.channel.send(
               `<:red_x:741454361007357993> You're already friends with them!`
             );
             return;
           }
           case "ERROR": {
-            msg.channel.send(
+            await msg.channel.send(
               `<:red_x:741454361007357993> An unexpected error occurred! Please try again.`
             );
             return;
           }
         }
 
-        FriendService.addFriend(executor, friendProfile);
+        await FriendService.addFriend(executor, friendProfile);
 
         const newUser = await msg.client.users.fetch(friendProfile.discord_id);
-        msg.channel.send(
+        await msg.channel.send(
           `:white_check_mark: Sent a friend request to **${newUser?.tag}**!`
         );
         return;
       }
       case "remove": {
         if (!this.options[1]) {
-          msg.channel.send(
+          await msg.channel.send(
             `<:red_x:741454361007357993> Please specify a user to unfriend!`
           );
           return;
@@ -140,7 +141,7 @@ export class Command extends BaseCommand {
           });
           friend = member?.firstKey();
           if (!friend) {
-            msg.channel.send(
+            await msg.channel.send(
               "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
             );
             return;
@@ -162,14 +163,14 @@ export class Command extends BaseCommand {
             return;
           }
           case "ERROR": {
-            msg.channel.send(
+            await msg.channel.send(
               `<:red_x:741454361007357993> An unexpected error occurred! Please try again.`
             );
             return;
           }
           default: {
             await FriendService.removeFriend(executor, friendProfile);
-            msg.channel.send(
+            await msg.channel.send(
               `:white_check_mark: Removed them from your friends list.`
             );
             return;
@@ -198,7 +199,7 @@ export class Command extends BaseCommand {
             .setDescription(`You don't have any friends :(`)
             .setThumbnail(msg.author.displayAvatarURL())
             .setColor(`#FFAACC`);
-          msg.channel.send(embed);
+          await msg.channel.send(embed);
           return;
         }
         const friends = await this.parseFriends(
