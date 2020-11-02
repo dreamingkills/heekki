@@ -168,6 +168,6 @@ export class Command extends BaseCommand {
       .setDescription(description)
       .setFooter(footer)
       .setColor(`#FFAACC`);
-    msg.channel.send(embed);
+    await msg.channel.send(embed);
   }
 }
