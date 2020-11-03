@@ -14,13 +14,19 @@ export class Command extends BaseCommand {
         const topCollectors = await PlayerService.getTopCollectors();
         const totalCards = await StatsService.getNumberOfCards();
         for (let profile of topCollectors) {
-          const user = await msg.client.users.fetch(profile.profile.discord_id);
+          let user;
+          try {
+            user = (await msg.client.users.fetch(profile.profile.discord_id))
+              .username;
+          } catch (e) {
+            user = "Unknown User";
+          }
           const count = await PlayerService.getCardCountByProfile(
             profile.profile
           );
-          description += `${topCollectors.indexOf(profile) + 1}) **${
-            user?.username || "Unknown User"
-          }** (${count.toLocaleString()} cards)\n`;
+          description += `${
+            topCollectors.indexOf(profile) + 1
+          }) **${user}** (${count.toLocaleString()} cards)\n`;
         }
         embed.setAuthor(
           `Cards Leaderboard | ${msg.author.tag}`,
@@ -35,10 +41,15 @@ export class Command extends BaseCommand {
         const topHearts = await PlayerService.getTopHearts();
         const totalHearts = await StatsService.getNumberOfHearts();
         for (let profile of topHearts) {
-          const user = await msg.client.users.fetch(profile.discord_id);
-          description += `${topHearts.indexOf(profile) + 1}) **${
-            user?.username || "Unknown User"
-          }** (${profile.hearts.toLocaleString()} hearts)\n`;
+          let user;
+          try {
+            user = (await msg.client.users.fetch(profile.discord_id)).username;
+          } catch (e) {
+            user = "Unknown User";
+          }
+          description += `${
+            topHearts.indexOf(profile) + 1
+          }) **${user}** (${profile.hearts.toLocaleString()} hearts)\n`;
         }
         embed.setAuthor(
           `Hearts Leaderboard | ${msg.author.tag}`,
@@ -53,10 +64,15 @@ export class Command extends BaseCommand {
         const richestUsers = await PlayerService.getRichestUsers();
         const totalCoins = await StatsService.getNumberOfCoins();
         for (let profile of richestUsers) {
-          const user = await msg.client.users.fetch(profile.discord_id);
-          description += `${richestUsers.indexOf(profile) + 1}) **${
-            user?.username || "Unknown User"
-          }** (${profile.coins.toLocaleString()} cash)\n`;
+          let user;
+          try {
+            user = (await msg.client.users.fetch(profile.discord_id)).username;
+          } catch (e) {
+            user = "Unknown User";
+          }
+          description += `${
+            richestUsers.indexOf(profile) + 1
+          }) **${user}** (${profile.coins.toLocaleString()} cash)\n`;
         }
         embed.setAuthor(
           `Cash Leaderboard | ${msg.author.tag}`,
