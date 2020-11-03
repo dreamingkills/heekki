@@ -28,12 +28,17 @@ export class Command extends BaseCommand {
   ): Promise<MessageEmbed> {
     const formatted: { name: string; value: string }[] = [];
     for (let listing of cards) {
-      const seller = await sender.client.users.fetch(listing.card.ownerId);
+      let seller;
+      try {
+        seller = (await sender.client.users.fetch(listing.card.ownerId))
+          .username;
+      } catch (e) {
+        seller = "Unknown User";
+      }
+
       formatted.push({
         name: `${listing.card.abbreviation}#${listing.card.serialNumber}`,
-        value: `:star: ${listing.card.stars}\n<:cash:757146832639098930> ${
-          listing.price
-        }\nSeller: **${seller?.tag || "Unknown User"}**`,
+        value: `:star: ${listing.card.stars}\n<:cash:757146832639098930> ${listing.price}\nSeller: **${seller}**`,
       });
     }
     const embed = new MessageEmbed()
