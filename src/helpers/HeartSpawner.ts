@@ -22,7 +22,7 @@ export class HeartSpawner {
     const filter = (reaction: MessageReaction, user: User) =>
       reaction.emoji.name === "❤️" && !user.bot;
     const collector = await sent.awaitReactions(filter, {
-      time: 5000,
+      time: 3000,
       max: 1,
     });
     const users = collector.first()?.users?.cache.array();
