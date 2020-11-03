@@ -20,7 +20,7 @@ export class Command extends BaseCommand {
           query: this.options.join(" "),
         });
         if (!member?.firstKey()) {
-          msg.channel.send(
+          await msg.channel.send(
             `<:red_x:741454361007357993> Sorry, but I couldn't find that user.`
           );
           return;
@@ -33,7 +33,7 @@ export class Command extends BaseCommand {
 
     const discordUser = await msg.client.users.fetch(userQuery.discord_id);
     if (!discordUser) {
-      msg.channel.send(
+      await msg.channel.send(
         `<:red_x:741454361007357993> Sorry, but I couldn't find that user.`
       );
       return;
