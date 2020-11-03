@@ -7,29 +7,36 @@ import {
 } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { ShopService } from "../../database/service/ShopService";
+import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["card", "show", "view"];
   async exec(msg: Message, executor: Profile) {
-    const reference = {
-      identifier: this.options[0]?.split("#")[0],
-      serial: parseInt(this.options[0]?.split("#")[1]),
-    };
-    if (isNaN(reference.serial)) {
-      await msg.channel.send(
-        `<:red_x:741454361007357993> That isn't a valid card reference.`
-      );
-      return;
+    let card;
+    if (this.options[0].toLowerCase() === "last") {
+      card = await UserCardService.getLastCard(executor);
+    } else {
+      const reference = {
+        identifier: this.options[0]?.split("#")[0],
+        serial: parseInt(this.options[0]?.split("#")[1]),
+      };
+      if (isNaN(reference.serial)) {
+        await msg.channel.send(
+          `<:red_x:741454361007357993> That isn't a valid card reference.`
+        );
+        return;
+      }
+      card = await CardService.getCardDataFromReference(reference);
+      if (card.ownerId !== msg.author.id) {
+        await msg.channel.send(
+          `<:red_x:741454361007357993> That card doesn't belong to you.`
+        );
+        return;
+      }
     }
-    const card = await CardService.getCardDataFromReference(reference);
-    if (card.ownerId !== msg.author.id) {
-      await msg.channel.send(
-        `<:red_x:741454361007357993> That card doesn't belong to you.`
-      );
-      return;
-    }
+
     const pack = await ShopService.getPackById(card.packId);
     const imageData = await CardService.getImageDataFromCard(card);
     const image = await CardService.generateCardImageFromUserCard(

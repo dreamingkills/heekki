@@ -6,6 +6,7 @@ import { MarketService } from "./MarketService";
 import { Card } from "../../structures/card/Card";
 import { Profile } from "../../structures/player/Profile";
 import { CardFetch } from "../sql/card/CardFetch";
+import { PlayerFetch } from "../sql/player/PlayerFetch";
 
 export class UserCardService {
   public static async getUserCardById(id: number): Promise<UserCard> {
@@ -79,5 +80,9 @@ export class UserCardService {
     amount: number
   ): Promise<void> {
     return await CardUpdate.removeHeartsFromCard(card, amount);
+  }
+
+  public static async getLastCard(profile: Profile): Promise<UserCard> {
+    return await PlayerFetch.getLastCard(profile.discord_id);
   }
 }

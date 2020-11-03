@@ -46,10 +46,10 @@ export class Command extends BaseCommand {
       .setColor(`#FFAACC`);
 
     const sent = await msg.channel.send(embed);
-    process.on("SIGINT", async () => {
+    /*process.on("SIGINT", async () => {
       await sent.delete();
       return;
-    });
+    });*/
 
     const filter = (m: Message) => m.author == msg.author;
     const collector = msg.channel.createMessageCollector(filter, {
@@ -97,5 +97,6 @@ export class Command extends BaseCommand {
         return;
       }
     });
+    return;
   }
 }

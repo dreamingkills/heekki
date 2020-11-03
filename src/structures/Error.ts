@@ -182,6 +182,12 @@ export class PendingFriendRequestError extends ClientError {
 /*
     Card Errors
                  */
+export class NoCardsError extends ClientError {
+  name = "NoCardsError";
+  constructor() {
+    super(`You don't have any cards yet.`);
+  }
+}
 export class InvalidCardReferenceError extends ClientError {
   name = "InvalidCardReferenceError";
   constructor() {

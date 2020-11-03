@@ -313,4 +313,46 @@ export class PlayerFetch extends DBClass {
     )) as { total: number }[];
     return query[0]?.total;
   }
+
+  public static async getLastCard(discordId: string): Promise<UserCard> {
+    let query = (await DB.query(`SELECT 
+                    card.id AS card_id,
+                    card.blurb,
+                    card.member,
+                    card.abbreviation,
+                    card.rarity,
+                    card.image_url,
+                    card.pack_id,
+                    card.serial_id,
+                    card.serial_limit,
+                    card.image_data_id,
+                    user_card.id AS user_card_id,
+                    user_card.serial_number,
+                    user_card.owner_id,
+                    user_card.stars,
+                    user_card.hearts,
+                    user_card.is_favorite,
+                    pack.title,
+                    pack.credit,
+                    marketplace.price
+                  FROM
+                    card 
+                  LEFT JOIN
+                    user_card ON
+                      card.id=user_card.card_id
+                  LEFT JOIN
+                    pack ON
+                      card.pack_id=pack.id
+                  LEFT JOIN
+                    shop ON
+                      shop.pack_id=pack.id
+                  LEFT JOIN
+                    marketplace ON
+                      marketplace.card_id=user_card.id
+                  WHERE user_card.owner_id=${DB.connection.escape(
+                    discordId
+                  )} ORDER BY user_card.id DESC;`)) as UserCardInterface[];
+    if (!query[0]) throw new error.NoCardsError();
+    return new UserCard(query[0]);
+  }
 }
