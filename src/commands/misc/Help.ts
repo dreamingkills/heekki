@@ -49,6 +49,18 @@ export class Command extends BaseCommand {
           `\nhttps://discord.gg/KbcQjRG`;
         break;
       }
+      case "badges": {
+        header = "Badges";
+        description =
+          `Badges are given to users who have accomplished something notable on Heekki.\n` +
+          `\n**Badge List**` +
+          `\n:tools: **Developer** (be RTFL)` +
+          `\n:zap: **Beta Tester** (play before 200906)` +
+          `\n:100: **First 100 Players**` +
+          `\n:art: **Artist** (make a card pack for Heekki)` +
+          `\n:heart: **Supporter** (on Patreon)`;
+        break;
+      }
       case "topics": {
         header = "Topics";
         description =
