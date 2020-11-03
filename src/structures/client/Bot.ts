@@ -42,8 +42,8 @@ export class Bot extends Client {
       this.updateStatus();
 
       try {
-        const lounge = await this.channels.fetch("752028822274179145");
-        HeartSpawner.spawn(<TextChannel>lounge);
+        //const lounge = await this.channels.fetch("752028822274179145");
+        //HeartSpawner.spawn(<TextChannel>lounge);
       } catch (e) {
         //ignore
       }
