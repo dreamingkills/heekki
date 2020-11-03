@@ -58,14 +58,14 @@ export class Command extends BaseCommand {
 
     collector.on("collect", async (m: Message) => {
       if (m.content.toLowerCase() === random.toLowerCase()) {
-        await PlayerService.addCoinsToProfile(executor, 40);
+        await PlayerService.addCoinsToProfile(executor, 30);
         const successEmbed = new MessageEmbed()
           .setAuthor(
             `Jumble | ${msg.author.tag}`,
             msg.author.displayAvatarURL()
           )
           .setDescription(
-            `:white_check_mark: **Correct!**\nYou've been given <:cash:757146832639098930> **40**!`
+            `:white_check_mark: **Correct!**\nYou've been given <:cash:757146832639098930> **20**!`
           )
           .setColor(`#FFAACC`);
         await m.react("✅");

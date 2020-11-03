@@ -199,7 +199,7 @@ export class Command extends BaseCommand {
         header = "Command - Jumble";
         description =
           `**Jumble** is a game where the objective is to unscramble a given LOONA-related term.` +
-          `\nYou're given 15 seconds to crack the code - if you get it right, you get <:cash:757146832639098930> **40**!`;
+          `\nYou're given 15 seconds to crack the code - if you get it right, you get <:cash:757146832639098930> **20**!`;
         break;
       }
       case "memory": {
