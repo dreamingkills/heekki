@@ -10,25 +10,30 @@ import { UserCard } from "../../structures/player/UserCard";
 export class Command extends BaseCommand {
   names: string[] = ["forfeit", "ff"];
   async exec(msg: Message, executor: Profile) {
-    const references = this.options.filter((p) => p.includes("#"));
-    const cardList = await Promise.all(
-      references.map(async (p) => {
-        return await CardService.getCardDataFromReference({
-          identifier: p?.split("#")[0],
-          serial: parseInt(p?.split("#")[1]),
-        });
-      })
-    );
-    if (cardList.length < 1) {
-      msg.channel.send(
-        "<:red_x:741454361007357993> You haven't specified any cards!"
+    const referencesRaw = this.options
+      .filter((p) => p.includes("#"))
+      .slice(0, 9);
+    const cards = [];
+    for (let ref of referencesRaw) {
+      const reference = {
+        identifier: ref.split("#")[0],
+        serial: parseInt(ref.split("#")[1]),
+      };
+      if (!reference.identifier || isNaN(reference.serial)) continue;
+      const card = await CardService.getCardDataFromReference(reference);
+      cards.push(card);
+    }
+
+    if (cards.length === 0) {
+      await msg.channel.send(
+        `<:red_x:741454361007357993> You didn't enter any valid cards.`
       );
       return;
     }
 
     let validCards: UserCard[] = [];
     let invalidMessage = "";
-    for (let c of cardList) {
+    for (let c of cards) {
       if (c.ownerId != msg.author.id) {
         invalidMessage += `\nYou are not the owner of **${c.abbreviation}#${c.serialNumber}**!`;
         continue;
