@@ -50,7 +50,12 @@ export class Logger {
       logString.push(chalk`{white Options:} {hex('#1fb7cf') ${params}}`);
 
     //Errors
-    if (error && !error.isClientFacing && error.message !== "Unknown Message")
+    if (
+      error &&
+      !error.isClientFacing &&
+      error.message !== "Unknown Message" &&
+      error.message !== "Missing Permissions"
+    )
       logString.push(
         ``,
         chalk`{red Error: ${error.name + " - " + error.message}}${
