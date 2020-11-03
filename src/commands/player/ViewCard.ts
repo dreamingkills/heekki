@@ -50,8 +50,8 @@ export class Command extends BaseCommand {
         msg.author.displayAvatarURL()
       )
       .setDescription(
-        `${card.blurb != "" ? `*"${card.blurb}"*` : ``}\n**Owner**: ${
-          card.ownerId == "0" ? "no-one!" : `<@${card.ownerId}>`
+        `${
+          card.blurb != "" ? `*"${card.blurb}"*` : ``
         }\n<:heekki_heart:757147742383505488> **${card.hearts}**\n⭐ **${
           card.stars
         }**`

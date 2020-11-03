@@ -12,7 +12,7 @@ export class HeartSpawner {
       .setDescription(
         `**${random}** <:heekki_heart:757147742383505488> have spawned!\nClick the reaction to claim!`
       )
-      .setFooter(`The first person to react will be rewarded.`)
+      .setFooter(`All users who react will be rewarded.`)
       .setColor(`#FFAACC`)
       .setThumbnail(`https://i.imgur.com/KTkUpIn.png`);
 
@@ -21,38 +21,42 @@ export class HeartSpawner {
 
     const filter = (reaction: MessageReaction, user: User) =>
       reaction.emoji.name === "❤️" && !user.bot;
-    const collector = sent.createReactionCollector(filter, {
-      time: 30000,
+    const collector = await sent.awaitReactions(filter, {
+      time: 5000,
       max: 1,
     });
-    collector.on("collect", async (r, u) => {
-      try {
-        const profile = await PlayerService.getProfileByDiscordId(u.id);
-        await PlayerService.addHeartsToProfile(profile, random);
-      } catch (e) {
-        console.log(e);
-        // ignore
+    const users = collector.first()?.users?.cache.array();
+    if (users) {
+      const profiles = [];
+      for (let user of users) {
+        try {
+          const profile = await PlayerService.getProfileByDiscordId(user.id);
+          profiles.push(profile);
+        } catch (e) {}
       }
+
+      for (let profile of profiles) {
+        await PlayerService.addCoinsToProfile(
+          profile,
+          random / profiles.length
+        );
+      }
+
       const successEmbed = new MessageEmbed()
         .setAuthor(`Heart Spawns`, `https://i.imgur.com/KTkUpIn.png`)
         .setDescription(
-          `**${u.tag}** was awarded **${random}** <:heekki_heart:757147742383505488>!`
+          `<:heekki_heart:757147742383505488> **${random}** was distributed evenly to **${profiles.length}** players!`
         )
         .setColor(`#FFAACC`);
       await sent.edit(successEmbed);
-    });
-    collector.on("end", async (collected, reason) => {
-      if (reason === "time") {
-        await sent.delete();
-        return;
-      }
-      setTimeout(
-        () => this.spawn(spawnChannel),
-        this.chance.integer({
-          min: 420000,
-          max: 1140000,
-        })
-      );
-    });
+    }
+
+    setTimeout(
+      () => this.spawn(spawnChannel),
+      this.chance.integer({
+        min: 420000,
+        max: 1140000,
+      })
+    );
   }
 }
