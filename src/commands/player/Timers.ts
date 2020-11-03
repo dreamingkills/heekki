@@ -19,23 +19,23 @@ export class Command extends BaseCommand {
       .setThumbnail(msg.author.displayAvatarURL())
       .setColor(`#FFAACC`)
       .setDescription(
-        `:alarm_clock: **Time-Based Rewards**\n- Daily Reward: ${
+        `:alarm_clock: **Time-Based Rewards**\n- \`!daily\` Daily Reward: ${
           now <= timeUntilDaily
             ? moment.utc(timeUntilDaily.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n-  Heart Boxes: ${
+        }\n- \`!hb\` Heart Boxes: ${
           now <= timeUntilHeartBox
             ? moment.utc(timeUntilHeartBox.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n-  Send Hearts: ${
+        }\n- \`!send\` Send Hearts: ${
           now <= timeUntilSend
             ? moment.utc(timeUntilSend.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n-  Mission: ${
+        }\n- \`!mission\` Mission: ${
           now <= timeUntilMission
             ? moment.utc(timeUntilMission.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n- Claim Forfeited Card: ${
+        }\n- \`!vff\` Claim Card: ${
           now <= timeUntilForfeitClaim
             ? moment
                 .utc(timeUntilForfeitClaim.diff(now))
