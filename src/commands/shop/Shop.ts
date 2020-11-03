@@ -9,7 +9,7 @@ export class Command extends BaseCommand {
     let page = this.options[0] ? parseInt(this.options[0]) : 1;
 
     let packsRaw = await ShopService.getAllShopItems(true);
-    let packs = packsRaw.slice(page * 9 - 9, page * 9);
+    let packs = packsRaw.slice(page * 15 - 15, page * 15);
     let desc = [];
     for (let pack of packs) {
       desc.push({
