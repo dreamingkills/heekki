@@ -58,7 +58,7 @@ export class Command extends BaseCommand {
 
     collector.on("collect", async (m: Message) => {
       if (m.content.toLowerCase() === random.toLowerCase()) {
-        await PlayerService.addCoinsToProfile(executor, 30);
+        await PlayerService.addCoinsToProfile(executor, 20);
         const successEmbed = new MessageEmbed()
           .setAuthor(
             `Jumble | ${msg.author.tag}`,
