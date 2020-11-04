@@ -8,6 +8,6 @@ export class Command extends BaseCommand {
     const desc = msg.client.guilds.cache.map((g) => {
       return `__**${g.name}**__ - ${g.memberCount}/<@${g.ownerID}>`;
     });
-    msg.channel.send(desc);
+    console.log(desc);
   }
 }
