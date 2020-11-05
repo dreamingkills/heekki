@@ -155,6 +155,15 @@ export class Command extends BaseCommand {
         });
 
         reactions.on("collect", async () => {
+          const verification = await CardService.getCardDataFromReference(
+            reference
+          );
+          if (verification.ownerId !== card.ownerId) {
+            await msg.channel.send(
+              `<:red_x:741454361007357993> That card has already been sold to someone else.`
+            );
+            return;
+          }
           const sellerProfile = await PlayerService.getProfileByDiscordId(
             card.ownerId
           );
