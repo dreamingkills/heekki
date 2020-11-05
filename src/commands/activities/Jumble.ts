@@ -71,7 +71,7 @@ export class Command extends BaseCommand {
         await m.react("✅");
 
         await sent.edit(successEmbed);
-        collector.stop();
+        collector.stop("correct");
         return;
       } else {
         await m.react("741454361007357993");
