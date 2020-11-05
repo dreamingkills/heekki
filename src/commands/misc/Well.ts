@@ -54,24 +54,26 @@ export class Command extends BaseCommand {
         const topDonators = await WellService.getTopDonators();
         const total = await StatsService.getNumberOfProfiles();
         const userRank = await WellService.getWellRank(executor);
+        let description = "";
+        for (let donor of topDonators) {
+          let user;
+          try {
+            const discordUser = await msg.client.users.fetch(donor.discord_id);
+            user = discordUser.username;
+          } catch (e) {
+            user = "Unknown User";
+          }
+
+          description += `**${
+            topDonators.indexOf(donor) + 1
+          })** ${user} - **${donor.well.toLocaleString()}**\n`;
+        }
         const embed = new MessageEmbed()
           .setAuthor(
             `Well of Goodwill - Top | ${msg.author.tag}`,
             msg.author.displayAvatarURL()
           )
-          .setDescription(
-            topDonators.map(async (t) => {
-              let user;
-              try {
-                user = (await msg.client.users.fetch(t.discord_id)).username;
-              } catch (e) {
-                user = "Unknown User";
-              }
-              return `**${
-                topDonators.indexOf(t) + 1
-              })** ${user} - **${t.well.toLocaleString()}** `;
-            })
-          )
+          .setDescription(description)
           .setFooter(`You're ranked #${userRank}/${total}.`)
           .setColor(`#FFAACC`);
         await msg.channel.send(embed);
