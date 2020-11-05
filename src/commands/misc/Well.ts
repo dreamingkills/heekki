@@ -35,23 +35,19 @@ export class Command extends BaseCommand {
         reactions.on("collect", async () => {
           await PlayerService.addToWell(executor, amount);
           await PlayerService.removeCoinsFromProfile(executor, amount);
-          confirmation.edit(
+          await confirmation.edit(
             `:white_check_mark: Threw **${amount}** <:cash:757146832639098930> in the well.`
           );
         });
-        reactions.on(
-          "end",
-          async (reaction: MessageReaction, reason: string) => {
-            if (reason !== "limit") {
-              console.log(reason);
-              confirmation.edit(
-                `<:red_x:741454361007357993> You didn't react in time.`
-              );
-              if (this.permissions.MANAGE_MESSAGES)
-                confirmation.reactions.removeAll();
-            }
+        reactions.on("end", async (reaction, reason: string) => {
+          if (reason !== "limit") {
+            await confirmation.edit(
+              `<:red_x:741454361007357993> You didn't react in time.`
+            );
+            if (this.permissions.MANAGE_MESSAGES)
+              await confirmation.reactions.removeAll();
           }
-        );
+        });
         break;
       }
       case "top": {
@@ -64,11 +60,16 @@ export class Command extends BaseCommand {
             msg.author.displayAvatarURL()
           )
           .setDescription(
-            topDonators.map((t) => {
-              const user = msg.client.users.cache.get(t.discord_id);
-              return `**${topDonators.indexOf(t) + 1})** ${
-                user?.username || "Unknown User"
-              } - **${t.well.toLocaleString()}** `;
+            topDonators.map(async (t) => {
+              let user;
+              try {
+                user = (await msg.client.users.fetch(t.discord_id)).username;
+              } catch (e) {
+                user = "Unknown User";
+              }
+              return `**${
+                topDonators.indexOf(t) + 1
+              })** ${user} - **${t.well.toLocaleString()}** `;
             })
           )
           .setFooter(`You're ranked #${userRank}/${total}.`)
