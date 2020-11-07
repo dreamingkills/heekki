@@ -77,66 +77,25 @@ export class Command extends BaseCommand {
 
     const collector = sent.createReactionCollector(filter, { time: 60000 });
     collector.on("collect", async (r) => {
-      if (r.emoji.name === "⏪" && page !== 1) {
-        page = 1;
-        const newCards = await PlayerService.getOrphanedCards({
-          ...options,
-          limit: 15,
-          page,
-        });
-        embed.fields = await this.render(newCards);
-        await sent.edit(
-          embed.setAuthor(
-            `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
-            msg.author.displayAvatarURL()
-          )
-        );
-      } else if (r.emoji.name === "◀️" && page !== 1) {
-        page--;
-        const newCards = await PlayerService.getOrphanedCards({
-          ...options,
-          limit: 15,
-          page,
-        });
-        embed.fields = await this.render(newCards);
-        await sent.edit(
-          embed.setAuthor(
-            `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
-            msg.author.displayAvatarURL()
-          )
-        );
-      } else if (r.emoji.name === "delete") {
-        (<TextChannel>msg.channel).bulkDelete([msg, sent]);
-        return;
-      } else if (r.emoji.name === "▶️" && page !== pageLimit) {
-        page++;
-        const newCards = await PlayerService.getOrphanedCards({
-          ...options,
-          limit: 15,
-          page,
-        });
-        embed.fields = await this.render(newCards);
-        await sent.edit(
-          embed.setAuthor(
-            `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
-            msg.author.displayAvatarURL()
-          )
-        );
-      } else if (r.emoji.name === "⏩") {
-        page = pageLimit;
-        const newCards = await PlayerService.getOrphanedCards({
-          ...options,
-          limit: 15,
-          page,
-        });
-        embed.fields = await this.render(newCards);
-        await sent.edit(
-          embed.setAuthor(
-            `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
-            msg.author.displayAvatarURL()
-          )
-        );
-      }
+      if (r.emoji.name === "⏪" && page !== 1) page = 1;
+      if (r.emoji.name === "◀️" && page !== 1) page--;
+      if (r.emoji.name === "delete") return await sent.delete();
+      if (r.emoji.name === "▶️" && page !== pageLimit) page++;
+      if (r.emoji.name === "⏩") page = pageLimit;
+
+      const newCards = await PlayerService.getOrphanedCards({
+        ...options,
+        limit: 15,
+        page,
+      });
+      embed.fields = await this.render(newCards);
+      await sent.edit(
+        embed.setAuthor(
+          `Forfeited Cards | ${msg.author.tag} (page ${page}/${pageLimit})`,
+          msg.author.displayAvatarURL()
+        )
+      );
+
       if (msg.guild?.member(msg.client.user!)?.hasPermission("MANAGE_MESSAGES"))
         await r.users.remove(msg.author);
     });
