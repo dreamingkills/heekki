@@ -27,7 +27,7 @@ export class Command extends BaseCommand {
     }
 
     await FriendService.sendHearts(executor, friends);
-    PlayerService.setLastHeartSend(executor, now);
+    await PlayerService.setLastHeartSend(executor, now);
     const chance = new Chance();
     //const xp = chance.integer({ min: 40, max: 85 });
     //PlayerService.addXp(executor, xp);

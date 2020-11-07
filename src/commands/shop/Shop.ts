@@ -22,7 +22,8 @@ export class Command extends BaseCommand {
       .setAuthor(
         `Shop | ${msg.author.tag} (page ${page}/${Math.ceil(
           packsRaw.length / 9
-        )})`
+        )})`,
+        msg.author.displayAvatarURL()
       )
       .setDescription(
         `You have ${this.config.discord.emoji.cash.full} **${executor.coins}**.`
