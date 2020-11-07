@@ -3,7 +3,7 @@ import { ConcurrencyService } from "../../helpers/Concurrency";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
-  names: string[] = ["avatar"];
+  names: string[] = ["$flush"];
   users: string[] = ["197186779843919877"];
   async exec(msg: Message) {
     ConcurrencyService.flushConcurrency();

@@ -3,7 +3,7 @@ import { AdminService } from "../../database/service/AdminService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 
-export class Command extends BaseCommand {
+/*export class Command extends BaseCommand {
   names: string[] = ["givebadge"];
   users: string[] = ["197186779843919877"];
   async exec(msg: Message) {
@@ -25,3 +25,4 @@ export class Command extends BaseCommand {
     );
   }
 }
+*/
