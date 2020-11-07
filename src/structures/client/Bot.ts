@@ -42,8 +42,9 @@ export class Bot extends Client {
 
     this.on("message", async (msg: Message) => {
       if (
-        this.user!.id === "752291099170701384" &&
-        msg.author.id !== "197186779843919877"
+        (this.user!.id === "752291099170701384" &&
+          msg.author.id !== "197186779843919877") ||
+        msg.author.bot
       )
         return;
       if (msg.channel.type == "text") {
