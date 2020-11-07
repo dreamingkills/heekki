@@ -8,6 +8,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
   names: string[] = ["claimforfeit", "cf"];
+  disabled: boolean = true;
   async exec(msg: Message, executor: Profile) {
     const lastForfeit = executor.lastOrphan;
     const now = Date.now();

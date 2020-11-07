@@ -18,9 +18,9 @@ export class Command extends BaseCommand {
           `\n**Profile**` +
           `\n\`!profile\`, \`!desc\`, \`!rep\`,  \`!unrep\`, \`!inv\`, \`!timers\`, \`!use\`, \`!using\`, \`!friend\`\n` +
           `\n**Cards / Packs**` +
-          `\n\`!packs\`, \`!pack\`, \`!preview\`, \`!view\`, \`!fav\`, \`!upgrade\`, \`!prestige\`, \`!gift\`, \`!buypack\`, \`!forfeit\`, \`!vff\`, \`!marketplace\`, \`!trade\`\n` +
+          `\n\`!packs\`, \`!pack\`, \`!preview\`, \`!view\`, \`!fav\`, \`!upgrade\`, \`!prestige\`, \`!gift\`, \`!buypack\`, \`!marketplace\`, \`!trade\`\n` +
           `\n**Time-Based**` +
-          `\n\`!daily\`, \`!mission\`, \`!send\`, \`!hb\`, \`!cf\`\n` +
+          `\n\`!daily\`, \`!mission\`, \`!send\`, \`!hb\`\n` +
           `\n**Other**` +
           `\n\`well\`, \`!help\`, \`!invite\`, \`!stats\`, \`!ticket\`, \`!top\`\n`;
         break;
@@ -211,7 +211,7 @@ export class Command extends BaseCommand {
           `\n\`\`\``;
         break;
       }
-      case "claimforfeit":
+      /*case "claimforfeit":
       case "cf": {
         header = "Command - Claim Forfeit";
         description =
@@ -241,6 +241,7 @@ export class Command extends BaseCommand {
           `\n- \`serial=(<X/>X/X)\``;
         break;
       }
+      */
       case "top": {
         header = "Command - Top";
         description =
@@ -314,7 +315,7 @@ export class Command extends BaseCommand {
       case "fav": {
         header = "Command - Favorite";
         description =
-          `Marks a card as "Favorite", preventing it from being sold, traded, or forfeited. Also pushes the card to the top of your inventory.\n` +
+          `Marks a card as "Favorite", preventing it from being sold or traded. Also pushes the card to the top of your inventory.\n` +
           `\n**Usage**` +
           `\n\`!fav <card>\` ex. \`!fav DLHJ#1\``;
         break;

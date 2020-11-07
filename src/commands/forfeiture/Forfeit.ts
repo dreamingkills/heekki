@@ -9,6 +9,7 @@ import { UserCard } from "../../structures/player/UserCard";
 
 export class Command extends BaseCommand {
   names: string[] = ["forfeit", "ff"];
+  disabled: boolean = true;
   async exec(msg: Message, executor: Profile) {
     const referencesRaw = this.options
       .filter((p) => p.includes("#"))

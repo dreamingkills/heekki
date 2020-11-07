@@ -72,6 +72,22 @@ export class Command extends BaseCommand {
     ctx.textAlign = "left";
     ctx.fillText(userQuery.reputation.toLocaleString(), 170, 460);
 
+    // Draw badges
+    if (executor.badges) {
+      for (let badge of executor.badges) {
+        const icon = await canvas.loadImage(
+          `./src/assets/badges/${badge.emoji}`
+        );
+        ctx.drawImage(
+          icon,
+          70 + 128 * executor.badges.indexOf(badge),
+          563,
+          120,
+          120
+        );
+      }
+    }
+
     let buf = cv.toBuffer("image/png");
     let final = Buffer.alloc(buf.length, buf, "base64");
 

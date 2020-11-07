@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
     const timeUntilMission = moment(executor.lastMission + 2700000);
     const timeUntilSend = moment(executor.lastHeartSend + 3600000);
     const timeUntilHeartBox = moment(executor.lastHeartBox + 14400000);
-    const timeUntilForfeitClaim = moment(executor.lastOrphan + 1800000);
+    //const timeUntilForfeitClaim = moment(executor.lastOrphan + 1800000);
 
     const embed = new MessageEmbed()
       .setAuthor(`Timers | ${msg.author.tag}`)
@@ -35,13 +35,13 @@ export class Command extends BaseCommand {
           now <= timeUntilMission
             ? moment.utc(timeUntilMission.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n- \`!vff\` Claim Card: ${
+        }` /*\n- \`!vff\` Claim Card: ${
           now <= timeUntilForfeitClaim
             ? moment
                 .utc(timeUntilForfeitClaim.diff(now))
                 .format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }`
+        }`*/
       );
 
     await msg.channel.send(embed);

@@ -12,6 +12,7 @@ import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
   names: string[] = ["viewforfeited", "vff"];
+  disabled: boolean = true;
   private async render(cards: UserCard[]): Promise<EmbedField[]> {
     const temp = new MessageEmbed();
     for (let c of cards) {

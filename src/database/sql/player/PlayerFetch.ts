@@ -22,19 +22,20 @@ export class PlayerFetch extends DBClass {
   }
 
   public static async getProfileFromDiscordId(
-    discord_id: string,
+    discordId: string,
     autoGenerate: boolean
   ): Promise<Profile> {
     const user = (await DB.query(
       `SELECT user_profile.*, COUNT(reputation.receiver_id) AS reputation FROM user_profile LEFT JOIN reputation ON reputation.receiver_id=user_profile.discord_id WHERE discord_id=?;`,
-      [discord_id]
+      [discordId]
     )) as ProfileInterface[];
     if (!user[0]?.discord_id && !autoGenerate) throw new error.NoProfileError();
     if (!user[0]?.discord_id) {
-      const newProfile = await PlayerService.createNewProfile(discord_id);
+      const newProfile = await PlayerService.createNewProfile(discordId);
       return newProfile;
     }
-    return new Profile(user[0]);
+    const badges = await this.getBadgesByDiscordId(discordId);
+    return new Profile(user[0], badges);
   }
 
   public static async getUserCardsByDiscordId(
