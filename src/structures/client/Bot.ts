@@ -48,7 +48,7 @@ export class Bot extends Client {
       )
         return;
       if (msg.channel.type == "text") {
-        const author = this.users.fetch(msg.author.id);
+        await this.users.fetch(msg.author.id);
         this.cmdMan.handle(msg, config);
       }
     });
