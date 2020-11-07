@@ -184,6 +184,7 @@ export class Command extends BaseCommand {
         const friendCount = await FriendService.getNumberOfFriendsByProfile(
           executor
         );
+
         const pageLimit = Math.ceil(friendCount / 20);
         if (page > pageLimit && pageLimit != 0) page = pageLimit;
         const friendsRaw = await FriendService.getFriendsByProfile(

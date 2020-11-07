@@ -46,7 +46,6 @@ export class CommandManager {
   }
 
   async handle(msg: Message, cfg: typeof config): Promise<void> {
-    console.log(msg.author);
     let cmd = this.getCommandByName(
       msg.content.toLowerCase(),
       config.discord.prefix

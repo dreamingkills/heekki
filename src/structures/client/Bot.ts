@@ -77,6 +77,10 @@ export class Bot extends Client {
 
       m.roles.add("753014710084960327");
     });
+
+    process.on("unhandledRejection", (error) => {
+      console.error(`Unhandled promise rejection: `, error);
+    });
     this.login(config.discord.token);
   }
 }
