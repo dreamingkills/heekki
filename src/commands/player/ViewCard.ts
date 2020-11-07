@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
   names: string[] = ["card", "show", "view"];
   async exec(msg: Message, executor: Profile) {
     let card;
-    if (this.options[0].toLowerCase() === "last") {
+    if (this.options[0]?.toLowerCase() === "last") {
       card = await UserCardService.getLastCard(executor);
     } else {
       const reference = {
