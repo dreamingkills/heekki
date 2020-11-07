@@ -1,7 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
-import * as jumble from "../../assets/jumble.json";
 import { Profile } from "../../structures/player/Profile";
 import { ConcurrencyService } from "../../helpers/Concurrency";
 
@@ -26,7 +25,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You're already playing Memory.`
+        `${this.config.discord.emoji.cross.full} You're already playing a minigame!`
       );
       return;
     }
