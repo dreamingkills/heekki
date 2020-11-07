@@ -61,26 +61,31 @@ export class Command extends BaseCommand {
     );
     await conf.react(this.config.discord.emoji.check.id);
     let filter = (reaction: MessageReaction, user: User) => {
-      return reaction.emoji.name == "✅" && user.id == msg.author.id;
+      return (
+        reaction.emoji.id == this.config.discord.emoji.check.id &&
+        user.id == msg.author.id
+      );
     };
-    let reactions = await conf.awaitReactions(filter, {
+    let collector = conf.createReactionCollector(filter, {
       max: 1,
       time: 10000,
     });
-    let rxn = reactions.first();
 
-    if (rxn) {
+    collector.on("collect", async () => {
       await UserCardService.transferCards("0", validCards);
 
       await conf.edit(
         `${this.config.discord.emoji.check.full} You forfeited **${validCards.length}** cards.`
       );
-    } else {
-      await conf.edit(
-        `${this.config.discord.emoji.cross.full} You did not react in time, so the forfeiture has been cancelled.`
-      );
-    }
-    if (this.permissions.MANAGE_MESSAGES) await conf.reactions.removeAll();
-    return;
+      collector.stop();
+    });
+    collector.on("end", async (c, reason) => {
+      if (reason === "time") {
+        await conf.edit(
+          `${this.config.discord.emoji.cross.full} You did not react in time, so the forfeiture has been cancelled.`
+        );
+      }
+      if (this.permissions.MANAGE_MESSAGES) await conf.reactions.removeAll();
+    });
   }
 }
