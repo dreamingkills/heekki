@@ -33,7 +33,7 @@ export class Command extends BaseCommand {
     //PlayerService.addXp(executor, xp);
 
     await msg.channel.send(
-      `${this.config.discord.emoji.hearts} You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
+      `${this.config.discord.emoji.hearts.full} You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
     );
     return;
   }
