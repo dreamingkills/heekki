@@ -35,7 +35,7 @@ export class Command extends BaseCommand {
           friendCounts.filter((r) => {
             return r.sender_id === friend;
           })[0]?.count || 0
-        }** ${this.config.discord.emoji.hearts} received`
+        }** ${this.config.discord.emoji.hearts.full} received`
       );
     }
     return tags.join("\n");
@@ -76,7 +76,7 @@ export class Command extends BaseCommand {
 
         const friendProfile = await PlayerService.getProfileByDiscordId(friend);
         if (executor.discord_id == friendProfile.discord_id) {
-          msg.channel.send(
+          await msg.channel.send(
             `${this.config.discord.emoji.cross.full} You can't add yourself as a friend.`
           );
           return;
