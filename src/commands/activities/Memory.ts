@@ -3,10 +3,10 @@ import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import * as jumble from "../../assets/jumble.json";
 import { Profile } from "../../structures/player/Profile";
+import { ConcurrencyService } from "../../helpers/Concurrency";
 
 export class Command extends BaseCommand {
   names: string[] = ["memory"];
-  playing: Set<string> = new Set<string>();
 
   makeup: string[] = [
     ":rabbit:",
@@ -24,15 +24,15 @@ export class Command extends BaseCommand {
   ];
 
   async exec(msg: Message, executor: Profile) {
-    if (this.playing.has(msg.author.id)) {
+    if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
         `${this.config.discord.emoji.cross.full} You're already playing Memory.`
       );
       return;
     }
-    this.playing.add(msg.author.id);
-    const sequence: string[] = [];
+    ConcurrencyService.setConcurrency(msg.author.id);
 
+    const sequence: string[] = [];
     let iterations = 0;
     while (sequence.length < 5) {
       if (iterations === 25) {
@@ -105,7 +105,7 @@ export class Command extends BaseCommand {
           }
         } catch (e) {
         } finally {
-          this.playing.delete(msg.author.id);
+          ConcurrencyService.unsetConcurrency(msg.author.id);
           return;
         }
       });

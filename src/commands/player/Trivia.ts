@@ -1,23 +1,24 @@
 import { Message, TextChannel } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
 import trivia from "../../assets/trivia.json";
 import Chance from "chance";
 import { StatsService } from "../../database/service/StatsService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import { ConcurrencyService } from "../../helpers/Concurrency";
 
 export class Command extends BaseCommand {
   names: string[] = ["trivia", "tr"];
   currentlyPlaying: Set<string> = new Set<string>();
 
   async exec(msg: Message, executor: Profile) {
-    if (this.currentlyPlaying.has(msg.author.id)) {
+    if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
         `${this.config.discord.emoji.cross.full} Finish your current trivia before starting another!`
       );
       return;
     }
-    this.currentlyPlaying.add(msg.author.id);
+    ConcurrencyService.setConcurrency(msg.author.id);
+
     const chance = new Chance();
     const triviaSelect = chance.pickone(trivia.trivia);
     const channel = msg.channel as TextChannel;
@@ -48,11 +49,12 @@ export class Command extends BaseCommand {
         //await PlayerService.addCoinsToProfile(executor, profit);
         collect.stop("correct");
         if (this.permissions.ADD_REACTIONS)
-          msg.react(this.config.discord.emoji.check.id);
+          await msg.react(this.config.discord.emoji.check.id);
       } else await m.react(this.config.discord.emoji.cross.id);
     });
     collect.on("end", async (collected, reason) => {
-      this.currentlyPlaying.delete(msg.author.id);
+      ConcurrencyService.unsetConcurrency(msg.author.id);
+
       if (reason != "correct") {
         await msg.react(this.config.discord.emoji.cross.id);
         await triviaMessage.edit(

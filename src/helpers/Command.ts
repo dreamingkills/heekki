@@ -6,6 +6,7 @@ import { promisify } from "util";
 import { PlayerService } from "../database/service/PlayerService";
 import * as error from "../structures/Error";
 import { Logger } from "../helpers/Logger";
+import { ConcurrencyService } from "./Concurrency";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
@@ -50,6 +51,7 @@ export class CommandManager {
       config.discord.prefix
     );
     if (!cmd) return;
+    if (!cmd.permissions.SEND_MESSAGES) return;
     if (cmd.users && cmd.users[0] !== msg.author.id) {
       await msg.channel.send(
         `${cfg.discord.emoji.cross.full} You don't have access to that command.`
@@ -85,6 +87,15 @@ export class CommandManager {
         if (e.isClientFacing) {
           await msg.channel.send(
             `${cfg.discord.emoji.cross.full} ${e.message}`
+          );
+        } else if (
+          err.name === "Internal Server Error" ||
+          err.name === "Service Unavailable" ||
+          err.name === "FetchError"
+        ) {
+          ConcurrencyService.flushConcurrency();
+          await msg.channel.send(
+            `${cfg.discord.emoji.cross.full} Sorry, Discord seems to be having some problems right now. Please try again in a moment.`
           );
         } else
           await msg.channel.send(

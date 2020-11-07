@@ -21,6 +21,7 @@ export abstract class BaseCommand implements Command {
 
   options: string[] = [];
   permissions!: {
+    SEND_MESSAGES: boolean;
     MANAGE_MESSAGES: boolean;
     ADD_REACTIONS: boolean;
     USE_EXTERNAL_EMOJI: boolean;
@@ -41,6 +42,9 @@ export abstract class BaseCommand implements Command {
       .slice(1)
       .filter((e) => e);
     this.permissions = {
+      SEND_MESSAGES: msg.guild
+        ?.member(msg.client.user!)
+        ?.hasPermission("SEND_MESSAGES")!,
       MANAGE_MESSAGES: msg.guild
         ?.member(msg.client.user!)
         ?.hasPermission("MANAGE_MESSAGES")!,

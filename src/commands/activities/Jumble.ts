@@ -3,10 +3,10 @@ import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import * as jumble from "../../assets/jumble.json";
 import { Profile } from "../../structures/player/Profile";
+import { ConcurrencyService } from "../../helpers/Concurrency";
 
 export class Command extends BaseCommand {
   names: string[] = ["jumble", "j"];
-  playing: Set<string> = new Set<string>();
   jumble(term: string): string {
     const words = term.split(" ");
     let final = "";
@@ -25,14 +25,14 @@ export class Command extends BaseCommand {
   }
 
   async exec(msg: Message, executor: Profile) {
-    if (this.playing.has(msg.author.id)) {
+    if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
         `${this.config.discord.emoji.cross.full} You're already playing Jumble.`
       );
       return;
     }
+    ConcurrencyService.setConcurrency(msg.author.id);
 
-    this.playing.add(msg.author.id);
     const random =
       jumble.terms[Math.floor(Math.random() * jumble.terms.length)];
     const jumbled = this.jumble(random);
@@ -74,24 +74,20 @@ export class Command extends BaseCommand {
       }
     });
     collector.on("end", async (collected, reason) => {
-      try {
-        if (reason === "time") {
-          const failedEmbed = new MessageEmbed()
-            .setAuthor(
-              `Jumble | ${msg.author.tag}`,
-              msg.author.displayAvatarURL()
-            )
-            .setDescription(
-              `:confused: **You ran out of time.**\nThe word was: \`${random.toUpperCase()}\`.`
-            )
-            .setColor(`#FFAACC`);
-          await sent.edit(failedEmbed);
-        }
-      } catch (e) {
-      } finally {
-        this.playing.delete(msg.author.id);
-        return;
+      if (reason === "time") {
+        const failedEmbed = new MessageEmbed()
+          .setAuthor(
+            `Jumble | ${msg.author.tag}`,
+            msg.author.displayAvatarURL()
+          )
+          .setDescription(
+            `:confused: **You ran out of time.**\nThe word was: \`${random.toUpperCase()}\`.`
+          )
+          .setColor(`#FFAACC`);
+        await sent.edit(failedEmbed);
       }
+      ConcurrencyService.unsetConcurrency(msg.author.id);
+      return;
     });
     return;
   }

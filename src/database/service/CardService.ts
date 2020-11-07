@@ -63,9 +63,7 @@ export class CardService {
 
     try {
       await fs.mkdir(`./cache/cards/${card.cardId}`);
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
     await fs.writeFile(`./cache/cards/temp/${card.userCardId}`, image);
     await fs.rename(
       `./cache/cards/temp/${card.userCardId}`,
@@ -80,7 +78,6 @@ export class CardService {
         `./cache/cards/${card.cardId}/${card.userCardId}`
       );
     } catch (e) {
-      console.log(e);
       return await this.updateCardCache(card);
     }
   }
