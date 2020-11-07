@@ -51,14 +51,14 @@ export class CommandManager {
     );
     if (!cmd) return;
     if (cmd.users && cmd.users[0] !== msg.author.id) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> You don't have access to that command.`
+      await msg.channel.send(
+        `${cfg.discord.emoji.cross.full} You don't have access to that command.`
       );
       return;
     }
     if (this.cooldown.has(msg.author.id)) {
       await msg.channel.send(
-        "<:red_x:741454361007357993> Please wait a couple seconds before using another command."
+        `${cfg.discord.emoji.cross.full} Please wait a couple seconds before using another command.`
       );
       return;
     }
@@ -83,10 +83,12 @@ export class CommandManager {
         if (e.message === "Unknown Message") return;
         err = e;
         if (e.isClientFacing) {
-          await msg.channel.send(`<:red_x:741454361007357993> ${e.message}`);
+          await msg.channel.send(
+            `${cfg.discord.emoji.cross.full} ${e.message}`
+          );
         } else
           await msg.channel.send(
-            `<:red_x:741454361007357993> **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
+            `${cfg.discord.emoji.cross.full} **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
           );
       });
       Logger.log(cmd, msg, staged, err);
