@@ -51,7 +51,9 @@ export class CommandManager {
       config.discord.prefix
     );
     if (!cmd) return;
-    if (!cmd.permissions.SEND_MESSAGES) return;
+    if (!msg.guild?.member(msg.client.user!)?.hasPermission("SEND_MESSAGES"))
+      return;
+
     if (cmd.users && cmd.users[0] !== msg.author.id) {
       await msg.channel.send(
         `${cfg.discord.emoji.cross.full} You don't have access to that command.`
