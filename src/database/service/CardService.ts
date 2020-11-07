@@ -61,7 +61,11 @@ export class CardService {
     const imageData = await this.getImageDataFromCard(card);
     const image = await this.generateCardImageFromUserCard(card, imageData);
 
-    await fs.mkdir(`./cache/cards/${card.cardId}/${card.userCardId}`);
+    try {
+      await fs.mkdir(`./cache/cards/${card.cardId}`);
+    } catch (e) {
+      console.log(e);
+    }
     await fs.writeFile(`./cache/cards/temp/${card.userCardId}`, image);
     await fs.rename(
       `./cache/cards/temp/${card.userCardId}`,
