@@ -14,6 +14,7 @@ export class Command extends BaseCommand {
         const topCollectors = await PlayerService.getTopCollectors();
         const totalCards = await StatsService.getNumberOfCards();
         for (let profile of topCollectors) {
+          console.log(profile);
           let user;
           try {
             user = (await msg.client.users.fetch(profile.profile.discord_id))
@@ -41,6 +42,7 @@ export class Command extends BaseCommand {
         const topHearts = await PlayerService.getTopHearts();
         const totalHearts = await StatsService.getNumberOfHearts();
         for (let profile of topHearts) {
+          console.log(profile);
           let user;
           try {
             user = (await msg.client.users.fetch(profile.discord_id)).username;
@@ -64,6 +66,7 @@ export class Command extends BaseCommand {
         const richestUsers = await PlayerService.getRichestUsers();
         const totalCoins = await StatsService.getNumberOfCoins();
         for (let profile of richestUsers) {
+          console.log(profile);
           let user;
           try {
             user = (await msg.client.users.fetch(profile.discord_id)).username;

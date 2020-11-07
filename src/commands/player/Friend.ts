@@ -221,8 +221,7 @@ export class Command extends BaseCommand {
         const sent = await msg.channel.send(embed);
 
         if (pageLimit > 1) await sent.react("◀️");
-        if (this.permissions.MANAGE_MESSAGES)
-          await sent.react("754832389620105276");
+        await sent.react("754832389620105276");
         if (pageLimit > 1) await sent.react("▶️");
 
         let filter;
@@ -240,49 +239,29 @@ export class Command extends BaseCommand {
           time: 300000,
         });
         collector.on("collect", async (r) => {
-          if (r.emoji.name === "◀️" && page !== 1) {
-            page--;
-            const newFriends = await FriendService.getFriendsByProfile(
-              executor,
-              page
-            );
-            sent.edit(
-              embed
-                .setAuthor(
-                  `Friends | ${msg.author.tag} (page ${page}/${pageLimit})`,
-                  msg.author.displayAvatarURL()
-                )
-                .setDescription(
-                  await this.parseFriends(newFriends, executor, msg.client)
-                )
-            );
-          } else if (
-            r.emoji.name === "delete" &&
-            this.permissions.MANAGE_MESSAGES
-          ) {
-            (<TextChannel>msg.channel).bulkDelete([msg, sent]);
-          } else if (r.emoji.name === "▶️" && page !== pageLimit) {
-            page++;
-            const newFriends = await FriendService.getFriendsByProfile(
-              executor,
-              page
-            );
-            sent.edit(
-              embed
-                .setAuthor(
-                  `Friends | ${msg.author.tag} (page ${page}/${pageLimit})`,
-                  msg.author.displayAvatarURL()
-                )
-                .setDescription(
-                  await this.parseFriends(newFriends, executor, msg.client)
-                )
-            );
-          }
+          if (r.emoji.name === "◀️" && page !== 1) page--;
+          if (r.emoji.name === "delete") await sent.delete();
+          if (r.emoji.name === "▶️" && page !== pageLimit) page++;
+
+          const newFriends = await FriendService.getFriendsByProfile(
+            executor,
+            page
+          );
+          await sent.edit(
+            embed
+              .setAuthor(
+                `Friends | ${msg.author.tag} (page ${page}/${pageLimit})`,
+                msg.author.displayAvatarURL()
+              )
+              .setDescription(
+                await this.parseFriends(newFriends, executor, msg.client)
+              )
+          );
           r.users.remove(msg.author);
         });
         collector.on("end", async () => {
           if (!sent.deleted && this.permissions.MANAGE_MESSAGES)
-            sent.reactions.removeAll();
+            await sent.reactions.removeAll();
         });
         return;
       }
@@ -306,7 +285,7 @@ export class Command extends BaseCommand {
           .setColor(`#FFAACC`);
         if (incomingRequests.length === 0)
           embed.setDescription(`No incoming friend requests.`);
-        msg.channel.send(embed);
+        await msg.channel.send(embed);
         return;
       }
     }
