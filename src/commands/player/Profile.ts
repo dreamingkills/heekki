@@ -1,10 +1,10 @@
 import { Message, MessageEmbed } from "discord.js";
 import jimp from "jimp";
-import canvas, { Image } from "canvas";
+import canvas from "canvas";
 import { PlayerService } from "../../database/service/PlayerService";
-import { ProfileEmbed } from "../../helpers/embed/ProfileEmbed";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["profile", "p"];
@@ -19,12 +19,7 @@ export class Command extends BaseCommand {
         const member = await msg.guild?.members.fetch({
           query: this.options.join(" "),
         });
-        if (!member?.firstKey()) {
-          await msg.channel.send(
-            `<:red_x:741454361007357993> Sorry, but I couldn't find that user.`
-          );
-          return;
-        }
+        if (!member?.firstKey()) throw new error.InvalidMemberError();
         userQuery = await PlayerService.getProfileByDiscordId(
           member.firstKey()!
         );
@@ -32,12 +27,7 @@ export class Command extends BaseCommand {
     } else userQuery = executor;
 
     const discordUser = await msg.client.users.fetch(userQuery.discord_id);
-    if (!discordUser) {
-      await msg.channel.send(
-        `<:red_x:741454361007357993> Sorry, but I couldn't find that user.`
-      );
-      return;
-    }
+    if (!discordUser) throw new error.InvalidMemberError();
     const badges = await PlayerService.getBadgesByProfile(userQuery);
     const cardCount = await PlayerService.getCardCountByProfile(userQuery);
 
