@@ -46,6 +46,7 @@ export class CommandManager {
   }
 
   async handle(msg: Message, cfg: typeof config): Promise<void> {
+    console.log(msg.author);
     let cmd = this.getCommandByName(
       msg.content.toLowerCase(),
       config.discord.prefix
@@ -84,7 +85,6 @@ export class CommandManager {
       let err;
 
       await cmd.run(msg, profile, cfg).catch(async (e) => {
-        if (e.message === "Unknown Message") return;
         err = e;
         if (e.isClientFacing) {
           await msg.channel.send(
