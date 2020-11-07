@@ -13,7 +13,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (this.currentlyPlaying.has(msg.author.id)) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> Finish your current trivia before starting another!`
+        `${this.config.discord.emoji.cross.full} Finish your current trivia before starting another!`
       );
       return;
     }
@@ -47,15 +47,16 @@ export class Command extends BaseCommand {
 
         //await PlayerService.addCoinsToProfile(executor, profit);
         collect.stop("correct");
-        if (this.permissions.ADD_REACTIONS) msg.react("✅");
-      } else await m.react("741454361007357993");
+        if (this.permissions.ADD_REACTIONS)
+          msg.react(this.config.discord.emoji.check.id);
+      } else await m.react(this.config.discord.emoji.cross.id);
     });
     collect.on("end", async (collected, reason) => {
       this.currentlyPlaying.delete(msg.author.id);
       if (reason != "correct") {
-        await msg.react("741454361007357993");
+        await msg.react(this.config.discord.emoji.cross.id);
         await triviaMessage.edit(
-          `<:red_x:741454361007357993> You didn't get the answer in time. :confused:`
+          `${this.config.discord.emoji.cross.full} You didn't get the answer in time. :confused:`
         );
       }
       if (this.permissions.MANAGE_MESSAGES) await channel.bulkDelete(collected);

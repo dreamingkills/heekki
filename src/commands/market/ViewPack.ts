@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (!this.options[0]) {
       await msg.channel.send(
-        "<:red_x:741454361007357993> Please specify a pack to view."
+        `${this.config.discord.emoji.cross.full} Please specify a pack to view.`
       );
       return;
     }
@@ -53,8 +53,8 @@ export class Command extends BaseCommand {
             .length;
           return `${
             owned > 0
-              ? `<:cards:757151797235286089>`
-              : `<:cards_dark:757771501335347311>`
+              ? this.config.discord.emoji.cards.full
+              : this.config.discord.emoji.cardsDark.full
           } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
@@ -67,8 +67,8 @@ export class Command extends BaseCommand {
             .length;
           return `${
             owned > 0
-              ? `<:cards:757151797235286089>`
-              : `<:cards_dark:757771501335347311>`
+              ? this.config.discord.emoji.cards.full
+              : this.config.discord.emoji.cardsDark.full
           } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
@@ -81,21 +81,21 @@ export class Command extends BaseCommand {
             .length;
           return `${
             owned > 0
-              ? `<:cards:757151797235286089>`
-              : `<:cards_dark:757771501335347311>`
+              ? this.config.discord.emoji.cards.full
+              : this.config.discord.emoji.cardsDark.full
           } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
       );
 
     embed.setDescription(
-      `${
-        pack.flavorText ? `*"${pack.flavorText}"*` : ``
-      }\n<:cards:757151797235286089> There ${
-        packCards.length > 1 ? "are" : "is"
-      } **${packCards.length}** card${
-        packCards.length > 1 ? "s" : ""
-      } in the **${pack.title}** pack.\nYou own **${ownedByUser.length}** card${
+      `${pack.flavorText ? `*"${pack.flavorText}"*` : ``}\n${
+        this.config.discord.emoji.cards.full
+      } There ${packCards.length > 1 ? "are" : "is"} **${
+        packCards.length
+      }** card${packCards.length > 1 ? "s" : ""} in the **${
+        pack.title
+      }** pack.\nYou own **${ownedByUser.length}** card${
         ownedByUser.length > 1 ? "s" : ""
       } from this pack.`
     );

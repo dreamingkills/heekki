@@ -44,8 +44,11 @@ export class CommandManager {
     }
   }
 
-  async handle(msg: Message): Promise<void> {
-    let cmd = this.getCommandByName(msg.content.toLowerCase(), config.prefix);
+  async handle(msg: Message, cfg: typeof config): Promise<void> {
+    let cmd = this.getCommandByName(
+      msg.content.toLowerCase(),
+      config.discord.prefix
+    );
     if (!cmd) return;
     if (cmd.users && cmd.users[0] !== msg.author.id) {
       msg.channel.send(
@@ -75,7 +78,8 @@ export class CommandManager {
       if (profile.restricted) throw new error.RestrictedUserError();
 
       let err;
-      await cmd.run(msg, profile).catch(async (e) => {
+
+      await cmd.run(msg, profile, cfg).catch(async (e) => {
         if (e.message === "Unknown Message") return;
         err = e;
         if (e.isClientFacing) {

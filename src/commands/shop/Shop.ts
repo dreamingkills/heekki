@@ -13,8 +13,8 @@ export class Command extends BaseCommand {
     let desc = [];
     for (let pack of packs) {
       desc.push({
-        name: `<:cards:757151797235286089> ${pack.title}`,
-        value: `<:cash:757146832639098930> **${pack.price}**\ncr. **${pack.credit}**\n\`!bp ${pack.keyword}\``,
+        name: `${this.config.discord.emoji.cards.full} ${pack.title}`,
+        value: `${this.config.discord.emoji.cash.full} **${pack.price}**\ncr. **${pack.credit}**\n\`!bp ${pack.keyword}\``,
         inline: true,
       });
     }
@@ -25,7 +25,7 @@ export class Command extends BaseCommand {
         )})`
       )
       .setDescription(
-        `You have <:cash:757146832639098930> **${executor.coins}**.`
+        `You have ${this.config.discord.emoji.cash.full} **${executor.coins}**.`
       )
       .addFields(desc)
       .setColor("#FFAACC")

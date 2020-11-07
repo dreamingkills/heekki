@@ -12,6 +12,7 @@ import { DB } from "../../database/index";
 import { Chance } from "chance";
 import { PlayerService } from "../../database/service/PlayerService";
 import { HeartSpawner } from "../../helpers/HeartSpawner";
+import version from "../../version.json";
 
 export class Bot extends Client {
   public config: Object = config;
@@ -34,25 +35,20 @@ export class Bot extends Client {
 
     this.on("ready", async () => {
       if (!this.user) return console.error("I'm null!");
-      let userCount = (await DB.query(
-        `SELECT COUNT(*) FROM user_profile;`
-      )) as { "COUNT(*)": number }[];
-      console.log(`Ready - ${userCount[0]["COUNT(*)"]} users in database`);
 
+      console.log(`[ Heekki v${version.version} ] - Connected to Discord.`);
       this.updateStatus();
-
-      try {
-        //const lounge = await this.channels.fetch("752028822274179145");
-        //HeartSpawner.spawn(<TextChannel>lounge);
-      } catch (e) {
-        //ignore
-      }
     });
 
     this.on("message", async (msg: Message) => {
+      if (
+        this.user!.id === "752291099170701384" &&
+        msg.author.id !== "197186779843919877"
+      )
+        return;
       if (msg.channel.type == "text") {
         const author = this.users.fetch(msg.author.id);
-        this.cmdMan.handle(msg);
+        this.cmdMan.handle(msg, config);
       }
     });
 
@@ -81,6 +77,6 @@ export class Bot extends Client {
 
       m.roles.add("753014710084960327");
     });
-    this.login(config.botToken);
+    this.login(config.discord.token);
   }
 }

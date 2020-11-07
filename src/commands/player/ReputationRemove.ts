@@ -8,14 +8,14 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> Please mention a user!`
+        `${this.config.discord.emoji.cross.full} Please mention a user!`
       );
       return;
     }
     const receiverUser = msg.mentions.users.first()!;
     if (receiverUser.id === msg.author.id) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> Why would you want to do that? :broken_heart:`
+        `${this.config.discord.emoji.cross.full} Why would you want to do that? :broken_heart:`
       );
       return;
     }
@@ -30,14 +30,14 @@ export class Command extends BaseCommand {
     );
     if (!reputationExists) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> You haven't given them a reputation point.`
+        `${this.config.discord.emoji.cross.full} You haven't given them a reputation point.`
       );
       return;
     }
 
     await PlayerService.removeReputation(executor, receiverProfile);
     await msg.channel.send(
-      `:white_check_mark: You revoked your reputation point from **${receiverUser.tag}**!`
+      `${this.config.discord.emoji.check.full} You revoked your reputation point from **${receiverUser.tag}**!`
     );
   }
 }

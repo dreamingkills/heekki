@@ -17,7 +17,7 @@ export class Command extends BaseCommand {
 
     const chance = new Chance();
     const type = "card"; // chance.weighted(["card", "coins"], [0.1, 1]);
-    let reward = `:white_check_mark: You claimed your daily reward.\n`;
+    let reward = `${this.config.discord.emoji.check.full} You claimed your daily reward.\n`;
     if (type === "card") {
       const randomCard = await CardService.getRandomCard();
       const starCount = chance.weighted(
@@ -36,7 +36,7 @@ export class Command extends BaseCommand {
       reward += `+ **${newCard.abbreviation}#${newCard.serialNumber}**`;
     } else if (type === "coins") {
       await PlayerService.addCoinsToProfile(executor, 1000);
-      reward += `+ <:cash:757146832639098930> **1000**`;
+      reward += `+ ${this.config.discord.emoji.cash.full} **1000**`;
     }
 
     PlayerService.setLastDaily(executor, now);

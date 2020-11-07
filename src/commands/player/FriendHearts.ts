@@ -20,8 +20,8 @@ export class Command extends BaseCommand {
     });
 
     if (friends.length === 0) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> You can't send hearts because you have no friends!`
+      await msg.channel.send(
+        `${this.config.discord.emoji.cross.full} You can't send hearts because you have no friends!`
       );
       return;
     }
@@ -33,7 +33,7 @@ export class Command extends BaseCommand {
     //PlayerService.addXp(executor, xp);
 
     await msg.channel.send(
-      `<:heekki_heart:757147742383505488> You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
+      `${this.config.discord.emoji.hearts} You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
     );
     return;
   }

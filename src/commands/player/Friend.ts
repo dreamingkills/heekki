@@ -35,7 +35,7 @@ export class Command extends BaseCommand {
           friendCounts.filter((r) => {
             return r.sender_id === friend;
           })[0]?.count || 0
-        }** <:heekki_heart:757147742383505488> received`
+        }** ${this.config.discord.emoji.hearts} received`
       );
     }
     return tags.join("\n");
@@ -46,14 +46,14 @@ export class Command extends BaseCommand {
       case "all": {
         await FriendService.acceptAllFriendRequests(executor);
         await msg.channel.send(
-          `:white_check_mark: Accepted all friend requests!`
+          `${this.config.discord.emoji.check.full} Accepted all friend requests!`
         );
         return;
       }
       case "add": {
         if (!this.options[1]) {
           await msg.channel.send(
-            `<:red_x:741454361007357993> Please specify a user to add!`
+            `${this.config.discord.emoji.cross.full} Please specify a user to add!`
           );
           return;
         }
@@ -66,7 +66,7 @@ export class Command extends BaseCommand {
           friend = member?.firstKey();
           if (!friend) {
             await msg.channel.send(
-              "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
+              `${this.config.discord.emoji.cross.full} Sorry, but I couldn't find that user.`
             );
             return;
           }
@@ -77,7 +77,7 @@ export class Command extends BaseCommand {
         const friendProfile = await PlayerService.getProfileByDiscordId(friend);
         if (executor.discord_id == friendProfile.discord_id) {
           msg.channel.send(
-            "<:red_x:741454361007357993> You can't add yourself as a friend."
+            `${this.config.discord.emoji.cross.full} You can't add yourself as a friend.`
           );
           return;
         }
@@ -91,25 +91,25 @@ export class Command extends BaseCommand {
           case "ACCEPTABLE": {
             await FriendService.acceptFriendRequest(friendProfile, executor);
             await msg.channel.send(
-              `:white_check_mark: Friend request accepted.`
+              `${this.config.discord.emoji.check.full} Friend request accepted.`
             );
             return;
           }
           case "REQUESTED": {
             await msg.channel.send(
-              `<:red_x:741454361007357993> You've already sent a friend request to that user!`
+              `${this.config.discord.emoji.cross.full} You've already sent a friend request to that user!`
             );
             return;
           }
           case "ALREADY_FRIENDS": {
             await msg.channel.send(
-              `<:red_x:741454361007357993> You're already friends with them!`
+              `${this.config.discord.emoji.cross.full} You're already friends with them!`
             );
             return;
           }
           case "ERROR": {
             await msg.channel.send(
-              `<:red_x:741454361007357993> An unexpected error occurred! Please try again.`
+              `${this.config.discord.emoji.cross.full} An unexpected error occurred! Please try again.`
             );
             return;
           }
@@ -119,14 +119,14 @@ export class Command extends BaseCommand {
 
         const newUser = await msg.client.users.fetch(friendProfile.discord_id);
         await msg.channel.send(
-          `:white_check_mark: Sent a friend request to **${newUser?.tag}**!`
+          `${this.config.discord.emoji.check.full} Sent a friend request to **${newUser?.tag}**!`
         );
         return;
       }
       case "remove": {
         if (!this.options[1]) {
           await msg.channel.send(
-            `<:red_x:741454361007357993> Please specify a user to unfriend!`
+            `${this.config.discord.emoji.cross.full} Please specify a user to unfriend!`
           );
           return;
         }
@@ -142,7 +142,7 @@ export class Command extends BaseCommand {
           friend = member?.firstKey();
           if (!friend) {
             await msg.channel.send(
-              "<:red_x:741454361007357993> Sorry, but I couldn't find that user."
+              `${this.config.discord.emoji.cross.full} Sorry, but I couldn't find that user.`
             );
             return;
           }
@@ -158,20 +158,20 @@ export class Command extends BaseCommand {
         switch (relationshipExists) {
           case "OK": {
             await msg.channel.send(
-              `<:red_x:741454361007357993> You aren't friends with them.`
+              `${this.config.discord.emoji.cross.full} You aren't friends with them.`
             );
             return;
           }
           case "ERROR": {
             await msg.channel.send(
-              `<:red_x:741454361007357993> An unexpected error occurred! Please try again.`
+              `${this.config.discord.emoji.cross.full} An unexpected error occurred! Please try again.`
             );
             return;
           }
           default: {
             await FriendService.removeFriend(executor, friendProfile);
             await msg.channel.send(
-              `:white_check_mark: Removed them from your friends list.`
+              `${this.config.discord.emoji.check.full} Removed them from your friends list.`
             );
             return;
           }

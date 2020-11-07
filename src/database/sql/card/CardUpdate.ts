@@ -4,8 +4,6 @@ import { CardFetch } from "./CardFetch";
 import { Card } from "../../../structures/card/Card";
 import { SerialGenerator } from "../../../helpers/Serial";
 import { Profile } from "../../../structures/player/Profile";
-import { PlayerService } from "../../service/PlayerService";
-import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
 
 export class CardUpdate extends DBClass {
   public static async createNewUserCard(
@@ -46,12 +44,13 @@ export class CardUpdate extends DBClass {
   public static async addHeartsToCard(
     card: UserCard,
     amount: number
-  ): Promise<void> {
+  ): Promise<UserCard> {
     await DB.query(`UPDATE user_card SET hearts=hearts+? WHERE id=?;`, [
       amount,
       card.userCardId,
     ]);
-    return;
+
+    return await CardFetch.getUserCardById(card.userCardId);
   }
 
   public static async removeHeartsFromCard(

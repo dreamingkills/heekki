@@ -29,7 +29,7 @@ export class Command extends BaseCommand {
 
     if (cards.length === 0) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> You didn't enter any valid cards.`
+        `${this.config.discord.emoji.cross.full} You didn't enter any valid cards.`
       );
       return;
     }
@@ -55,9 +55,13 @@ export class Command extends BaseCommand {
         `${card.abbreviation}#${card.serialNumber}`,
         `Owner: **${owner}**\n**${pack.title}**\n${card.member}\n:star: **${
           card.stars
-        }**\n<:heekki_heart:757147742383505488> **${card.hearts.toLocaleString()}**\n${
+        }**\n${
+          this.config.discord.emoji.hearts.full
+        } **${card.hearts.toLocaleString()}**\n${
           isInMarketplace.forSale
-            ? `<:cash:757146832639098930> For Sale: **${isInMarketplace.price.toLocaleString()}**`
+            ? `${
+                this.config.discord.emoji.cash.full
+              } For Sale: **${isInMarketplace.price.toLocaleString()}**`
             : ""
         }`,
         true

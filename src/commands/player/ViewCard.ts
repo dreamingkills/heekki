@@ -24,25 +24,26 @@ export class Command extends BaseCommand {
       };
       if (isNaN(reference.serial)) {
         await msg.channel.send(
-          `<:red_x:741454361007357993> That isn't a valid card reference.`
+          `${this.config.discord.emoji.cross.full} That isn't a valid card reference.`
         );
         return;
       }
       card = await CardService.getCardDataFromReference(reference);
       if (card.ownerId !== msg.author.id) {
         await msg.channel.send(
-          `<:red_x:741454361007357993> That card doesn't belong to you.`
+          `${this.config.discord.emoji.cross.full} That card doesn't belong to you.`
         );
         return;
       }
     }
 
     const pack = await ShopService.getPackById(card.packId);
-    const imageData = await CardService.getImageDataFromCard(card);
+    const image = await CardService.checkCacheForCard(card);
+    /*const imageData = await CardService.getImageDataFromCard(card);
     const image = await CardService.generateCardImageFromUserCard(
       card,
       imageData
-    );
+    );*/
 
     let embed = new MessageEmbed()
       .setAuthor(
@@ -50,11 +51,9 @@ export class Command extends BaseCommand {
         msg.author.displayAvatarURL()
       )
       .setDescription(
-        `${
-          card.blurb != "" ? `*"${card.blurb}"*` : ``
-        }\n<:heekki_heart:757147742383505488> **${card.hearts}**\n⭐ **${
-          card.stars
-        }**`
+        `${card.blurb != "" ? `*"${card.blurb}"*` : ``}\n${
+          this.config.discord.emoji.hearts.full
+        } **${card.hearts}**\n⭐ **${card.stars}**`
       )
       .setColor("#FFAACC")
       .setFooter(

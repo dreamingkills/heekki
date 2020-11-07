@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
     if (!reference.identifier) {
       await PlayerService.unsetDefaultCard(executor);
       await msg.channel.send(
-        `:white_check_mark: You're no longer using a card by default.`
+        `${this.config.discord.emoji.check.full} You're no longer using a card by default.`
       );
       return;
     }
@@ -28,7 +28,7 @@ export class Command extends BaseCommand {
     await PlayerService.useCard(card, executor);
 
     await msg.channel.send(
-      `:white_check_mark: Now using **${card.abbreviation}#${card.serialNumber}** by default.`
+      `${this.config.discord.emoji.check.full} Now using **${card.abbreviation}#${card.serialNumber}** by default.`
     );
   }
 }

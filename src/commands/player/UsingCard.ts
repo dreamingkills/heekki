@@ -8,7 +8,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (executor.cardPriority === 0) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> You haven't set a card to use.`
+        `${this.config.discord.emoji.cross.full} You haven't set a card to use.`
       );
       return;
     }
@@ -16,7 +16,7 @@ export class Command extends BaseCommand {
     const card = await UserCardService.getUserCardById(executor.cardPriority);
 
     await msg.channel.send(
-      `<:cards:757151797235286089> You're currently using **${card.abbreviation}#${card.serialNumber}** by default.`
+      `${this.config.discord.emoji.cards.full} You're currently using **${card.abbreviation}#${card.serialNumber}** by default.`
     );
     return;
   }

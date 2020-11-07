@@ -8,6 +8,7 @@ import { Pack } from "../../structures/card/Pack";
 import { ShopItem } from "../../structures/shop/ShopItem";
 import { Card } from "../../structures/card/Card";
 import { TextInterface } from "../../structures/interface/image/TextInterface";
+import fs from "fs/promises";
 
 interface Reference {
   identifier: string;
@@ -46,11 +47,38 @@ export class CardService {
     amount: number,
     card: UserCard
   ): Promise<void> {
-    await CardUpdate.addHeartsToCard(card, amount);
+    const newCard = await CardUpdate.addHeartsToCard(card, amount);
+
+    await this.updateCardCache(newCard);
+    return;
   }
 
   public static async getImageDataFromCard(card: UserCard): Promise<ImageData> {
     return await CardFetch.getImageDataFromCard(card);
+  }
+
+  public static async updateCardCache(card: UserCard): Promise<Buffer> {
+    const imageData = await this.getImageDataFromCard(card);
+    const image = await this.generateCardImageFromUserCard(card, imageData);
+
+    await fs.mkdir(`./cache/cards/${card.cardId}`);
+    await fs.writeFile(`./cache/cards/temp/${card.userCardId}`, image);
+    await fs.rename(
+      `./cache/cards/temp/${card.userCardId}`,
+      `./cache/cards/${card.cardId}/${card.userCardId}`
+    );
+    return await fs.readFile(`./cache/cards/${card.cardId}/${card.userCardId}`);
+  }
+
+  public static async checkCacheForCard(card: UserCard): Promise<any> {
+    try {
+      return await fs.readFile(
+        `./cache/cards/${card.cardId}/${card.userCardId}`
+      );
+    } catch (e) {
+      console.log(e);
+      return await this.updateCardCache(card);
+    }
   }
 
   /*

@@ -107,7 +107,7 @@ export class Command extends BaseCommand {
       case "cash": {
         header = "Cash";
         description =
-          `<:cash:757146832639098930> **Cash** is used to buy cards both from the Marketplace and from packs.\n` +
+          `${this.config.discord.emoji.cash.full} **Cash** is used to buy cards both from the Marketplace and from packs.\n` +
           `\n__**How do I gain cash?**__` +
           `\n**1)** Use \`!mission\` on a card every 45 minutes` +
           `\n**2)** Go \`!fishing\` (use \`!fish sell\`)` +
@@ -133,7 +133,7 @@ export class Command extends BaseCommand {
       case "hearts": {
         header = "Hearts";
         description =
-          `<:heekki_heart:757147742383505488> **Hearts** are used to level up your cards.` +
+          `${this.config.discord.emoji.hearts.full} **Hearts** are used to level up your cards.` +
           `\nYour card will level up once every 150 hearts!\n` +
           `\n__**How do I gain hearts?**__` +
           `\n**1)** Every 4 hours, you can use \`!hb\` to receive a random amount of hearts.` +
@@ -143,22 +143,12 @@ export class Command extends BaseCommand {
           `\nExample: \`!upgrade DLHJ#32 300\``;
         break;
       }
-      case "xp": {
-        header = "XP";
-        description =
-          `**Experience points (XP)** are gained by completing various tasks and activities on Heekki.\n` +
-          `\n__**What does XP do?**__` +
-          `\nExperience points do not currently do anything.\n` +
-          `\n__**Who has the most XP?**__` +
-          `\nYou can see the top users by XP by using \`!top xp\`!`;
-        break;
-      }
       case "market":
       case "mp":
       case "marketplace": {
         header = "Marketplace";
         description =
-          `The **Marketplace** (MP) is a place where you can sell your cards to other users for <:cash:757146832639098930> Cash.\n` +
+          `The **Marketplace** (MP) is a place where you can sell your cards to other users for ${this.config.discord.emoji.cash.full} Cash.\n` +
           `\n**Command List**` +
           `\n\`\`\`` +
           `\n!mp - Shows you the MP.` +
@@ -199,14 +189,14 @@ export class Command extends BaseCommand {
         header = "Command - Jumble";
         description =
           `**Jumble** is a game where the objective is to unscramble a given LOONA-related term.` +
-          `\nYou're given 15 seconds to crack the code - if you get it right, you get <:cash:757146832639098930> **20**!`;
+          `\nYou're given 15 seconds to crack the code - if you get it right, you get ${this.config.discord.emoji.cash.full} **20**!`;
         break;
       }
       case "memory": {
         header = "Command - Memory";
         description =
           `**Memory** is a game where the objective is to remember a sequence and identify at which number in the sequence a given member of LOONA is.` +
-          `\nYou have only one attempt and 60 seconds - if you get it right, you get <:cash:757146832639098930> **40**!`;
+          `\nYou have only one attempt and 60 seconds - if you get it right, you get ${this.config.discord.emoji.cash.full} **40**!`;
         break;
       }
       case "prestige": {

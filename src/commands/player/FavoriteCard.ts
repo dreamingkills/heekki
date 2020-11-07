@@ -25,7 +25,7 @@ export class Command extends BaseCommand {
       ? "You are no longer able to trade, sell, or forfeit that card."
       : "You are now able to trade, sell, and forfeit that card.";
     await msg.channel.send(
-      `:white_check_mark: ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
+      `${this.config.discord.emoji.check.full} ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
     );
   }
 }

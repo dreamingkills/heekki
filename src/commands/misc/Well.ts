@@ -20,12 +20,15 @@ export class Command extends BaseCommand {
           throw new error.NotEnoughCoinsError(executor.coins, amount);
 
         const confirmation = await msg.channel.send(
-          `:warning: Really throw **${amount}** <:cash:757146832639098930> in the well?\nThis action is **irreversible**! React with :white_check_mark: to confirm.`
+          `:warning: Really throw **${amount}** ${this.config.discord.emoji.cash.full} in the well?\nThis action is **irreversible**! React with ${this.config.discord.emoji.check.full} to confirm.`
         );
 
-        confirmation.react("✅");
+        confirmation.react(this.config.discord.emoji.check.id);
         const filter = (reaction: MessageReaction, user: User) => {
-          return reaction.emoji.name === "✅" && user.id == msg.author.id;
+          return (
+            reaction.emoji.id === this.config.discord.emoji.check.id &&
+            user.id == msg.author.id
+          );
         };
         const reactions = confirmation.createReactionCollector(filter, {
           max: 1,
@@ -36,13 +39,13 @@ export class Command extends BaseCommand {
           await PlayerService.addToWell(executor, amount);
           await PlayerService.removeCoinsFromProfile(executor, amount);
           await confirmation.edit(
-            `:white_check_mark: Threw **${amount}** <:cash:757146832639098930> in the well.`
+            `${this.config.discord.emoji.check.full} Threw **${amount}** ${this.config.discord.emoji.cash.full} in the well.`
           );
         });
         reactions.on("end", async (reaction, reason: string) => {
           if (reason !== "limit") {
             await confirmation.edit(
-              `<:red_x:741454361007357993> You didn't react in time.`
+              `${this.config.discord.emoji.cross.full} You didn't react in time.`
             );
             if (this.permissions.MANAGE_MESSAGES)
               await confirmation.reactions.removeAll();

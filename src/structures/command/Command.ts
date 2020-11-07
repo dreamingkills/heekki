@@ -1,5 +1,6 @@
 import { Message } from "discord.js";
 import { Profile } from "../player/Profile";
+import config from "../../../config.json";
 
 export interface Command {
   names: string[];
@@ -25,10 +26,16 @@ export abstract class BaseCommand implements Command {
     USE_EXTERNAL_EMOJI: boolean;
   };
   flags: { [key: string]: string } = {};
+  config!: typeof config;
 
   abstract async exec(msg: Message, executor: Profile): Promise<void>;
 
-  public async run(msg: Message, executor: Profile): Promise<void> {
+  public async run(
+    msg: Message,
+    executor: Profile,
+    cfg: typeof config
+  ): Promise<void> {
+    this.config = cfg;
     this.options = msg.content
       .split(" ")
       .slice(1)

@@ -1,4 +1,4 @@
-import { Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import jimp from "jimp";
 import canvas, { Image } from "canvas";
 import { PlayerService } from "../../database/service/PlayerService";
@@ -41,66 +41,62 @@ export class Command extends BaseCommand {
     const badges = await PlayerService.getBadgesByProfile(userQuery);
     const cardCount = await PlayerService.getCardCountByProfile(userQuery);
 
-    /*const bg = await jimp.read(`./src/assets/profile_template.png`);
+    const bg = await jimp.read(`./src/assets/profile_blank.png`);
     const buffer = await bg.getBufferAsync(jimp.MIME_PNG);
 
-    let cv = canvas.createCanvas(600, 600);
+    let cv = canvas.createCanvas(1100, 800);
     let ctx = cv.getContext("2d");
     let background = await canvas.loadImage(buffer);
-    const pfp = await canvas.loadImage(
-      msg.author.displayAvatarURL({ format: "png" })
-    );
 
-    ctx.drawImage(background, 0, 0, 600, 600);
+    ctx.drawImage(background, 0, 0, 1100, 800);
 
     //Draw username
-    ctx.font = `45px theboldfont`;
+    ctx.font = `75px MyriadPro-Bold`;
     ctx.fillStyle = "white";
     ctx.textAlign = "left";
-    ctx.fillText(discordUser.username, 195, 90);
-    //Draw discriminator
-    ctx.font = `65px theboldfont`;
-    ctx.fillStyle = "white";
-    ctx.textAlign = "left";
-    ctx.fillText(`#${discordUser.discriminator}`, 195, 150);
+    ctx.fillText(discordUser.username, 69, 182);
     // Draw profile picture
-    ctx.save();
-    ctx.beginPath();
-    ctx.arc(100, 100, 75, 0, Math.PI * 2, true);
-    ctx.closePath();
-    ctx.clip();
     const avatar = await canvas.loadImage(
       discordUser.displayAvatarURL({ format: "png" })
     );
-    ctx.drawImage(avatar, 25, 25, 150, 150);
-    ctx.restore();
+    ctx.drawImage(avatar, 775, 220, 256, 256);
 
     // Draw card count
-    ctx.font = `45px theboldfont`;
+    ctx.font = `25px MyriadPro-Bold`;
     ctx.fillStyle = "white";
-    ctx.textAlign = "left";
-    ctx.fillText(`${cardCount.toLocaleString()} CARDS`, 95, 230);
+    ctx.textAlign = "right";
+    ctx.fillText(cardCount.toLocaleString(), 987, 144);
     // Draw cash count
-    ctx.font = `45px theboldfont`;
-    ctx.fillStyle = "white";
+    ctx.font = `65px MyriadPro-Bold`;
+    ctx.fillStyle = "#FFAACC";
     ctx.textAlign = "left";
-    ctx.fillText(`${userQuery.coins.toLocaleString()} CASH`, 95, 290);
+    ctx.fillText(userQuery.coins.toLocaleString(), 170, 273);
+    // Draw heart count
+    ctx.font = `65px MyriadPro-Bold`;
+    ctx.fillStyle = "#FFAACC";
+    ctx.textAlign = "left";
+    ctx.fillText(userQuery.hearts.toLocaleString(), 170, 365);
+    // Draw reputation count
+    ctx.font = `65px MyriadPro-Bold`;
+    ctx.fillStyle = "#FFAACC";
+    ctx.textAlign = "left";
+    ctx.fillText(userQuery.reputation.toLocaleString(), 170, 460);
 
     let buf = cv.toBuffer("image/png");
     let final = Buffer.alloc(buf.length, buf, "base64");
 
-    await msg.channel.send(`> **${discordUser.tag}**'s Profile`, {
+    const embed = new MessageEmbed()
+      .setAuthor(`Profile | ${discordUser.tag}`, msg.author.displayAvatarURL())
+      .setDescription(
+        userQuery.blurb ||
+          "No description set!\nUse `!desc` to set your description."
+      )
+      .setColor(`#FFAACC`)
+      .setFooter(`Took ${Date.now() - msg.createdTimestamp}ms`)
+      .setTimestamp(Date.now());
+    await msg.channel.send({
       files: [final],
-    });*/
-
-    const embed = new ProfileEmbed(
-      userQuery,
-      badges,
-      discordUser,
-      discordUser.displayAvatarURL(),
-      userQuery.reputation,
-      cardCount
-    );
-    await msg.channel.send(embed);
+      embed,
+    });
   }
 }

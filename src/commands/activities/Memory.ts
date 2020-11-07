@@ -26,7 +26,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (this.playing.has(msg.author.id)) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> You're already playing Memory.`
+        `${this.config.discord.emoji.cross.full} You're already playing Memory.`
       );
       return;
     }
@@ -99,7 +99,7 @@ export class Command extends BaseCommand {
             await PlayerService.addCoinsToProfile(executor, 40);
             await sent.edit(
               embed.setDescription(
-                `:white_check_mark: **Correct!**\nYou've been given <:cash:757146832639098930> **40**!`
+                `${this.config.discord.emoji.check.full} **Correct!**\nYou've been given ${this.config.discord.emoji.cash.full} **40**!`
               )
             );
           }

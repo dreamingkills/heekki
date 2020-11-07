@@ -20,8 +20,8 @@ export class Command extends BaseCommand {
       const { forSale } = await MarketService.cardIsOnMarketplace(c);
       const { level } = CardService.heartsToLevel(c.hearts);
       desc += `__**${c.abbreviation}#${c.serialNumber}**__ - ${c.member} ${
-        (c.isFavorite ? "<:heekki_heart:757147742383505488>" : "") +
-        (forSale ? "<:cash:757146832639098930>" : "")
+        (c.isFavorite ? `${this.config.discord.emoji.hearts.full}` : "") +
+        (forSale ? `${this.config.discord.emoji.cash.full}` : "")
       }\nLevel **${level}** / ${":star:".repeat(c.stars)}\n`;
     }
     return desc;
@@ -60,11 +60,13 @@ export class Command extends BaseCommand {
     const pageNotNegative = pageNotNaN < 1 ? 1 : pageNotNaN;
     let page = pageNotNegative > pageLimit ? pageLimit : pageNotNegative;
 
-    const desc = `<:cards:757151797235286089> I found **${cardCount}** card${
-      cardCount == 1 ? "" : "s"
-    }${optionsRaw[0] ? " matching this search" : ""}!\n${
-      optionsRaw[0] ? "```" : ""
-    }${optionsRaw.join("\n")}${optionsRaw[0] ? "```\n" : "\n"}`;
+    const desc = `${
+      this.config.discord.emoji.cards.full
+    } I found **${cardCount}** card${cardCount == 1 ? "" : "s"}${
+      optionsRaw[0] ? " matching this search" : ""
+    }!\n${optionsRaw[0] ? "```" : ""}${optionsRaw.join("\n")}${
+      optionsRaw[0] ? "```\n" : "\n"
+    }`;
 
     const cards = await PlayerService.getCardsByProfile(profile, {
       ...options,

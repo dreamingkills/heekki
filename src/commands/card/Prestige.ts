@@ -29,7 +29,9 @@ export class Command extends BaseCommand {
     await UserCardService.incrementCardStars(card);
 
     await msg.channel.send(
-      `:white_check_mark: Prestiged **${reference.identifier.toUpperCase()}#${
+      `${
+        this.config.discord.emoji.check.full
+      } Prestiged **${reference.identifier.toUpperCase()}#${
         reference.serial
       }**!\nIt now has **${card.stars + 1}** :star:.`
     );

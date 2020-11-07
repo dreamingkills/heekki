@@ -26,7 +26,7 @@ export class Command extends BaseCommand {
     limit: number,
     sender: User
   ): Promise<MessageEmbed> {
-    const formatted: { name: string; value: string }[] = [];
+    const formatted: { name: string; value: string; inline: boolean }[] = [];
     for (let listing of cards) {
       let seller;
       try {
@@ -38,7 +38,8 @@ export class Command extends BaseCommand {
 
       formatted.push({
         name: `${listing.card.abbreviation}#${listing.card.serialNumber}`,
-        value: `:star: ${listing.card.stars}\n<:cash:757146832639098930> ${listing.price}\nSeller: **${seller}**`,
+        value: `:star: ${listing.card.stars}\n${this.config.discord.emoji.cash.full} ${listing.price}\nSeller: **${seller}**`,
+        inline: true,
       });
     }
     const embed = new MessageEmbed()
@@ -91,7 +92,7 @@ export class Command extends BaseCommand {
         price = Math.round(price);
         if (isNaN(price)) {
           await msg.channel.send(
-            "<:red_x:741454361007357993> Please specify a price."
+            `${this.config.discord.emoji.cross.full} Please specify a price.`
           );
           return;
         }
@@ -99,9 +100,11 @@ export class Command extends BaseCommand {
         await MarketService.sellCard(price, card);
 
         await msg.channel.send(
-          `:white_check_mark: You've listed **${card.abbreviation}#${
-            card.serialNumber
-          }** on the Marketplace for <:cash:757146832639098930> **${price.toLocaleString()}**.`
+          `${this.config.discord.emoji.check.full} You've listed **${
+            card.abbreviation
+          }#${card.serialNumber}** on the Marketplace for ${
+            this.config.discord.emoji.cash.full
+          } **${price.toLocaleString()}**.`
         );
         break;
       }
@@ -123,7 +126,7 @@ export class Command extends BaseCommand {
 
         await MarketService.removeListing(card);
         await msg.channel.send(
-          `:white_check_mark: You've removed the listing for **${card.abbreviation}#${card.serialNumber}** from the Marketplace.`
+          `${this.config.discord.emoji.check.full} You've removed the listing for **${card.abbreviation}#${card.serialNumber}** from the Marketplace.`
         );
         break;
       }
@@ -142,12 +145,15 @@ export class Command extends BaseCommand {
           throw new error.NotEnoughCoinsError(executor.coins, forSale.price);
 
         const conf = await msg.channel.send(
-          `:warning: Are you sure you want to purchase **${card.abbreviation}#${card.serialNumber}** for <:cash:757146832639098930> **${forSale.price}**?\nThis card has :star: **${card.stars}** and :heart: **${card.hearts}**. React with :white_check_mark: to confirm.`
+          `:warning: Are you sure you want to purchase **${card.abbreviation}#${card.serialNumber}** for ${this.config.discord.emoji.cash.full} **${forSale.price}**?\nThis card has :star: **${card.stars}** and ${this.config.discord.emoji.hearts.full} **${card.hearts}**. React with ${this.config.discord.emoji.check.full} to confirm.`
         );
-        await conf.react("✅");
+        await conf.react(this.config.discord.emoji.check.id);
 
         let filter = (reaction: MessageReaction, user: User) => {
-          return reaction.emoji.name == "✅" && user.id == msg.author.id;
+          return (
+            reaction.emoji.id === this.config.discord.emoji.check.id &&
+            user.id == msg.author.id
+          );
         };
         let reactions = conf.createReactionCollector(filter, {
           max: 1,
@@ -160,7 +166,7 @@ export class Command extends BaseCommand {
           );
           if (verification.ownerId !== card.ownerId) {
             await msg.channel.send(
-              `<:red_x:741454361007357993> That card has already been sold to someone else.`
+              `${this.config.discord.emoji.cross.full} That card has already been sold to someone else.`
             );
             return;
           }
@@ -186,23 +192,23 @@ export class Command extends BaseCommand {
           const seller = msg.client.users.resolve(card.ownerId);
           if (seller) {
             await seller.send(
-              `:white_check_mark: Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**` //\n+ **${xp}** XP`
+              `${this.config.discord.emoji.check.full} Your card **${card.abbreviation}#${card.serialNumber}** has been purchased by **${msg.author.tag}**` //\n+ **${xp}** XP`
             );
           }
 
           await conf.edit(
-            `:white_check_mark: Successfully purchased **${card.abbreviation}#${
-              card.serialNumber
-            }**!\nYour new balance is <:cash:757146832639098930> **${
-              executor.coins - forSale.price
-            }**.`
+            `${this.config.discord.emoji.check.full} Successfully purchased **${
+              card.abbreviation
+            }#${card.serialNumber}**!\nYour new balance is ${
+              this.config.discord.emoji.cash.full
+            } **${executor.coins - forSale.price}**.`
           );
           return;
         });
         reactions.on("end", async (collected, reason) => {
           if (reason !== "time") return;
           await conf.edit(
-            `<:red_x:741454361007357993> You did not react in time, so the purchase has been cancelled.`
+            `${this.config.discord.emoji.cross.full} You did not react in time, so the purchase has been cancelled.`
           );
           if (this.permissions.MANAGE_MESSAGES)
             await conf.reactions.removeAll();

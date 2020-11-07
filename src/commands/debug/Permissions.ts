@@ -11,21 +11,21 @@ export class Command extends BaseCommand {
       )
       .setColor(`#FFAACC`)
       .setDescription(
-        `Heekki needs **all** of the following permissions to function properly.\nIf you see an <:red_x:741454361007357993>, that means the bot is **missing** that permission.\n` +
+        `Heekki needs **all** of the following permissions to function properly.\nIf you see an ${this.config.discord.emoji.cross.full}, that means the bot is **missing** that permission.\n` +
           `\n${
             this.permissions.MANAGE_MESSAGES
-              ? ":white_check_mark:"
-              : `<:red_x:741454361007357993>`
+              ? this.config.discord.emoji.check.full
+              : this.config.discord.emoji.cross.full
           } **Manage Messages**` +
           `\n${
             this.permissions.ADD_REACTIONS
-              ? ":white_check_mark:"
-              : `<:red_x:741454361007357993>`
+              ? this.config.discord.emoji.check.full
+              : this.config.discord.emoji.cross.full
           } **Add Reactions**` +
           `\n${
             this.permissions.USE_EXTERNAL_EMOJI
-              ? ":white_check_mark:"
-              : `<:red_x:741454361007357993>`
+              ? this.config.discord.emoji.check.full
+              : this.config.discord.emoji.cross.full
           } **Use External Emoji**`
       );
     await msg.channel.send(embed);

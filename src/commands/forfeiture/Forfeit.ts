@@ -26,7 +26,7 @@ export class Command extends BaseCommand {
 
     if (cards.length === 0) {
       await msg.channel.send(
-        `<:red_x:741454361007357993> You didn't enter any valid cards.`
+        `${this.config.discord.emoji.cross.full} You didn't enter any valid cards.`
       );
       return;
     }
@@ -51,15 +51,15 @@ export class Command extends BaseCommand {
 
     if (invalidMessage)
       await msg.channel.send(
-        `<:red_x:741454361007357993> ${
+        `${this.config.discord.emoji.cross.full} ${
           validCards.length === 0 ? "All" : "Some"
         } of the cards you specified were invalid:` + invalidMessage
       );
     if (validCards.length === 0) return;
     let conf = await msg.channel.send(
-      `:warning: Really forfeit **${validCards.length}** cards?\nThis action is **irreversible**. React to this message with :white_check_mark: to confirm.`
+      `:warning: Really forfeit **${validCards.length}** cards?\nThis action is **irreversible**. React to this message with ${this.config.discord.emoji.check.full} to confirm.`
     );
-    await conf.react("✅");
+    await conf.react(this.config.discord.emoji.check.id);
     let filter = (reaction: MessageReaction, user: User) => {
       return reaction.emoji.name == "✅" && user.id == msg.author.id;
     };
@@ -73,11 +73,11 @@ export class Command extends BaseCommand {
       await UserCardService.transferCards("0", validCards);
 
       await conf.edit(
-        `:white_check_mark: You forfeited **${validCards.length}** cards.`
+        `${this.config.discord.emoji.check.full} You forfeited **${validCards.length}** cards.`
       );
     } else {
       await conf.edit(
-        `<:red_x:741454361007357993> You did not react in time, so the forfeiture has been cancelled.`
+        `${this.config.discord.emoji.cross.full} You did not react in time, so the forfeiture has been cancelled.`
       );
     }
     if (this.permissions.MANAGE_MESSAGES) await conf.reactions.removeAll();

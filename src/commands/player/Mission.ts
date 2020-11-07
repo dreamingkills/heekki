@@ -72,12 +72,16 @@ export class Command extends BaseCommand {
       .setAuthor(`Mission | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         `${
-          profit === 0 ? "<:red_x:741454361007357993>" : ":white_check_mark:"
+          profit === 0
+            ? `${this.config.discord.emoji.cross.full}`
+            : this.config.discord.emoji.check.full
         } ${selected.text.replace(
           `%M`,
           `**${card.member.replace(/ *\([^)]*\) * /g, "")}**`
         )}\n${
-          profit === 0 ? `` : `+ <:cash:757146832639098930> **${profit}**` //\n+ **${xp}** XP`
+          profit === 0
+            ? ``
+            : `+ ${this.config.discord.emoji.cash.full} **${profit}**` //\n+ **${xp}** XP`
         }`
       )
       .setFooter(

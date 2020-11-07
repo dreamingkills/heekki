@@ -14,8 +14,8 @@ export class Command extends BaseCommand {
     };
     const amount = parseInt(this.options[1]);
     if (isNaN(amount)) {
-      msg.channel.send(
-        `<:red_x:741454361007357993> Please enter an amount of hearts to upgrade your card with.`
+      await msg.channel.send(
+        `${this.config.discord.emoji.cross.full} Please enter an amount of hearts to upgrade your card with.`
       );
       return;
     }
@@ -40,11 +40,11 @@ export class Command extends BaseCommand {
           afterLevel > beforeLevel
             ? `:tada: **LEVEL UP!** ${beforeLevel} ~~-->~~ ${afterLevel}\n`
             : ``
-        } Successfully added <:heekki_heart:757147742383505488> **${
+        } Successfully added ${this.config.discord.emoji.hearts.full} **${
           this.options[1]
         }** to **${card.abbreviation}#${
           card.serialNumber
-        }**.\nYour card now has <:heekki_heart:757147742383505488> **${
+        }**.\nYour card now has ${this.config.discord.emoji.hearts.full} **${
           card.hearts + amount
         }**.`
       )
