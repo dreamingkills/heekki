@@ -9,3 +9,6 @@ ormconfig.json
 example_textless.png
 cardpacks/
 error-file.txt
+cache
+cache/cards
+cache/*
