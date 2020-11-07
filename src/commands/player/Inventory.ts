@@ -86,8 +86,7 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(embed);
     if (pageLimit > 2) await sent.react(`⏪`);
     if (pageLimit > 1) await sent.react(`◀️`);
-    if (this.permissions.MANAGE_MESSAGES)
-      await sent.react(`754832389620105276`);
+    await sent.react(`754832389620105276`);
     if (pageLimit > 1) await sent.react(`▶️`);
     if (pageLimit > 2) await sent.react(`⏩`);
 
@@ -106,72 +105,25 @@ export class Command extends BaseCommand {
 
     const collector = sent.createReactionCollector(filter, { time: 300000 });
     collector.on("collect", async (r) => {
-      if (r.emoji.name === "⏪" && page !== 1) {
-        page = 1;
-        const newCards = await PlayerService.getCardsByProfile(profile, {
-          ...options,
-          limit: 10,
-          page: page,
-        });
-        await sent.edit(
-          embed
-            .setAuthor(
-              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
-              msg.author.displayAvatarURL()
-            )
-            .setDescription(desc + (await this.renderInventory(newCards)))
-        );
-      } else if (r.emoji.name === "◀️" && page !== 1) {
-        page--;
-        const newCards = await PlayerService.getCardsByProfile(profile, {
-          ...options,
-          limit: 10,
-          page: page,
-        });
-        await sent.edit(
-          embed
-            .setAuthor(
-              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
-              msg.author.displayAvatarURL()
-            )
-            .setDescription(desc + (await this.renderInventory(newCards)))
-        );
-      } else if (
-        r.emoji.name === "delete" &&
-        this.permissions.MANAGE_MESSAGES
-      ) {
-        return await (<TextChannel>msg.channel).bulkDelete([msg, sent]);
-      } else if (r.emoji.name === "▶️" && page !== pageLimit) {
-        page++;
-        const newCards = await PlayerService.getCardsByProfile(profile, {
-          ...options,
-          limit: 10,
-          page: page,
-        });
-        sent.edit(
-          embed
-            .setAuthor(
-              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
-              msg.author.displayAvatarURL()
-            )
-            .setDescription(desc + (await this.renderInventory(newCards)))
-        );
-      } else if (r.emoji.name === "⏩" && page !== pageLimit) {
-        page = pageLimit;
-        const newCards = await PlayerService.getCardsByProfile(profile, {
-          ...options,
-          limit: 10,
-          page: page,
-        });
-        await sent.edit(
-          embed
-            .setAuthor(
-              `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
-              msg.author.displayAvatarURL()
-            )
-            .setDescription(desc + (await this.renderInventory(newCards)))
-        );
-      }
+      if (r.emoji.name === "⏪" && page !== 1) page = 1;
+      if (r.emoji.name === "◀️" && page !== 1) page--;
+      if (r.emoji.name === "delete") return await sent.delete();
+      if (r.emoji.name === "▶️" && page !== pageLimit) page++;
+      if (r.emoji.name === "⏩" && page !== pageLimit) page = pageLimit;
+
+      const newCards = await PlayerService.getCardsByProfile(profile, {
+        ...options,
+        limit: 10,
+        page: page,
+      });
+      await sent.edit(
+        embed
+          .setAuthor(
+            `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
+            msg.author.displayAvatarURL()
+          )
+          .setDescription(desc + (await this.renderInventory(newCards)))
+      );
       await r.users.remove(msg.author);
     });
     collector.on("end", async () => {
