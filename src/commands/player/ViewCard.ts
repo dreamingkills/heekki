@@ -10,6 +10,7 @@ import { ShopService } from "../../database/service/ShopService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["card", "show", "view"];
@@ -22,28 +23,14 @@ export class Command extends BaseCommand {
         identifier: this.options[0]?.split("#")[0],
         serial: parseInt(this.options[0]?.split("#")[1]),
       };
-      if (isNaN(reference.serial)) {
-        await msg.channel.send(
-          `${this.config.discord.emoji.cross.full} That isn't a valid card reference.`
-        );
-        return;
-      }
+      if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
       card = await CardService.getCardDataFromReference(reference);
-      if (card.ownerId !== msg.author.id) {
-        await msg.channel.send(
-          `${this.config.discord.emoji.cross.full} That card doesn't belong to you.`
-        );
-        return;
-      }
+      if (card.ownerId !== msg.author.id)
+        throw new error.NotYourCardError(reference);
     }
 
     const pack = await ShopService.getPackById(card.packId);
     const image = await CardService.checkCacheForCard(card);
-    /*const imageData = await CardService.getImageDataFromCard(card);
-    const image = await CardService.generateCardImageFromUserCard(
-      card,
-      imageData
-    );*/
 
     let embed = new MessageEmbed()
       .setAuthor(
