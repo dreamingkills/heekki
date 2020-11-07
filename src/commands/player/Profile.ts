@@ -73,14 +73,14 @@ export class Command extends BaseCommand {
     ctx.fillText(userQuery.reputation.toLocaleString(), 170, 460);
 
     // Draw badges
-    if (executor.badges) {
-      for (let badge of executor.badges) {
+    if (userQuery.badges) {
+      for (let badge of userQuery.badges) {
         const icon = await canvas.loadImage(
           `./src/assets/badges/${badge.emoji}`
         );
         ctx.drawImage(
           icon,
-          70 + 128 * executor.badges.indexOf(badge),
+          70 + 128 * userQuery.badges.indexOf(badge),
           563,
           120,
           120
