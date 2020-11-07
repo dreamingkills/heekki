@@ -58,7 +58,7 @@ export class RestrictedUserError extends ClientError {
 export class NotEnoughCoinsError extends ClientError {
   name = "NotEnoughCoinsError";
   constructor(has: number, needed: number) {
-    super("You don't have enough coins to buy that!");
+    super("You don't have enough cash to buy that!");
   }
 }
 export class NotEnoughHeartsError extends ClientError {
@@ -361,5 +361,29 @@ export class InvalidFishError extends ClientError {
   name = "InvalidFishError";
   constructor() {
     super(`That fish does not exist.`);
+  }
+}
+
+/*
+    Auction Errors
+                    */
+export class InvalidAuctionError extends ClientError {
+  name = "InvalidAuctionError";
+  constructor() {
+    super(`Please enter a valid string to use as an auction name.`);
+  }
+}
+export class NoAuctionError extends ClientError {
+  name = "NoAuctionError";
+  constructor() {
+    super(`There isn't an auction going on.`);
+  }
+}
+export class OutbidError extends ClientError {
+  name = "OutbidError";
+  constructor(bid: number) {
+    super(
+      `You have been outbid. The current bid is **${bid.toLocaleString()}**.\nYou must bid at least 100 cash higher than the previous bid.`
+    );
   }
 }

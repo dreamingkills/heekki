@@ -184,6 +184,20 @@ export class Command extends BaseCommand {
       }
 
       // Commands
+      case "auc":
+      case "bid":
+      case "auction": {
+        header = "Auctions";
+        description =
+          `**Auctions** are held from time to time in the official Heekki server. It's not just cards that can be auctioned, so keep an eye out!` +
+          `\nBids must be at least ${this.config.discord.emoji.cash.full} **100** greater than the previous bid.\n` +
+          `\n**Subcommands**` +
+          `\n\`\`\`` +
+          `\n!auction - shows active auction and top bid` +
+          `\n!bid <amount> - bids on the active auction` +
+          `\n\`\`\``;
+        break;
+      }
       case "j":
       case "jumble": {
         header = "Command - Jumble";
