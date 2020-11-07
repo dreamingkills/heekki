@@ -110,7 +110,7 @@ export class Command extends BaseCommand {
           `${this.config.discord.emoji.cash.full} **Cash** is used to buy cards both from the Marketplace and from packs.\n` +
           `\n__**How do I gain cash?**__` +
           `\n**1)** Use \`!mission\` on a card every 45 minutes` +
-          `\n**2)** Go \`!fishing\` (use \`!fish sell\`)` +
+          `\n**2)** Play minigames - \`!jumble\`, \`!memory\`` +
           `\n**3)** \`!sell\` your cards on the Marketplace`;
         break;
       }
