@@ -235,8 +235,7 @@ export class Command extends BaseCommand {
 
         if (pageLimit > 2) await sent.react(`⏪`);
         if (pageLimit > 1) await sent.react(`◀️`);
-        if (this.permissions.MANAGE_MESSAGES)
-          await sent.react(`754832389620105276`);
+        await sent.react(`754832389620105276`);
         if (pageLimit > 1) await sent.react(`▶️`);
         if (pageLimit > 2) await sent.react(`⏩`);
 
@@ -255,38 +254,26 @@ export class Command extends BaseCommand {
 
         const collector = sent.createReactionCollector(filter, { time: 60000 });
         collector.on("collect", async (r) => {
-          let newPage = 0;
-          if (r.emoji.name === "⏪" && page !== 1) newPage = 1;
-          if (r.emoji.name === "◀️" && page !== 1) newPage = page - 1;
-          if (r.emoji.name === "▶️" && page !== pageLimit) newPage = page + 1;
-          if (r.emoji.name === "⏩" && page !== pageLimit) newPage = pageLimit;
-          if (r.emoji.name === "delete" && this.permissions.MANAGE_MESSAGES) {
-            (<TextChannel>msg.channel).bulkDelete([msg, sent]);
-            return;
-          }
+          if (r.emoji.name === "⏪" && page !== 1) page = 1;
+          if (r.emoji.name === "◀️" && page !== 1) page--;
+          if (r.emoji.name === "▶️" && page !== pageLimit) page++;
+          if (r.emoji.name === "⏩" && page !== pageLimit) page = pageLimit;
+          if (r.emoji.name === "delete") return await sent.delete();
 
-          if (this.permissions.MANAGE_MESSAGES) r.users.remove(msg.author);
-
-          if (newPage !== 0 && newPage !== page) {
-            const newCards = await MarketService.getMarket({
-              ...options,
-              limit: 15,
-              page: newPage,
-            });
-            await sent.edit(
-              await this.renderMarket(newCards, newPage, pageLimit, msg.author)
-            );
-            page = newPage;
-          }
+          const newCards = await MarketService.getMarket({
+            ...options,
+            limit: 15,
+            page: page,
+          });
+          await sent.edit(
+            await this.renderMarket(newCards, page, pageLimit, msg.author)
+          );
+          if (this.permissions.MANAGE_MESSAGES)
+            await r.users.remove(msg.author);
         });
 
         collector.on("end", async () => {
-          if (
-            !sent.deleted &&
-            msg.guild
-              ?.member(msg.client.user!)
-              ?.hasPermission("MANAGE_MESSAGES")
-          )
+          if (!sent.deleted && this.permissions.MANAGE_MESSAGES)
             await sent.reactions.removeAll();
         });
         return;
