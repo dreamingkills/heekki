@@ -39,18 +39,20 @@ export class Command extends BaseCommand {
       }
     );
     collect.on("collect", async (m: Message) => {
-      if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
-        //const xp = chance.integer({ min: 2, max: 6 });
-        //PlayerService.addXp(executor, xp);
-        await triviaMessage.edit(
-          `:tada: **Correct!**` //\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
-        );
+      if (!collect.ended) {
+        if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
+          //const xp = chance.integer({ min: 2, max: 6 });
+          //PlayerService.addXp(executor, xp);
+          await triviaMessage.edit(
+            `:tada: **Correct!**` //\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
+          );
 
-        //await PlayerService.addCoinsToProfile(executor, profit);
-        collect.stop("correct");
-        if (this.permissions.ADD_REACTIONS)
-          await msg.react(this.config.discord.emoji.check.id);
-      } else await m.react(this.config.discord.emoji.cross.id);
+          //await PlayerService.addCoinsToProfile(executor, profit);
+          collect.stop("correct");
+          if (this.permissions.ADD_REACTIONS)
+            await msg.react(this.config.discord.emoji.check.id);
+        } else await m.react(this.config.discord.emoji.cross.id);
+      }
     });
     collect.on("end", async (collected, reason) => {
       ConcurrencyService.unsetConcurrency(msg.author.id);
