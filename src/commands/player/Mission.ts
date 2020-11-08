@@ -41,24 +41,15 @@ export class Command extends BaseCommand {
     );
     let selected;
     if (!success) {
-      selected = chance.pickone(
-        mission.missions.filter((m) => {
-          return m.baseReward === 0;
-        })
-      );
-    } else
-      selected = chance.pickone(
-        mission.missions.filter((m) => {
-          return m.baseReward > 0;
-        })
-      );
+      selected = chance.pickone(mission.success);
+    } else selected = chance.pickone(mission.failure);
 
     const multiplier = 1 + (level.level / 100) * 0.3 + card.stars * 0.2;
     const profit = Math.floor(
       chance.integer({
-        min: selected.baseReward - selected.baseReward / 10,
-        max: selected.baseReward + selected.baseReward / 10,
-      }) * (multiplier > 2.5 ? 2.5 : multiplier)
+        min: 350,
+        max: 430,
+      }) * (multiplier > 2.2 ? 2.2 : multiplier)
     );
 
     await StatsService.missionComplete(executor, profit === 0 ? false : true);
@@ -75,7 +66,7 @@ export class Command extends BaseCommand {
           profit === 0
             ? `${this.config.discord.emoji.cross.full}`
             : this.config.discord.emoji.check.full
-        } ${selected.text.replace(
+        } ${selected.replace(
           `%M`,
           `**${card.member.replace(/ *\([^)]*\) * /g, "")}**`
         )}\n${
