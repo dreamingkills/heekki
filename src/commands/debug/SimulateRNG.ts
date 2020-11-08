@@ -26,7 +26,7 @@ export class Command extends BaseCommand {
     for (let i = 0; i < loopTime; i++) {
       const starCount = chance.weighted(
         [1, 2, 3, 4, 5, 6],
-        [50, 30, 20, 11.5, 3.8, 1.11]
+        [62.3, 43.7, 28.7, 11.8, 2.8, 0.44]
       );
       rolls[`num${starCount}` as keyof typeof rolls] += 1;
     }
