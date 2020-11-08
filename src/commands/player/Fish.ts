@@ -77,7 +77,7 @@ export class Command extends BaseCommand {
     }
     if (this.options[0]?.toLowerCase() === "trophy") {
       if (executor.coins < 10000)
-        throw new error.NotEnoughCoinsError(executor.coins, 10000);
+        throw new error.NotEnoughCoinsError();
       const fishId = this.options[1];
       if (!fishId) {
         msg.channel.send(

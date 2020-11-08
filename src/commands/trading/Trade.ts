@@ -201,7 +201,7 @@ export class Command extends BaseCommand {
       }
     });
 
-    collector.on("end", async (collected, reason: string) => {
+    collector.on("end", async (_, reason: string) => {
       if (reason === "time") {
         await sent.edit(
           panel.setDescription(
@@ -234,7 +234,7 @@ export class Command extends BaseCommand {
           (u.id === msg.author.id || u.id === tradeeUser.id);
         const conf = sent.createReactionCollector(rxnFilter, { time: 15000 });
         let [senderConfirmed, tradeeConfirmed] = [false, false];
-        conf.on("collect", async (r: MessageReaction, u: User) => {
+        conf.on("collect", async (_: MessageReaction, u: User) => {
           if (u.id === msg.author.id) senderConfirmed = true;
           if (u.id === tradeeUser.id) tradeeConfirmed = true;
 
@@ -255,7 +255,7 @@ export class Command extends BaseCommand {
             return conf.stop("ok");
           }
         });
-        conf.on("end", async (collected, reason: string) => {
+        conf.on("end", async (_, reason: string) => {
           if (reason !== "time") return;
           this.currentlyTrading.delete(msg.author.id);
           this.currentlyTrading.delete(tradeeUser.id);

@@ -1,5 +1,4 @@
 import { Message, MessageEmbed } from "discord.js";
-import { PlayerService } from "../../database/service/PlayerService";
 import moment from "moment";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";

@@ -4,10 +4,8 @@ import { BaseCommand } from "../structures/command/Command";
 import stripAnsi from "strip-ansi";
 import moment from "moment";
 import version from "../version.json";
-import { ClientError } from "../structures/Error";
 import "fs";
 import { createWriteStream } from "fs";
-import through = require("through2");
 
 export class Logger {
   static stream = createWriteStream("./error-file.txt", { flags: "a" });

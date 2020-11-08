@@ -76,7 +76,7 @@ export class Command extends BaseCommand {
           collector.stop("success");
       });
 
-      collector.on("end", async (c, reason) => {
+      collector.on("end", async (_, reason) => {
         try {
           if (reason === "time") {
             await sent.edit(

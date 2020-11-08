@@ -2,11 +2,10 @@ import { Message, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { StatsService } from "../../database/service/StatsService";
 import { BaseCommand } from "../../structures/command/Command";
-import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["top"];
-  async exec(msg: Message, executor: Profile) {
+  async exec(msg: Message) {
     let embed = new MessageEmbed();
     let description = "";
     switch (this.options[0]?.toLowerCase()) {

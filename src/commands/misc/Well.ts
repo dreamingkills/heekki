@@ -4,8 +4,6 @@ import { WellService } from "../../database/service/WellService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
-import { profile } from "console";
-import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
@@ -16,8 +14,7 @@ export class Command extends BaseCommand {
       case "give": {
         const amount = parseInt(this.options[1]);
         if (isNaN(amount) || amount <= 0) throw new error.NotANumberError();
-        if (amount > executor.coins)
-          throw new error.NotEnoughCoinsError(executor.coins, amount);
+        if (amount > executor.coins) throw new error.NotEnoughCoinsError();
 
         const confirmation = await msg.channel.send(
           `:warning: Really throw **${amount}** ${this.config.discord.emoji.cash.full} in the well?\nThis action is **irreversible**! React with ${this.config.discord.emoji.check.full} to confirm.`
@@ -42,7 +39,7 @@ export class Command extends BaseCommand {
             `${this.config.discord.emoji.check.full} Threw **${amount}** ${this.config.discord.emoji.cash.full} in the well.`
           );
         });
-        reactions.on("end", async (reaction, reason: string) => {
+        reactions.on("end", async (_, reason: string) => {
           if (reason !== "limit") {
             await confirmation.edit(
               `${this.config.discord.emoji.cross.full} You didn't react in time.`

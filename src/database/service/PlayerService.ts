@@ -1,9 +1,7 @@
-import * as error from "../../structures/Error";
 import { PlayerFetch } from "../sql/player/PlayerFetch";
 import { Profile } from "../../structures/player/Profile";
 import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { UserCard } from "../../structures/player/UserCard";
-import Chance from "chance";
 import { Badge } from "../../structures/player/Badge";
 import { Fish } from "../../structures/game/Fish";
 

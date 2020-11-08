@@ -7,6 +7,7 @@ import { PlayerService } from "../database/service/PlayerService";
 import * as error from "../structures/Error";
 import { Logger } from "../helpers/Logger";
 import { ConcurrencyService } from "./Concurrency";
+import { Bot } from "../structures/client/Bot";
 
 export class CommandManager {
   commands: BaseCommand[] = [];
@@ -45,10 +46,10 @@ export class CommandManager {
     }
   }
 
-  async handle(msg: Message, cfg: typeof config): Promise<void> {
+  async handle(msg: Message, cfg: typeof config, bot: Bot): Promise<void> {
     let cmd = this.getCommandByName(
       msg.content.toLowerCase(),
-      config.discord.prefix
+      bot.getPrefix(msg.guild?.id)
     );
     if (!cmd) return;
     if (!msg.guild?.member(msg.client.user!)?.hasPermission("SEND_MESSAGES"))
@@ -83,7 +84,7 @@ export class CommandManager {
 
       let err;
 
-      await cmd.run(msg, profile, cfg).catch(async (e) => {
+      await cmd.run(msg, profile, cfg, bot).catch(async (e) => {
         err = e;
         if (e.isClientFacing) {
           await msg.channel.send(

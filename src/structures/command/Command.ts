@@ -1,6 +1,7 @@
 import { Message } from "discord.js";
 import { Profile } from "../player/Profile";
 import config from "../../../config.json";
+import { Bot } from "../client/Bot";
 
 export interface Command {
   names: string[];
@@ -28,15 +29,19 @@ export abstract class BaseCommand implements Command {
   };
   flags: { [key: string]: string } = {};
   config!: typeof config;
+  bot!: Bot;
 
-  abstract async exec(msg: Message, executor: Profile): Promise<void>;
+  abstract exec(msg: Message, executor: Profile): Promise<void>;
 
   public async run(
     msg: Message,
     executor: Profile,
-    cfg: typeof config
+    cfg: typeof config,
+    bot: Bot
   ): Promise<void> {
     this.config = cfg;
+    this.bot = bot;
+    
     this.options = msg.content
       .split(" ")
       .slice(1)

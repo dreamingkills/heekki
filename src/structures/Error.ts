@@ -57,13 +57,13 @@ export class RestrictedUserError extends ClientError {
 }
 export class NotEnoughCoinsError extends ClientError {
   name = "NotEnoughCoinsError";
-  constructor(has: number, needed: number) {
+  constructor() {
     super("You don't have enough cash to buy that!");
   }
 }
 export class NotEnoughHeartsError extends ClientError {
   name = "NotEnoughHeartsError";
-  constructor(has: number, needed: number) {
+  constructor() {
     super("You don't have enough hearts to do that!");
   }
 }

@@ -2,15 +2,13 @@ import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
-import { Profile } from "../../structures/player/Profile";
-import * as error from "../../structures/Error";
 import { MarketService } from "../../database/service/MarketService";
 import { UserCard } from "../../structures/player/UserCard";
 
 export class Command extends BaseCommand {
   names: string[] = ["forfeit", "ff"];
   disabled: boolean = true;
-  async exec(msg: Message, executor: Profile) {
+  async exec(msg: Message) {
     const referencesRaw = this.options
       .filter((p) => p.includes("#"))
       .slice(0, 9);
@@ -80,7 +78,7 @@ export class Command extends BaseCommand {
       );
       collector.stop();
     });
-    collector.on("end", async (c, reason) => {
+    collector.on("end", async (_, reason) => {
       if (reason === "time") {
         await conf.edit(
           `${this.config.discord.emoji.cross.full} You did not react in time, so the forfeiture has been cancelled.`

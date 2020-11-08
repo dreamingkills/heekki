@@ -4,7 +4,7 @@ import { promisify } from "util";
 import sqlstring from "sqlstring";
 
 export class DB {
-  public static query: <T>(
+  public static query: (
     arg1: string | QueryOptions,
     values?: any
   ) => Promise<unknown>;

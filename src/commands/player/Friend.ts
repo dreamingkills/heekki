@@ -3,7 +3,6 @@ import {
   Message,
   MessageEmbed,
   MessageReaction,
-  TextChannel,
   User,
 } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";

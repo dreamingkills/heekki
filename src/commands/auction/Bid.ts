@@ -24,7 +24,7 @@ export class Command extends BaseCommand {
       bid = baseBid;
     }
     if (bid > executor.coins)
-      throw new error.NotEnoughCoinsError(executor.coins, bid);
+      throw new error.NotEnoughCoinsError();
 
     const currentBid = AuctionService.getTopBid();
     if (currentBid && currentBid.bid + 100 > bid)

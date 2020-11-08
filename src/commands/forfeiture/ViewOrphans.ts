@@ -4,7 +4,6 @@ import {
   MessageReaction,
   User,
   EmbedField,
-  TextChannel,
 } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { UserCard } from "../../structures/player/UserCard";
