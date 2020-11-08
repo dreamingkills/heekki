@@ -39,7 +39,7 @@ export class Command extends BaseCommand {
     const randomCard = chance.weighted(cardList, chances);
     const starCount = chance.weighted(
       [1, 2, 3, 4, 5, 6],
-      [52.3, 31.7, 24.7, 13.1, 3.4, 0.54]
+      [59.3, 36.7, 25.7, 13.8, 2.8, 0.47]
     );
 
     const newCard = await UserCardService.createNewUserCard(
