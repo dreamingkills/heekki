@@ -1,5 +1,4 @@
 import { Message } from "discord.js";
-import { AdminService } from "../../database/service/AdminService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 

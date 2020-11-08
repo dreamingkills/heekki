@@ -1,7 +1,6 @@
 import { MarketFetch } from "../sql/market/MarketFetch";
 import { UserCard } from "../../structures/player/UserCard";
 import { MarketUpdate } from "../sql/market/MarketUpdate";
-import { Profile } from "../../structures/player/Profile";
 
 export class MarketService {
   public static async getMarket(

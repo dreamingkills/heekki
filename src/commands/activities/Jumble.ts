@@ -73,7 +73,7 @@ export class Command extends BaseCommand {
         await m.react(this.config.discord.emoji.cross.id);
       }
     });
-    collector.on("end", async (collected, reason) => {
+    collector.on("end", async (_, reason) => {
       if (reason === "time") {
         const failedEmbed = new MessageEmbed()
           .setAuthor(

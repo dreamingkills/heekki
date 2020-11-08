@@ -1,6 +1,5 @@
 import { StatsUpdate } from "../sql/stats/StatsUpdate";
 import { StatsFetch } from "../sql/stats/StatsFetch";
-import { Stats } from "../../structures/game/Stats";
 import { Profile } from "../../structures/player/Profile";
 
 export class StatsService {

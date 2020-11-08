@@ -1,7 +1,6 @@
 import { UserCard } from "../../structures/player/UserCard";
 import { CardUpdate } from "../sql/card/CardUpdate";
 import { PlayerService } from "./PlayerService";
-import * as error from "../../structures/Error";
 import { MarketService } from "./MarketService";
 import { Card } from "../../structures/card/Card";
 import { Profile } from "../../structures/player/Profile";
@@ -43,7 +42,7 @@ export class UserCardService {
     return await CardUpdate.toggleCardAsFavorite(card.userCardId);
   }
 
-  public static async forfeitCard(user: string, card: UserCard): Promise<void> {
+  public static async forfeitCard(_: string, card: UserCard): Promise<void> {
     return await CardUpdate.forfeitCard(card);
   }
 

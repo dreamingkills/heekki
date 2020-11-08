@@ -8,7 +8,7 @@ export class SettingUpdate extends DBClass {
     name: Settings,
     value: string
   ): Promise<Setting> {
-    await DB.query<any[]>(
+    await DB.query(
       "INSERT INTO setting (guild_id, name, value) values (?, ?, ?)",
       [guild_id, name, value]
     );

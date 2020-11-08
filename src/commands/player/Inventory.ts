@@ -1,10 +1,4 @@
-import {
-  Message,
-  MessageReaction,
-  User,
-  MessageEmbed,
-  TextChannel,
-} from "discord.js";
+import { Message, MessageReaction, User, MessageEmbed } from "discord.js";
 import { PlayerService } from "../../database/service/PlayerService";
 import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";

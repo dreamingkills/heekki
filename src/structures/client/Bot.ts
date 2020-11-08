@@ -8,10 +8,8 @@ import {
   MessageEmbed,
   TextChannel,
 } from "discord.js";
-import { DB } from "../../database/index";
 import { Chance } from "chance";
 import { PlayerService } from "../../database/service/PlayerService";
-import { HeartSpawner } from "../../helpers/HeartSpawner";
 import version from "../../version.json";
 import { SettingService } from "../../database/service/SettingService";
 

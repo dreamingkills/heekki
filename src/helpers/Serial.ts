@@ -19,7 +19,7 @@ export class SerialGenerator {
       } finally {
         const profile = await PlayerService.getProfileByDiscordId(discordId);
         if (profile.coins < price && !free) {
-          throw new error.NotEnoughCoinsError(profile.coins, price);
+          throw new error.NotEnoughCoinsError();
         } else if (!free) {
           await PlayerService.removeCoinsFromProfile(profile, price);
         }

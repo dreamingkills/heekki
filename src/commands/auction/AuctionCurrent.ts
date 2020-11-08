@@ -1,12 +1,10 @@
-import { Message, TextChannel } from "discord.js";
+import { Message } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
-import { Profile } from "../../structures/player/Profile";
-import * as error from "../../structures/Error";
 import { AuctionService } from "../../helpers/Auction";
 
 export class Command extends BaseCommand {
   names: string[] = ["auction", "auc"];
-  async exec(msg: Message, executor: Profile) {
+  async exec(msg: Message) {
     const auction = AuctionService.getAuction();
     if (!auction) {
       await msg.channel.send(

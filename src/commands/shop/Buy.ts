@@ -6,7 +6,6 @@ import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import Chance from "chance";
 import { UserCardService } from "../../database/service/UserCardService";
-import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
   names: string[] = ["buypack", "bp"];

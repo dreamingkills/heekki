@@ -1,5 +1,4 @@
 import { DBClass, DB } from "../..";
-import { PlayerService } from "../../service/PlayerService";
 
 export class FriendUpdate extends DBClass {
   public static async sendFriendRequest(

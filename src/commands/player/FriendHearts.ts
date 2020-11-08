@@ -2,7 +2,6 @@ import { Message } from "discord.js";
 import { FriendService } from "../../database/service/FriendService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
-import Chance from "chance";
 import { PlayerService } from "../../database/service/PlayerService";
 import * as error from "../../structures/Error";
 
@@ -28,7 +27,7 @@ export class Command extends BaseCommand {
 
     await FriendService.sendHearts(executor, friends);
     await PlayerService.setLastHeartSend(executor, now);
-    const chance = new Chance();
+    // const chance = new Chance();
     //const xp = chance.integer({ min: 40, max: 85 });
     //PlayerService.addXp(executor, xp);
 

@@ -1,5 +1,5 @@
 import Chance from "chance";
-import { MessageEmbed, MessageReaction, TextChannel, User } from "discord.js";
+import { MessageEmbed, TextChannel, User } from "discord.js";
 import { PlayerService } from "../database/service/PlayerService";
 import config from "../../config.json";
 
@@ -20,19 +20,19 @@ export class HeartSpawner {
     const sent = await spawnChannel.send(embed);
     await sent.react(config.discord.emoji.hearts.id);
 
-    const filter = (reaction: MessageReaction) => true;
+    const filter = () => true;
     const collector = sent.createReactionCollector(filter, {
       time: 3000,
       dispose: true,
     });
     let users: User[] = [];
 
-    collector.on("collect", async (r, u) => {
+    collector.on("collect", async (_, u) => {
       console.log("collected");
       users.push(u);
     });
 
-    collector.on("end", async (c, r) => {
+    collector.on("end", async () => {
       const perUser = Math.floor(random / users.length);
       console.log(users);
       for (let user of users) {

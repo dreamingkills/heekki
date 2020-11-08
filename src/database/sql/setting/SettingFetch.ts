@@ -10,7 +10,7 @@ export class SettingFetch extends DBClass {
     guildID: string,
     settingName: Settings
   ): Promise<Setting | undefined> {
-    let query = (await DB.query<any[]>(
+    let query = (await DB.query(
       `
     SELECT *
     FROM setting
@@ -26,7 +26,7 @@ export class SettingFetch extends DBClass {
   }
 
   public static async listSetting(setting: Settings): Promise<Setting[]> {
-    let query = (await DB.query<any[]>(
+    let query = (await DB.query(
       `
     SELECT *
     FROM setting

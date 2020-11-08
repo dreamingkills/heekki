@@ -25,7 +25,7 @@ export class Command extends BaseCommand {
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
     if (amount > executor.hearts)
-      throw new error.NotEnoughHeartsError(executor.hearts, amount);
+      throw new error.NotEnoughHeartsError();
 
     await CardService.upgradeCard(amount, card);
     await PlayerService.removeHeartsFromProfile(executor, amount);

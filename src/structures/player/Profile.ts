@@ -1,7 +1,5 @@
-import { UserCardService } from "../../database/service/UserCardService";
 import { ProfileInterface } from "../interface/ProfileInterface";
 import { Badge } from "./Badge";
-import { UserCard } from "./UserCard";
 
 export class Profile {
   discord_id: string;

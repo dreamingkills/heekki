@@ -1,13 +1,12 @@
 import { Message } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { BaseCommand } from "../../structures/command/Command";
-import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
 import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends BaseCommand {
   names: string[] = ["prestige"];
-  async exec(msg: Message, executor: Profile) {
+  async exec(msg: Message) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),

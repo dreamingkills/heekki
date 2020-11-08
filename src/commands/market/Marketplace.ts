@@ -1,11 +1,4 @@
-import {
-  EmbedField,
-  Message,
-  MessageEmbed,
-  MessageReaction,
-  TextChannel,
-  User,
-} from "discord.js";
+import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
 import { PlayerService } from "../../database/service/PlayerService";
@@ -14,7 +7,6 @@ import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import { UserCard } from "../../structures/player/UserCard";
-import { Chance } from "chance";
 import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
@@ -142,7 +134,7 @@ export class Command extends BaseCommand {
         const forSale = await MarketService.cardIsOnMarketplace(card);
         if (!forSale.forSale) throw new error.CardNotForSaleError(reference);
         if (forSale.price > executor.coins)
-          throw new error.NotEnoughCoinsError(executor.coins, forSale.price);
+          throw new error.NotEnoughCoinsError();
 
         const conf = await msg.channel.send(
           `:warning: Are you sure you want to purchase **${card.abbreviation}#${card.serialNumber}** for ${this.config.discord.emoji.cash.full} **${forSale.price}**?\nThis card has :star: **${card.stars}** and ${this.config.discord.emoji.hearts.full} **${card.hearts}**. React with ${this.config.discord.emoji.check.full} to confirm.`
@@ -178,7 +170,7 @@ export class Command extends BaseCommand {
           await PlayerService.addCoinsToProfile(sellerProfile, forSale.price);
           await PlayerService.removeCoinsFromProfile(executor, forSale.price);
 
-          const chance = new Chance();
+          // const chance = new Chance();
           //const xp = chance.integer({ min: 40, max: 71 });
           //PlayerService.addXp(sellerProfile, xp);
 
@@ -205,7 +197,7 @@ export class Command extends BaseCommand {
           );
           return;
         });
-        reactions.on("end", async (collected, reason) => {
+        reactions.on("end", async (_, reason) => {
           if (reason !== "time") return;
           await conf.edit(
             `${this.config.discord.emoji.cross.full} You did not react in time, so the purchase has been cancelled.`

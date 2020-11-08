@@ -1,6 +1,4 @@
 import { DBClass, DB } from "../..";
-import { Stats } from "../../../structures/game/Stats";
-import { Profile } from "../../../structures/player/Profile";
 
 export class StatsFetch extends DBClass {
   public static async getNumberOfCards(stars?: number): Promise<number> {

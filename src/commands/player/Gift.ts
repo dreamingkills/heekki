@@ -5,11 +5,10 @@ import { MarketService } from "../../database/service/MarketService";
 import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
-import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["gift"];
-  async exec(msg: Message, executor: Profile) {
+  async exec(msg: Message) {
     const references = this.options.filter((p) => p.includes("#"));
     const cardList = await Promise.all(
       references.map(async (p) => {
@@ -97,7 +96,7 @@ export class Command extends BaseCommand {
         `${this.config.discord.emoji.check.full} Gifted **${validCards.length}** cards to **${mention.tag}**!`
       );
     });
-    reactions.on("end", async (reaction, reason: string) => {
+    reactions.on("end", async (_, reason: string) => {
       if (reason !== "limit") {
         await confirmation.edit(
           `${this.config.discord.emoji.cross.full} You didn't react in time!`

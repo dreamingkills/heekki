@@ -28,7 +28,6 @@ export class Command extends BaseCommand {
 
     const discordUser = await msg.client.users.fetch(userQuery.discord_id);
     if (!discordUser) throw new error.InvalidMemberError();
-    const badges = await PlayerService.getBadgesByProfile(userQuery);
     const cardCount = await PlayerService.getCardCountByProfile(userQuery);
 
     const bg = await jimp.read(`./src/assets/profile_blank.png`);

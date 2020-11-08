@@ -76,7 +76,7 @@ export class Command extends BaseCommand {
           reaction.emoji.id === "753019858932727868" &&
           user.id === msg.author.id
       );
-      collector.on("collect", (r) =>
+      collector.on("collect", (_) =>
         (<TextChannel>msg.channel).bulkDelete([sent, msg])
       );
     }
