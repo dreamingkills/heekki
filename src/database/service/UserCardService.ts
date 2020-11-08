@@ -63,7 +63,7 @@ export class UserCardService {
     return numberForfeited;
   }
 
-  public static async incrementCardStars(card: UserCard): Promise<void> {
+  public static async incrementCardStars(card: UserCard): Promise<UserCard> {
     return await CardUpdate.incrementCardStars(card);
   }
 

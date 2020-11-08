@@ -24,14 +24,13 @@ export class Command extends BaseCommand {
 
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
-    if (amount > executor.hearts)
-      throw new error.NotEnoughHeartsError();
+    if (amount > executor.hearts) throw new error.NotEnoughHeartsError();
 
-    await CardService.upgradeCard(amount, card);
+    const upgraded = await CardService.upgradeCard(amount, card);
     await PlayerService.removeHeartsFromProfile(executor, amount);
 
     let beforeLevel = CardService.heartsToLevel(card.hearts).level;
-    let afterLevel = CardService.heartsToLevel(card.hearts + amount).level;
+    let afterLevel = CardService.heartsToLevel(upgraded.hearts).level;
 
     let embed = new MessageEmbed()
       .setAuthor(`Upgrade | ${msg.author.tag}`, msg.author.displayAvatarURL())
@@ -42,14 +41,16 @@ export class Command extends BaseCommand {
             : ``
         } Successfully added ${this.config.discord.emoji.hearts.full} **${
           this.options[1]
-        }** to **${card.abbreviation}#${
-          card.serialNumber
+        }** to **${upgraded.abbreviation}#${
+          upgraded.serialNumber
         }**.\nYour card now has ${this.config.discord.emoji.hearts.full} **${
-          card.hearts + amount
+          upgraded.hearts
         }**.`
       )
       .setFooter(`You now have ${executor.hearts - amount} hearts.`)
       .setColor("#FFAACC");
     await msg.channel.send(embed);
+    await CardService.updateCardCache(upgraded);
+    return;
   }
 }

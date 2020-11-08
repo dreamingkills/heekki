@@ -25,15 +25,12 @@ export class Command extends BaseCommand {
       );
 
     await UserCardService.removeHeartsFromCard(card, 14700);
-    await UserCardService.incrementCardStars(card);
+    const newCard = await UserCardService.incrementCardStars(card);
 
     await msg.channel.send(
-      `${
-        this.config.discord.emoji.check.full
-      } Prestiged **${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }**!\nIt now has **${card.stars + 1}** :star:.`
+      `${this.config.discord.emoji.check.full} Prestiged **${newCard.abbreviation}#${newCard.serialNumber}**!\nIt now has **${newCard.stars}** :star:.`
     );
+    await CardService.updateCardCache(newCard);
     return;
   }
 }

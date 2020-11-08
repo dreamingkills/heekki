@@ -46,11 +46,8 @@ export class CardService {
   public static async upgradeCard(
     amount: number,
     card: UserCard
-  ): Promise<void> {
-    const newCard = await CardUpdate.addHeartsToCard(card, amount);
-
-    await this.updateCardCache(newCard);
-    return;
+  ): Promise<UserCard> {
+    return await CardUpdate.addHeartsToCard(card, amount);
   }
 
   public static async getImageDataFromCard(card: UserCard): Promise<ImageData> {
