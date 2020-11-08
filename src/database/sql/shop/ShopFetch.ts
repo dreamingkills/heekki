@@ -3,6 +3,7 @@ import { DBClass } from "../../index";
 import * as error from "../../../structures/Error";
 import { ShopItem } from "../../../structures/shop/ShopItem";
 import { Pack } from "../../../structures/card/Pack";
+import { ShopItemInterface } from "../../../structures/interface/ShopItemInterface";
 
 export class ShopFetch extends DBClass {
   public static async getPackByFuzzySearch(name: string): Promise<ShopItem> {
@@ -50,6 +51,36 @@ export class ShopFetch extends DBClass {
       flavor_text: string;
     }[];
     return new Pack(query[0]);
+  }
+
+  public static async getNumberOfShopItems(active: boolean): Promise<number> {
+    const query = (await DB.query(
+      `SELECT COUNT(*) as count FROM shop WHERE active=?;`,
+      [active]
+    )) as { count: number }[];
+    return query[0].count;
+  }
+
+  public static async getActiveShopItems(page: number): Promise<ShopItem[]> {
+    const query = (await DB.query(
+      `SELECT 
+        shop.title AS keyword,
+        price,
+        active,
+        pack.title,
+        pack.credit,
+        pack.id,
+        pack.cover_url,
+        pack.flavor_text
+      FROM shop
+      LEFT JOIN pack
+      ON pack.id=shop.pack_id
+      WHERE active=1
+      LIMIT 6
+      OFFSET ?;`,
+      [6 * page - 6]
+    )) as ShopItemInterface[];
+    return query.map((item) => new ShopItem(item));
   }
 
   public static async getAllShopItems(active?: boolean): Promise<ShopItem[]> {
