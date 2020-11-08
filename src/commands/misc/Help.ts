@@ -40,6 +40,7 @@ export class Command extends BaseCommand {
           `\n${prefix}help xp` +
           `\n${prefix}help marketplace` +
           `\n${prefix}help trading` +
+          `\n${prefix}help prefix` +
           `\n\`\`\`` +
           `\nYou can use \`${prefix}help topics\` to see a complete list.` +
           `\nYou can use \`${prefix}help commands\` to see a command list.\n` +
@@ -55,7 +56,7 @@ export class Command extends BaseCommand {
         description =
           `Badges are given to users who have accomplished something notable on Heekki.\n` +
           `\n**Badge List**` +
-          `\n:tools: **Developer** (be RTFL)` +
+          `\n:tools: **Developer** (write code for Heekki)` +
           `\n:zap: **Beta Tester** (play before 200906)` +
           `\n:100: **First 100 Players**` +
           `\n:art: **Artist** (make a card pack for Heekki)` +
@@ -185,6 +186,16 @@ export class Command extends BaseCommand {
       }
 
       // Commands
+      case "prefix":
+      case "settings": {
+        header = "Prefix";
+        description =
+          `Server administrators change the **prefix** of Heekki by using \`${prefix}settings prefix <prefix here>\`\n` +
+          `\n**Example**` +
+          `\n\`${prefix}settings prefix !!\`` +
+          `\n\`${prefix}settings prefix ?\``;
+        break;
+      }
       case "auc":
       case "bid":
       case "auction": {
