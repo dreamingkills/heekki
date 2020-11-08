@@ -13,11 +13,13 @@ import { Chance } from "chance";
 import { PlayerService } from "../../database/service/PlayerService";
 import { HeartSpawner } from "../../helpers/HeartSpawner";
 import version from "../../version.json";
+import { SettingService } from "../../database/service/SettingService";
 
 export class Bot extends Client {
   public config: Object = config;
   public cmdMan: CommandManager = new CommandManager();
   public chance: Chance.Chance = new Chance();
+  private prefixes: { [guildID: string]: string } = {};
 
   public async updateStatus() {
     const supporters = await PlayerService.getSupporters();
@@ -31,6 +33,7 @@ export class Bot extends Client {
   }
 
   public async init() {
+    await this.cachePrefixes();
     await this.cmdMan.init();
 
     this.on("ready", async () => {
@@ -49,7 +52,7 @@ export class Bot extends Client {
         return;
       if (msg.channel.type == "text") {
         await this.users.fetch(msg.author.id);
-        this.cmdMan.handle(msg, config);
+        this.cmdMan.handle(msg, config, this);
       }
     });
 
@@ -83,5 +86,22 @@ export class Bot extends Client {
       console.error(`Unhandled promise rejection: `, error);
     });
     this.login(config.discord.token);
+  }
+
+  public getPrefix(guildID?: string) {
+    if (!guildID) return config.discord.prefix;
+    return this.prefixes[guildID] ?? config.discord.prefix;
+  }
+
+  public setPrefix(guildID: string, prefix: string) {
+    this.prefixes[guildID] = prefix;
+  }
+
+  public async cachePrefixes() {
+    let prefixes = await SettingService.listPrefixes();
+
+    for (let prefix of prefixes) {
+      this.setPrefix(prefix.guildID, prefix.value);
+    }
   }
 }

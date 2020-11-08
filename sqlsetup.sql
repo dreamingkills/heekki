@@ -283,3 +283,12 @@ CREATE TABLE supporter
 );
 
 ALTER TABLE user_profile ADD COLUMN use_card INT(11) DEFAULT 0;
+
+CREATE TABLE setting 
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    guild_id        TINYTEXT NOT NULL,
+    name            TINYTEXT NOT NULL,
+    value           TINYTEXT,
+    PRIMARY KEY(id)
+);
