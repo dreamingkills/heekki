@@ -1,84 +1,63 @@
 {
-  "missions": [
-    {
-      "text": "%M was invited to MC on Fact iN Star!",
-      "baseReward": 300
-    },
-    {
-      "text": "%M was paid for an earring CF.",
-      "baseReward": 400
-    },
-    {
-      "text": "%M stole from BlockBerry Creative - but was it really stealing?",
-      "baseReward": 200
-    },
-    {
-      "text": "%M sold some albums.",
-      "baseReward": 200
-    },
-    {
-      "text": "%M received a birthday gift from Orbits.",
-      "baseReward": 150
-    },
-    {
-      "text": "%M was scared by a pigeon.",
-      "baseReward": 0
-    },
-    {
-      "text": "%M went fishing and came back with nothing.",
-      "baseReward": 0
-    },
-    {
-      "text": "%M passed their graduation exam.",
-      "baseReward": 200
-    },
-    {
-      "text": "%M dropped out of school.",
-      "baseReward": 0
-    },
-    {
-      "text": "%M tried to cook a meal and started a fire instead.",
-      "baseReward": 0
-    },
-    {
-      "text": "%M overslept and missed dance practice.",
-      "baseReward": 0
-    },
-    {
-      "text": "%M was sponsored by a noodle company.",
-      "baseReward": 300
-    },
-    {
-      "text": "%M went busking.",
-      "baseReward": 250
-    },
-    {
-      "text": "%M appeared on King of Masked Singer and made it to the second round!",
-      "baseReward": 450
-    },
-    {
-      "text": "%M was invited to Weekly Idol.",
-      "baseReward": 100
-    },
-    {
-      "text": "%M covered another group's choreography and gained some fans.",
-      "baseReward": 300
-    },
-    {
-      "text": "%M competed in ISAC and won a gold medal.",
-      "baseReward": 150
-    },
-    {
-      "text": "%M was selected to be the face of Fenty Beauty Korea.",
-      "baseReward": 300
-    },
-    {
-      "text": "%M found some spare changed underneath the couch cushions.",
-      "baseReward": 100
-    },
-    {
-      "text": "%M got lost on her way back to the dorm.",
-      "baseReward": 0
-    }
+  "success": [
+    "%M was invited to MC on Fact iN Star!",
+    "%M was paid for an earring CF.",
+    "%M stole from BlockBerry Creative - but was it really stealing?",
+    "%M sold some albums.",
+    "%M received a birthday gift from Orbits.",
+    "%M passed their graduation exam.",
+    "%M was sponsored by a noodle company.",
+    "%M went busking.",
+    "%M appeared on King of Masked Singer and made it to the second round!",
+    "%M was invited to Weekly Idol.",
+    "%M covered another group's choreography and gained some fans.",
+    "%M competed in ISAC and won a gold medal.",
+    "%M was selected to be the face of Fenty Beauty Korea.",
+    "%M found some spare change underneath the couch cushions.",
+    "%M cashed out the company credit card.",
+    "%M was casted for a drama.",
+    "%M pockets some spare change from the manager.",
+    "%M cooked seaweed soup for a member's birthday.",
+    "%M made friends with a cockroach.",
+    "%M was the ending fairy to a comeback stage.",
+    "%M uploaded a LOONA LOG to YouTube.",
+    "%M was booked to sing an OST!",
+    "%M choreographed another group's title track!",
+    "%M produced a hit song for another group!",
+    "%M produced a song that exploded in the West!",
+    "%M set up a group picnic.",
+    "%M dyed their hair and trended on Twitter.",
+    "%M started playing Heekki and got some starting cash.",
+    "%M got a win on a music show.",
+    "%M was signed as a model for Converse.",
+    "%M streamed League of Legends on Twitch.",
+    "%M debuts in a virtual girl group.",
+    "%M made some art on commission.",
+    "%M taught a dance class."
+  ],
+  "failure": [
+    "%M was scared by a pigeon.",
+    "%M went fishing and came back with nothing.",
+    "%M dropped out of school.",
+    "%M tried to cook a meal and started a fire instead.",
+    "%M overslept and missed dance practice.",
+    "%M got lost on her way back to the dorm.",
+    "%M died in PUBG during an ISAC competition.",
+    "%M lost a shoe.",
+    "%M accidentally broke a lightstick.",
+    "%M added too much soap to the washing machine.",
+    "%M took the wrong company van home.",
+    "%M dropped an orange slice on the floor.",
+    "%M slipped on a banana.",
+    "%M spent all her money trying to win a prize from a claw machine.",
+    "%M got lost on the moon.",
+    "%M got dizzy on the Mobius strip.",
+    "%M was not the impostor.",
+    "%M forgot their umbrella in a rainstorm.",
+    "%M got restricted on Heekki.",
+    "%M ate an onion.",
+    "%M forgot the choreography.",
+    "%M forgot the lyrics.",
+    "%M tried to cook spaghetti inside a meatball. <:what:768525906200231966>"
   ]
 }
