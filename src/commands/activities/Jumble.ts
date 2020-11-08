@@ -25,6 +25,7 @@ export class Command extends BaseCommand {
   }
 
   async exec(msg: Message, executor: Profile) {
+    const isMulti = this.options[0]?.toLowerCase() === "multi";
     if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
         `${this.config.discord.emoji.cross.full} You're already playing a minigame!`
@@ -38,7 +39,10 @@ export class Command extends BaseCommand {
     const jumbled = this.jumble(random);
 
     const embed = new MessageEmbed()
-      .setAuthor(`Jumble | ${msg.author.tag}`, msg.author.displayAvatarURL())
+      .setAuthor(
+        `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
+        msg.author.displayAvatarURL()
+      )
       .setDescription(
         `**Unscramble this word for a reward!**` +
           `\n:mag_right: \`${jumbled.toUpperCase()}\``
@@ -47,37 +51,57 @@ export class Command extends BaseCommand {
 
     const sent = await msg.channel.send(embed);
 
-    const filter = (m: Message) => m.author == msg.author;
+    const filter = (m: Message) => {
+      if (isMulti) {
+        return !m.author.bot;
+      } else return m.author === msg.author;
+    };
     const collector = msg.channel.createMessageCollector(filter, {
       time: 15000,
     });
 
     collector.on("collect", async (m: Message) => {
-      if (m.content.toLowerCase() === random.toLowerCase()) {
-        await PlayerService.addCoinsToProfile(executor, 20);
-        const successEmbed = new MessageEmbed()
-          .setAuthor(
-            `Jumble | ${msg.author.tag}`,
-            msg.author.displayAvatarURL()
-          )
-          .setDescription(
-            `${this.config.discord.emoji.check.full} **Correct!**\nYou've been given ${this.config.discord.emoji.cash.full} **20**!`
-          )
-          .setColor(`#FFAACC`);
-        await m.react(this.config.discord.emoji.check.id);
+      if (
+        (isMulti &&
+          !ConcurrencyService.checkConcurrency(m.author.id) &&
+          m.author !== msg.author) ||
+        m.author === msg.author ||
+        !isMulti
+      ) {
+        if (!collector.ended) {
+          if (m.content.toLowerCase() === random.toLowerCase()) {
+            let winner: Profile;
+            if (isMulti) {
+              winner = await PlayerService.getProfileByDiscordId(m.author.id);
+            } else winner = executor;
+            await PlayerService.addCoinsToProfile(winner, 20);
+            const successEmbed = new MessageEmbed()
+              .setAuthor(
+                `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
+                msg.author.displayAvatarURL()
+              )
+              .setDescription(
+                `${this.config.discord.emoji.check.full} **Correct!**\n${
+                  isMulti ? `**${m.author.tag}** has` : `You have`
+                } been given ${this.config.discord.emoji.cash.full} **20**!`
+              )
+              .setColor(`#FFAACC`);
+            await m.react(this.config.discord.emoji.check.id);
 
-        await sent.edit(successEmbed);
-        collector.stop("correct");
-        return;
-      } else {
-        await m.react(this.config.discord.emoji.cross.id);
+            await sent.edit(successEmbed);
+            collector.stop("correct");
+            return;
+          } else {
+            await m.react(this.config.discord.emoji.cross.id);
+          }
+        }
       }
     });
     collector.on("end", async (_, reason) => {
       if (reason === "time") {
         const failedEmbed = new MessageEmbed()
           .setAuthor(
-            `Jumble | ${msg.author.tag}`,
+            `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
             msg.author.displayAvatarURL()
           )
           .setDescription(
