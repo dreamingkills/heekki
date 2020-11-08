@@ -41,10 +41,13 @@ export class Command extends BaseCommand {
     ctx.drawImage(background, 0, 0, 1100, 800);
 
     //Draw username
-    ctx.font = `75px MyriadPro-Bold`;
+    let baseSize = 75;
+    do {
+      ctx.font = `${(baseSize -= 10)}px MyriadPro-Bold`;
+    } while (ctx.measureText(discordUser.username).width > cv.width - 340);
     ctx.fillStyle = "white";
     ctx.textAlign = "left";
-    ctx.fillText(discordUser.username, 69, 182);
+    ctx.fillText(discordUser.username, 69, 178);
     // Draw profile picture
     const avatar = await canvas.loadImage(
       discordUser.displayAvatarURL({ format: "png" })
