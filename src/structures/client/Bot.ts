@@ -45,7 +45,6 @@ export class Bot extends Client {
       if (msg.author.bot) return;
       if (msg.channel.type == "text") {
         await msg.author.fetch();
-        console.log("Handling");
         this.cmdMan.handle(msg, config, this);
       }
     });

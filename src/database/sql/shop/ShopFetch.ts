@@ -76,6 +76,7 @@ export class ShopFetch extends DBClass {
       LEFT JOIN pack
       ON pack.id=shop.pack_id
       WHERE active=1
+      ORDER BY shop.id DESC
       LIMIT 6
       OFFSET ?;`,
       [6 * page - 6]
