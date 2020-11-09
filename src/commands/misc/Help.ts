@@ -290,6 +290,7 @@ export class Command extends BaseCommand {
         description = `This command will show you a link to invite the bot and a link to the official Heekki server.`;
         break;
       }
+      case "pre":
       case "preview": {
         header = "Command - Preview";
         description =

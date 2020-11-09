@@ -11,7 +11,7 @@ import { ShopService } from "../../database/service/ShopService";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
-  names: string[] = ["preview"];
+  names: string[] = ["preview", "pre"];
   async exec(msg: Message) {
     const referencesRaw = this.options
       .filter((p) => p.includes("#"))
