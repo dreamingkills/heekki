@@ -17,7 +17,7 @@ export class Command extends BaseCommand {
     const chance = new Chance();
     let generated: number[] = [];
     for (let i = 0; i < 7; i++) {
-      generated.push(chance.weighted([7, 20, 100, 1000], [100, 25, 5, 0.1]));
+      generated.push(chance.weighted([7, 20, 100, 1000], [130, 20, 3, 0.1]));
     }
 
     const total = generated.reduce((a, b) => {

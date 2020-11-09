@@ -46,7 +46,7 @@ export class FriendUpdate extends DBClass {
     friendIds: string[]
   ): Promise<void> {
     await DB.query(
-      `UPDATE user_profile SET hearts=hearts+2 WHERE discord_id IN (?);`,
+      `UPDATE user_profile SET hearts=hearts+1 WHERE discord_id IN (?);`,
       [friendIds]
     );
 
