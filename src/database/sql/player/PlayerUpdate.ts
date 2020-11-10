@@ -1,6 +1,50 @@
+import { Profile } from "../../../structures/player/Profile";
 import { DB, DBClass } from "../../index";
+import { PlayerService } from "../../service/PlayerService";
 
 export class PlayerUpdate extends DBClass {
+  /*
+      Currency
+                */
+  public static async addShards(
+    profile: Profile,
+    amount: number
+  ): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET shards=shards+? WHERE discord_id=?;`,
+      [amount, profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+  public static async removeShards(
+    profile: Profile,
+    amount: number
+  ): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET shards=shards-? WHERE discord_id=?;`,
+      [amount, profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+
+  /*
+      Time-Based Rewards
+                          */
+  public static async incrementDailyStreak(profile: Profile): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET daily_streak=daily_streak+1 WHERE discord_id=?;`,
+      [profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+  public static async resetDailyStreak(profile: Profile): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET daily_streak=0 WHERE discord_id=?;`,
+      [profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+
   public static async createNewProfile(discord_id: string): Promise<void> {
     await DB.query(
       `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${300});`,

@@ -292,3 +292,6 @@ CREATE TABLE setting
     value           TINYTEXT,
     PRIMARY KEY(id)
 );
+
+ALTER TABLE user_profile ADD COLUMN shards INT(11) DEFAULT 0;
+ALTER TABLE user_profile DROP COLUMN xp;

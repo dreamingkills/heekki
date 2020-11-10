@@ -117,12 +117,16 @@ export class MissionCooldownError extends ClientError {
 }
 export class DailyCooldownError extends ClientError {
   name = "DailyCooldownError";
+  header = "Daily Reward";
   constructor(until: number, now: number) {
     super(
-      `Please wait **${moment(until).diff(now, "hours")} hours and ${
+      `You can claim your daily reward in **${moment(until).diff(
+        now,
+        "hours"
+      )}h ${
         moment(until).diff(now, "minutes") -
         moment(until).diff(now, "hours") * 60
-      } minutes** before claiming your daily reward again.`
+      }m**.`
     );
   }
 }

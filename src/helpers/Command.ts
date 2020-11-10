@@ -1,7 +1,7 @@
 import { BaseCommand } from "../structures/command/Command";
 import config from "../../config.json";
 import glob from "glob";
-import { Message } from "discord.js";
+import { Message, MessageEmbed } from "discord.js";
 import { promisify } from "util";
 import { PlayerService } from "../database/service/PlayerService";
 import * as error from "../structures/Error";
@@ -87,9 +87,14 @@ export class CommandManager {
       await cmd.run(msg, profile, cfg, bot).catch(async (e) => {
         err = e;
         if (e.isClientFacing) {
-          await msg.channel.send(
-            `${cfg.discord.emoji.cross.full} ${e.message}`
-          );
+          const errorEmbed = new MessageEmbed()
+            .setAuthor(
+              `${e.header} | ${msg.author.tag}`,
+              msg.author.displayAvatarURL()
+            )
+            .setDescription(`${cfg.discord.emoji.cross.full} ${e.message}`)
+            .setColor(`#FFAACC`);
+          await msg.channel.send(errorEmbed);
         } else if (
           err.name === "Internal Server Error" ||
           err.name === "Service Unavailable" ||

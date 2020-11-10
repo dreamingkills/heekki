@@ -8,12 +8,14 @@ export class Profile {
   hearts: number;
   cardPriority: number;
   reputation: number;
+  shards: number;
 
   xp: number;
   restricted: boolean;
   well: number;
   badges?: Badge[];
 
+  dailyStreak: number;
   lastDaily: number;
   lastHeartBox: number;
   lastMission: number;
@@ -30,7 +32,9 @@ export class Profile {
     this.well = data.well;
     this.cardPriority = data.use_card;
     this.reputation = data.reputation;
+    this.shards = data.shards;
 
+    this.dailyStreak = data.daily_streak;
     this.lastDaily = data.daily_last;
     this.lastHeartBox = data.heart_box_last;
     this.lastMission = data.mission_last;

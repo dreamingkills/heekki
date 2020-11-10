@@ -5,6 +5,16 @@ import { UserCard } from "../../structures/player/UserCard";
 import { Badge } from "../../structures/player/Badge";
 
 export class PlayerService {
+  /*
+      Time-Based Rewards
+                          */
+  public static async incrementDailyStreak(profile: Profile): Promise<Profile> {
+    return await PlayerUpdate.incrementDailyStreak(profile);
+  }
+  public static async resetDailyStreak(profile: Profile): Promise<Profile> {
+    return await PlayerUpdate.resetDailyStreak(profile);
+  }
+
   public static async createNewProfile(discord_id: string): Promise<Profile> {
     await PlayerUpdate.createNewProfile(discord_id);
     const user = await this.getProfileByDiscordId(discord_id);
@@ -107,12 +117,6 @@ export class PlayerService {
   ): Promise<void> {
     await PlayerUpdate.addHearts(profile.discord_id, amount);
   }
-  public static async addHeartsToDiscordId(
-    discord_id: string,
-    amount: number
-  ): Promise<void> {
-    await PlayerUpdate.addHearts(discord_id, amount);
-  }
 
   public static async removeHeartsFromProfile(
     profile: Profile,
@@ -127,12 +131,24 @@ export class PlayerService {
   ): Promise<void> {
     await PlayerUpdate.addCoins(profile.discord_id, amount);
   }
-
   public static async removeCoinsFromProfile(
     profile: Profile,
     amount: number
   ): Promise<void> {
     await PlayerUpdate.removeCoins(profile.discord_id, amount);
+  }
+
+  public static async addShardsToProfile(
+    profile: Profile,
+    amount: number
+  ): Promise<Profile> {
+    return await PlayerUpdate.addShards(profile, amount);
+  }
+  public static async removeShardsFromProfile(
+    profile: Profile,
+    amount: number
+  ): Promise<Profile> {
+    return await PlayerUpdate.removeShards(profile, amount);
   }
 
   public static async addToWell(

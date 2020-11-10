@@ -4,5 +4,8 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["shards"];
-  async exec(_msg: Message, _executor: Profile) {}
+  async exec(msg: Message, executor: Profile) {
+    await msg.channel.send(`You have ${executor.shards} shards.`);
+    return;
+  }
 }
