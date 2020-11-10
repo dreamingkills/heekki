@@ -11,7 +11,7 @@ export class Command extends BaseCommand {
       msg.channel.send("Enter a valid number.");
       return;
     }
-    console.log(loopTime);
+
     const chance = new Chance();
     let rolls = {
       num1: 0,
@@ -24,15 +24,23 @@ export class Command extends BaseCommand {
     const now = Date.now();
 
     for (let i = 0; i < loopTime; i++) {
+      /*
+          !buy
+            [1, 2, 3, 4, 5, 6],
+            [1000, 500, 200, 66.66666667, 19.047619, 4.76190475]
+          !daily
+            ???
+            ???
+      */
       const starCount = chance.weighted(
         [1, 2, 3, 4, 5, 6],
-        [61.3, 35, 20, 2.2, 0.9, 0.16]
+        [1000, 500, 200, 66.66666667, 19.047619, 4.76190475]
       );
       rolls[`num${starCount}` as keyof typeof rolls] += 1;
     }
 
     const after = Date.now();
-    msg.channel.send(
+    await msg.channel.send(
       `Generated **${
         rolls.num1 +
         rolls.num2 +

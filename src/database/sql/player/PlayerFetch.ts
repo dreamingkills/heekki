@@ -4,12 +4,10 @@ import { UserCard } from "../../../structures/player/UserCard";
 import { DBClass } from "../../index";
 import { Badge } from "../../../structures/player/Badge";
 import * as error from "../../../structures/Error";
-import { Fish } from "../../../structures/game/Fish";
 import { PlayerService } from "../../service/PlayerService";
 import { ProfileInterface } from "../../../structures/interface/ProfileInterface";
 import { OptionsParser } from "../OptionsParser";
 import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
-import { FishInterface } from "../../../structures/interface/FishInterface";
 import { BadgeInterface } from "../../../structures/interface/BadgeInterface";
 
 export class PlayerFetch extends DBClass {
@@ -161,20 +159,6 @@ export class PlayerFetch extends DBClass {
     return count[0][`COUNT(*)`];
   }
 
-  public static async getFishByDiscordId(
-    discord_id: string,
-    trophy: boolean
-  ): Promise<Fish[]> {
-    const fishRaw = (await DB.query(
-      `SELECT owner_id AS owner, fish.fish_weight AS weight, fish_name AS name, emoji, weight_mod.mod_name, weight_mod.multiplier, identifier, base_price, price_multiplier
-       FROM fish LEFT JOIN fish_types ON fish_types.id=fish.fish_id LEFT JOIN weight_mod ON weight_mod.id=fish.weight_mod WHERE owner_id=? AND trophy_fish=?;`,
-      [discord_id, trophy]
-    )) as FishInterface[];
-    return fishRaw.map((fishy) => {
-      return new Fish(fishy);
-    });
-  }
-
   public static async checkReputation(
     sender_id: string,
     receiver_id: string
@@ -235,63 +219,6 @@ export class PlayerFetch extends DBClass {
       [limit]
     )) as ProfileInterface[];
     return query.map((p) => new Profile(p));
-  }
-
-  /*
-      Fishing
-                */
-  public static async getRandomFish(): Promise<{
-    id: number;
-    fish_name: string;
-    fish_weight: number;
-    emoji: string;
-  }> {
-    const query = (await DB.query(
-      `SELECT * FROM fish_types WHERE base_chance>0 ORDER BY -LOG(1.0-RAND())/base_chance LIMIT 1;`
-    )) as {
-      id: number;
-      fish_name: string;
-      base_chance: number;
-      fish_weight: number;
-      emoji: string;
-    }[];
-    return query[0];
-  }
-
-  public static async getFishByUniqueId(id: string): Promise<Fish> {
-    const query = (await DB.query(
-      `SELECT owner_id AS owner, fish.fish_weight AS weight, fish_name AS name, emoji, weight_mod.mod_name, weight_mod.multiplier, identifier, price_multiplier, base_price
-    FROM fish LEFT JOIN fish_types ON fish_types.id=fish.fish_id LEFT JOIN weight_mod ON weight_mod.id=fish.weight_mod WHERE identifier=?;`,
-      [id]
-    )) as FishInterface[];
-    if (!query[0]) throw new error.InvalidFishError();
-    return new Fish(query[0]);
-  }
-
-  public static async getRandomWeightMod(): Promise<{
-    id: number;
-    mod_name: string;
-    multiplier: number;
-  }> {
-    const query = (await DB.query(
-      `SELECT * FROM weight_mod WHERE base_chance>0 ORDER BY -LOG(1.0-RAND())/base_chance LIMIT 1;`
-    )) as {
-      id: number;
-      mod_name: string;
-      multiplier: number;
-      base_chance: number;
-    }[];
-    return query[0];
-  }
-
-  public static async getNumberOfFishByProfile(
-    discordId: string
-  ): Promise<number> {
-    const query = (await DB.query(
-      `SELECT COUNT(*) AS count FROM fish WHERE owner_id=? AND trophy_fish=false;`,
-      [discordId]
-    )) as { count: number }[];
-    return query[0].count;
   }
 
   public static async fetchSupporters(): Promise<

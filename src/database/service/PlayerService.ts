@@ -3,7 +3,6 @@ import { Profile } from "../../structures/player/Profile";
 import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { UserCard } from "../../structures/player/UserCard";
 import { Badge } from "../../structures/player/Badge";
-import { Fish } from "../../structures/game/Fish";
 
 export class PlayerService {
   public static async createNewProfile(discord_id: string): Promise<Profile> {
@@ -182,28 +181,6 @@ export class PlayerService {
     await PlayerUpdate.setOrphanTimestamp(profile.discord_id, time);
   }
 
-  public static async getFishByProfile(
-    profile: Profile,
-    trophy: boolean = false
-  ): Promise<Fish[]> {
-    return await PlayerFetch.getFishByDiscordId(profile.discord_id, trophy);
-  }
-  public static async createFishByDiscordId(
-    profile: Profile,
-    fishId: number,
-    weight: number,
-    weightModId: number,
-    identifier: string
-  ): Promise<void> {
-    return await PlayerUpdate.createFish(
-      profile.discord_id,
-      fishId,
-      weight,
-      weightModId,
-      identifier
-    );
-  }
-
   public static async giveReputation(
     sender: Profile,
     receiver: Profile
@@ -248,43 +225,6 @@ export class PlayerService {
 
   public static async addXp(profile: Profile, amount: number): Promise<void> {
     return await PlayerUpdate.addXp(profile.discord_id, amount);
-  }
-
-  /*
-      Fishing
-               */
-  public static async getRandomFish(): Promise<{
-    id: number;
-    fish_name: string;
-    fish_weight: number;
-    emoji: string;
-  }> {
-    return await PlayerFetch.getRandomFish();
-  }
-
-  public static async getFishByUniqueId(id: string): Promise<Fish> {
-    return await PlayerFetch.getFishByUniqueId(id);
-  }
-  public static async getRandomWeightMod(): Promise<{
-    id: number;
-    mod_name: string;
-    multiplier: number;
-  }> {
-    return await PlayerFetch.getRandomWeightMod();
-  }
-
-  public static async getNumberOfFishByprofile(
-    profile: Profile
-  ): Promise<number> {
-    return await PlayerFetch.getNumberOfFishByProfile(profile.discord_id);
-  }
-
-  public static async makeFishTrophy(id: string): Promise<void> {
-    return await PlayerUpdate.makeFishTrophy(id);
-  }
-
-  public static async clearFish(owner: Profile): Promise<void> {
-    return await PlayerUpdate.clearFish(owner.discord_id);
   }
 
   public static async toggleRestriction(profile: Profile): Promise<void> {
