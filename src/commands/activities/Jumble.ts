@@ -7,22 +7,6 @@ import { ConcurrencyService } from "../../helpers/Concurrency";
 
 export class Command extends BaseCommand {
   names: string[] = ["jumble", "j"];
-  jumble(term: string): string {
-    const words = term.split(" ");
-    let final = "";
-    for (let word of words) {
-      const split = word.split("");
-      let j, x, i;
-      for (i = split.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = split[i];
-        split[i] = split[j];
-        split[j] = x;
-      }
-      final += ` ${split.join("")}`;
-    }
-    return final.trim();
-  }
 
   async exec(msg: Message, executor: Profile) {
     const isMulti = this.options[0]?.toLowerCase() === "multi";
@@ -97,9 +81,14 @@ export class Command extends BaseCommand {
         }
       }
     });
+
     collector.on("end", async (_, reason) => {
+      let failedEmbed: MessageEmbed | undefined;
+
+      ConcurrencyService.unsetConcurrency(msg.author.id);
+
       if (reason === "time") {
-        const failedEmbed = new MessageEmbed()
+        failedEmbed = new MessageEmbed()
           .setAuthor(
             `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
             msg.author.displayAvatarURL()
@@ -108,11 +97,36 @@ export class Command extends BaseCommand {
             `:confused: **You ran out of time.**\nThe word was: \`${random.toUpperCase()}\`.`
           )
           .setColor(`#FFAACC`);
-        await sent.edit(failedEmbed);
       }
-      ConcurrencyService.unsetConcurrency(msg.author.id);
-      return;
+      if (failedEmbed) {
+        try {
+          await sent.edit(failedEmbed);
+        } catch {
+          await msg.channel.send(failedEmbed);
+        }
+      }
     });
     return;
+  }
+
+  private jumble(term: string): string {
+    const words = term.split(" ");
+    let final = "";
+    for (let word of words) {
+      const split = word.split("");
+      let j, x, i;
+      for (i = split.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = split[i];
+        split[i] = split[j];
+        split[j] = x;
+      }
+      final += ` ${split.join("")}`;
+    }
+
+    final = final.trim();
+
+    if (final === term.trim()) return this.jumble(term);
+    else return final;
   }
 }

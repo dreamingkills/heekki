@@ -6,7 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
-  names: string[] = ["upgrade"];
+  names: string[] = ["upgrade", "up"];
   async exec(msg: Message, executor: Profile) {
     const reference = {
       identifier: this.options[0]?.split("#")[0],
