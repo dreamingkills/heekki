@@ -281,7 +281,7 @@ export class CardOnMarketplaceError extends ClientError {
   name = "CardOnMarketplaceError";
   constructor() {
     super(
-      `That card is currently on the Marketplace.\nTo unlist it, use \`!unlist <card reference>\`.`
+      `That card is currently on the Marketplace.\nTo unlist it, use \`!mp unsell <card reference>\`.`
     );
   }
 }

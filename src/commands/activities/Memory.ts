@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 import { ConcurrencyService } from "../../helpers/Concurrency";
 
 export class Command extends BaseCommand {
-  names: string[] = ["memory"];
+  names: string[] = ["memory", "mem"];
 
   makeup: string[] = [
     ":rabbit:",
