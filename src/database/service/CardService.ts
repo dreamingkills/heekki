@@ -16,21 +16,16 @@ interface Reference {
 }
 
 export class CardService {
-  private static commafyNumber(num: number) {
+  private static commafyNumber(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  public static heartsToLevel(hearts: number) {
-    const unrounded = hearts / 150;
-    const currentLevel = unrounded >= 1 ? Math.floor(unrounded) + 1 : 1;
+  public static calculateLevel(card: UserCard): number {
+    const cap = [15, 30, 45, 60, 75, 100][card.stars - 1];
 
-    const nextRequirement = currentLevel * 150;
-    return {
-      totalHearts: hearts,
-      level: currentLevel >= 99 ? 99 : currentLevel,
-      next: currentLevel >= 99 ? -1 : nextRequirement,
-      toNext: currentLevel >= 99 ? -1 : nextRequirement - hearts,
-    };
+    const raw = Math.floor(card.hearts / 300);
+    const adjusted = raw > cap ? cap : raw;
+    return adjusted;
   }
 
   public static async getCardsByPack(pack: Pack | ShopItem): Promise<Card[]> {
@@ -119,7 +114,7 @@ export class CardService {
       await this.generateText(
         ctx,
         { ...imageData.levelNum },
-        this.heartsToLevel(card.hearts).level.toString()
+        this.calculateLevel(card).toString()
       );
     }
     if (imageData.heartText.size > 0) {

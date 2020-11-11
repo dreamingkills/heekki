@@ -15,5 +15,5 @@ export interface ProfileInterface {
   hearts_last: number;
   heart_box_last: number;
   last_orphan: number;
-  mission_last: number;
+  mission_next: number;
 }

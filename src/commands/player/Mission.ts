@@ -1,13 +1,14 @@
 import { Message, MessageEmbed } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { PlayerService } from "../../database/service/PlayerService";
-import { StatsService } from "../../database/service/StatsService";
+// import { StatsService } from "../../database/service/StatsService";
 import { BaseCommand } from "../../structures/command/Command";
 import mission from "../../assets/missions.json";
 import { Chance } from "chance";
 import * as error from "../../structures/Error";
 import { Profile } from "../../structures/player/Profile";
 import { UserCardService } from "../../database/service/UserCardService";
+import moment from "moment";
 
 export class Command extends BaseCommand {
   names: string[] = ["mission", "m"];
@@ -28,68 +29,86 @@ export class Command extends BaseCommand {
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
 
-    const last = executor.lastMission;
-    const now = Date.now();
-    if (now < last + 2700000)
-      throw new error.MissionCooldownError(last + 2700000, now);
+    if (Date.now() < executor.missionNext)
+      throw new error.MissionCooldownError(executor.missionNext, Date.now());
 
+    const base = 0.34768125;
+    const cardLevel = CardService.calculateLevel(card);
+    const luckCoefficient = 1.23 * card.stars + 0.0125 * cardLevel;
     const chance = new Chance();
-    const level = CardService.heartsToLevel(card.hearts);
-    const success = chance.weighted(
-      [false, true],
-      [0.6, 0.4 + (level.level / 100) * 0.12 + card.stars * 0.35]
-    );
-    let selected;
-    if (success) {
-      selected = chance.pickone(mission.success);
-    } else selected = chance.pickone(mission.failure);
+    const success = chance.weighted([false, true], [base, luckCoefficient]);
 
-    //const xp = chance.integer({ min: 30, max: 72 });
-    //if (profit !== 0) PlayerService.addXp(executor, xp);
-    let embed: MessageEmbed;
-
+    let text;
     if (success) {
-      const multiplier = 0.8 + (level.level / 100) * 0.06 + card.stars * 0.11;
-      const profit = Math.floor(
-        chance.integer({
-          min: 350,
-          max: 430,
-        }) * (multiplier > 1.5 ? 1.5 : multiplier)
+      text = chance.pickone(mission.success);
+    } else text = chance.pickone(mission.failure);
+    text = text.replace("%M", `**${card.member}**`);
+
+    let embed = new MessageEmbed()
+      .setAuthor(`Mission | ${msg.author.tag}`, msg.author.displayAvatarURL())
+      .setColor(`#FFAACC`);
+    if (success) {
+      const reward = chance.weighted(
+        ["card", "shards", "cash"],
+        [10, 20, 1000]
       );
+      embed.setDescription(`${this.config.discord.emoji.check.full} ${text}`);
 
-      await PlayerService.addCoinsToProfile(executor, profit);
-      embed = new MessageEmbed()
-        .setAuthor(`Mission | ${msg.author.tag}`, msg.author.displayAvatarURL())
-        .setDescription(
-          `${this.config.discord.emoji.check.full} ${selected.replace(
-            `%M`,
-            `**${card.member.replace(/ *\([^)]*\) * /g, "")}**`
-          )}\n${
-            `+ ${this.config.discord.emoji.cash.full} **${profit}**` //\n+ **${xp}** XP`
-          }`
-        )
-        .setFooter(
-          `You now have ${
-            executor.coins + profit
-          } cash.\nYou can do another mission in 45 minutes.`
-        )
-        .setColor(`FFAACC`);
+      if (reward === "card") {
+        const cardType = await CardService.getRandomCard();
+        const stars = chance.weighted(
+          [1, 2, 3, 4],
+          [1000 / 2.5, 500 / 1.75, 200 * 2, 66.66666667 * 2]
+        );
+        const newCard = await UserCardService.createNewUserCard(
+          executor,
+          cardType,
+          stars,
+          0,
+          true,
+          0,
+          true
+        );
+
+        embed.description += `\n**+ ${this.config.discord.emoji.cards.full} ${
+          newCard.abbreviation + `#` + newCard.serialNumber
+        }** — ${`:star:`.repeat(newCard.stars)}`;
+      } else if (reward === "shards") {
+        const profit = Math.floor(chance.integer({ min: 1, max: 4 }));
+        const newProfile = await PlayerService.addShardsToProfile(
+          executor,
+          profit
+        );
+
+        embed.description += `\n**+ ${
+          this.config.discord.emoji.shard.full
+        }${profit}** (${newProfile.shards.toLocaleString()} total)`;
+      } else if (reward === "cash") {
+        const profit = Math.floor(chance.integer({ min: 15, max: 25 }));
+        const newProfile = await PlayerService.addCoinsToProfile(
+          executor,
+          profit
+        );
+
+        embed.description += `\n**+ ${
+          this.config.discord.emoji.cash.full
+        } ${profit}** (${newProfile.coins.toLocaleString()} total)`;
+      }
     } else {
-      embed = new MessageEmbed()
-        .setAuthor(`Mission | ${msg.author.tag}`, msg.author.displayAvatarURL())
-        .setDescription(
-          `${`${this.config.discord.emoji.cross.full}`} ${selected.replace(
-            `%M`,
-            `**${card.member.replace(/ *\([^)]*\) * /g, "")}**`
-          )}`
-        )
-        .setFooter(
-          `You can do another mission in 45 minutes.\nUpgrade your card to fail less!`
-        )
-        .setColor(`FFAACC`);
+      embed.setDescription(`${this.config.discord.emoji.cross.full} ${text}`);
     }
+
+    const now = Date.now();
+    const timeout = (45 - ((card.stars * cardLevel) / 600) * 15) * 60 * 1000;
+    console.log(timeout);
+    const nextMoment = moment(now + timeout);
+    const nextMinutes = nextMoment.diff(now, "minutes");
+    const nextSeconds = nextMoment.diff(now, "seconds") - nextMinutes * 60;
+
+    await PlayerService.setLastMission(executor, now + timeout);
+    embed.setFooter(
+      `You can do another mission in ${nextMinutes}m ${nextSeconds}s.`
+    );
     await msg.channel.send(embed);
-    await StatsService.missionComplete(executor, success);
-    await PlayerService.setLastMission(executor, now);
   }
 }

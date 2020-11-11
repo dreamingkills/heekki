@@ -31,10 +31,13 @@ export class Command extends BaseCommand {
           !daily
             ???
             ???
+          !mission
+          [1, 2, 3, 4],
+          [1000 / 2.5, 500 / 1.75, 200 * 2, 66.66666667 * 2]
       */
       const starCount = chance.weighted(
-        [1, 2, 3, 4, 5, 6],
-        [1000, 500, 200, 66.66666667, 19.047619, 4.76190475]
+        [1, 2, 3, 4],
+        [1000 / 2.5, 500 / 1.75, 200 * 2, 66.66666667 * 2]
       );
       rolls[`num${starCount}` as keyof typeof rolls] += 1;
     }

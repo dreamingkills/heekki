@@ -106,12 +106,13 @@ export class OrphanCooldownError extends ClientError {
 }
 export class MissionCooldownError extends ClientError {
   name = "MissionCooldownError";
+  header = "Mission";
   constructor(until: number, now: number) {
     super(
-      `Please wait **${moment(until).diff(
-        now,
-        "minutes"
-      )} minutes** before embarking upon another mission.`
+      `You can do another mission in **${moment(until).diff(now, "minutes")}m ${
+        moment(until).diff(now, "seconds") -
+        moment(until).diff(now, "minutes") * 60
+      }s**.`
     );
   }
 }

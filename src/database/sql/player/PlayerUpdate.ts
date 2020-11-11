@@ -63,14 +63,14 @@ export class PlayerUpdate extends DBClass {
     return;
   }
   public static async addCoins(
-    discord_id: string,
+    discordId: string,
     amount: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET coins=coins+? WHERE discord_id=?;`,
-      [amount, discord_id]
+      [amount, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async removeCoins(
     discord_id: string,
@@ -159,7 +159,7 @@ export class PlayerUpdate extends DBClass {
     time: number
   ): Promise<void> {
     await DB.query(
-      `UPDATE user_profile SET mission_last=? WHERE discord_id=?;`,
+      `UPDATE user_profile SET mission_next=? WHERE discord_id=?;`,
       [time, discord_id]
     );
     return;

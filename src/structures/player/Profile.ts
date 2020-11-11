@@ -18,7 +18,7 @@ export class Profile {
   dailyStreak: number;
   lastDaily: number;
   lastHeartBox: number;
-  lastMission: number;
+  missionNext: number;
   lastOrphan: number;
   lastHeartSend: number;
   constructor(data: ProfileInterface, badges?: Badge[]) {
@@ -37,7 +37,7 @@ export class Profile {
     this.dailyStreak = data.daily_streak;
     this.lastDaily = data.daily_last;
     this.lastHeartBox = data.heart_box_last;
-    this.lastMission = data.mission_last;
+    this.missionNext = data.mission_next;
     this.lastOrphan = data.last_orphan;
     this.lastHeartSend = data.hearts_last;
   }

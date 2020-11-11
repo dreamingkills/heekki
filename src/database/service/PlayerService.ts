@@ -128,8 +128,8 @@ export class PlayerService {
   public static async addCoinsToProfile(
     profile: Profile,
     amount: number
-  ): Promise<void> {
-    await PlayerUpdate.addCoins(profile.discord_id, amount);
+  ): Promise<Profile> {
+    return await PlayerUpdate.addCoins(profile.discord_id, amount);
   }
   public static async removeCoinsFromProfile(
     profile: Profile,

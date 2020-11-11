@@ -29,8 +29,8 @@ export class Command extends BaseCommand {
     const upgraded = await CardService.upgradeCard(amount, card);
     await PlayerService.removeHeartsFromProfile(executor, amount);
 
-    let beforeLevel = CardService.heartsToLevel(card.hearts).level;
-    let afterLevel = CardService.heartsToLevel(upgraded.hearts).level;
+    let beforeLevel = CardService.calculateLevel(card);
+    let afterLevel = CardService.calculateLevel(upgraded);
 
     let embed = new MessageEmbed()
       .setAuthor(`Upgrade | ${msg.author.tag}`, msg.author.displayAvatarURL())
