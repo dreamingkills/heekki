@@ -68,6 +68,12 @@ export class NotEnoughHeartsError extends ClientError {
     super("You don't have enough hearts to do that!");
   }
 }
+export class NotEnoughShardsError extends ClientError {
+  name = "NotEnoughShardsError";
+  constructor() {
+    super(`You don't have enough shards for that.`);
+  }
+}
 
 /*
     Timer Errors
@@ -332,7 +338,7 @@ export class InvalidPriceError extends ClientError {
   name = "InvalidPriceError";
   constructor() {
     super(
-      `Please enter a valid price, above 0 Coins and below 2,147,483,647 Coins.`
+      `Please enter a valid price, above 0 Cash and below 2,147,483,647 Cash.`
     );
   }
 }
