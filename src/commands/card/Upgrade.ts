@@ -12,45 +12,47 @@ export class Command extends BaseCommand {
       identifier: this.options[0]?.split("#")[0],
       serial: parseInt(this.options[0]?.split("#")[1]),
     };
-    const amount = parseInt(this.options[1]);
-    if (isNaN(amount)) {
-      await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} Please enter an amount of hearts to upgrade your card with.`
-      );
-      return;
-    }
     if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
     const card = await CardService.getCardDataFromReference(reference);
 
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
+
+    const amount = parseInt(this.options[1]);
+    if (isNaN(amount) || amount < 1) throw new error.NotANumberError();
     if (amount > executor.hearts) throw new error.NotEnoughHeartsError();
 
-    const upgraded = await CardService.upgradeCard(amount, card);
-    await PlayerService.removeHeartsFromProfile(executor, amount);
+    const levelCap = CardService.getLevelCap(card);
+    const cardLevel = CardService.calculateLevel(card);
+    if (cardLevel >= levelCap) throw new error.MaximumLevelError();
 
-    let beforeLevel = CardService.calculateLevel(card);
-    let afterLevel = CardService.calculateLevel(upgraded);
+    const adjustedAmount =
+      card.hearts + amount > levelCap * CardService.heartsPerLevel
+        ? levelCap * CardService.heartsPerLevel - card.hearts
+        : amount;
+    const newCard = await CardService.addHeartsToCard(card, adjustedAmount);
+    const newProfile = await PlayerService.removeHeartsFromProfile(
+      executor,
+      adjustedAmount
+    );
+    await CardService.updateCardCache(newCard);
+
+    let newLevel = CardService.calculateLevel(newCard);
 
     let embed = new MessageEmbed()
       .setAuthor(`Upgrade | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         `${
-          afterLevel > beforeLevel
-            ? `:tada: **LEVEL UP!** ${beforeLevel} ~~-->~~ ${afterLevel}\n`
+          newLevel > cardLevel
+            ? `${this.config.discord.emoji.chart.full} **LEVEL UP!** ${cardLevel} ~~-->~~ ${newLevel}\n`
             : ``
-        } Successfully added ${this.config.discord.emoji.hearts.full} **${
-          this.options[1]
-        }** to **${upgraded.abbreviation}#${
-          upgraded.serialNumber
-        }**.\nYour card now has ${this.config.discord.emoji.hearts.full} **${
-          upgraded.hearts
-        }**.`
+        } Upgraded **${newCard.abbreviation}#${newCard.serialNumber}** with ${
+          this.config.discord.emoji.hearts.full
+        } **${adjustedAmount.toLocaleString()}** *(${newCard.hearts.toLocaleString()} total)*`
       )
-      .setFooter(`You now have ${executor.hearts - amount} hearts.`)
+      .setFooter(`You now have ${newProfile.hearts.toLocaleString()} hearts.`)
       .setColor("#FFAACC");
     await msg.channel.send(embed);
-    await CardService.updateCardCache(upgraded);
     return;
   }
 }

@@ -44,7 +44,7 @@ export class PlayerService {
   }
 
   /*
-      Badges
+      Badges  
               */
   public static async getBadgesByProfile(profile: Profile): Promise<Badge[]> {
     return await PlayerFetch.getBadgesByDiscordId(profile.discord_id);
@@ -57,8 +57,8 @@ export class PlayerService {
   public static async giveBadgeToUser(
     profile: Profile,
     badge: Badge
-  ): Promise<void> {
-    await PlayerUpdate.giveBadge(profile.discord_id, badge.id);
+  ): Promise<Profile> {
+    return await PlayerUpdate.giveBadge(profile.discord_id, badge.id);
   }
 
   public static async getCardsByProfile(
@@ -90,11 +90,14 @@ export class PlayerService {
     return await PlayerFetch.getCardCountByDiscordId("0", options);
   }
 
-  public static async useCard(card: UserCard, profile: Profile): Promise<void> {
+  public static async useCard(
+    card: UserCard,
+    profile: Profile
+  ): Promise<Profile> {
     return await PlayerUpdate.useCard(profile.discord_id, card.userCardId);
   }
 
-  public static async unsetDefaultCard(profile: Profile): Promise<void> {
+  public static async unsetDefaultCard(profile: Profile): Promise<Profile> {
     return await PlayerUpdate.unsetDefaultCard(profile.discord_id);
   }
 
@@ -114,15 +117,15 @@ export class PlayerService {
   public static async addHeartsToProfile(
     profile: Profile,
     amount: number
-  ): Promise<void> {
-    await PlayerUpdate.addHearts(profile.discord_id, amount);
+  ): Promise<Profile> {
+    return await PlayerUpdate.addHearts(profile.discord_id, amount);
   }
 
   public static async removeHeartsFromProfile(
     profile: Profile,
     amount: number
-  ): Promise<void> {
-    await PlayerUpdate.removeHearts(profile.discord_id, amount);
+  ): Promise<Profile> {
+    return await PlayerUpdate.removeHearts(profile.discord_id, amount);
   }
 
   public static async addCoinsToProfile(
@@ -134,8 +137,8 @@ export class PlayerService {
   public static async removeCoinsFromProfile(
     profile: Profile,
     amount: number
-  ): Promise<void> {
-    await PlayerUpdate.removeCoins(profile.discord_id, amount);
+  ): Promise<Profile> {
+    return await PlayerUpdate.removeCoins(profile.discord_id, amount);
   }
 
   public static async addShardsToProfile(
@@ -154,8 +157,8 @@ export class PlayerService {
   public static async addToWell(
     profile: Profile,
     amount: number
-  ): Promise<void> {
-    await PlayerUpdate.addToWell(profile.discord_id, amount);
+  ): Promise<Profile> {
+    return await PlayerUpdate.addToWell(profile.discord_id, amount);
   }
 
   /* 
@@ -165,50 +168,56 @@ export class PlayerService {
   public static async setLastHeartSend(
     profile: Profile,
     time: number
-  ): Promise<void> {
-    await PlayerUpdate.setHeartSendTimestamp(profile.discord_id, time);
+  ): Promise<Profile> {
+    return await PlayerUpdate.setHeartSendTimestamp(profile.discord_id, time);
   }
 
   public static async setLastMission(
     profile: Profile,
     time: number
-  ): Promise<void> {
-    await PlayerUpdate.setMissionTimestamp(profile.discord_id, time);
+  ): Promise<Profile> {
+    return await PlayerUpdate.setMissionTimestamp(profile.discord_id, time);
   }
 
   public static async setLastDaily(
     profile: Profile,
     time: number
-  ): Promise<void> {
-    await PlayerUpdate.setDailyTimestamp(profile.discord_id, time);
+  ): Promise<Profile> {
+    return await PlayerUpdate.setDailyTimestamp(profile.discord_id, time);
   }
 
   public static async setLastHeartBox(
     profile: Profile,
     time: number
-  ): Promise<void> {
-    await PlayerUpdate.setHeartBoxTimestamp(profile.discord_id, time);
+  ): Promise<Profile> {
+    return await PlayerUpdate.setHeartBoxTimestamp(profile.discord_id, time);
   }
 
   public static async setLastOrphanClaim(
     profile: Profile,
     time: number
-  ): Promise<void> {
-    await PlayerUpdate.setOrphanTimestamp(profile.discord_id, time);
+  ): Promise<Profile> {
+    return await PlayerUpdate.setOrphanTimestamp(profile.discord_id, time);
   }
 
   public static async giveReputation(
     sender: Profile,
     receiver: Profile
-  ): Promise<void> {
-    await PlayerUpdate.giveReputation(sender.discord_id, receiver.discord_id);
+  ): Promise<Profile> {
+    return await PlayerUpdate.giveReputation(
+      sender.discord_id,
+      receiver.discord_id
+    );
   }
 
   public static async removeReputation(
     sender: Profile,
     receiver: Profile
-  ): Promise<void> {
-    await PlayerUpdate.removeReputation(sender.discord_id, receiver.discord_id);
+  ): Promise<Profile> {
+    return await PlayerUpdate.removeReputation(
+      sender.discord_id,
+      receiver.discord_id
+    );
   }
 
   public static async checkReputation(
@@ -235,19 +244,11 @@ export class PlayerService {
     return await PlayerFetch.getMostHearts(limit);
   }
 
-  public static async getTopXp(limit: number = 15): Promise<Profile[]> {
-    return await PlayerFetch.getTopXp(limit);
-  }
-
-  public static async addXp(profile: Profile, amount: number): Promise<void> {
-    return await PlayerUpdate.addXp(profile.discord_id, amount);
-  }
-
-  public static async toggleRestriction(profile: Profile): Promise<void> {
+  public static async toggleRestriction(profile: Profile): Promise<Profile> {
     if (profile.restricted) {
-      await PlayerUpdate.unrestrictUser(profile.discord_id);
+      return await PlayerUpdate.unrestrictUser(profile.discord_id);
     } else {
-      await PlayerUpdate.restrictUser(profile.discord_id);
+      return await PlayerUpdate.restrictUser(profile.discord_id);
     }
   }
 

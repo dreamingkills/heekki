@@ -16,14 +16,20 @@ interface Reference {
 }
 
 export class CardService {
+  public static heartsPerLevel: number = 300;
+
   private static commafyNumber(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  public static getLevelCap(card: UserCard): number {
+    return [15, 30, 45, 60, 75, 100][card.stars - 1];
   }
 
   public static calculateLevel(card: UserCard): number {
     const cap = [15, 30, 45, 60, 75, 100][card.stars - 1];
 
-    const raw = Math.floor(card.hearts / 300);
+    const raw = Math.floor(card.hearts / this.heartsPerLevel);
     const adjusted = raw > cap ? cap : raw;
     return adjusted;
   }
@@ -38,9 +44,9 @@ export class CardService {
     return await CardFetch.getUserCardByReference(reference);
   }
 
-  public static async upgradeCard(
-    amount: number,
-    card: UserCard
+  public static async addHeartsToCard(
+    card: UserCard,
+    amount: number
   ): Promise<UserCard> {
     return await CardUpdate.addHeartsToCard(card, amount);
   }

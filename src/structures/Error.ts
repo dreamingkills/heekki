@@ -4,6 +4,7 @@ export abstract class ClientError extends Error {
   message: string;
   name = "ClientError";
   isClientFacing = "true";
+  header = "Error";
   constructor(msg: string) {
     super(msg);
     this.message = msg;
@@ -187,6 +188,12 @@ export class PendingFriendRequestError extends ClientError {
 /*
     Card Errors
                  */
+export class MaximumLevelError extends ClientError {
+  name = "MaximumLevelError";
+  constructor() {
+    super(`Your card is at the maximum level for its rarity.`);
+  }
+}
 export class NoCardsError extends ClientError {
   name = "NoCardsError";
   constructor() {
