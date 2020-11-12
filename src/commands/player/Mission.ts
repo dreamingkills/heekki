@@ -82,7 +82,7 @@ export class Command extends BaseCommand {
 
         embed.description += `\n**+ ${
           this.config.discord.emoji.shard.full
-        }${profit}** (${newProfile.shards.toLocaleString()} total)`;
+        }${profit}** *(${newProfile.shards.toLocaleString()} total)*`;
       } else if (reward === "cash") {
         const profit = Math.floor(chance.integer({ min: 15, max: 25 }));
         const newProfile = await PlayerService.addCoinsToProfile(
@@ -92,7 +92,7 @@ export class Command extends BaseCommand {
 
         embed.description += `\n**+ ${
           this.config.discord.emoji.cash.full
-        } ${profit}** (${newProfile.coins.toLocaleString()} total)`;
+        } ${profit}** *(${newProfile.coins.toLocaleString()} total)*`;
       }
     } else {
       embed.setDescription(`${this.config.discord.emoji.cross.full} ${text}`);

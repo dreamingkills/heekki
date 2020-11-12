@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
       throw new error.DailyCooldownError(last + (86400000 - 1800000), now);
 
     let broken: boolean = false;
-    if (executor.dailyStreak > 0 && now > last + 86400000) broken = true;
+    if (executor.dailyStreak > 0 && now > last + 172800000) broken = true;
 
     await PlayerService.setLastDaily(executor, now);
 
@@ -38,9 +38,11 @@ export class Command extends BaseCommand {
     let desc =
       `${broken ? `:confused: **Your daily streak has been reset.**` : ``}` +
       `${!broken ? `:gift: You claimed your daily reward!` : ``}` +
-      `\n**+ ${shards.toLocaleString()} shards** (${
+      `\n**+ ${
+        this.config.discord.emoji.shard.full
+      } ${shards.toLocaleString()}** *(${
         milestone ? `${shards - 3} bonus, ` : ``
-      }${newProfile.shards.toLocaleString()} total)\n`;
+      }${newProfile.shards.toLocaleString()} total)*\n`;
     const embed = new MessageEmbed()
       .setAuthor(
         `Daily Reward | ${msg.author.tag}`,
