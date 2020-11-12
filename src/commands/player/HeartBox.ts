@@ -28,8 +28,6 @@ export class Command extends BaseCommand {
       PlayerService.setLastHeartBox(executor, now),
     ]);
 
-    //const xp = chance.integer({ min: 30, max: 65 });
-    //PlayerService.addXp(executor, xp);
     const embed = new MessageEmbed()
       .setAuthor(
         `Heart Boxes | ${msg.author.tag}`,

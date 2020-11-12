@@ -27,9 +27,6 @@ export class Command extends BaseCommand {
 
     await FriendService.sendHearts(executor, friends);
     await PlayerService.setLastHeartSend(executor, now);
-    // const chance = new Chance();
-    //const xp = chance.integer({ min: 40, max: 85 });
-    //PlayerService.addXp(executor, xp);
 
     await msg.channel.send(
       `${this.config.discord.emoji.hearts.full} You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`

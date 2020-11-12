@@ -34,13 +34,7 @@ export class Command extends BaseCommand {
           now <= timeUntilMission
             ? moment.utc(timeUntilMission.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }` /*\n- \`!vff\` Claim Card: ${
-          now <= timeUntilForfeitClaim
-            ? moment
-                .utc(timeUntilForfeitClaim.diff(now))
-                .format(`[__]HH:mm:ss[__]`)
-            : "**Now!**"
-        }`*/
+        }`
       );
 
     await msg.channel.send(embed);

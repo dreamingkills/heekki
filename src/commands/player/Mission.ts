@@ -100,7 +100,6 @@ export class Command extends BaseCommand {
 
     const now = Date.now();
     const timeout = (45 - ((card.stars * cardLevel) / 600) * 15) * 60 * 1000;
-    console.log(timeout);
     const nextMoment = moment(now + timeout);
     const nextMinutes = nextMoment.diff(now, "minutes");
     const nextSeconds = nextMoment.diff(now, "seconds") - nextMinutes * 60;

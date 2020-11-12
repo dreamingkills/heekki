@@ -1,7 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import { ShopService } from "../../database/service/ShopService";
 import { CardService } from "../../database/service/CardService";
-import moment from "moment";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import Chance from "chance";
@@ -26,7 +25,7 @@ export class Command extends BaseCommand {
     }
     if (pack.price > executor.coins) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You don't have enough coins to buy that.`
+        `${this.config.discord.emoji.cross.full} You don't have enough cash to buy that.`
       );
       return;
     }
@@ -51,30 +50,22 @@ export class Command extends BaseCommand {
       pack.price
     );
 
-    //const imageData = await CardService.getImageDataFromCard(newCard);
-    /*const image = await CardService.generateCardImageFromUserCard(
-      newCard,
-      imageData
-    );*/
     let embed = new MessageEmbed()
-      .setAuthor(`You rolled the ${pack.title} pack and got...`)
+      .setAuthor(`Pack | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
-        `${this.config.discord.emoji.cards.full} **${newCard.member}** #${
-          newCard.serialNumber
-        } ${"⭐".repeat(newCard.stars)}${
-          newCard.blurb !== "" ? `\n*"${newCard.blurb}"*` : ``
-        }`
+        `You rolled ${`**${pack.title}** and pulled **${newCard.member}**`}!\n**+ ${
+          this.config.discord.emoji.cards.full
+        } ${newCard.abbreviation}#${newCard.serialNumber}** — ${"⭐".repeat(
+          newCard.stars
+        )}`
       )
       .setColor("#FFAACC")
       .setFooter(
-        `${newCard.abbreviation + "#" + newCard.serialNumber} • Rolled by ${
-          msg.author.tag
-        } on ${moment().format("MMMM Do YYYY [@] HH:mm:ss")}`
+        `You now have ${(
+          executor.coins - pack.price
+        ).toLocaleString()} cash.\nCard #${newCard.userCardId.toLocaleString()}`
       )
-      .setThumbnail(`attachment://card.png`);
-
-    //embed.attachFiles([{ name: "card.png", attachment: image }]);
-
+      .setTimestamp(Date.now());
     await msg.channel.send(embed);
   }
 }

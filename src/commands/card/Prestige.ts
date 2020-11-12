@@ -36,14 +36,14 @@ export class Command extends BaseCommand {
       .setDescription(
         `${
           this.config.discord.emoji.check.full
-        } Prestiged **${`${newCard.abbreviation}#${newCard.serialNumber}`}**.` +
+        } Prestiged **${`${newCard.abbreviation}#${newCard.serialNumber}`}** for ${
+          this.config.discord.emoji.shard.full
+        } **${requirement}**.` +
           `\n**+ ${`${newCard.abbreviation}#${newCard.serialNumber}`}** — ${":star:".repeat(
             newCard.stars
-          )}` +
-          `\n**- ${
-            this.config.discord.emoji.shard.full
-          } ${requirement}** *(new total: ${newProfile.shards.toLocaleString()})*`
-      );
+          )}`
+      )
+      .setFooter(`You now have ${newProfile.shards.toLocaleString()} shards.`);
     await msg.channel.send(embed);
     return;
   }
