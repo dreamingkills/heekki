@@ -1,12 +1,56 @@
+import { Profile } from "../../../structures/player/Profile";
 import { DB, DBClass } from "../../index";
+import { PlayerService } from "../../service/PlayerService";
 
 export class PlayerUpdate extends DBClass {
-  public static async createNewProfile(discord_id: string): Promise<void> {
+  /*
+      Currency
+                */
+  public static async addShards(
+    profile: Profile,
+    amount: number
+  ): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET shards=shards+? WHERE discord_id=?;`,
+      [amount, profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+  public static async removeShards(
+    profile: Profile,
+    amount: number
+  ): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET shards=shards-? WHERE discord_id=?;`,
+      [amount, profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+
+  /*
+      Time-Based Rewards
+                          */
+  public static async incrementDailyStreak(profile: Profile): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET daily_streak=daily_streak+1 WHERE discord_id=?;`,
+      [profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+  public static async resetDailyStreak(profile: Profile): Promise<Profile> {
+    await DB.query(
+      `UPDATE user_profile SET daily_streak=0 WHERE discord_id=?;`,
+      [profile.discord_id]
+    );
+    return await PlayerService.getProfileByDiscordId(profile.discord_id);
+  }
+
+  public static async createNewProfile(discordId: string): Promise<Profile> {
     await DB.query(
       `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${300});`,
-      [discord_id]
+      [discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async changeDescription(
     discord_id: string,
@@ -19,218 +63,182 @@ export class PlayerUpdate extends DBClass {
     return;
   }
   public static async addCoins(
-    discord_id: string,
+    discordId: string,
     amount: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET coins=coins+? WHERE discord_id=?;`,
-      [amount, discord_id]
+      [amount, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async removeCoins(
-    discord_id: string,
+    discordId: string,
     amount: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(`UPDATE user_profile SET coins=coins-? WHERE discord_id=?`, [
       amount,
-      discord_id,
+      discordId,
     ]);
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async addHearts(
-    discord_id: string,
+    discordId: string,
     amount: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET hearts=hearts+? WHERE discord_id=?;`,
-      [amount, discord_id]
+      [amount, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async removeHearts(
-    discord_id: string,
+    discordId: string,
     amount: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET hearts=hearts-? WHERE discord_id=?`,
-      [amount, discord_id]
+      [amount, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async setHeartSendTimestamp(
-    discord_id: string,
+    discordId: string,
     time: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET hearts_last=? WHERE discord_id=?;`,
-      [time, discord_id]
+      [time, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async setHeartBoxTimestamp(
-    discord_id: string,
+    discordId: string,
     time: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET heart_box_last=? WHERE discord_id=?;`,
-      [time, discord_id]
+      [time, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async giveBadge(
-    discord_id: string,
+    discordId: string,
     badge_id: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `INSERT INTO user_badge (discord_id, badge_id) VALUES (?, ?);`,
-      [discord_id, badge_id]
+      [discordId, badge_id]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
   public static async removeBadge(
-    discord_id: string,
+    discordId: string,
     badge_id: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `DELETE FROM user_badge WHERE discord_id=? AND badge_id=?;`,
-      [discord_id, badge_id]
+      [discordId, badge_id]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
   public static async setOrphanTimestamp(
-    discord_id: string,
+    discordId: string,
     time: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET last_orphan=? WHERE discord_id=?;`,
-      [time, discord_id]
+      [time, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async setMissionTimestamp(
-    discord_id: string,
+    discordId: string,
     time: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(
-      `UPDATE user_profile SET mission_last=? WHERE discord_id=?;`,
-      [time, discord_id]
+      `UPDATE user_profile SET mission_next=? WHERE discord_id=?;`,
+      [time, discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
   public static async setDailyTimestamp(
-    discord_id: string,
+    discordId: string,
     time: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(`UPDATE user_profile SET daily_last=? WHERE discord_id=?;`, [
       time,
-      discord_id,
+      discordId,
     ]);
-    return;
-  }
-
-  public static async createFish(
-    discord_id: string,
-    fish: number,
-    weight: number,
-    weightModId: number,
-    identifier: string
-  ): Promise<void> {
-    await DB.query(
-      `INSERT INTO fish (owner_id, fish_id, fish_weight, weight_mod, identifier) VALUES (?, ?, ?, ?, ?);`,
-      [discord_id, fish, weight, weightModId, identifier]
-    );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
   public static async giveReputation(
-    sender_id: string,
-    receiver_id: string
-  ): Promise<void> {
+    senderId: string,
+    receiverId: string
+  ): Promise<Profile> {
     await DB.query(
       `INSERT INTO reputation (sender_id, receiver_id) VALUES (?, ?);`,
-      [sender_id, receiver_id]
+      [senderId, receiverId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(receiverId);
   }
 
   public static async removeReputation(
     sender_id: string,
-    receiver_id: string
-  ): Promise<void> {
+    receiverId: string
+  ): Promise<Profile> {
     await DB.query(
       `DELETE FROM reputation WHERE sender_id=? AND receiver_id=?;`,
-      [sender_id, receiver_id]
+      [sender_id, receiverId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(receiverId);
   }
 
-  public static async addXp(discord_id: string, amount: number): Promise<void> {
-    await DB.query(`UPDATE user_profile SET xp=xp+? WHERE discord_id=?;`, [
-      amount,
-      discord_id,
-    ]);
-    return;
-  }
-
-  public static async makeFishTrophy(id: string): Promise<void> {
-    await DB.query(`UPDATE fish SET trophy_fish=true WHERE identifier=?;`, [
-      id,
-    ]);
-    return;
-  }
-
-  public static async clearFish(ownerId: string): Promise<void> {
-    await DB.query(`DELETE FROM fish WHERE owner_id=? AND trophy_fish=false;`, [
-      ownerId,
-    ]);
-    return;
-  }
-
-  public static async restrictUser(discordId: string): Promise<void> {
+  public static async restrictUser(discordId: string): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET restricted=true WHERE discord_id=?;`,
       [discordId]
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
-  public static async unrestrictUser(discordId: string): Promise<void> {
+  public static async unrestrictUser(discordId: string): Promise<Profile> {
     await DB.query(
       `UPDATE user_profile SET restricted=false WHERE discord_id=?;`,
       discordId
     );
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
   public static async addToWell(
     discordId: string,
     amount: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(`UPDATE user_profile SET well=well+? WHERE discord_id=?;`, [
       amount,
       discordId,
     ]);
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
   public static async useCard(
     discordId: string,
     cardId: number
-  ): Promise<void> {
+  ): Promise<Profile> {
     await DB.query(`UPDATE user_profile SET use_card=? WHERE discord_id=?;`, [
       cardId,
       discordId,
     ]);
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 
-  public static async unsetDefaultCard(discordId: string): Promise<void> {
+  public static async unsetDefaultCard(discordId: string): Promise<Profile> {
     await DB.query(`UPDATE user_profile SET use_card=0 WHERE discord_id=?;`, [
       discordId,
     ]);
-    return;
+    return await PlayerService.getProfileByDiscordId(discordId);
   }
 }

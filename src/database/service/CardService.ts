@@ -16,21 +16,22 @@ interface Reference {
 }
 
 export class CardService {
-  private static commafyNumber(num: number) {
+  public static heartsPerLevel: number = 300;
+
+  private static commafyNumber(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
-  public static heartsToLevel(hearts: number) {
-    const unrounded = hearts / 150;
-    const currentLevel = unrounded >= 1 ? Math.floor(unrounded) + 1 : 1;
+  public static getLevelCap(card: UserCard): number {
+    return [15, 30, 45, 60, 75, 100][card.stars - 1];
+  }
 
-    const nextRequirement = currentLevel * 150;
-    return {
-      totalHearts: hearts,
-      level: currentLevel >= 99 ? 99 : currentLevel,
-      next: currentLevel >= 99 ? -1 : nextRequirement,
-      toNext: currentLevel >= 99 ? -1 : nextRequirement - hearts,
-    };
+  public static calculateLevel(card: UserCard): number {
+    const cap = [15, 30, 45, 60, 75, 100][card.stars - 1];
+
+    const raw = Math.floor(card.hearts / this.heartsPerLevel);
+    const adjusted = raw > cap ? cap : raw;
+    return adjusted;
   }
 
   public static async getCardsByPack(pack: Pack | ShopItem): Promise<Card[]> {
@@ -43,9 +44,9 @@ export class CardService {
     return await CardFetch.getUserCardByReference(reference);
   }
 
-  public static async upgradeCard(
-    amount: number,
-    card: UserCard
+  public static async addHeartsToCard(
+    card: UserCard,
+    amount: number
   ): Promise<UserCard> {
     return await CardUpdate.addHeartsToCard(card, amount);
   }
@@ -119,7 +120,7 @@ export class CardService {
       await this.generateText(
         ctx,
         { ...imageData.levelNum },
-        this.heartsToLevel(card.hearts).level.toString()
+        this.calculateLevel(card).toString()
       );
     }
     if (imageData.heartText.size > 0) {

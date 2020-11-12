@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
     let desc = "";
     for (let c of cards) {
       const { forSale } = await MarketService.cardIsOnMarketplace(c);
-      const { level } = CardService.heartsToLevel(c.hearts);
+      const level = CardService.calculateLevel(c);
       desc += `__**${c.abbreviation}#${c.serialNumber}**__ - ${c.member} ${
         (c.isFavorite ? `${this.config.discord.emoji.hearts.full}` : "") +
         (forSale ? `${this.config.discord.emoji.cash.full}` : "")

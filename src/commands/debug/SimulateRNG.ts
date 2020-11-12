@@ -31,6 +31,9 @@ export class Command extends BaseCommand {
           !daily
             ???
             ???
+          !mission
+          [1, 2, 3, 4],
+          [1000 / 2.5, 500 / 1.75, 200 * 2, 66.66666667 * 2]
       */
       const starCount = chance.weighted(
         [1, 2, 3, 4, 5, 6],

@@ -170,10 +170,6 @@ export class Command extends BaseCommand {
           await PlayerService.addCoinsToProfile(sellerProfile, forSale.price);
           await PlayerService.removeCoinsFromProfile(executor, forSale.price);
 
-          // const chance = new Chance();
-          //const xp = chance.integer({ min: 40, max: 71 });
-          //PlayerService.addXp(sellerProfile, xp);
-
           await StatsService.saleComplete(
             executor,
             card.ownerId,

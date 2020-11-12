@@ -292,3 +292,7 @@ CREATE TABLE setting
     value           TINYTEXT,
     PRIMARY KEY(id)
 );
+
+ALTER TABLE user_profile ADD COLUMN shards INT(11) DEFAULT 0;
+ALTER TABLE user_profile DROP COLUMN xp;
+ALTER TABLE user_profile CHANGE COLUMN mission_last mission_next BIGINT(20);

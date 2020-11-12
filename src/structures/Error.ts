@@ -4,6 +4,7 @@ export abstract class ClientError extends Error {
   message: string;
   name = "ClientError";
   isClientFacing = "true";
+  header = "Error";
   constructor(msg: string) {
     super(msg);
     this.message = msg;
@@ -67,6 +68,12 @@ export class NotEnoughHeartsError extends ClientError {
     super("You don't have enough hearts to do that!");
   }
 }
+export class NotEnoughShardsError extends ClientError {
+  name = "NotEnoughShardsError";
+  constructor() {
+    super(`You don't have enough shards for that.`);
+  }
+}
 
 /*
     Timer Errors
@@ -106,23 +113,28 @@ export class OrphanCooldownError extends ClientError {
 }
 export class MissionCooldownError extends ClientError {
   name = "MissionCooldownError";
+  header = "Mission";
   constructor(until: number, now: number) {
     super(
-      `Please wait **${moment(until).diff(
-        now,
-        "minutes"
-      )} minutes** before embarking upon another mission.`
+      `You can do another mission in **${moment(until).diff(now, "minutes")}m ${
+        moment(until).diff(now, "seconds") -
+        moment(until).diff(now, "minutes") * 60
+      }s**.`
     );
   }
 }
 export class DailyCooldownError extends ClientError {
   name = "DailyCooldownError";
+  header = "Daily Reward";
   constructor(until: number, now: number) {
     super(
-      `Please wait **${moment(until).diff(now, "hours")} hours and ${
+      `You can claim your daily reward in **${moment(until).diff(
+        now,
+        "hours"
+      )}h ${
         moment(until).diff(now, "minutes") -
         moment(until).diff(now, "hours") * 60
-      } minutes** before claiming your daily reward again.`
+      }m**.`
     );
   }
 }
@@ -182,6 +194,12 @@ export class PendingFriendRequestError extends ClientError {
 /*
     Card Errors
                  */
+export class MaximumLevelError extends ClientError {
+  name = "MaximumLevelError";
+  constructor() {
+    super(`Your card is at the maximum level for its rarity.`);
+  }
+}
 export class NoCardsError extends ClientError {
   name = "NoCardsError";
   constructor() {
@@ -320,7 +338,7 @@ export class InvalidPriceError extends ClientError {
   name = "InvalidPriceError";
   constructor() {
     super(
-      `Please enter a valid price, above 0 Coins and below 2,147,483,647 Coins.`
+      `Please enter a valid price, above 0 Cash and below 2,147,483,647 Cash.`
     );
   }
 }

@@ -27,11 +27,6 @@ export class Command extends BaseCommand {
       `:information_source: **Trivia Time!** ${msg.author}\n${triviaSelect.question}`
     );
 
-    /*const profit = chance.integer({
-      min: triviaSelect.reward.min,
-      max: triviaSelect.reward.max,
-    });*/
-
     const collect = channel.createMessageCollector(
       (m: Message) => m.author == msg.author,
       {
@@ -41,13 +36,8 @@ export class Command extends BaseCommand {
     collect.on("collect", async (m: Message) => {
       if (!collect.ended) {
         if (triviaSelect.answer.indexOf(m.content.toLowerCase()) >= 0) {
-          //const xp = chance.integer({ min: 2, max: 6 });
-          //PlayerService.addXp(executor, xp);
-          await triviaMessage.edit(
-            `:tada: **Correct!**` //\n+ **${xp}** XP` //\nYou were awarded <:coin:745447920072917093> **${profit}**.`
-          );
+          await triviaMessage.edit(`:tada: **Correct!**`);
 
-          //await PlayerService.addCoinsToProfile(executor, profit);
           collect.stop("correct");
           if (this.permissions.ADD_REACTIONS)
             await msg.react(this.config.discord.emoji.check.id);

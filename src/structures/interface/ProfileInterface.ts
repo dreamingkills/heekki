@@ -8,10 +8,12 @@ export interface ProfileInterface {
   well: number;
   use_card: number;
   reputation: number;
+  shards: number;
 
+  daily_streak: number;
   daily_last: number;
   hearts_last: number;
   heart_box_last: number;
   last_orphan: number;
-  mission_last: number;
+  mission_next: number;
 }

@@ -1,10 +1,4 @@
-import {
-  Message,
-  MessageEmbed,
-  User,
-  MessageReaction,
-  TextChannel,
-} from "discord.js";
+import { Message, MessageEmbed, User, MessageReaction } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { ShopService } from "../../database/service/ShopService";
 import { UserCardService } from "../../database/service/UserCardService";
@@ -55,9 +49,7 @@ export class Command extends BaseCommand {
           reaction.emoji.id === "753019858932727868" &&
           user.id === msg.author.id
       );
-      collector.on("collect", async () => {
-        await (<TextChannel>msg.channel).bulkDelete([sent, msg]);
-      });
+      collector.on("collect", async () => await sent.delete());
     }
   }
 }

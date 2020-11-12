@@ -69,8 +69,8 @@ export class ProfileController {
           { daily: profile.lastDaily },
           { heart_box: profile.lastHeartBox },
           { send_hearts: profile.lastHeartSend },
-          { mission: profile.lastMission },
-          { claim_forfeit: profile.lastMission },
+          { mission: profile.missionNext },
+          { claim_forfeit: profile.lastOrphan },
         ],
       };
     } catch (e) {
