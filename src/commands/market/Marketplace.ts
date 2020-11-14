@@ -3,7 +3,6 @@ import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { StatsService } from "../../database/service/StatsService";
-import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import { UserCard } from "../../structures/player/UserCard";
@@ -166,7 +165,7 @@ export class Command extends BaseCommand {
             card.ownerId
           );
           await MarketService.removeListing(card);
-          await UserCardService.transferCardToProfile(executor, card);
+          await CardService.transferCardToProfile(executor, card);
           await PlayerService.addCoinsToProfile(sellerProfile, forSale.price);
           await PlayerService.removeCoinsFromProfile(executor, forSale.price);
 

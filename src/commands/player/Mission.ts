@@ -7,7 +7,6 @@ import mission from "../../assets/missions.json";
 import { Chance } from "chance";
 import * as error from "../../structures/Error";
 import { Profile } from "../../structures/player/Profile";
-import { UserCardService } from "../../database/service/UserCardService";
 import moment from "moment";
 
 export class Command extends BaseCommand {
@@ -19,7 +18,7 @@ export class Command extends BaseCommand {
     };
     let card;
     if (!reference.identifier && executor.cardPriority !== 0) {
-      card = await UserCardService.getUserCardById(executor.cardPriority);
+      card = await CardService.getUserCardById(executor.cardPriority);
     } else {
       if (isNaN(reference.serial) && executor.cardPriority === 0)
         throw new error.InvalidCardReferenceError();
@@ -60,7 +59,7 @@ export class Command extends BaseCommand {
           [1, 2, 3, 4],
           [1000 / 2.5, 500 / 1.75, 200 * 2, 66.66666667 * 2]
         );
-        const newCard = await UserCardService.createNewUserCard(
+        const newCard = await CardService.createNewUserCard(
           executor,
           cardType,
           stars,

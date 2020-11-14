@@ -9,6 +9,8 @@ import { ProfileInterface } from "../../../structures/interface/ProfileInterface
 import { OptionsParser } from "../OptionsParser";
 import { UserCardInterface } from "../../../structures/interface/UserCardInterface";
 import { BadgeInterface } from "../../../structures/interface/BadgeInterface";
+import { EdenInterface } from "../../../structures/interface/EdenInterface";
+import { Eden } from "../../../structures/game/Eden";
 
 export class PlayerFetch extends DBClass {
   public static async checkIfUserExists(discord_id: string): Promise<boolean> {
@@ -36,6 +38,18 @@ export class PlayerFetch extends DBClass {
     return new Profile(user[0], badges);
   }
 
+  public static async getEdenByDiscordId(profile: Profile): Promise<Eden> {
+    const query = (await DB.query(`SELECT * FROM eden WHERE discord_id=?;`, [
+      profile.discord_id,
+    ])) as EdenInterface[];
+    let eden;
+    if (!query[0]?.discord_id) {
+      eden = await PlayerService.createNewEden(profile);
+      return eden;
+    } else eden = query[0];
+    return new Eden(eden);
+  }
+
   public static async getUserCardsByDiscordId(
     discord_id: string,
     options: {
@@ -50,8 +64,8 @@ export class PlayerFetch extends DBClass {
                     card.rarity,
                     card.image_url,
                     card.pack_id,
-                    card.serial_id,
                     card.serial_limit,
+                    card.serial_total,
                     card.image_data_id,
                     user_card.id AS user_card_id,
                     user_card.serial_number,
@@ -251,8 +265,8 @@ export class PlayerFetch extends DBClass {
                     card.rarity,
                     card.image_url,
                     card.pack_id,
-                    card.serial_id,
                     card.serial_limit,
+                    card.serial_total,
                     card.image_data_id,
                     user_card.id AS user_card_id,
                     user_card.serial_number,

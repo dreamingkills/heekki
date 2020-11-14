@@ -1,6 +1,5 @@
 import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
-import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { MarketService } from "../../database/service/MarketService";
 import { UserCard } from "../../structures/player/UserCard";
@@ -71,7 +70,7 @@ export class Command extends BaseCommand {
     });
 
     collector.on("collect", async () => {
-      await UserCardService.transferCards("0", validCards);
+      await CardService.transferCards("0", validCards);
 
       await conf.edit(
         `${this.config.discord.emoji.check.full} You forfeited **${validCards.length}** cards.`

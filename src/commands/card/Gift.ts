@@ -2,7 +2,6 @@ import { Message, MessageReaction, User } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { UserCard } from "../../structures/player/UserCard";
 import { MarketService } from "../../database/service/MarketService";
-import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 
@@ -91,7 +90,7 @@ export class Command extends BaseCommand {
     });
 
     reactions.on("collect", async () => {
-      await UserCardService.transferCards(profile.discord_id, validCards);
+      await CardService.transferCards(profile.discord_id, validCards);
       await confirmation.edit(
         `${this.config.discord.emoji.check.full} Gifted **${validCards.length}** cards to **${mention.tag}**!`
       );

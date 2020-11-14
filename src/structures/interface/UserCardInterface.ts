@@ -10,6 +10,7 @@ export interface UserCardInterface {
   id: number;
   serial_number: number;
   serial_limit: number;
+  serial_total: number;
   owner_id: string;
   stars: number;
   hearts: number;

@@ -3,7 +3,6 @@ import { CardService } from "../../database/service/CardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
-import { UserCardService } from "../../database/service/UserCardService";
 import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
@@ -25,7 +24,7 @@ export class Command extends BaseCommand {
     if (targetCard.ownerId !== "0")
       throw new error.CardNotOrphanedError(reference);
 
-    await UserCardService.transferCardToProfile(executor, targetCard);
+    await CardService.transferCardToProfile(executor, targetCard);
     await PlayerService.setLastOrphanClaim(executor, now);
     await msg.channel.send(
       `${this.config.discord.emoji.check.full} You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **30 minutes**.`

@@ -296,3 +296,40 @@ CREATE TABLE setting
 ALTER TABLE user_profile ADD COLUMN shards INT(11) DEFAULT 0;
 ALTER TABLE user_profile DROP COLUMN xp;
 ALTER TABLE user_profile CHANGE COLUMN mission_last mission_next BIGINT(20);
+
+CREATE TABLE guild
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    guild_id        TINYTEXT NOT NULL,
+    drop_channel    TINYTEXT NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE eden
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      TINYTEXT NOT NULL,
+    cash            INT(11) DEFAULT 0,
+    hourly_rate     INT(11) DEFAULT 0,
+    cap             INT(11) DEFAULT 150,
+    multiplier      DECIMAL(11, 1) DEFAULT 1,
+    multiplier_ends BIGINT(20),
+    heejin          INT(11),
+    hyunjin         INT(11),
+    haseul          INT(11),
+    yeojin          INT(11),
+    vivi            INT(11),
+    kimlip          INT(11),
+    jinsoul         INT(11),
+    choerry         INT(11),
+    yves            INT(11),
+    chuu            INT(11),
+    gowon           INT(11),
+    oliviahye       INT(11),
+    PRIMARY KEY(id)
+);
+
+ALTER TABLE card DROP FOREIGN KEY SerialNumber;
+ALTER TABLE card DROP COLUMN serial_id;
+DROP TABLE serial_number;
+ALTER TABLE card ADD COLUMN serial_total INT(11) DEFAULT 0;

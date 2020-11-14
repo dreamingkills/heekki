@@ -3,8 +3,34 @@ import { Profile } from "../../structures/player/Profile";
 import { PlayerUpdate } from "../sql/player/PlayerUpdate";
 import { UserCard } from "../../structures/player/UserCard";
 import { Badge } from "../../structures/player/Badge";
+import { Eden } from "../../structures/game/Eden";
 
 export class PlayerService {
+  public static async getLastCard(profile: Profile): Promise<UserCard> {
+    return await PlayerFetch.getLastCard(profile.discord_id);
+  }
+  /*
+      Eden
+            */
+  public static async addCardToEden(
+    profile: Profile,
+    member: string,
+    card: UserCard
+  ): Promise<Eden> {
+    return await PlayerUpdate.addCardToEden(card, member, profile);
+  }
+  public static async removeCardFromEden(
+    profile: Profile,
+    member: string
+  ): Promise<Eden> {
+    return await PlayerUpdate.removeCardFromEden(member, profile);
+  }
+  public static async setHourlyRate(
+    profile: Profile,
+    rate: number
+  ): Promise<Eden> {
+    return await PlayerUpdate.setHourlyRate(profile, rate);
+  }
   /*
       Time-Based Rewards
                           */
@@ -20,6 +46,13 @@ export class PlayerService {
     const user = await this.getProfileByDiscordId(discord_id);
 
     return user;
+  }
+
+  public static async getEden(profile: Profile): Promise<Eden> {
+    return await PlayerFetch.getEdenByDiscordId(profile);
+  }
+  public static async createNewEden(profile: Profile): Promise<Eden> {
+    return await PlayerUpdate.createEden(profile);
   }
 
   public static async getProfileByDiscordId(

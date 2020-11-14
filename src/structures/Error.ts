@@ -1,4 +1,5 @@
 import moment from "moment";
+import { UserCard } from "./player/UserCard";
 
 export abstract class ClientError extends Error {
   message: string;
@@ -42,6 +43,40 @@ export class NotANumberError extends ClientError {
 }
 
 /*
+    Eden Errors
+                 */
+export class DifferentCardInEdenError extends ClientError {
+  name = "DifferentCardInEdenError";
+  constructor(card: UserCard) {
+    super(
+      `The **${
+        card.member
+      }** slot is already taken by **${`${card.abbreviation}#${card.serialNumber}`}**.`
+    );
+  }
+}
+export class CardAlreadyInEdenError extends ClientError {
+  name = "CardAlreadyInEdenError";
+  constructor(card: UserCard) {
+    super(
+      `**${`${card.abbreviation}#${card.serialNumber}`}** is already in Eden.`
+    );
+  }
+}
+export class NoMemberInEdenError extends ClientError {
+  name = "NoMemberInEdenError";
+  constructor(member: string) {
+    super(`You haven't sent a **${member}** card to Eden yet.`);
+  }
+}
+export class CardNotInEdenError extends ClientError {
+  name = "CardNotInEdenError";
+  constructor(card: UserCard) {
+    super(`**${`${card.abbreviation}#${card.serialNumber}`}** is not in Eden.`);
+  }
+}
+
+/*
     Profile Errors
                     */
 export class NoProfileError extends ClientError {
@@ -72,6 +107,18 @@ export class NotEnoughShardsError extends ClientError {
   name = "NotEnoughShardsError";
   constructor() {
     super(`You don't have enough shards for that.`);
+  }
+}
+export class NoMentionedUserError extends ClientError {
+  name = "NoMentionedUserError";
+  constructor() {
+    super(`Please mention someone.`);
+  }
+}
+export class NotAMemberError extends ClientError {
+  name = "NotAMemberError";
+  constructor() {
+    super(`Please select a member of LOONA.`);
   }
 }
 

@@ -25,7 +25,7 @@ export class CardFetch extends DBClass {
         rarity,
         image_url,
         pack_id,
-        serial_id,
+        serial_total,
         serial_limit,
         image_data_id
       FROM card WHERE rarity>0 ORDER BY -LOG(1.0-RAND())/rarity LIMIT 1;`
@@ -87,7 +87,7 @@ export class CardFetch extends DBClass {
         rarity,
         image_url,
         pack_id,
-        serial_id,
+        serial_total,
         serial_limit,
         image_data_id
       FROM card WHERE pack_id=?;`,
@@ -113,7 +113,7 @@ export class CardFetch extends DBClass {
         card.rarity,
         card.image_url,
         card.pack_id,
-        card.serial_id,
+        card.serial_total,
         card.serial_limit,
         card.image_data_id,
         user_card.id AS user_card_id,
@@ -139,7 +139,7 @@ export class CardFetch extends DBClass {
         card.rarity,
         card.image_url,
         card.pack_id,
-        card.serial_id,
+        card.serial_total,
         card.serial_limit,
         card.image_data_id,
         user_card.id AS user_card_id,

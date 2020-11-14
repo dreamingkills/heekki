@@ -41,7 +41,7 @@ export abstract class BaseCommand implements Command {
   ): Promise<void> {
     this.config = cfg;
     this.bot = bot;
-    
+
     this.options = msg.content
       .split(" ")
       .slice(1)
@@ -67,4 +67,19 @@ export abstract class BaseCommand implements Command {
   public parseMention(query: string): string {
     return query.replace(/[\\<>@#&!]/g, "");
   }
+
+  public emojis: { [key: string]: string } = {
+    HeeJin: ":rabbit:",
+    HyunJin: ":cat:",
+    HaSeul: ":dove:",
+    YeoJin: ":frog:",
+    ViVi: ":deer:",
+    "Kim Lip": ":owl:",
+    JinSoul: ":fish:",
+    Choerry: ":bat:",
+    Yves: ":swan:",
+    Chuu: ":penguin:",
+    "Go Won": ":butterfly:",
+    "Olivia Hye": ":wolf:",
+  };
 }

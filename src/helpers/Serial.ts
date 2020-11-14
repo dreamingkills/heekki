@@ -24,24 +24,20 @@ export class SerialGenerator {
           await PlayerService.removeCoinsFromProfile(profile, price);
         }
 
-        const serial = (await DB.query(
-          `SELECT * FROM serial_number WHERE id=?;`,
-          [card.serialId]
-        )) as { id: number; serial_number: number }[];
         if (
           card.serialLimit > 0 &&
-          serial[0].serial_number >= card.serialLimit &&
+          card.serialTotal >= card.serialLimit &&
           force === false
         ) {
           throw new error.MaxSerialError();
         }
 
-        await DB.query(`UPDATE serial_number SET serial_number=? WHERE id=?;`, [
-          serial[0].serial_number + 1,
-          card.serialId,
+        await DB.query(`UPDATE card SET serial_total=? WHERE id=?;`, [
+          card.serialTotal + 1,
+          card.cardId,
         ]);
 
-        return serial[0].serial_number + 1;
+        return card.serialTotal + 1;
       }
     };
 

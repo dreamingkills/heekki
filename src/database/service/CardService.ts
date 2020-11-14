@@ -9,6 +9,7 @@ import { ShopItem } from "../../structures/shop/ShopItem";
 import { Card } from "../../structures/card/Card";
 import { TextInterface } from "../../structures/interface/image/TextInterface";
 import fs from "fs/promises";
+import { Profile } from "../../structures/player/Profile";
 
 interface Reference {
   identifier: string;
@@ -22,6 +23,10 @@ export class CardService {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  public static cardToReference(card: UserCard): string {
+    return `${card.abbreviation}#${card.serialNumber}`;
+  }
+
   public static getLevelCap(card: UserCard): number {
     return [15, 30, 45, 60, 75, 100][card.stars - 1];
   }
@@ -32,6 +37,63 @@ export class CardService {
     const raw = Math.floor(card.hearts / this.heartsPerLevel);
     const adjusted = raw > cap ? cap : raw;
     return adjusted;
+  }
+
+  public static async getUserCardById(id: number): Promise<UserCard> {
+    return await CardFetch.getUserCardById(id);
+  }
+
+  public static async transferCardToProfile(
+    receiver: Profile,
+    card: UserCard
+  ): Promise<void> {
+    return await CardUpdate.transferCardsToUser(receiver.discord_id, [card]);
+  }
+
+  public static async createNewUserCard(
+    profile: Profile,
+    card: Card,
+    stars: number,
+    hearts: number,
+    force: boolean = false,
+    price: number,
+    free: boolean = false
+  ): Promise<UserCard> {
+    return await CardUpdate.createNewUserCard(
+      profile,
+      card,
+      stars,
+      hearts,
+      force,
+      price,
+      free
+    );
+  }
+
+  public static async toggleCardAsFavorite(card: UserCard): Promise<void> {
+    return await CardUpdate.toggleCardAsFavorite(card.userCardId);
+  }
+
+  public static async forfeitCard(_: string, card: UserCard): Promise<void> {
+    return await CardUpdate.forfeitCard(card);
+  }
+
+  public static async incrementCardStars(card: UserCard): Promise<UserCard> {
+    return await CardUpdate.incrementCardStars(card);
+  }
+
+  public static async transferCards(
+    recipient: string,
+    cards: UserCard[]
+  ): Promise<void> {
+    return await CardUpdate.transferCardsToUser(recipient, cards);
+  }
+
+  public static async removeHeartsFromCard(
+    card: UserCard,
+    amount: number
+  ): Promise<void> {
+    return await CardUpdate.removeHeartsFromCard(card, amount);
   }
 
   public static async getCardsByPack(pack: Pack | ShopItem): Promise<Card[]> {

@@ -9,6 +9,7 @@ export class Card {
   serialId: number;
   serialLimit: number;
   imageDataId: number;
+  serialTotal: number;
 
   constructor(data: {
     card_id: number;
@@ -20,6 +21,7 @@ export class Card {
     pack_id: number;
     serial_id: number;
     serial_limit: number;
+    serial_total: number;
     image_data_id: number;
   }) {
     this.cardId = data.card_id;
@@ -32,5 +34,6 @@ export class Card {
     this.serialId = data.serial_id;
     this.serialLimit = data.serial_limit;
     this.imageDataId = data.image_data_id;
+    this.serialTotal = data.serial_total;
   }
 }

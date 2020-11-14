@@ -4,7 +4,7 @@ import { CardFetch } from "./CardFetch";
 import { Card } from "../../../structures/card/Card";
 import { SerialGenerator } from "../../../helpers/Serial";
 import { Profile } from "../../../structures/player/Profile";
-import { UserCardService } from "../../service/UserCardService";
+import { CardService } from "../../service/CardService";
 
 export class CardUpdate extends DBClass {
   public static async createNewUserCard(
@@ -94,7 +94,7 @@ export class CardUpdate extends DBClass {
     await DB.query(`UPDATE user_card SET stars=stars+1 WHERE id=?;`, [
       card.userCardId,
     ]);
-    return await UserCardService.getUserCardById(card.userCardId);
+    return await CardService.getUserCardById(card.userCardId);
   }
 
   public static async toggleCardAsFavorite(card_id: number): Promise<void> {

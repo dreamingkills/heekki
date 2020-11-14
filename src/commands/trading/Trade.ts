@@ -3,7 +3,6 @@ import { CardService } from "../../database/service/CardService";
 import { MarketService } from "../../database/service/MarketService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { StatsService } from "../../database/service/StatsService";
-import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import { UserCard } from "../../structures/player/UserCard";
@@ -240,9 +239,9 @@ export class Command extends BaseCommand {
 
           if (senderConfirmed && tradeeConfirmed) {
             if (senderCards.length > 0)
-              await UserCardService.transferCards(tradeeUser.id, senderCards);
+              await CardService.transferCards(tradeeUser.id, senderCards);
             if (tradeeCards.length > 0)
-              await UserCardService.transferCards(msg.author.id, tradeeCards);
+              await CardService.transferCards(msg.author.id, tradeeCards);
 
             await StatsService.tradeComplete(executor, tradee);
             await sent.edit(

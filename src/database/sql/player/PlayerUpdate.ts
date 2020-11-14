@@ -1,8 +1,51 @@
+import { Eden } from "../../../structures/game/Eden";
 import { Profile } from "../../../structures/player/Profile";
+import { UserCard } from "../../../structures/player/UserCard";
 import { DB, DBClass } from "../../index";
 import { PlayerService } from "../../service/PlayerService";
 
 export class PlayerUpdate extends DBClass {
+  public static async createEden(profile: Profile): Promise<Eden> {
+    await DB.query(`INSERT INTO eden (discord_id) VALUES (?);`, [
+      profile.discord_id,
+    ]);
+    return await PlayerService.getEden(profile);
+  }
+
+  /*
+      Eden
+            */
+  public static async addCardToEden(
+    card: UserCard,
+    member: string,
+    profile: Profile
+  ): Promise<Eden> {
+    await DB.query(`UPDATE eden SET ${member}=? WHERE discord_id=?;`, [
+      card.userCardId,
+      profile.discord_id,
+    ]);
+    return await PlayerService.getEden(profile);
+  }
+  public static async removeCardFromEden(
+    member: string,
+    profile: Profile
+  ): Promise<Eden> {
+    await DB.query(`UPDATE eden SET ${member}=NULL WHERE discord_id=?`, [
+      profile.discord_id,
+    ]);
+    return await PlayerService.getEden(profile);
+  }
+
+  public static async setHourlyRate(
+    profile: Profile,
+    rate: number
+  ): Promise<Eden> {
+    await DB.query(`UPDATE eden SET hourly_rate=? WHERE discord_id=?;`, [
+      rate,
+      profile.discord_id,
+    ]);
+    return await PlayerService.getEden(profile);
+  }
   /*
       Currency
                 */

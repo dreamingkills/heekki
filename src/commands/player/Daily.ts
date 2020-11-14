@@ -33,6 +33,7 @@ export class Command extends BaseCommand {
       milestone = true;
     }
 
+    await PlayerService.addCoinsToProfile(executor, 100);
     const newProfile = await PlayerService.addShardsToProfile(executor, shards);
 
     let desc =
@@ -42,7 +43,10 @@ export class Command extends BaseCommand {
         this.config.discord.emoji.shard.full
       } ${shards.toLocaleString()}** *(${
         milestone ? `${shards - 3} bonus, ` : ``
-      }${newProfile.shards.toLocaleString()} total)*\n`;
+      }${newProfile.shards.toLocaleString()} total)*` +
+      `\n**+ ${
+        this.config.discord.emoji.cash.full
+      } 100** *(${newProfile.coins.toLocaleString()} total)*`;
     const embed = new MessageEmbed()
       .setAuthor(
         `Daily Reward | ${msg.author.tag}`,

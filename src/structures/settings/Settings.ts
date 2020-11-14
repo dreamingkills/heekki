@@ -1,5 +1,6 @@
 export enum Settings {
   Prefix = "prefix",
+  Drops = "drops",
 }
 
 export interface SettingInterface {

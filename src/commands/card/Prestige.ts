@@ -2,7 +2,6 @@ import { Message, MessageEmbed } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { BaseCommand } from "../../structures/command/Command";
 import * as error from "../../structures/Error";
-import { UserCardService } from "../../database/service/UserCardService";
 import { Profile } from "../../structures/player/Profile";
 import { PlayerService } from "../../database/service/PlayerService";
 
@@ -28,7 +27,7 @@ export class Command extends BaseCommand {
       executor,
       requirement
     );
-    const newCard = await UserCardService.incrementCardStars(card);
+    const newCard = await CardService.incrementCardStars(card);
 
     const embed = new MessageEmbed()
       .setAuthor(`Prestige | ${msg.author.tag}`, msg.author.displayAvatarURL())

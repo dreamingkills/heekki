@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import { CardService } from "../../database/service/CardService";
-import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
@@ -18,7 +17,7 @@ export class Command extends BaseCommand {
     if (card.ownerId !== executor.discord_id)
       throw new error.NotYourCardError(reference);
 
-    await UserCardService.toggleCardAsFavorite(card);
+    await CardService.toggleCardAsFavorite(card);
 
     const pre = !card.isFavorite ? "Favorited" : "Unfavorited";
     const post = !card.isFavorite

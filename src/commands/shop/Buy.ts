@@ -4,7 +4,6 @@ import { CardService } from "../../database/service/CardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import Chance from "chance";
-import { UserCardService } from "../../database/service/UserCardService";
 
 export class Command extends BaseCommand {
   names: string[] = ["buypack", "bp"];
@@ -41,7 +40,7 @@ export class Command extends BaseCommand {
       [61.3, 42.7, 25.7, 6.5, 2.1, 0.22]
     );
 
-    const newCard = await UserCardService.createNewUserCard(
+    const newCard = await CardService.createNewUserCard(
       executor,
       randomCard,
       starCount,

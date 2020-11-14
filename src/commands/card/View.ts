@@ -1,17 +1,17 @@
 import { Message, MessageEmbed, User, MessageReaction } from "discord.js";
 import { CardService } from "../../database/service/CardService";
 import { ShopService } from "../../database/service/ShopService";
-import { UserCardService } from "../../database/service/UserCardService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
+import { PlayerService } from "../../database/service/PlayerService";
 
 export class Command extends BaseCommand {
   names: string[] = ["card", "show", "view"];
   async exec(msg: Message, executor: Profile) {
     let card;
     if (this.options[0]?.toLowerCase() === "last") {
-      card = await UserCardService.getLastCard(executor);
+      card = await PlayerService.getLastCard(executor);
     } else {
       const reference = {
         identifier: this.options[0]?.split("#")[0],
