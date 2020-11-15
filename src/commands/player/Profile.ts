@@ -8,6 +8,41 @@ import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
   names: string[] = ["profile", "p"];
+
+  private roundRect(
+    ctx: CanvasRenderingContext2D,
+    x: number,
+    y: number,
+    width: number,
+    height: number,
+    radius: { tl: number; tr: number; bl: number; br: number },
+    fill: boolean,
+    stroke: boolean
+  ) {
+    ctx.beginPath();
+    ctx.moveTo(x + radius.tl, y);
+    ctx.lineTo(x + width - radius.tr, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + radius.tr);
+    ctx.lineTo(x + width, y + height - radius.br);
+    ctx.quadraticCurveTo(
+      x + width,
+      y + height,
+      x + width - radius.br,
+      y + height
+    );
+    ctx.lineTo(x + radius.bl, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - radius.bl);
+    ctx.lineTo(x, y + radius.tl);
+    ctx.quadraticCurveTo(x, y, x + radius.tl, y);
+    ctx.closePath();
+    if (fill) {
+      ctx.fill();
+    }
+    if (stroke) {
+      ctx.stroke();
+    }
+  }
+
   async exec(msg: Message, executor: Profile) {
     let userQuery: Profile;
     if (this.options[0]) {
@@ -40,6 +75,7 @@ export class Command extends BaseCommand {
     ctx.drawImage(background, 0, 0, 1100, 800);
 
     //Draw username
+    ctx.save();
     let baseSize = 75;
     do {
       ctx.font = `${(baseSize -= 10)}px MyriadPro-Bold`;
@@ -48,10 +84,22 @@ export class Command extends BaseCommand {
     ctx.textAlign = "left";
     ctx.fillText(discordUser.username, 69, 178);
     // Draw profile picture
+    this.roundRect(
+      ctx,
+      775,
+      220,
+      256,
+      256,
+      { tl: 25, bl: 25, br: 25, tr: 25 },
+      false,
+      false
+    );
+    ctx.clip();
     const avatar = await canvas.loadImage(
       discordUser.displayAvatarURL({ format: "png" })
     );
     ctx.drawImage(avatar, 775, 220, 256, 256);
+    ctx.restore();
 
     // Draw card count
     ctx.font = `25px MyriadPro-Bold`;
@@ -68,11 +116,11 @@ export class Command extends BaseCommand {
     ctx.fillStyle = "#FFAACC";
     ctx.textAlign = "left";
     ctx.fillText(userQuery.hearts.toLocaleString(), 170, 365);
-    // Draw reputation count
+    // Draw shard count
     ctx.font = `65px MyriadPro-Bold`;
     ctx.fillStyle = "#FFAACC";
     ctx.textAlign = "left";
-    ctx.fillText(userQuery.reputation.toLocaleString(), 170, 460);
+    ctx.fillText(userQuery.shards.toLocaleString(), 170, 460);
 
     // Draw badges
     if (userQuery.badges) {
