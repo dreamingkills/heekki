@@ -1,4 +1,4 @@
-import { Message, MessageReaction, User } from "discord.js";
+import { Message, MessageEmbed, MessageReaction, User } from "discord.js";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
@@ -118,11 +118,22 @@ export class Command extends BaseCommand {
       });
       return;
     }
-    await msg.channel.send(
-      `${
-        this.config.discord.emoji.shard.full
-      } You have **${executor.shards.toLocaleString()} shards**.`
-    );
+
+    const prefix = this.bot.getPrefix(msg.guild!.id);
+    const embed = new MessageEmbed()
+      .setAuthor(`Shards | ${msg.author.tag}`, msg.author.displayAvatarURL())
+      .setDescription(
+        `${
+          this.config.discord.emoji.shard.full
+        } You have **${executor.shards.toLocaleString()}** shards.\n` +
+          `\n**Subcommands**` +
+          `\n\`\`\`` +
+          `\n${prefix}shard give <@user> <amount>` +
+          `\n${prefix}shard upgrade <card> <amount> - 1 shard : 100 hearts` +
+          `\n\`\`\``
+      )
+      .setColor(`#FFAACC`);
+    await msg.channel.send(embed);
     return;
   }
 }
