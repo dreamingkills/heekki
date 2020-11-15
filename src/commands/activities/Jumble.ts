@@ -58,7 +58,7 @@ export class Command extends BaseCommand {
             if (isMulti) {
               winner = await PlayerService.getProfileByDiscordId(m.author.id);
             } else winner = executor;
-            await PlayerService.addCoinsToProfile(winner, 20);
+            await PlayerService.addCoinsToProfile(winner, 2);
             const successEmbed = new MessageEmbed()
               .setAuthor(
                 `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
@@ -67,7 +67,7 @@ export class Command extends BaseCommand {
               .setDescription(
                 `${this.config.discord.emoji.check.full} **Correct!**\n${
                   isMulti ? `**${m.author.tag}** has` : `You have`
-                } been given ${this.config.discord.emoji.cash.full} **20**!`
+                } been given ${this.config.discord.emoji.cash.full} **2**!`
               )
               .setColor(`#FFAACC`);
             await m.react(this.config.discord.emoji.check.id);

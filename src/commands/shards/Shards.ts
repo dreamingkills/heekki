@@ -62,6 +62,61 @@ export class Command extends BaseCommand {
       const amount = parseInt(this.options[2]);
       if (isNaN(amount) || amount < 1) throw new error.NotANumberError();
       if (executor.shards < amount) throw new error.NotEnoughShardsError();
+
+      const cap = CardService.getLevelCap(card);
+      const level = CardService.calculateLevel(card);
+      if (cap === level) throw new error.MaximumLevelError();
+
+      const adjustedAmount = Math.ceil(
+        (card.hearts + amount * CardService.heartsPerShard >
+        cap * CardService.heartsPerLevel
+          ? cap * CardService.heartsPerLevel - card.hearts
+          : amount * CardService.heartsPerShard) / CardService.heartsPerShard
+      );
+
+      const confirm = await msg.channel.send(
+        `:warning: Really upgrade **${CardService.cardToReference(
+          card
+        )}** with ${
+          this.config.discord.emoji.shard.full
+        } **${adjustedAmount.toLocaleString()}** *(${(
+          adjustedAmount * CardService.heartsPerShard
+        ).toLocaleString()} hearts)*?`
+      );
+      await confirm.react(this.config.discord.emoji.check.id);
+
+      const filter = (reaction: MessageReaction, user: User) =>
+        reaction.emoji.id === this.config.discord.emoji.check.id &&
+        user === msg.author;
+      const collector = confirm.createReactionCollector(filter, {
+        max: 1,
+        time: 15000,
+      });
+      collector.on("collect", async () => {
+        await PlayerService.removeShardsFromProfile(executor, adjustedAmount);
+        await CardService.addHeartsToCard(
+          card,
+          adjustedAmount * CardService.heartsPerShard
+        );
+
+        await confirm.edit(
+          `${this.config.discord.emoji.check.full} Used ${
+            this.config.discord.emoji.shard.full
+          } **${adjustedAmount.toLocaleString()}** on **${CardService.cardToReference(
+            card
+          )}**.`
+        );
+        return;
+      });
+      collector.on("end", async (_, reason) => {
+        if (reason === "time") {
+          await confirm.edit(
+            `${this.config.discord.emoji.cross.full} Your transaction was cancelled.`
+          );
+        }
+        return;
+      });
+      return;
     }
     await msg.channel.send(
       `${

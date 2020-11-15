@@ -6,9 +6,10 @@ import { PlayerService } from "../../service/PlayerService";
 
 export class PlayerUpdate extends DBClass {
   public static async createEden(profile: Profile): Promise<Eden> {
-    await DB.query(`INSERT INTO eden (discord_id) VALUES (?);`, [
-      profile.discord_id,
-    ]);
+    await DB.query(
+      `INSERT INTO eden (discord_id, multiplier, multiplier_ends, cap) VALUES (?, 1.3, 1606093200000, 250);`,
+      [profile.discord_id]
+    );
     return await PlayerService.getEden(profile);
   }
 
@@ -42,6 +43,13 @@ export class PlayerUpdate extends DBClass {
   ): Promise<Eden> {
     await DB.query(`UPDATE eden SET hourly_rate=? WHERE discord_id=?;`, [
       rate,
+      profile.discord_id,
+    ]);
+    return await PlayerService.getEden(profile);
+  }
+
+  public static async clearEdenCash(profile: Profile): Promise<Eden> {
+    await DB.query(`UPDATE eden SET cash=0 WHERE discord_id=?;`, [
       profile.discord_id,
     ]);
     return await PlayerService.getEden(profile);
@@ -90,8 +98,8 @@ export class PlayerUpdate extends DBClass {
 
   public static async createNewProfile(discordId: string): Promise<Profile> {
     await DB.query(
-      `INSERT INTO user_profile (discord_id, coins) VALUES (?, ${300});`,
-      [discordId]
+      `INSERT INTO user_profile (discord_id, coins) VALUES (?, ?);`,
+      [discordId, 150]
     );
     return await PlayerService.getProfileByDiscordId(discordId);
   }

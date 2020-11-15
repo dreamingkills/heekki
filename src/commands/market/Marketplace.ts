@@ -74,6 +74,9 @@ export class Command extends BaseCommand {
         if (card.ownerId !== msg.author.id)
           throw new error.NotYourCardError(reference);
         if (card.isFavorite) throw new error.CardFavoritedError(reference);
+        const eden = await PlayerService.getEden(executor);
+        if (CardService.cardInEden(card, eden))
+          throw new error.CardInEdenError(card);
 
         const isForSale = await MarketService.cardIsOnMarketplace(card);
         if (isForSale.forSale) throw new error.CardOnMarketplaceError();

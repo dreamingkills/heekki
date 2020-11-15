@@ -329,7 +329,20 @@ CREATE TABLE eden
     PRIMARY KEY(id)
 );
 
+SET GLOBAL event_scheduler=ON;
+
+DELIMITER $$
+CREATE EVENT eden_timer
+    ON SCHEDULE EVERY 1 HOUR
+    DO BEGIN
+      UPDATE eden SET multiplier=1 WHERE multiplier_ends < UNIX_TIMESTAMP()*1000; 
+      UPDATE eden SET cash = cash + (hourly_rate * multiplier) WHERE (cash < cap);
+      UPDATE eden SET cash = cap WHERE cash > cap;
+END $$
+DELIMITER ;
+
 ALTER TABLE card DROP FOREIGN KEY SerialNumber;
 ALTER TABLE card DROP COLUMN serial_id;
 DROP TABLE serial_number;
 ALTER TABLE card ADD COLUMN serial_total INT(11) DEFAULT 0;
+RENAME TABLE user_card TO legacy;

@@ -79,7 +79,6 @@ export class CommandManager {
         msg.author.id,
         true
       );
-
       if (profile.restricted) throw new error.RestrictedUserError();
 
       let err;

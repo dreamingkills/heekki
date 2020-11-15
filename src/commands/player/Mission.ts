@@ -31,6 +31,11 @@ export class Command extends BaseCommand {
     if (Date.now() < executor.missionNext)
       throw new error.MissionCooldownError(executor.missionNext, Date.now());
 
+    const eden = await PlayerService.getEden(executor);
+    if (CardService.cardInEden(card, eden)) {
+      throw new error.CardInEdenError(card);
+    }
+
     const base = 0.34768125;
     const cardLevel = CardService.calculateLevel(card);
     const luckCoefficient = 1.23 * card.stars + 0.0125 * cardLevel;

@@ -31,6 +31,9 @@ export class PlayerService {
   ): Promise<Eden> {
     return await PlayerUpdate.setHourlyRate(profile, rate);
   }
+  public static async clearEdenCash(profile: Profile): Promise<Eden> {
+    return await PlayerUpdate.clearEdenCash(profile);
+  }
   /*
       Time-Based Rewards
                           */
@@ -112,6 +115,29 @@ export class PlayerService {
     options: { [key: string]: string | number } = {}
   ): Promise<number> {
     return await PlayerFetch.getCardCountByDiscordId(
+      profile.discord_id,
+      options
+    );
+  }
+
+  public static async getLegacyCardsByProfile(
+    profile: Profile,
+    options: { [key: string]: string | number } = {}
+  ): Promise<UserCard[]> {
+    const user = await this.getProfileByDiscordId(profile.discord_id);
+    const cardList = await PlayerFetch.getLegacyCardsByDiscordId(
+      user.discord_id,
+      options
+    );
+
+    return cardList;
+  }
+
+  public static async getLegacyCardCountByProfile(
+    profile: Profile,
+    options: { [key: string]: string | number } = {}
+  ): Promise<number> {
+    return await PlayerFetch.getLegacyCardCountByDiscordId(
       profile.discord_id,
       options
     );

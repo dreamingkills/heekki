@@ -10,6 +10,7 @@ import { Card } from "../../structures/card/Card";
 import { TextInterface } from "../../structures/interface/image/TextInterface";
 import fs from "fs/promises";
 import { Profile } from "../../structures/player/Profile";
+import { Eden } from "../../structures/game/Eden";
 
 interface Reference {
   identifier: string;
@@ -18,6 +19,7 @@ interface Reference {
 
 export class CardService {
   public static heartsPerLevel: number = 300;
+  public static heartsPerShard: number = 100;
 
   private static commafyNumber(num: number): string {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -37,6 +39,10 @@ export class CardService {
     const raw = Math.floor(card.hearts / this.heartsPerLevel);
     const adjusted = raw > cap ? cap : raw;
     return adjusted;
+  }
+
+  public static cardInEden(card: UserCard, eden: Eden): boolean {
+    return eden[card.member as keyof typeof eden] === card.userCardId;
   }
 
   public static async getUserCardById(id: number): Promise<UserCard> {

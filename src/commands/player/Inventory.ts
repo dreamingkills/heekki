@@ -5,23 +5,29 @@ import { MarketService } from "../../database/service/MarketService";
 import { UserCard } from "../../structures/player/UserCard";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
+import { Eden } from "../../structures/game/Eden";
 
 export class Command extends BaseCommand {
   names: string[] = ["inventory", "inv"];
-  private async renderInventory(cards: UserCard[]): Promise<string> {
+  private async renderInventory(
+    cards: UserCard[],
+    eden: Eden
+  ): Promise<string> {
     let desc = "";
     for (let c of cards) {
       const { forSale } = await MarketService.cardIsOnMarketplace(c);
       const level = CardService.calculateLevel(c);
       desc += `__**${c.abbreviation}#${c.serialNumber}**__ - ${c.member} ${
         (c.isFavorite ? `${this.config.discord.emoji.hearts.full}` : "") +
-        (forSale ? `${this.config.discord.emoji.cash.full}` : "")
+        (forSale ? `${this.config.discord.emoji.cash.full}` : "") +
+        (CardService.cardInEden(c, eden) ? ":park:" : "")
       }\nLevel **${level}** / ${":star:".repeat(c.stars)}\n`;
     }
     return desc;
   }
 
   async exec(msg: Message, executor: Profile) {
+    const eden = await PlayerService.getEden(executor);
     const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
     for (let option of optionsRaw) {
@@ -42,10 +48,14 @@ export class Command extends BaseCommand {
       user = msg.author;
     }
 
-    const cardCount = await PlayerService.getCardCountByProfile(
-      profile,
-      options
-    );
+    let cardCount: number;
+    if (options.legacy) {
+      cardCount = await PlayerService.getLegacyCardCountByProfile(
+        profile,
+        options
+      );
+    } else
+      cardCount = await PlayerService.getCardCountByProfile(profile, options);
 
     const pageLimit = Math.ceil(cardCount / 10);
     const pageNotNaN = isNaN(parseInt(options.page))
@@ -62,18 +72,26 @@ export class Command extends BaseCommand {
       optionsRaw[0] ? "```\n" : "\n"
     }`;
 
-    const cards = await PlayerService.getCardsByProfile(profile, {
-      ...options,
-      limit: 10,
-      page,
-    });
+    let cards: UserCard[];
+    if (options.legacy) {
+      cards = await PlayerService.getLegacyCardsByProfile(profile, {
+        ...options,
+        limit: 10,
+        page,
+      });
+    } else
+      cards = await PlayerService.getCardsByProfile(profile, {
+        ...options,
+        limit: 10,
+        page,
+      });
 
     const embed = new MessageEmbed()
       .setAuthor(
         `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
         msg.author.displayAvatarURL()
       )
-      .setDescription(desc + (await this.renderInventory(cards)))
+      .setDescription(desc + (await this.renderInventory(cards, eden)))
       .setFooter(`To change pages, click the arrow reactions.`)
       .setColor(`#FFAACC`)
       .setThumbnail(user.displayAvatarURL());
@@ -105,18 +123,27 @@ export class Command extends BaseCommand {
       if (r.emoji.name === "▶️" && page !== pageLimit) page++;
       if (r.emoji.name === "⏩" && page !== pageLimit) page = pageLimit;
 
-      const newCards = await PlayerService.getCardsByProfile(profile, {
-        ...options,
-        limit: 10,
-        page: page,
-      });
+      let newCards: UserCard[];
+      if (options.legacy) {
+        newCards = await PlayerService.getLegacyCardsByProfile(profile, {
+          ...options,
+          limit: 10,
+          page,
+        });
+      } else
+        newCards = await PlayerService.getCardsByProfile(profile, {
+          ...options,
+          limit: 10,
+          page,
+        });
+
       await sent.edit(
         embed
           .setAuthor(
             `Inventory | ${user.tag} (page ${page}/${pageLimit})`,
             msg.author.displayAvatarURL()
           )
-          .setDescription(desc + (await this.renderInventory(newCards)))
+          .setDescription(desc + (await this.renderInventory(newCards, eden)))
       );
       await r.users.remove(msg.author);
     });

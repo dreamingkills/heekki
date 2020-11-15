@@ -4,10 +4,12 @@ import { UserCard } from "../../structures/player/UserCard";
 import { MarketService } from "../../database/service/MarketService";
 import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
+import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["gift"];
-  async exec(msg: Message) {
+  async exec(msg: Message, executor: Profile) {
+    const eden = await PlayerService.getEden(executor);
     const references = this.options.filter((p) => p.includes("#"));
     const cardList = await Promise.all(
       references.map(async (p) => {
@@ -53,6 +55,12 @@ export class Command extends BaseCommand {
       }
       if ((await MarketService.cardIsOnMarketplace(c)).forSale) {
         invalidMessage += `\nYour card **${c.abbreviation}#${c.serialNumber}** is currently on the marketplace.`;
+        continue;
+      }
+      if (CardService.cardInEden(c, eden)) {
+        invalidMessage += `\nYour card **${CardService.cardToReference(
+          c
+        )}** is currently in Eden.`;
         continue;
       }
       validCards.push(c!);

@@ -17,6 +17,9 @@ export class Command extends BaseCommand {
 
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
+    const eden = await PlayerService.getEden(executor);
+    if (CardService.cardInEden(card, eden))
+      throw new error.CardInEdenError(card);
 
     const amount = parseInt(this.options[1]);
     if (isNaN(amount) || amount < 1) throw new error.NotANumberError();

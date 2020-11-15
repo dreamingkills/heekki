@@ -17,6 +17,9 @@ export class Command extends BaseCommand {
 
     if (card.ownerId !== msg.author.id)
       throw new error.NotYourCardError(reference);
+    const eden = await PlayerService.getEden(executor);
+    if (CardService.cardInEden(card, eden))
+      throw new error.CardInEdenError(card);
     if (card.stars >= 6) throw new error.MaxPrestigeError(reference);
 
     //                  1-2  2-3 3-4  4-5  5-6

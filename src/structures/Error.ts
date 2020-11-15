@@ -1,4 +1,5 @@
 import moment from "moment";
+import { CardService } from "../database/service/CardService";
 import { UserCard } from "./player/UserCard";
 
 export abstract class ClientError extends Error {
@@ -75,7 +76,19 @@ export class CardNotInEdenError extends ClientError {
     super(`**${`${card.abbreviation}#${card.serialNumber}`}** is not in Eden.`);
   }
 }
-
+export class NoCashInEdenError extends ClientError {
+  name = "NoCashInEdenError";
+  header = "Eden";
+  constructor() {
+    super(`Eden has not made any money yet. Check back in an hour.`);
+  }
+}
+export class CardInEdenError extends ClientError {
+  name = "CardInEdenError";
+  constructor(card: UserCard) {
+    super(`**${CardService.cardToReference(card)}** is currently in Eden.`);
+  }
+}
 /*
     Profile Errors
                     */

@@ -10,45 +10,49 @@ export class Eden {
   cap: number;
   multiplier: number;
   multiplierEnds: number;
-  heejin: UserCard | number;
-  hyunjin: UserCard | number;
-  haseul: UserCard | number;
-  yeojin: UserCard | number;
-  vivi: UserCard | number;
-  kimlip: UserCard | number;
-  jinsoul: UserCard | number;
-  choerry: UserCard | number;
-  yves: UserCard | number;
-  chuu: UserCard | number;
-  gowon: UserCard | number;
-  oliviahye: UserCard | number;
+  HeeJin: UserCard | number;
+  HyunJin: UserCard | number;
+  HaSeul: UserCard | number;
+  YeoJin: UserCard | number;
+  ViVi: UserCard | number;
+  "Kim Lip": UserCard | number;
+  JinSoul: UserCard | number;
+  Choerry: UserCard | number;
+  Yves: UserCard | number;
+  Chuu: UserCard | number;
+  "Go Won": UserCard | number;
+  "Olivia Hye": UserCard | number;
 
   public async convert() {
-    if (this.heejin)
-      this.heejin = await CardService.getUserCardById(this.heejin as number);
-    if (this.hyunjin)
-      this.hyunjin = await CardService.getUserCardById(this.hyunjin as number);
-    if (this.haseul)
-      this.haseul = await CardService.getUserCardById(this.haseul as number);
-    if (this.yeojin)
-      this.yeojin = await CardService.getUserCardById(this.yeojin as number);
-    if (this.vivi)
-      this.vivi = await CardService.getUserCardById(this.vivi as number);
-    if (this.kimlip)
-      this.kimlip = await CardService.getUserCardById(this.kimlip as number);
-    if (this.jinsoul)
-      this.jinsoul = await CardService.getUserCardById(this.jinsoul as number);
-    if (this.choerry)
-      this.choerry = await CardService.getUserCardById(this.choerry as number);
-    if (this.yves)
-      this.yves = await CardService.getUserCardById(this.yves as number);
-    if (this.chuu)
-      this.chuu = await CardService.getUserCardById(this.chuu as number);
-    if (this.gowon)
-      this.gowon = await CardService.getUserCardById(this.gowon as number);
-    if (this.oliviahye)
-      this.oliviahye = await CardService.getUserCardById(
-        this.oliviahye as number
+    if (this.HeeJin)
+      this.HeeJin = await CardService.getUserCardById(this.HeeJin as number);
+    if (this.HyunJin)
+      this.HyunJin = await CardService.getUserCardById(this.HyunJin as number);
+    if (this.HaSeul)
+      this.HaSeul = await CardService.getUserCardById(this.HaSeul as number);
+    if (this.YeoJin)
+      this.YeoJin = await CardService.getUserCardById(this.YeoJin as number);
+    if (this.ViVi)
+      this.ViVi = await CardService.getUserCardById(this.ViVi as number);
+    if (this["Kim Lip"])
+      this["Kim Lip"] = await CardService.getUserCardById(
+        this["Kim Lip"] as number
+      );
+    if (this.JinSoul)
+      this.JinSoul = await CardService.getUserCardById(this.JinSoul as number);
+    if (this.Choerry)
+      this.Choerry = await CardService.getUserCardById(this.Choerry as number);
+    if (this.Yves)
+      this.Yves = await CardService.getUserCardById(this.Yves as number);
+    if (this.Chuu)
+      this.Chuu = await CardService.getUserCardById(this.Chuu as number);
+    if (this["Go Won"])
+      this["Go Won"] = await CardService.getUserCardById(
+        this["Go Won"] as number
+      );
+    if (this["Olivia Hye"])
+      this["Olivia Hye"] = await CardService.getUserCardById(
+        this["Olivia Hye"] as number
       );
   }
 
@@ -60,17 +64,17 @@ export class Eden {
     this.cap = data.cap;
     this.multiplier = data.multiplier;
     this.multiplierEnds = data.multiplier_ends;
-    this.heejin = data.heejin;
-    this.hyunjin = data.hyunjin;
-    this.haseul = data.haseul;
-    this.yeojin = data.yeojin;
-    this.vivi = data.vivi;
-    this.kimlip = data.kimlip;
-    this.jinsoul = data.jinsoul;
-    this.choerry = data.choerry;
-    this.yves = data.yves;
-    this.chuu = data.chuu;
-    this.gowon = data.gowon;
-    this.oliviahye = data.oliviahye;
+    this.HeeJin = data.heejin;
+    this.HyunJin = data.hyunjin;
+    this.HaSeul = data.haseul;
+    this.YeoJin = data.yeojin;
+    this.ViVi = data.vivi;
+    this["Kim Lip"] = data.kimlip;
+    this.JinSoul = data.jinsoul;
+    this.Choerry = data.choerry;
+    this.Yves = data.yves;
+    this.Chuu = data.chuu;
+    this["Go Won"] = data.gowon;
+    this["Olivia Hye"] = data.oliviahye;
   }
 }

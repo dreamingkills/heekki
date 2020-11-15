@@ -95,10 +95,10 @@ export class Command extends BaseCommand {
               )
             );
           } else if (reason === "success") {
-            await PlayerService.addCoinsToProfile(executor, 40);
+            await PlayerService.addCoinsToProfile(executor, 4);
             await sent.edit(
               embed.setDescription(
-                `${this.config.discord.emoji.check.full} **Correct!**\nYou've been given ${this.config.discord.emoji.cash.full} **40**!`
+                `${this.config.discord.emoji.check.full} **Correct!**\nYou've been given ${this.config.discord.emoji.cash.full} **4**!`
               )
             );
           }

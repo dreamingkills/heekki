@@ -24,6 +24,8 @@ export class Command extends BaseCommand {
       throw new error.UserInTradeError();
 
     const tradee = await PlayerService.getProfileByDiscordId(tradeeUser.id);
+    const traderEden = await PlayerService.getEden(executor);
+    const tradeeEden = await PlayerService.getEden(tradee);
 
     this.currentlyTrading.add(msg.author.id);
     this.currentlyTrading.add(tradeeUser.id);
@@ -116,6 +118,11 @@ export class Command extends BaseCommand {
 
               if (card.ownerId !== id)
                 throw new error.NotYourCardError(reference);
+              if (
+                CardService.cardInEden(card, traderEden) ||
+                CardService.cardInEden(card, tradeeEden)
+              )
+                throw new error.CardInEdenError(card);
               if (card.isFavorite)
                 throw new error.CardFavoritedError(reference);
               if (forSale.forSale) throw new error.CardOnMarketplaceError();

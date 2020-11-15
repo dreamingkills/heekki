@@ -50,6 +50,98 @@ export class PlayerFetch extends DBClass {
     return new Eden(eden);
   }
 
+  public static async getLegacyCardsByDiscordId(
+    discord_id: string,
+    options: {
+      [key: string]: string | number;
+    }
+  ): Promise<UserCard[]> {
+    let query = `SELECT 
+                    card.id AS card_id,
+                    card.blurb,
+                    card.member,
+                    card.abbreviation,
+                    card.rarity,
+                    card.image_url,
+                    card.pack_id,
+                    card.serial_limit,
+                    card.serial_total,
+                    card.image_data_id,
+                    legacy.id AS user_card_id,
+                    legacy.serial_number,
+                    legacy.owner_id,
+                    legacy.stars,
+                    legacy.hearts,
+                    legacy.is_favorite,
+                    pack.title,
+                    pack.credit,
+                    marketplace.price
+                  FROM
+                    card 
+                  LEFT JOIN
+                  legacy ON
+                      card.id=legacy.card_id
+                  LEFT JOIN
+                    pack ON
+                      card.pack_id=pack.id
+                  LEFT JOIN
+                    shop ON
+                      shop.pack_id=pack.id
+                  LEFT JOIN
+                    marketplace ON
+                      marketplace.card_id=legacy.id
+                  WHERE legacy.owner_id=${DB.connection.escape(discord_id)}`;
+
+    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
+    query +=
+      (queryOptions.length > 0 ? " AND" : "") +
+      queryOptions.join(" AND") +
+      " ORDER BY legacy.is_favorite DESC, legacy.stars DESC, legacy.hearts DESC, legacy.id DESC" +
+      (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
+      (options?.page && options.limit
+        ? ` OFFSET ${DB.connection.escape(
+            (isNaN(<number>options.page) ? 1 : <number>options.page) *
+              <number>options.limit -
+              <number>options.limit
+          )}`
+        : ``);
+
+    const cards = (await DB.query(query + ";")) as UserCardInterface[];
+    return cards.map((c) => {
+      return new UserCard(c);
+    });
+  }
+
+  public static async getLegacyCardCountByDiscordId(
+    discord_id: string,
+    options: { [key: string]: string | number }
+  ): Promise<number> {
+    let query = `SELECT 
+                  COUNT(*)
+                FROM
+                  card 
+                LEFT JOIN
+                legacy ON
+                    card.id=legacy.card_id
+                LEFT JOIN
+                  pack ON
+                    card.pack_id=pack.id
+                LEFT JOIN
+                  shop ON
+                    shop.pack_id=pack.id
+                LEFT JOIN
+                  marketplace ON
+                    marketplace.card_id=legacy.id
+                WHERE legacy.owner_id=${DB.connection.escape(discord_id)}`;
+
+    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
+    query +=
+      (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
+
+    const count = (await DB.query(`${query};`)) as { "COUNT(*)": number }[];
+    return count[0][`COUNT(*)`];
+  }
+
   public static async getUserCardsByDiscordId(
     discord_id: string,
     options: {

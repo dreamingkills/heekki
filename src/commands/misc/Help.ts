@@ -21,9 +21,16 @@ export class Command extends BaseCommand {
           `\n**Cards / Packs**` +
           `\n\`${prefix}packs\`, \`${prefix}pack\`, \`${prefix}preview\`, \`${prefix}view\`, \`${prefix}fav\`, \`${prefix}upgrade\`, \`${prefix}prestige\`, \`${prefix}gift\`, \`${prefix}buypack\`, \`${prefix}marketplace\`, \`${prefix}trade\`\n` +
           `\n**Time-Based**` +
-          `\n\`${prefix}daily\`, \`${prefix}mission\`, \`${prefix}send\`, \`${prefix}hb\`\n` +
+          `\n\`${prefix}daily\`, \`${prefix}mission\`, \`${prefix}send\`, \`${prefix}hb\`, \`${prefix}eden\`\n` +
           `\n**Other**` +
           `\n\`well\`, \`${prefix}help\`, \`${prefix}invite\`, \`${prefix}stats\`, \`${prefix}ticket\`, \`${prefix}top\`\n`;
+        break;
+      }
+      case "eden": {
+        header = `Eden`;
+        description =
+          `**Eden** is a place you can send LOONA members to work and passively make money for you.` +
+          `\nUse \`!eden\` for more information!`;
         break;
       }
       case "overview":
@@ -37,12 +44,11 @@ export class Command extends BaseCommand {
           `\n${prefix}help cards` +
           `\n${prefix}help friends` +
           `\n${prefix}help hearts` +
-          `\n${prefix}help xp` +
           `\n${prefix}help marketplace` +
           `\n${prefix}help trading` +
           `\n${prefix}help prefix` +
           `\n\`\`\`` +
-          `\nYou can use \`${prefix}help topics\` to see a complete list.` +
+          `\nYou can use \`${prefix}help <command>\` for info about a command.` +
           `\nYou can use \`${prefix}help commands\` to see a command list.\n` +
           `\n:warning: **Find a bug? Need further help?**` +
           `\nYou can submit a ticket with \`${prefix}ticket <your problem>\`.` +
@@ -63,28 +69,17 @@ export class Command extends BaseCommand {
           `\n:heart: **Supporter** (on Patreon)`;
         break;
       }
-      case "topics": {
-        header = "Topics";
-        description =
-          `You can use \`${prefix}help <topic>\` to learn more information about something${prefix}\n` +
-          `\n__**Profile**__` +
-          `\n\`profile\`, \`friends\`, \`hearts\`, \`xp\`\n` +
-          `\n__**Economy**__` +
-          `\n\`cash\`, \`marketplace\`, \`trading\`, \`missions\`, \`cards\`\n`;
-        break;
-      }
       case "cards": {
         header = "Cards";
         description =
-          `**Cards** are the main focus of Heekki - images with various designs about LOONA${prefix}\n` +
+          `**Cards** are the main focus of Heekki - images with various designs about LOONA$!\n` +
           `\n__**How do I get cards?**__` +
-          `\n**1)** Use \`${prefix}daily\` once per day for a free card` +
-          `\n**2)** Use \`${prefix}bp <pack>\` to buy a random card from a pack - use \`${prefix}packs\` to see all packs` +
-          `\n**3)** \`${prefix}trade\` with other players` +
-          `\n**4)** Purchase from the Marketplace (\`${prefix}mp\`)\n` +
+          `\n**1)** Use \`${prefix}bp <pack>\` to buy a random card from a pack - use \`${prefix}packs\` to see all packs` +
+          `\n**2)** \`${prefix}trade\` with other players` +
+          `\n**3)** Purchase from the Marketplace (\`${prefix}mp\`)\n` +
           `\n__**What do stars do?**__` +
           `\nStars increase the success rate and reward of missions.` +
-          `\nHigher stars are rarer, but you can add a star to your card at level 99 by using \`${prefix}prestige <card>\`${prefix}`;
+          `\nHigher stars are rarer, but you can add a star to your card at level 99 by using \`${prefix}prestige <card>\`!`;
         break;
       }
       case "profile": {
@@ -92,7 +87,7 @@ export class Command extends BaseCommand {
         description =
           `Your **Profile** displays information about you, including how many hearts, cards, cash, and reputation you have.\n` +
           `\n__**How do I set my description?**__` +
-          `\nYou can use \`${prefix}desc description goes here${prefix}\` to set your description.`;
+          `\nYou can use \`${prefix}desc description goes here\` to set your description.`;
         break;
       }
       case "mission":
@@ -111,9 +106,10 @@ export class Command extends BaseCommand {
         description =
           `${this.config.discord.emoji.cash.full} **Cash** is used to buy cards both from the Marketplace and from packs.\n` +
           `\n__**How do I gain cash?**__` +
-          `\n**1)** Use \`${prefix}mission\` on a card every 45 minutes` +
+          `\n**1)** Use \`${prefix}mission\` on a card every 30-55 minutes` +
           `\n**2)** Play minigames - \`${prefix}jumble\`, \`${prefix}memory\`` +
-          `\n**3)** \`${prefix}sell\` your cards on the Marketplace`;
+          `\n**3)** \`${prefix}sell\` your cards on the Marketplace` +
+          `\n**4)** Passively collect it from \`!eden\``;
         break;
       }
       case "friend":
@@ -129,20 +125,27 @@ export class Command extends BaseCommand {
           `\n${prefix}friend requests - Shows incoming friend requests` +
           `\n\`\`\`` +
           `\n**Sending Hearts**` +
-          `\nTo send hearts to your friends, you can use \`${prefix}send\` once per hour. Hearts that your friends have sent to you will automatically be deposited into your profile${prefix}`;
+          `\nTo send hearts to your friends, you can use \`${prefix}send\` once per hour. Hearts that your friends have sent to you will automatically be deposited into your profile!`;
         break;
       }
       case "hearts": {
         header = "Hearts";
         description =
           `${this.config.discord.emoji.hearts.full} **Hearts** are used to level up your cards.` +
-          `\nYour card will level up once every 150 hearts${prefix}\n` +
+          `\nYour card will level up once every 300 hearts!\n` +
           `\n__**How do I gain hearts?**__` +
           `\n**1)** Every 4 hours, you can use \`${prefix}hb\` to receive a random amount of hearts.` +
           `\n**2)** Your friends can send you hearts.\n` +
           `\n__**How do I use hearts?**__` +
           `\nYou can upgrade your cards by using \`${prefix}upgrade <card> <amount>\`.` +
           `\nExample: \`${prefix}upgrade DLHJ#32 300\``;
+        break;
+      }
+      case "shards": {
+        header = "Shards";
+        description =
+          `${this.config.discord.emoji.shard.full} **Shards** are a premium currency acquired through dailies and missions.` +
+          `\nYou can use shards to **upgrade your cards** or to **prestige them**.`;
         break;
       }
       case "market":
@@ -179,9 +182,9 @@ export class Command extends BaseCommand {
           `\n**1)** Enter up to five of **your cards** (type OK if you have less than 5 cards)` +
           `\n**2)** Whoever you're trading with enters up to five of **their cards** (again, type OK if there are less than 5 cards)` +
           `\n**3)** Both of you will confirm the trade.` +
-          `\n**4)** Success${prefix}\n` +
+          `\n**4)** Success!\n` +
           `\n__**Can I reverse a trade?**__` +
-          `\nNo, you cannot reverse a trade; be careful who you're trading with${prefix}`;
+          `\nNo, you cannot reverse a trade; be careful who you're trading with!`;
         break;
       }
 
@@ -201,7 +204,7 @@ export class Command extends BaseCommand {
       case "auction": {
         header = "Auctions";
         description =
-          `**Auctions** are held from time to time in the official Heekki server. It's not just cards that can be auctioned, so keep an eye out${prefix}` +
+          `**Auctions** are held from time to time in the official Heekki server. It's not just cards that can be auctioned, so keep an eye out!` +
           `\nBids must be at least ${this.config.discord.emoji.cash.full} **100** greater than the previous bid.\n` +
           `\n**Subcommands**` +
           `\n\`\`\`` +
@@ -215,14 +218,14 @@ export class Command extends BaseCommand {
         header = "Command - Jumble";
         description =
           `**Jumble** is a game where the objective is to unscramble a given LOONA-related term.` +
-          `\nYou're given 15 seconds to crack the code - if you get it right, you get ${this.config.discord.emoji.cash.full} **20**${prefix}`;
+          `\nYou're given 15 seconds to crack the code - if you get it right, you get ${this.config.discord.emoji.cash.full} **2**!`;
         break;
       }
       case "memory": {
         header = "Command - Memory";
         description =
           `**Memory** is a game where the objective is to remember a sequence and identify at which number in the sequence a given member of LOONA is.` +
-          `\nYou have only one attempt and 60 seconds - if you get it right, you get ${this.config.discord.emoji.cash.full} **40**${prefix}`;
+          `\nYou have only one attempt and 60 seconds - if you get it right, you get ${this.config.discord.emoji.cash.full} **4**!`;
         break;
       }
       case "prestige": {
@@ -351,10 +354,12 @@ export class Command extends BaseCommand {
       case "upgrade": {
         header = "Command - Upgrade";
         description =
-          `You can upgrade a card with hearts to increase its level. Your card will gain **one** level for every **150** hearts.` +
-          `\nOnce your card hits level 99, you can use \`${prefix}prestige\` to increase the star count.\n` +
+          `You can upgrade a card with hearts to increase its level. Your card will gain **one** level for every **300** hearts.` +
+          `\nOnce your card hits level 100, you can use \`${prefix}prestige\` to increase the star count.\n` +
+          `\nYou can also upgrade cards with shards instead of hearts at **1 shard** : **100 hearts**.` +
           `\n**Usage**` +
-          `\n\`${prefix}upgrade <card> <amount>\` ex. \`${prefix}upgrade DLHJ#1 300\``;
+          `\n\`${prefix}upgrade <card> <amount>\` ex. \`${prefix}upgrade DLHJ#1 300\`` +
+          `\n\`${prefix}shards upgrade <card> <amount>\` ex. \`${prefix}upgrade DLHJ#1 3\``;
         break;
       }
       case "send": {
