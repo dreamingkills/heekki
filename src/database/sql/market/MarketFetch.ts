@@ -14,7 +14,7 @@ export class MarketFetch extends DBClass {
                   card.abbreviation,
                   card.rarity,
                   card.image_url,
-                  card.serial_id,
+                  card.serial_total,
                   card.pack_id,
                   card.serial_limit,
                   card.image_data_id,

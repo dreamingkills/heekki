@@ -23,7 +23,6 @@ export class UserCard extends Card {
     rarity: number;
     image_url: string;
     pack_id: number;
-    serial_id: number;
     serial_limit: number;
     serial_total: number;
     image_data_id: number;

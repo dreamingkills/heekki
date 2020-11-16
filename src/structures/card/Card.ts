@@ -6,7 +6,6 @@ export class Card {
   rarity: number;
   imageUrl: string;
   packId: number;
-  serialId: number;
   serialLimit: number;
   imageDataId: number;
   serialTotal: number;
@@ -19,7 +18,6 @@ export class Card {
     rarity: number;
     image_url: string;
     pack_id: number;
-    serial_id: number;
     serial_limit: number;
     serial_total: number;
     image_data_id: number;
@@ -31,7 +29,6 @@ export class Card {
     this.rarity = data.rarity;
     this.imageUrl = data.image_url;
     this.packId = data.pack_id;
-    this.serialId = data.serial_id;
     this.serialLimit = data.serial_limit;
     this.imageDataId = data.image_data_id;
     this.serialTotal = data.serial_total;

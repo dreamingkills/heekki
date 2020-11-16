@@ -17,7 +17,6 @@ export interface UserCardInterface {
   is_favorite: boolean;
   title: string;
   credit: string;
-  serial_id: number;
   image_data_id: number;
   price?: number;
 }
