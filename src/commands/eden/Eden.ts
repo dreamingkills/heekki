@@ -43,7 +43,7 @@ export class Command extends BaseCommand {
       eden.HyunJin,
       eden.HaSeul,
       eden.YeoJin,
-      eden.ViVi,
+      eden.Vivi,
       eden["Kim Lip"],
       eden.JinSoul,
       eden.Choerry,

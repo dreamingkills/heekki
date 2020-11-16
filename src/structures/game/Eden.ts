@@ -14,7 +14,7 @@ export class Eden {
   HyunJin: UserCard | number;
   HaSeul: UserCard | number;
   YeoJin: UserCard | number;
-  ViVi: UserCard | number;
+  Vivi: UserCard | number;
   "Kim Lip": UserCard | number;
   JinSoul: UserCard | number;
   Choerry: UserCard | number;
@@ -32,8 +32,8 @@ export class Eden {
       this.HaSeul = await CardService.getUserCardById(this.HaSeul as number);
     if (this.YeoJin)
       this.YeoJin = await CardService.getUserCardById(this.YeoJin as number);
-    if (this.ViVi)
-      this.ViVi = await CardService.getUserCardById(this.ViVi as number);
+    if (this.Vivi)
+      this.Vivi = await CardService.getUserCardById(this.Vivi as number);
     if (this["Kim Lip"])
       this["Kim Lip"] = await CardService.getUserCardById(
         this["Kim Lip"] as number
@@ -68,7 +68,7 @@ export class Eden {
     this.HyunJin = data.hyunjin;
     this.HaSeul = data.haseul;
     this.YeoJin = data.yeojin;
-    this.ViVi = data.vivi;
+    this.Vivi = data.vivi;
     this["Kim Lip"] = data.kimlip;
     this.JinSoul = data.jinsoul;
     this.Choerry = data.choerry;
