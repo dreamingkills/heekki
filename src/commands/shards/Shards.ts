@@ -94,11 +94,12 @@ export class Command extends BaseCommand {
       });
       collector.on("collect", async () => {
         await PlayerService.removeShardsFromProfile(executor, adjustedAmount);
-        await CardService.addHeartsToCard(
+        const newCard = await CardService.addHeartsToCard(
           card,
           adjustedAmount * CardService.heartsPerShard
         );
 
+        await CardService.updateCardCache(newCard);
         await confirm.edit(
           `${this.config.discord.emoji.check.full} Used ${
             this.config.discord.emoji.shard.full
