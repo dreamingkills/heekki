@@ -73,7 +73,7 @@ export abstract class BaseCommand implements Command {
     HyunJin: ":cat:",
     HaSeul: ":dove:",
     YeoJin: ":frog:",
-    ViVi: ":deer:",
+    Vivi: ":deer:",
     "Kim Lip": ":owl:",
     JinSoul: ":fish:",
     Choerry: ":bat:",
