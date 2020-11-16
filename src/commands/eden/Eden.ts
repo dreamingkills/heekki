@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
     "HyunJin",
     "HaSeul",
     "YeoJin",
-    "ViVi",
+    "Vivi",
     "Kim Lip",
     "JinSoul",
     "Choerry",
