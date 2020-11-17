@@ -30,7 +30,7 @@ export class Command extends BaseCommand {
     const cards = members.filter((m) => m) as UserCard[];
     for (let card of cards) {
       const level = CardService.calculateLevel(card);
-      total += Math.round(0.333 * level + 1.4 * card.stars);
+      total += Math.round(0.25 * level + 1.4 * card.stars);
     }
     return total;
   }
@@ -186,14 +186,20 @@ export class Command extends BaseCommand {
     if (eden.multiplierEnds > Date.now()) {
       const now = moment(Date.now());
       const ending = moment(eden.multiplierEnds);
-      const diffH = ending.diff(now, "hours");
-      const diffM = ending.diff(now, "minutes") - diffH * 60;
+      const diffD = ending.diff(now, "days");
+      const diffH = ending.diff(now, "hours") - diffD * 24;
+      const diffM =
+        ending.diff(now, "minutes") - ending.diff(now, "hours") * 60;
       const diffS =
         ending.diff(now, "seconds") - ending.diff(now, "minutes") * 60;
+
+      const diffMessage = `${diffD > 0 ? `${diffD}d ` : ``}${
+        diffH > 0 ? `${diffH}h ` : ``
+      }${diffM > 0 ? `${diffM}m ` : ``}${diffS > 0 ? `${diffS}s` : ``}`;
       desc +=
         `\n\n:sparkles: **Bonus**: \`${eden.multiplier}x\` (${Math.round(
           eden.hourlyRate * eden.multiplier
-        )}/h)` + `\n— *time remaining:* \`${diffH}h ${diffM}m ${diffS}s\``;
+        )}/h)` + `\n— *bonus expires in:* \`${diffMessage}\``;
     }
 
     const prefix = this.bot.getPrefix(msg.guild!.id);
