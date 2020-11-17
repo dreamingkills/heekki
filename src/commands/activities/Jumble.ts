@@ -45,6 +45,7 @@ export class Command extends BaseCommand {
     });
 
     collector.on("collect", async (m: Message) => {
+      if (sent.deleted) collector.stop("deleted");
       if (
         (isMulti &&
           !ConcurrencyService.checkConcurrency(m.author.id) &&
@@ -83,27 +84,32 @@ export class Command extends BaseCommand {
     });
 
     collector.on("end", async (_, reason) => {
-      let failedEmbed: MessageEmbed | undefined;
+      try {
+        let failedEmbed: MessageEmbed | undefined;
+        ConcurrencyService.unsetConcurrency(msg.author.id);
 
-      ConcurrencyService.unsetConcurrency(msg.author.id);
-
-      if (reason === "time") {
-        failedEmbed = new MessageEmbed()
-          .setAuthor(
-            `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
-            msg.author.displayAvatarURL()
-          )
-          .setDescription(
-            `:confused: **You ran out of time.**\nThe word was: \`${random.toUpperCase()}\`.`
-          )
-          .setColor(`#FFAACC`);
-      }
-      if (failedEmbed) {
-        try {
-          await sent.edit(failedEmbed);
-        } catch {
-          await msg.channel.send(failedEmbed);
+        if (reason === "time") {
+          failedEmbed = new MessageEmbed()
+            .setAuthor(
+              `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,
+              msg.author.displayAvatarURL()
+            )
+            .setDescription(
+              `:confused: **You ran out of time.**\nThe word was: \`${random.toUpperCase()}\`.`
+            )
+            .setColor(`#FFAACC`);
         }
+        if (failedEmbed) {
+          try {
+            await sent.edit(failedEmbed);
+          } catch {
+            await msg.channel.send(failedEmbed);
+          }
+        }
+      } catch (_) {
+      } finally {
+        ConcurrencyService.unsetConcurrency(msg.author.id);
+        return;
       }
     });
     return;

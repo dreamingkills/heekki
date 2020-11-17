@@ -103,10 +103,12 @@ export class CommandManager {
           await msg.channel.send(
             `${cfg.discord.emoji.cross.full} Sorry, Discord seems to be having some problems right now. Please try again in a moment.`
           );
-        } else
+        } else {
+          ConcurrencyService.flushConcurrency();
           await msg.channel.send(
             `${cfg.discord.emoji.cross.full} **An unexpected error occurred**: ${e.name} - ${e.message}\nPlease report this error to the developer.`
           );
+        }
       });
       Logger.log(cmd, msg, staged, err);
     } catch (e) {}

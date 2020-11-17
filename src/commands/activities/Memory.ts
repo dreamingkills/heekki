@@ -72,6 +72,7 @@ export class Command extends BaseCommand {
         max: 1,
       });
       collector.on("collect", async (m: Message) => {
+        if (sent.deleted) collector.stop("deleted");
         if (parseInt(m.content) === sequence.indexOf(objective) + 1)
           collector.stop("success");
       });
