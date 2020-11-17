@@ -23,9 +23,8 @@ export class Command extends BaseCommand {
     if (this.currentlyTrading.has(tradeeUser.id))
       throw new error.UserInTradeError();
 
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const tradee = await PlayerService.getProfileByDiscordId(tradeeUser.id);
-    const traderEden = await PlayerService.getEden(executor);
-    const tradeeEden = await PlayerService.getEden(tradee);
 
     this.currentlyTrading.add(msg.author.id);
     this.currentlyTrading.add(tradeeUser.id);
@@ -82,8 +81,9 @@ export class Command extends BaseCommand {
       }
 
       if (
-        (submitter === "sender" && m.author.id === msg.author.id) ||
-        (submitter === "tradee" && m.author.id === tradeeUser.id)
+        ((submitter === "sender" && m.author.id === msg.author.id) ||
+          (submitter === "tradee" && m.author.id === tradeeUser.id)) &&
+        !m.content.startsWith(prefix)
       ) {
         if (m.content.toLowerCase() === "ok") {
           if (submitter === "sender") {
@@ -113,6 +113,8 @@ export class Command extends BaseCommand {
               const card = await CardService.getCardDataFromReference(
                 reference
               );
+              const traderEden = await PlayerService.getEden(executor);
+              const tradeeEden = await PlayerService.getEden(tradee);
 
               const forSale = await MarketService.cardIsOnMarketplace(card);
 
