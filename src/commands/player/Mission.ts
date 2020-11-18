@@ -78,7 +78,7 @@ export class Command extends BaseCommand {
           newCard.abbreviation + `#` + newCard.serialNumber
         }** — ${`:star:`.repeat(newCard.stars)}`;
       } else if (reward === "shards") {
-        const profit = Math.floor(chance.integer({ min: 1, max: 4 }));
+        const profit = Math.floor(chance.integer({ min: 2, max: 4 }));
         const newProfile = await PlayerService.addShardsToProfile(
           executor,
           profit
