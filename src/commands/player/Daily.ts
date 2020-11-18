@@ -24,9 +24,8 @@ export class Command extends BaseCommand {
 
     let shards = 3;
     let milestone = false;
-    const nextMilestone = (
-      Math.ceil((executor.dailyStreak + 1 + 0.1) / interval) * interval
-    ).toLocaleString();
+    const nextMilestone =
+      Math.ceil((executor.dailyStreak + 1 + 0.1) / interval) * interval;
     if (!broken && (executor.dailyStreak + 1) % interval === 0) {
       const additional = Math.ceil(Math.pow(1.04, executor.dailyStreak + 1));
       shards += additional > 17 ? 17 : additional;
@@ -54,7 +53,9 @@ export class Command extends BaseCommand {
       )
       .setDescription(desc)
       .setFooter(
-        `Streak: ${newProfile.dailyStreak.toLocaleString()}/${nextMilestone.toLocaleString()}\nYou can claim your daily reward again in 24 hours.`
+        `Streak: ${(newProfile.dailyStreak || 1).toLocaleString()}/${(
+          nextMilestone || 10
+        ).toLocaleString()}\nYou can claim your daily reward again in 24 hours.`
       )
       .setColor(`#FFAACC`);
     await msg.channel.send(embed);
