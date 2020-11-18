@@ -15,12 +15,11 @@ export class Command extends BaseCommand {
     if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
     const card = await CardService.getCardDataFromReference(reference);
 
-    if (card.ownerId !== msg.author.id)
-      throw new error.NotYourCardError(reference);
+    if (card.ownerId !== msg.author.id) throw new error.NotYourCardError(card);
     const eden = await PlayerService.getEden(executor);
     if (CardService.cardInEden(card, eden))
       throw new error.CardInEdenError(card);
-    if (card.stars >= 6) throw new error.MaxPrestigeError(reference);
+    if (card.stars >= 6) throw new error.MaxPrestigeError(card);
 
     //                  1-2  2-3 3-4  4-5  5-6
     const requirement = [30, 60, 120, 240, 480][card.stars - 1];

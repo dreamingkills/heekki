@@ -26,8 +26,7 @@ export class Command extends BaseCommand {
       card = await CardService.getCardDataFromReference(reference);
     }
 
-    if (card.ownerId !== msg.author.id)
-      throw new error.NotYourCardError(reference);
+    if (card.ownerId !== msg.author.id) throw new error.NotYourCardError(card);
 
     if (Date.now() < executor.missionNext)
       throw new error.MissionCooldownError(executor.missionNext, Date.now());

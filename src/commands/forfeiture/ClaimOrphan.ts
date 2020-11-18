@@ -22,7 +22,7 @@ export class Command extends BaseCommand {
 
     const targetCard = await CardService.getCardDataFromReference(reference);
     if (targetCard.ownerId !== "0")
-      throw new error.CardNotOrphanedError(reference);
+      throw new error.CardNotOrphanedError(targetCard);
 
     await CardService.transferCardToProfile(executor, targetCard);
     await PlayerService.setLastOrphanClaim(executor, now);

@@ -15,7 +15,7 @@ export class Command extends BaseCommand {
 
     const card = await CardService.getCardDataFromReference(reference);
     if (card.ownerId !== executor.discord_id)
-      throw new error.NotYourCardError(reference);
+      throw new error.NotYourCardError(card);
 
     await CardService.toggleCardAsFavorite(card);
 

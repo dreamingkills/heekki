@@ -14,7 +14,7 @@ import version from "../../version.json";
 import { SettingService } from "../../database/service/SettingService";
 
 export class Bot extends Client {
-  public config: Object = config;
+  public config: typeof config = config;
   public cmdMan: CommandManager = new CommandManager();
   public chance: Chance.Chance = new Chance();
   private prefixes: { [guildID: string]: string } = {};
@@ -34,6 +34,9 @@ export class Bot extends Client {
     await this.cachePrefixes();
     await this.cmdMan.init();
 
+    this.on("debug", async (info) => {
+      if (this.config.discord.debug) console.log(info);
+    });
     this.on("ready", async () => {
       if (!this.user) return console.error("I'm null!");
 

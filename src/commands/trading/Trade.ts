@@ -118,16 +118,14 @@ export class Command extends BaseCommand {
 
               const forSale = await MarketService.cardIsOnMarketplace(card);
 
-              if (card.ownerId !== id)
-                throw new error.NotYourCardError(reference);
+              if (card.ownerId !== id) throw new error.NotYourCardError(card);
               if (
                 CardService.cardInEden(card, traderEden) ||
                 CardService.cardInEden(card, tradeeEden)
               )
                 throw new error.CardInEdenError(card);
-              if (card.isFavorite)
-                throw new error.CardFavoritedError(reference);
-              if (forSale.forSale) throw new error.CardOnMarketplaceError();
+              if (card.isFavorite) throw new error.CardFavoritedError(card);
+              if (forSale.forSale) throw new error.CardOnMarketplaceError(card);
               if (
                 senderCards
                   .map((c) => {

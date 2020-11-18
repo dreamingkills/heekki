@@ -15,8 +15,7 @@ export class Command extends BaseCommand {
     if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
     const card = await CardService.getCardDataFromReference(reference);
 
-    if (card.ownerId !== msg.author.id)
-      throw new error.NotYourCardError(reference);
+    if (card.ownerId !== msg.author.id) throw new error.NotYourCardError(card);
     const eden = await PlayerService.getEden(executor);
     if (CardService.cardInEden(card, eden))
       throw new error.CardInEdenError(card);

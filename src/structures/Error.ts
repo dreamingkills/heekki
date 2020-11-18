@@ -52,16 +52,14 @@ export class DifferentCardInEdenError extends ClientError {
     super(
       `The **${
         card.member
-      }** slot is already taken by **${`${card.abbreviation}#${card.serialNumber}`}**.`
+      }** slot is already taken by **${CardService.cardToReference(card)}**.`
     );
   }
 }
 export class CardAlreadyInEdenError extends ClientError {
   name = "CardAlreadyInEdenError";
   constructor(card: UserCard) {
-    super(
-      `**${`${card.abbreviation}#${card.serialNumber}`}** is already in Eden.`
-    );
+    super(`**${CardService.cardToReference(card)}** is already in Eden.`);
   }
 }
 export class NoMemberInEdenError extends ClientError {
@@ -73,7 +71,7 @@ export class NoMemberInEdenError extends ClientError {
 export class CardNotInEdenError extends ClientError {
   name = "CardNotInEdenError";
   constructor(card: UserCard) {
-    super(`**${`${card.abbreviation}#${card.serialNumber}`}** is not in Eden.`);
+    super(`**${CardService.cardToReference(card)}** is not in Eden.`);
   }
 }
 export class NoCashInEdenError extends ClientError {
@@ -274,11 +272,11 @@ export class InvalidCardReferenceError extends ClientError {
 }
 export class InvalidUserCardError extends ClientError {
   name = "InvalidUserCardError";
-  constructor(reference: { identifier: string; serial: number }) {
+  constructor(reference?: { identifier: string; serial: number }) {
     super(
-      `The card **${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** doesn't exist!`
+      reference
+        ? `The card **${`${reference.identifier}#${reference.serial}`}** doesn't exist!`
+        : `That card doesn't exist!`
     );
   }
 }
@@ -296,28 +294,10 @@ export class MaxSerialError extends ClientError {
     super(`There cannot be any more issues of that card.`);
   }
 }
-export class NotEnoughHeartsToPrestigeError extends ClientError {
-  name = "NotEnoughHeartsToPrestigeError";
-  constructor(
-    has: number,
-    required: number,
-    reference: { identifier: string; serial: number }
-  ) {
-    super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** doesn't have enough hearts to prestige.\n**${required}** :heart: are required to prestige, but your card only has **${has}**.`
-    );
-  }
-}
 export class MaxPrestigeError extends ClientError {
   name = "MaxPrestigeError";
-  constructor(reference: { identifier: string; serial: number }) {
-    super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** is already at 6 stars!`
-    );
+  constructor(card: UserCard) {
+    super(`**${CardService.cardToReference(card)}** is already at 6 stars!`);
   }
 }
 /*
@@ -325,48 +305,36 @@ export class MaxPrestigeError extends ClientError {
                               */
 export class NotYourCardError extends ClientError {
   name = "NotYourCardError";
-  constructor(reference: { identifier: string; serial: number }) {
-    super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** doesn't belong to you.`
-    );
+  constructor(card: UserCard) {
+    super(`**${CardService.cardToReference(card)}** doesn't belong to you.`);
   }
 }
 export class CardNotOrphanedError extends ClientError {
   name = "CardNotOrphanedError";
-  constructor(reference: { identifier: string; serial: number }) {
-    super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** is not forfeited.`
-    );
+  constructor(card: UserCard) {
+    super(`**${CardService.cardToReference(card)}** is not forfeited.`);
   }
 }
 export class CardFavoritedError extends ClientError {
   name = "CardFavoritedError";
-  constructor(reference: { identifier: string; serial: number }) {
+  constructor(card: UserCard) {
     super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** is favorited!\nUse \`!fav ${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }\` to unfavorite.`
+      `**${CardService.cardToReference(
+        card
+      )}** is favorited!\nUse \`!fav ${CardService.cardToReference(
+        card
+      )}\` to unfavorite.`
     );
   }
 }
 export class CardOnMarketplaceError extends ClientError {
   name = "CardOnMarketplaceError";
-  constructor() {
+  constructor(card: UserCard) {
     super(
-      `That card is currently on the Marketplace.\nTo unlist it, use \`!mp unsell <card reference>\`.`
+      `**${CardService.cardToReference(
+        card
+      )}** is currently on the Marketplace.\nTo unlist it, use \`!mp unsell <card reference>\`.`
     );
-  }
-}
-export class CardInTradeError extends ClientError {
-  name = "CardInTradeError";
-  constructor() {
-    super(`That card is currently in a trade.`);
   }
 }
 
@@ -376,21 +344,15 @@ export class CardInTradeError extends ClientError {
 
 export class CardNotForSaleError extends ClientError {
   name = "CardNotForSaleError";
-  constructor(reference: { identifier: string; serial: number }) {
-    super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** isn't for sale.`
-    );
+  constructor(card: UserCard) {
+    super(`**${CardService.cardToReference(card)}** isn't for sale.`);
   }
 }
 export class CardAlreadyForSaleError extends ClientError {
   name = "CardAlreadyForSaleError";
-  constructor(reference: { identifier: string; serial: number }) {
+  constructor(card: UserCard) {
     super(
-      `**${reference.identifier.toUpperCase()}#${
-        reference.serial
-      }** is already on the Marketplace.`
+      `**${CardService.cardToReference(card)}** is already on the Marketplace.`
     );
   }
 }
@@ -406,14 +368,6 @@ export class InvalidPriceError extends ClientError {
 /*
     Trading Errors
                     */
-export class InvalidTradeError extends ClientError {
-  name = "InvalidTradeError";
-  constructor(id: string) {
-    super(
-      `I couldn't find Trade \`${id}\`.\nIt may have been accepted already.`
-    );
-  }
-}
 export class CannotTradeWithYourselfError extends ClientError {
   name = "CannotTradeWithYourselfError";
   constructor() {

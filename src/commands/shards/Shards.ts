@@ -57,7 +57,7 @@ export class Command extends BaseCommand {
       const card = await CardService.getCardDataFromReference(reference);
 
       if (card.ownerId !== msg.author.id)
-        throw new error.NotYourCardError(reference);
+        throw new error.NotYourCardError(card);
 
       const amount = parseInt(this.options[2]);
       if (isNaN(amount) || amount < 1) throw new error.NotANumberError();

@@ -72,14 +72,14 @@ export class Command extends BaseCommand {
 
         const card = await CardService.getCardDataFromReference(reference);
         if (card.ownerId !== msg.author.id)
-          throw new error.NotYourCardError(reference);
-        if (card.isFavorite) throw new error.CardFavoritedError(reference);
+          throw new error.NotYourCardError(card);
+        if (card.isFavorite) throw new error.CardFavoritedError(card);
         const eden = await PlayerService.getEden(executor);
         if (CardService.cardInEden(card, eden))
           throw new error.CardInEdenError(card);
 
         const isForSale = await MarketService.cardIsOnMarketplace(card);
-        if (isForSale.forSale) throw new error.CardOnMarketplaceError();
+        if (isForSale.forSale) throw new error.CardOnMarketplaceError(card);
 
         let price = parseFloat(this.options[2]);
         if (this.options[2]?.toLowerCase().endsWith("k")) price = price * 1000;
@@ -112,11 +112,10 @@ export class Command extends BaseCommand {
 
         const card = await CardService.getCardDataFromReference(reference);
         if (card.ownerId !== msg.author.id)
-          throw new error.NotYourCardError(reference);
+          throw new error.NotYourCardError(card);
 
         const isOnMarketplace = await MarketService.cardIsOnMarketplace(card);
-        if (!isOnMarketplace.forSale)
-          throw new error.CardNotForSaleError(reference);
+        if (!isOnMarketplace.forSale) throw new error.CardNotForSaleError(card);
 
         await MarketService.removeListing(card);
         await msg.channel.send(
@@ -134,7 +133,7 @@ export class Command extends BaseCommand {
         const card = await CardService.getCardDataFromReference(reference);
 
         const forSale = await MarketService.cardIsOnMarketplace(card);
-        if (!forSale.forSale) throw new error.CardNotForSaleError(reference);
+        if (!forSale.forSale) throw new error.CardNotForSaleError(card);
         if (forSale.price > executor.coins)
           throw new error.NotEnoughCoinsError();
 

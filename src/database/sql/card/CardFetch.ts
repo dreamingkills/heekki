@@ -151,11 +151,7 @@ export class CardFetch extends DBClass {
       FROM user_card LEFT JOIN card ON user_card.card_id=card.id WHERE user_card.id=?;`,
       [id]
     )) as UserCardInterface[];
-    if (!query[0])
-      throw new error.InvalidUserCardError({
-        identifier: "ERROR",
-        serial: 0,
-      });
+    if (!query[0]) throw new error.InvalidUserCardError();
     return new UserCard(query[0]);
   }
 }

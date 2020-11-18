@@ -20,7 +20,7 @@ export class Command extends BaseCommand {
       if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
       card = await CardService.getCardDataFromReference(reference);
       if (card.ownerId !== msg.author.id)
-        throw new error.NotYourCardError(reference);
+        throw new error.NotYourCardError(card);
     }
 
     const pack = await ShopService.getPackById(card.packId);

@@ -81,9 +81,9 @@ export class Command extends BaseCommand {
       if (isNaN(reference.serial)) throw new error.InvalidCardReferenceError();
       const card = await CardService.getCardDataFromReference(reference);
       if (card.ownerId !== msg.author.id)
-        throw new error.NotYourCardError(reference);
+        throw new error.NotYourCardError(card);
       if ((await MarketService.cardIsOnMarketplace(card)).forSale)
-        throw new error.CardOnMarketplaceError();
+        throw new error.CardOnMarketplaceError(card);
 
       if (this.memberNames.indexOf(card.member) < 0)
         throw new error.NotAMemberError();
