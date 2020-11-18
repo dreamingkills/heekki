@@ -166,25 +166,6 @@ CREATE TABLE marketplace
     CONSTRAINT MarketplaceCard FOREIGN KEY (card_id) REFERENCES user_card (id) ON DELETE CASCADE
 );
 
-CREATE TABLE trade_request
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    unique_id       VARCHAR(255) NOT NULL,
-    sender_id       VARCHAR(32) NOT NULL,
-    recipient_id    VARCHAR(32) NOT NULL,
-    sender_card     INT(11),
-    recipient_card  INT(11),
-    PRIMARY KEY(id),
-    CONSTRAINT TradeSender FOREIGN KEY (sender_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE,
-    CONSTRAINT TradeRecipient FOREIGN KEY (recipient_id) REFERENCES user_profile (discord_id) ON DELETE CASCADE
-);
-
-CREATE TABLE stats
-(
-    statistic_name  VARCHAR(255) NOT NULL,
-    statistic_count INT(11) DEFAULT 0
-);
-
 CREATE TABLE trivia
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
@@ -214,19 +195,6 @@ CREATE TABLE trade
     PRIMARY KEY(id)
 );
 
-CREATE TABLE fish
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    owner_id        VARCHAR(32) NOT NULL,
-    fish_id         INT(11) NOT NULL,
-    fish_weight     DOUBLE(11, 4) NOT NULL,
-    weight_mod      INT(11) NOT NULL,
-    identifier      VARCHAR(32) NOT NULL,
-    trophy_fish     BOOLEAN DEFAULT FALSE,
-    CONSTRAINT FishIdentifier UNIQUE(identifier),
-    PRIMARY KEY(id)
-);
-
 CREATE TABLE mission
 (
     id              INT(11) NOT NULL AUTO_INCREMENT,
@@ -251,26 +219,6 @@ CREATE TABLE friend_heart
     sender_id       VARCHAR(32) NOT NULL,
     friend_id       VARCHAR(32) NOT NULL,
     time            BIGINT(20) NOT NULL,
-    PRIMARY KEY(id)
-);
-
-CREATE TABLE fish_types
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    fish_name       VARCHAR(255) NOT NULL,
-    base_chance     INT(11) NOT NULL,
-    fish_weight     DOUBLE(11, 4) NOT NULL,
-    emoji           VARCHAR(255) NOT NULL,
-    PRIMARY KEY(id)
-);
-
-CREATE TABLE weight_mod
-(
-    id              INT(11) NOT NULL AUTO_INCREMENT,
-    mod_name        VARCHAR(255) NOT NULL,
-    multiplier      DOUBLE(11, 4) NOT NULL,
-    base_chance     INT(11) NOT NULL,
-    price_multiplier INT(11) NOT NULL,
     PRIMARY KEY(id)
 );
 
@@ -346,3 +294,21 @@ ALTER TABLE card DROP COLUMN serial_id;
 DROP TABLE serial_number;
 ALTER TABLE card ADD COLUMN serial_total INT(11) DEFAULT 0;
 RENAME TABLE user_card TO legacy;
+
+CREATE TABLE jumble
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      TINYTEXT NOT NULL,
+    time            BIGINT(20) NOT NULL,
+    correct         BOOLEAN NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE memory
+(
+    id              INT(11) NOT NULL AUTO_INCREMENT,
+    discord_id      TINYTEXT NOT NULL,
+    time            BIGINT(20) NOT NULL,
+    correct         BOOLEAN NOT NULL,
+    PRIMARY KEY(id)
+);

@@ -56,4 +56,25 @@ export class StatsUpdate extends DBClass {
       [sender_id, receiver_id, Date.now()]
     );
   }
+
+  public static async jumbleComplete(
+    discordId: string,
+    correct: boolean
+  ): Promise<void> {
+    await DB.query(
+      `INSERT INTO jumble (discord_id, time, correct) VALUES (?, ?, ?);`,
+      [discordId, Date.now(), correct]
+    );
+    return;
+  }
+  public static async memoryComplete(
+    discordId: string,
+    correct: boolean
+  ): Promise<void> {
+    await DB.query(
+      `INSERT INTO memory (discord_id, time, correct) VALUES (?, ?, ?);`,
+      [discordId, Date.now(), correct]
+    );
+    return;
+  }
 }

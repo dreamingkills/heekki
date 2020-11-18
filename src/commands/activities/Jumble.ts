@@ -4,6 +4,7 @@ import { BaseCommand } from "../../structures/command/Command";
 import * as jumble from "../../assets/jumble.json";
 import { Profile } from "../../structures/player/Profile";
 import { ConcurrencyService } from "../../helpers/Concurrency";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends BaseCommand {
   names: string[] = ["jumble", "j"];
@@ -73,6 +74,7 @@ export class Command extends BaseCommand {
               .setColor(`#FFAACC`);
             await m.react(this.config.discord.emoji.check.id);
 
+            await StatsService.jumbleComplete(executor, true);
             await sent.edit(successEmbed);
             collector.stop("correct");
             return;
@@ -101,6 +103,7 @@ export class Command extends BaseCommand {
         }
         if (failedEmbed) {
           try {
+            await StatsService.jumbleComplete(executor, false);
             await sent.edit(failedEmbed);
           } catch {
             await msg.channel.send(failedEmbed);

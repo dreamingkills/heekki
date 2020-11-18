@@ -38,55 +38,37 @@ export class StatsFetch extends DBClass {
     return query[0][`COUNT(*)`];
   }
 
-  public static async getUserStats(
-    discord_id: string
-  ): Promise<{
-    triviaCorrect: number;
-    triviaIncorrect: number;
-    marketPurchases: number;
-    marketSales: number;
-    tradesComplete: number;
-    missionsSuccessful: number;
-    missionsFailed: number;
-  }> {
-    const triviaCorrect = (await DB.query(
-      `SELECT COUNT(*) FROM trivia WHERE discord_id=? AND correct=1;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-    const triviaIncorrect = (await DB.query(
-      `SELECT COUNT(*) FROM trivia WHERE discord_id=? AND correct=0;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-    const marketPurchases = (await DB.query(
-      `SELECT COUNT(*) FROM sale WHERE buyer_id=?;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-    const marketSales = (await DB.query(
-      `SELECT COUNT(*) FROM sale WHERE seller_id=?;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-    const tradesComplete = (await DB.query(
-      `SELECT COUNT(*) FROM trade WHERE (sender_id=? OR receiver_id=?);`,
-      [discord_id, discord_id]
-    )) as { "COUNT(*)": number }[];
-    const missionsSuccessful = (await DB.query(
-      `SELECT COUNT(*) FROM mission WHERE discord_id=? AND success=1;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-    const missionsFailed = (await DB.query(
-      `SELECT COUNT(*) FROM mission WHERE discord_id=? AND success=0;`,
-      [discord_id]
-    )) as { "COUNT(*)": number }[];
-
-    return {
-      triviaCorrect: triviaCorrect[0][`COUNT(*)`],
-      triviaIncorrect: triviaIncorrect[0][`COUNT(*)`],
-      marketPurchases: marketPurchases[0][`COUNT(*)`],
-      marketSales: marketSales[0][`COUNT(*)`],
-      tradesComplete: tradesComplete[0][`COUNT(*)`],
-      missionsSuccessful: missionsSuccessful[0][`COUNT(*)`],
-      missionsFailed: missionsFailed[0][`COUNT(*)`],
-    };
+  /*
+      Economy
+               */
+  public static async getUserSales(discordId: string): Promise<number> {
+    const query = (await DB.query(
+      `SELECT COUNT(*) AS count FROM sale WHERE seller_id=?;`,
+      [discordId]
+    )) as { count: number }[];
+    return query[0].count;
+  }
+  public static async getUserPurchases(discordId: string): Promise<number> {
+    const query = (await DB.query(
+      `SELECT COUNT(*) AS count FROM sale WHERE buyer_id=?;`,
+      [discordId]
+    )) as { count: number }[];
+    return query[0].count;
+  }
+  public static async getUserTrades(discordId: string): Promise<number> {
+    const query = (await DB.query(
+      `SELECT COUNT(*) AS count FROM trade WHERE (sender_id=? OR receiver_id=?);`,
+      [discordId, discordId]
+    )) as { count: number }[];
+    return query[0].count;
+  }
+  public static async getUserMissions(
+    discordId: string
+  ): Promise<{ success: boolean; time: number }[]> {
+    const query = (await DB.query(`SELECT * FROM mission WHERE discord_id=?;`, [
+      discordId,
+    ])) as { discord_id: number; success: boolean; time: number }[];
+    return query;
   }
 
   public static async getTotalCoins(): Promise<number> {
@@ -102,10 +84,42 @@ export class StatsFetch extends DBClass {
     }[];
     return query[0][`SUM(hearts)`];
   }
-  public static async getTotalXp(): Promise<number> {
-    const query = (await DB.query(`SELECT SUM(xp) FROM user_profile;`)) as {
-      "SUM(xp)": number;
+
+  public static async getUserTrivias(
+    discordId: string
+  ): Promise<{ time: number; correct: boolean }[]> {
+    const query = (await DB.query(`SELECT * FROM trivia WHERE discord_id=?;`, [
+      discordId,
+    ])) as { discord_id: string; time: number; correct: boolean }[];
+    return query;
+  }
+  public static async getUserJumbles(
+    discordId: string
+  ): Promise<{ time: number; correct: boolean }[]> {
+    const query = (await DB.query(`SELECT * FROM jumble WHERE discord_id=?;`, [
+      discordId,
+    ])) as { discord_id: string; time: number; correct: boolean }[];
+    return query;
+  }
+  public static async getUserMemories(
+    discordId: string
+  ): Promise<{ time: number; correct: boolean }[]> {
+    const query = (await DB.query(`SELECT * FROM memory WHERE discord_id=?;`, [
+      discordId,
+    ])) as { discord_id: string; time: number; correct: boolean }[];
+    return query;
+  }
+
+  public static async getTotalJumbles(): Promise<number> {
+    const query = (await DB.query(`SELECT COUNT(*) AS count FROM jumble;`)) as {
+      count: number;
     }[];
-    return query[0][`SUM(xp)`];
+    return query[0].count;
+  }
+  public static async getTotalMemories(): Promise<number> {
+    const query = (await DB.query(`SELECT COUNT(*) AS count FROM memory;`)) as {
+      count: number;
+    }[];
+    return query[0].count;
   }
 }

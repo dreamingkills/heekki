@@ -41,20 +41,6 @@ export class StatsService {
     StatsUpdate.tradeComplete(sender.discord_id, receiver.discord_id);
   }
 
-  public static async getUserStats(
-    profile: Profile
-  ): Promise<{
-    triviaCorrect: number;
-    triviaIncorrect: number;
-    marketPurchases: number;
-    marketSales: number;
-    tradesComplete: number;
-    missionsSuccessful: number;
-    missionsFailed: number;
-  }> {
-    return await StatsFetch.getUserStats(profile.discord_id);
-  }
-
   /*
       General Stats
                      */
@@ -73,7 +59,53 @@ export class StatsService {
   public static async getNumberOfHearts(): Promise<number> {
     return await StatsFetch.getTotalHearts();
   }
-  public static async getNumberOfXp(): Promise<number> {
-    return await StatsFetch.getTotalXp();
+
+  /*
+      Economy Stats
+                     */
+  public static async getUserSales(profile: Profile): Promise<number> {
+    return await StatsFetch.getUserSales(profile.discord_id);
+  }
+  public static async getUserPurchases(profile: Profile): Promise<number> {
+    return await StatsFetch.getUserPurchases(profile.discord_id);
+  }
+  public static async getUserTrades(profile: Profile): Promise<number> {
+    return await StatsFetch.getUserTrades(profile.discord_id);
+  }
+  public static async getUserMissions(
+    profile: Profile
+  ): Promise<{ success: boolean; time: number }[]> {
+    return await StatsFetch.getUserMissions(profile.discord_id);
+  }
+
+  /*
+      Minigame Stats
+                      */
+  public static async jumbleComplete(
+    profile: Profile,
+    correct: boolean
+  ): Promise<void> {
+    return await StatsUpdate.jumbleComplete(profile.discord_id, correct);
+  }
+  public static async memoryComplete(
+    profile: Profile,
+    correct: boolean
+  ): Promise<void> {
+    return await StatsUpdate.memoryComplete(profile.discord_id, correct);
+  }
+  public static async getUserTrivias(
+    profile: Profile
+  ): Promise<{ time: number; correct: boolean }[]> {
+    return await StatsFetch.getUserTrivias(profile.discord_id);
+  }
+  public static async getUserJumbles(
+    profile: Profile
+  ): Promise<{ time: number; correct: boolean }[]> {
+    return await StatsFetch.getUserJumbles(profile.discord_id);
+  }
+  public static async getUserMemories(
+    profile: Profile
+  ): Promise<{ time: number; correct: boolean }[]> {
+    return await StatsFetch.getUserMemories(profile.discord_id);
   }
 }

@@ -303,6 +303,13 @@ export class PlayerService {
     return await PlayerFetch.getMostHearts(limit);
   }
 
+  public static async getTopJumblers(limit: number = 15): Promise<Profile[]> {
+    return await PlayerFetch.getTopJumblers(limit);
+  }
+  public static async getTopMemories(limit: number = 15): Promise<Profile[]> {
+    return await PlayerFetch.getTopMemories(limit);
+  }
+
   public static async toggleRestriction(profile: Profile): Promise<Profile> {
     if (profile.restricted) {
       return await PlayerUpdate.unrestrictUser(profile.discord_id);

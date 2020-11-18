@@ -3,6 +3,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 import { BaseCommand } from "../../structures/command/Command";
 import { Profile } from "../../structures/player/Profile";
 import { ConcurrencyService } from "../../helpers/Concurrency";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends BaseCommand {
   names: string[] = ["memory", "mem"];
@@ -88,6 +89,7 @@ export class Command extends BaseCommand {
               )
             );
           } else if (reason === "limit") {
+            await StatsService.memoryComplete(executor, false);
             await sent.edit(
               embed.setDescription(
                 `:confused: **Incorrect!**\nThe answer was: **${
@@ -97,6 +99,7 @@ export class Command extends BaseCommand {
             );
           } else if (reason === "success") {
             await PlayerService.addCoinsToProfile(executor, 4);
+            await StatsService.memoryComplete(executor, true);
             await sent.edit(
               embed.setDescription(
                 `${this.config.discord.emoji.check.full} **Correct!**\nYou've been given ${this.config.discord.emoji.cash.full} **4**!`

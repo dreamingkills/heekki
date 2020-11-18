@@ -9,33 +9,49 @@ export class Command extends BaseCommand {
   names: string[] = ["stats"];
   async exec(msg: Message, executor: Profile) {
     if (this.options[0] === "me") {
-      const stats = await StatsService.getUserStats(executor);
+      const [purchases, sales] = [
+        await StatsService.getUserPurchases(executor),
+        await StatsService.getUserSales(executor),
+      ];
+      const trades = await StatsService.getUserTrades(executor);
+      const missions = await StatsService.getUserMissions(executor);
+
+      const trivias = await StatsService.getUserTrivias(executor);
+      const jumbles = await StatsService.getUserJumbles(executor);
+      const memories = await StatsService.getUserMemories(executor);
+
       const embed = new MessageEmbed()
         .setAuthor(
           `User Stats | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         )
-        .setDescription(`Trades: **${stats.tradesComplete}**`)
+        .setDescription(
+          `Statistics are accurate as of **2020-11-17** (version **3.0.1**).` +
+            `\nYour User ID is **${msg.author.id}**.`
+        )
         .setColor(`#FFAACC`);
       embed.addField(
-        `Trivia`,
-        `Correct: **${stats.triviaCorrect}**\nIncorrect: **${
-          stats.triviaIncorrect
-        }**\nTotal: **${stats.triviaIncorrect + stats.triviaCorrect}**`,
+        `:money_with_wings: Economy`,
+        `\n**Marketplace**` +
+          `\n— Purchases: **${purchases}**` +
+          `\n— Sales: **${sales}**` +
+          `\n**Missions** (${missions.length})` +
+          `\n— Success: **${missions.filter((m) => m.success).length}**` +
+          `\n— Failed: **${missions.filter((m) => !m.success).length}**` +
+          `\n**Trades**: **${trades}**`,
         true
       );
       embed.addField(
-        `Marketplace`,
-        `Purchases: **${stats.marketPurchases}**\nSales: **${
-          stats.marketSales
-        }**\nTotal: **${stats.marketPurchases + stats.marketSales}**`,
-        true
-      );
-      embed.addField(
-        `Missions`,
-        `Successful: **${stats.missionsSuccessful}**\nFailed: **${
-          stats.missionsFailed
-        }**\nTotal: **${stats.missionsFailed + stats.missionsSuccessful}**`,
+        `:mag_right: Minigames`,
+        `**Jumble** (${jumbles.length})` +
+          `\n— Correct: **${jumbles.filter((j) => j.correct).length}**` +
+          `\n— Incorrect: **${jumbles.filter((j) => !j.correct).length}**` +
+          `\n**Memory** (${memories.length})` +
+          `\n— Correct: **${memories.filter((m) => m.correct).length}**` +
+          `\n— Incorrect: **${memories.filter((m) => !m.correct).length}**` +
+          `\n**Trivia** (${trivias.length})` +
+          `\n— Correct: **${trivias.filter((t) => t.correct).length}**` +
+          `\n— Incorrect: **${trivias.filter((t) => !t.correct).length}**`,
         true
       );
       await msg.channel.send(embed);

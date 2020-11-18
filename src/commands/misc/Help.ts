@@ -82,14 +82,6 @@ export class Command extends BaseCommand {
           `\nHigher stars are rarer, but you can add a star to your card at level 99 by using \`${prefix}prestige <card>\`!`;
         break;
       }
-      case "profile": {
-        header = "Profile";
-        description =
-          `Your **Profile** displays information about you, including how many hearts, cards, cash, and reputation you have.\n` +
-          `\n__**How do I set my description?**__` +
-          `\nYou can use \`${prefix}desc description goes here\` to set your description.`;
-        break;
-      }
       case "mission":
       case "missions": {
         header = "Missions";
@@ -395,12 +387,12 @@ export class Command extends BaseCommand {
           `\n- \`forsale=true/false\``;
         break;
       }
-      case "unrep":
+      /*case "unrep":
       case "rep": {
         header = "Command - Reputation";
         description = `Gives or removes reputation from a user. See \`${prefix}help profile\` for further information.`;
         break;
-      }
+      }*/
       case "t":
       case "timers": {
         header = "Command - Timers";
@@ -448,16 +440,12 @@ export class Command extends BaseCommand {
       case "profile": {
         header = "Command - Profile";
         description =
-          `**Profiles** shows you information about players such as card count, reputation, badges, etc.\n` +
+          `**Profiles** shows you information about players such as cash, card count, badges, etc.\n` +
           `\n__**How do I set my description?**__` +
           `\nTo set your description, you can use \`${prefix}desc\`.\n` +
-          `\n__**What is reputation?**__` +
-          `\nReputation is given by other players - you should give reputation to users you think are trustworthy.\n` +
           `\n**Related Commands**` +
           `\n\`\`\`` +
           `\n${prefix}desc <description> - sets your description` +
-          `\n${prefix}rep <@user> - gives someone reputation` +
-          `\n${prefix}unrep <@user> - un-gives someone reputation` +
           `\n${prefix}inv - shows your inventory` +
           `\n\`\`\``;
         break;

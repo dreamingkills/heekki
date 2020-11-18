@@ -297,6 +297,21 @@ export class PlayerFetch extends DBClass {
     });
   }
 
+  public static async getTopJumblers(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT user_profile.*, COUNT(*) as count FROM jumble LEFT JOIN user_profile ON jumble.discord_id=user_profile.discord_id WHERE jumble.correct=true GROUP BY discord_id ORDER BY count DESC LIMIT ?;`,
+      [limit]
+    )) as ProfileInterface[];
+    return query.map((p) => new Profile(p));
+  }
+  public static async getTopMemories(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT user_profile.*, COUNT(*) as count FROM memory LEFT JOIN user_profile ON memory.discord_id=user_profile.discord_id WHERE memory.correct=true GROUP BY discord_id ORDER BY count DESC LIMIT ?;`,
+      [limit]
+    )) as ProfileInterface[];
+    return query.map((p) => new Profile(p));
+  }
+
   public static async getTopCollectors(
     limit: number
   ): Promise<{ profile: Profile }[]> {

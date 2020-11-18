@@ -5,6 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 
 export class Command extends BaseCommand {
   names: string[] = ["unrep"];
+  disabled: boolean = true;
   async exec(msg: Message, executor: Profile) {
     if (!msg.mentions.users.first()) {
       await msg.channel.send(

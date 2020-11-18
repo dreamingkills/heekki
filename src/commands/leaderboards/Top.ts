@@ -9,6 +9,50 @@ export class Command extends BaseCommand {
     let embed = new MessageEmbed();
     let description = "";
     switch (this.options[0]?.toLowerCase()) {
+      case "jumble": {
+        const topJumblers = await PlayerService.getTopJumblers();
+        for (let jumbler of topJumblers) {
+          let user;
+          try {
+            user = (await msg.client.users.fetch(jumbler.discord_id)).username;
+          } catch (e) {
+            user = "Unknown User";
+          }
+          const count = (await StatsService.getUserJumbles(jumbler)).filter(
+            (j) => j.correct
+          );
+          description += `${
+            topJumblers.indexOf(jumbler) + 1
+          }) **${user}** (${count.length.toLocaleString()} jumbles)\n`;
+          embed.setAuthor(
+            `Jumble Leaderboard | ${msg.author.tag}`,
+            msg.author.displayAvatarURL()
+          );
+        }
+        break;
+      }
+      case "memory": {
+        const topMemories = await PlayerService.getTopMemories();
+        for (let memory of topMemories) {
+          let user;
+          try {
+            user = (await msg.client.users.fetch(memory.discord_id)).username;
+          } catch (e) {
+            user = "Unknown User";
+          }
+          const count = (await StatsService.getUserMemories(memory)).filter(
+            (m) => m.correct
+          );
+          description += `${
+            topMemories.indexOf(memory) + 1
+          }) **${user}** (${count.length.toLocaleString()} memory)\n`;
+          embed.setAuthor(
+            `Memory Leaderboard | ${msg.author.tag}`,
+            msg.author.displayAvatarURL()
+          );
+        }
+        break;
+      }
       case "cards": {
         const topCollectors = await PlayerService.getTopCollectors();
         const totalCards = await StatsService.getNumberOfCards();
