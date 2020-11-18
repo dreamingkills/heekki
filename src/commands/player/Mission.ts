@@ -88,7 +88,7 @@ export class Command extends BaseCommand {
           this.config.discord.emoji.shard.full
         }${profit}** *(${newProfile.shards.toLocaleString()} total)*`;
       } else if (reward === "cash") {
-        const profit = Math.floor(chance.integer({ min: 15, max: 25 }));
+        const profit = Math.floor(chance.integer({ min: 35, max: 55 }));
         const newProfile = await PlayerService.addCoinsToProfile(
           executor,
           profit
