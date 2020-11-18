@@ -8,6 +8,7 @@ import { Chance } from "chance";
 import * as error from "../../structures/Error";
 import { Profile } from "../../structures/player/Profile";
 import moment from "moment";
+import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends BaseCommand {
   names: string[] = ["mission", "m"];
@@ -108,6 +109,7 @@ export class Command extends BaseCommand {
     const nextMinutes = nextMoment.diff(now, "minutes");
     const nextSeconds = nextMoment.diff(now, "seconds") - nextMinutes * 60;
 
+    await StatsService.missionComplete(executor, success);
     await PlayerService.setLastMission(executor, now + timeout);
     embed.setFooter(
       `You can do another mission in ${nextMinutes}m ${nextSeconds}s.`
