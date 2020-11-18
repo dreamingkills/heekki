@@ -64,10 +64,10 @@ export class Command extends BaseCommand {
 
     const sent = await msg.channel.send(embed);
     if (this.permissions.MANAGE_MESSAGES) {
-      await sent.react(`753019858932727868`);
+      await sent.react(this.config.discord.emoji.delete.id);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>
-          reaction.emoji.id === "753019858932727868" &&
+          reaction.emoji.id === this.config.discord.emoji.delete.id &&
           user.id === msg.author.id
       );
       collector.on("collect", async () => await sent.delete());

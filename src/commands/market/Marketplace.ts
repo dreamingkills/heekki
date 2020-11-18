@@ -225,7 +225,7 @@ export class Command extends BaseCommand {
 
         if (pageLimit > 2) await sent.react(`⏪`);
         if (pageLimit > 1) await sent.react(`◀️`);
-        await sent.react(`754832389620105276`);
+        await sent.react(this.config.discord.emoji.delete.id);
         if (pageLimit > 1) await sent.react(`▶️`);
         if (pageLimit > 2) await sent.react(`⏩`);
 
