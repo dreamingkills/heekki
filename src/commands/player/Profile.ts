@@ -44,6 +44,7 @@ export class Command extends BaseCommand {
   }
 
   async exec(msg: Message, executor: Profile) {
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     let userQuery: Profile;
     if (this.options[0]) {
       if (msg.mentions.users.first()) {
@@ -145,7 +146,7 @@ export class Command extends BaseCommand {
       .setAuthor(`Profile | ${discordUser.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         userQuery.blurb ||
-          "No description set!\nUse `!desc` to set your description."
+          `No description set!\nUse \`${prefix}desc\` to set your description.`
       )
       .setColor(`#FFAACC`)
       .setFooter(`Took ${Date.now() - msg.createdTimestamp}ms`)

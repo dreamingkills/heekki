@@ -15,7 +15,8 @@ export class Command extends BaseCommand {
     cards: { card: UserCard; price: number }[],
     page: number,
     limit: number,
-    sender: User
+    sender: User,
+    prefix: string
   ): Promise<MessageEmbed> {
     const formatted: { name: string; value: string; inline: boolean }[] = [];
     for (let listing of cards) {
@@ -45,13 +46,14 @@ export class Command extends BaseCommand {
       )
       .addFields(formatted)
       .setFooter(
-        `To buy a card, use !mp buy <card reference>.\nTo change pages, click the arrow reactions.`
+        `To buy a card, use ${prefix}mp buy <card reference>.\nTo change pages, click the arrow reactions.`
       )
       .setColor(`#FFAACC`);
     return embed;
   }
 
   async exec(msg: Message, executor: Profile) {
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const subcommand = this.options[0];
     const optionsRaw = this.options.filter((v) => v.includes("="));
     let options: { [key: string]: string } = {};
@@ -255,7 +257,13 @@ export class Command extends BaseCommand {
             page: page,
           });
           await sent.edit(
-            await this.renderMarket(newCards, page, pageLimit, msg.author)
+            await this.renderMarket(
+              newCards,
+              page,
+              pageLimit,
+              msg.author,
+              prefix
+            )
           );
           if (this.permissions.MANAGE_MESSAGES)
             await r.users.remove(msg.author);

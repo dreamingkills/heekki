@@ -202,9 +202,9 @@ export class DailyCooldownError extends ClientError {
                  */
 export class InvalidPackError extends ClientError {
   name = "InvalidPackError";
-  constructor() {
+  constructor(prefix: string) {
     super(
-      "Sorry, but I couldn't find that pack. Make sure you entered it correctly.\n**TIP**: You can use `!packs` to see all available packs."
+      `Sorry, but I couldn't find that pack. Make sure you entered it correctly.\n**TIP**: You can use \`${prefix}packs\` to see all available packs.`
     );
   }
 }
@@ -317,11 +317,11 @@ export class CardNotOrphanedError extends ClientError {
 }
 export class CardFavoritedError extends ClientError {
   name = "CardFavoritedError";
-  constructor(card: UserCard) {
+  constructor(card: UserCard, prefix: string) {
     super(
       `**${CardService.cardToReference(
         card
-      )}** is favorited!\nUse \`!fav ${CardService.cardToReference(
+      )}** is favorited!\nUse \`${prefix}fav ${CardService.cardToReference(
         card
       )}\` to unfavorite.`
     );
@@ -329,11 +329,11 @@ export class CardFavoritedError extends ClientError {
 }
 export class CardOnMarketplaceError extends ClientError {
   name = "CardOnMarketplaceError";
-  constructor(card: UserCard) {
+  constructor(card: UserCard, prefix: string) {
     super(
       `**${CardService.cardToReference(
         card
-      )}** is currently on the Marketplace.\nTo unlist it, use \`!mp unsell <card reference>\`.`
+      )}** is currently on the Marketplace.\nTo unlist it, use \`${prefix}mp unsell <card reference>\`.`
     );
   }
 }

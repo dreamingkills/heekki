@@ -30,7 +30,7 @@ export class Command extends BaseCommand {
         header = `Eden`;
         description =
           `**Eden** is a place you can send LOONA members to work and passively make money for you.` +
-          `\nUse \`!eden\` for more information!`;
+          `\nUse \`${prefix}eden\` for more information!`;
         break;
       }
       case "overview":
@@ -455,7 +455,7 @@ export class Command extends BaseCommand {
         header = "Error";
         description =
           `\nSorry, I couldn't find that topic.` +
-          `\nUse \`${prefix}help topics\` to see a list of topics.`;
+          `\nUse \`${prefix}help commands\` to see a list of commands.`;
       }
     }
 

@@ -9,6 +9,7 @@ import { PlayerService } from "../../database/service/PlayerService";
 export class Command extends BaseCommand {
   names: string[] = ["well"];
   async exec(msg: Message, executor: Profile) {
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const subcommand = this.options[0];
     switch (subcommand) {
       case "give": {
@@ -80,7 +81,7 @@ export class Command extends BaseCommand {
         break;
       }
       default: {
-        const requirement = 7500000;
+        const requirement = Infinity;
         const current = await WellService.getWellTotal();
         const percentage = (current / requirement) * 100;
         const steps = Math.floor((current / requirement) * 100) / 10;
@@ -106,10 +107,10 @@ export class Command extends BaseCommand {
             `:fountain: The **Well of Goodwill** is a crowdsourced charity project.\n` +
               `\n${progressBar}` +
               `\n**${current.toLocaleString()}** / **${requirement.toLocaleString()}**` +
-              `\nNext reward: **Card pack**\n` +
+              `\nNext reward: **None**\n` +
               `\n\`\`\`` +
-              `\n!well give <amount> - throw money in the well` +
-              `\n!well top - see top donators` +
+              `\n${prefix}well give <amount> - throw money in the well` +
+              `\n${prefix}well top - see top donators` +
               `\n\`\`\``
           )
           .setColor(`#FFAACC`)
