@@ -98,12 +98,19 @@ export class Command extends BaseCommand {
               )
             );
           } else if (reason === "success") {
-            await PlayerService.addCoinsToProfile(executor, 4);
+            const newProfile = await PlayerService.addCoinsToProfile(
+              executor,
+              4
+            );
             await StatsService.memoryComplete(executor, true);
             await sent.edit(
-              embed.setDescription(
-                `${this.config.discord.emoji.check.full} **Correct!**\nYou've been given ${this.config.discord.emoji.cash.full} **4**!`
-              )
+              embed
+                .setDescription(
+                  `${this.config.discord.emoji.check.full} **Correct!**\n**+ ${
+                    this.config.discord.emoji.cash.full
+                  } 4** *(${newProfile.coins.toLocaleString()} total)*`
+                )
+                .setFooter(``)
             );
           }
         } catch (e) {
