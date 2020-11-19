@@ -63,6 +63,8 @@ export class OptionsParser {
     }
 
     if (type === "INVENTORY") {
+      if (options.forsale === "false")
+        queryOptions.push(` marketplace.price IS NULL`);
       if (options.forsale === "true")
         queryOptions.push(` marketplace.price IS NOT NULL`);
       if (options.favorite === "true")
