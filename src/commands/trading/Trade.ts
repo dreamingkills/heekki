@@ -124,8 +124,10 @@ export class Command extends BaseCommand {
                 CardService.cardInEden(card, tradeeEden)
               )
                 throw new error.CardInEdenError(card);
-              if (card.isFavorite) throw new error.CardFavoritedError(card);
-              if (forSale.forSale) throw new error.CardOnMarketplaceError(card);
+              if (card.isFavorite)
+                throw new error.CardFavoritedError(card, prefix);
+              if (forSale.forSale)
+                throw new error.CardOnMarketplaceError(card, prefix);
               if (
                 senderCards
                   .map((c) => {

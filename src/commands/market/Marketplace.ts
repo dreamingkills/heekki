@@ -75,13 +75,14 @@ export class Command extends BaseCommand {
         const card = await CardService.getCardDataFromReference(reference);
         if (card.ownerId !== msg.author.id)
           throw new error.NotYourCardError(card);
-        if (card.isFavorite) throw new error.CardFavoritedError(card);
+        if (card.isFavorite) throw new error.CardFavoritedError(card, prefix);
         const eden = await PlayerService.getEden(executor);
         if (CardService.cardInEden(card, eden))
           throw new error.CardInEdenError(card);
 
         const isForSale = await MarketService.cardIsOnMarketplace(card);
-        if (isForSale.forSale) throw new error.CardOnMarketplaceError(card);
+        if (isForSale.forSale)
+          throw new error.CardOnMarketplaceError(card, prefix);
 
         let price = parseFloat(this.options[2]);
         if (this.options[2]?.toLowerCase().endsWith("k")) price = price * 1000;
@@ -221,7 +222,7 @@ export class Command extends BaseCommand {
 
         const ff = await MarketService.getMarket({ ...options, page });
         const sent = await msg.channel.send(
-          await this.renderMarket(ff, page, pageLimit, msg.author)
+          await this.renderMarket(ff, page, pageLimit, msg.author, prefix)
         );
 
         if (pageLimit > 2) await sent.react(`⏪`);

@@ -13,8 +13,11 @@ export class ShopService {
     return await ShopFetch.getActiveShopItems(page);
   }
 
-  public static async getPackByName(name: string): Promise<ShopItem> {
-    return await ShopFetch.getPackByName(name);
+  public static async getPackByName(
+    name: string,
+    prefix: string
+  ): Promise<ShopItem> {
+    return await ShopFetch.getPackByName(name, prefix);
   }
 
   public static async getPackById(id: number): Promise<Pack> {
@@ -22,8 +25,9 @@ export class ShopService {
   }
 
   public static async getPackByFuzzySearch(
-    searchterm: string
+    searchTerm: string,
+    prefix: string
   ): Promise<ShopItem> {
-    return await ShopFetch.getPackByFuzzySearch(searchterm);
+    return await ShopFetch.getPackByFuzzySearch(searchTerm, prefix);
   }
 }

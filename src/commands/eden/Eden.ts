@@ -36,6 +36,7 @@ export class Command extends BaseCommand {
   }
 
   async exec(msg: Message, executor: Profile): Promise<void> {
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const eden = await PlayerService.getEden(executor);
     await eden.convert();
     const members = [
@@ -83,7 +84,7 @@ export class Command extends BaseCommand {
       if (card.ownerId !== msg.author.id)
         throw new error.NotYourCardError(card);
       if ((await MarketService.cardIsOnMarketplace(card)).forSale)
-        throw new error.CardOnMarketplaceError(card);
+        throw new error.CardOnMarketplaceError(card, prefix);
 
       if (this.memberNames.indexOf(card.member) < 0)
         throw new error.NotAMemberError();
@@ -202,7 +203,6 @@ export class Command extends BaseCommand {
         )}/h)` + `\n— *bonus expires in:* \`${diffMessage}\``;
     }
 
-    const prefix = this.bot.getPrefix(msg.guild!.id);
     desc +=
       `\n\n**Subcommands**` +
       `\n\`\`\`` +

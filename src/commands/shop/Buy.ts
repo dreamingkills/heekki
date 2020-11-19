@@ -8,6 +8,7 @@ import Chance from "chance";
 export class Command extends BaseCommand {
   names: string[] = ["buypack", "bp"];
   async exec(msg: Message, executor: Profile) {
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const packName = this.options.join(" ");
     if (!packName) {
       await msg.channel.send(
@@ -15,7 +16,7 @@ export class Command extends BaseCommand {
       );
       return;
     }
-    const pack = await ShopService.getPackByName(packName);
+    const pack = await ShopService.getPackByName(packName, prefix);
     if (!pack.active) {
       await msg.channel.send(
         `${this.config.discord.emoji.cross.full} That pack isn't available for purchase.`

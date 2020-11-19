@@ -6,7 +6,10 @@ import { Pack } from "../../../structures/card/Pack";
 import { ShopItemInterface } from "../../../structures/interface/ShopItemInterface";
 
 export class ShopFetch extends DBClass {
-  public static async getPackByFuzzySearch(name: string): Promise<ShopItem> {
+  public static async getPackByFuzzySearch(
+    name: string,
+    prefix: string
+  ): Promise<ShopItem> {
     const query = (await DB.query(
       `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE (pack.title LIKE ? OR shop.title LIKE ?);`,
       [`%${name}%`, `%${name}%`]
@@ -20,11 +23,14 @@ export class ShopFetch extends DBClass {
       cover_url: string;
       flavor_text: string;
     }[];
-    if (!query[0]) throw new error.InvalidPackError();
+    if (!query[0]) throw new error.InvalidPackError(prefix);
     return new ShopItem(query[0]);
   }
 
-  public static async getPackByName(name: string): Promise<ShopItem> {
+  public static async getPackByName(
+    name: string,
+    prefix: string
+  ): Promise<ShopItem> {
     const query = (await DB.query(
       `SELECT shop.title AS keyword, price, active, pack.title, pack.credit, pack.id, pack.cover_url, pack.flavor_text FROM shop LEFT JOIN pack ON pack.id=shop.pack_id WHERE shop.title=?;`,
       [name]
@@ -38,7 +44,7 @@ export class ShopFetch extends DBClass {
       cover_url: string;
       flavor_text: string;
     }[];
-    if (!query[0]) throw new error.InvalidPackError();
+    if (!query[0]) throw new error.InvalidPackError(prefix);
     return new ShopItem(query[0]);
   }
 

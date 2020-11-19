@@ -14,8 +14,9 @@ export class Command extends BaseCommand {
       );
       return;
     }
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const packName = this.options.join(" ");
-    const pack = await ShopService.getPackByFuzzySearch(packName);
+    const pack = await ShopService.getPackByFuzzySearch(packName, prefix);
     const packCards = await CardService.getCardsByPack(pack);
     const ownedByUser = await PlayerService.getCardsByProfile(executor, {
       pack: pack.title,
