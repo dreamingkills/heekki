@@ -12,6 +12,7 @@ import { Bot } from "../structures/client/Bot";
 export class CommandManager {
   commands: BaseCommand[] = [];
   cooldown: Set<string> = new Set<string>();
+  warned: Set<string> = new Set<string>();
 
   constructor() {}
   async init(): Promise<BaseCommand[]> {
@@ -47,6 +48,15 @@ export class CommandManager {
   }
 
   async handle(msg: Message, cfg: typeof config, bot: Bot): Promise<void> {
+    if (this.cooldown.has(msg.author.id)) {
+      if (!this.warned.has(msg.author.id)) {
+        this.warned.add(msg.author.id);
+        await msg.channel.send(
+          `${cfg.discord.emoji.cross.full} Please wait a couple seconds before using another command.`
+        );
+      }
+      return;
+    }
     let cmd = this.getCommandByName(
       msg.content.toLowerCase(),
       bot.getPrefix(msg.guild?.id)
@@ -61,16 +71,11 @@ export class CommandManager {
       );
       return;
     }
-    if (this.cooldown.has(msg.author.id)) {
-      await msg.channel.send(
-        `${cfg.discord.emoji.cross.full} Please wait a couple seconds before using another command.`
-      );
-      return;
-    }
 
     const staged = Date.now();
     this.cooldown.add(msg.author.id);
     setTimeout(() => {
+      this.warned.delete(msg.author.id);
       this.cooldown.delete(msg.author.id);
     }, 1500);
 
