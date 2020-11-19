@@ -6,6 +6,7 @@ import { Profile } from "../../structures/player/Profile";
 export class Command extends BaseCommand {
   names: string[] = ["timers", "t"];
   async exec(msg: Message, executor: Profile) {
+    const prefix = this.bot.getPrefix(msg.guild!.id);
     const now = moment(Date.now());
     const timeUntilDaily = moment(executor.lastDaily + (86400000 - 1800000));
     const timeUntilMission = moment(executor.missionNext);
@@ -18,19 +19,19 @@ export class Command extends BaseCommand {
       .setThumbnail(msg.author.displayAvatarURL())
       .setColor(`#FFAACC`)
       .setDescription(
-        `:alarm_clock: **Time-Based Rewards**\n- \`!daily\` Daily Reward: ${
+        `:alarm_clock: **Time-Based Rewards**\n- \`${prefix}daily\` Daily Reward: ${
           now <= timeUntilDaily
             ? moment.utc(timeUntilDaily.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n- \`!hb\` Heart Boxes: ${
+        }\n- \`${prefix}hb\` Heart Boxes: ${
           now <= timeUntilHeartBox
             ? moment.utc(timeUntilHeartBox.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n- \`!send\` Send Hearts: ${
+        }\n- \`${prefix}send\` Send Hearts: ${
           now <= timeUntilSend
             ? moment.utc(timeUntilSend.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"
-        }\n- \`!mission\` Mission: ${
+        }\n- \`${prefix}mission\` Mission: ${
           now <= timeUntilMission
             ? moment.utc(timeUntilMission.diff(now)).format(`[__]HH:mm:ss[__]`)
             : "**Now!**"

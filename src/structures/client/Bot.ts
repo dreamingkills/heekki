@@ -37,6 +37,7 @@ export class Bot extends Client {
     this.on("debug", async (info) => {
       if (this.config.discord.debug) console.log(info);
     });
+
     this.on("ready", async () => {
       if (!this.user) return console.error("I'm null!");
 

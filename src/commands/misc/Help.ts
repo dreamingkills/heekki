@@ -182,13 +182,14 @@ export class Command extends BaseCommand {
 
       // Commands
       case "prefix":
+      case "setting":
       case "settings": {
         header = "Prefix";
         description =
-          `Server administrators change the **prefix** of Heekki by using \`${prefix}settings prefix <prefix here>\`\n` +
+          `Server administrators change the **prefix** of Heekki by using \`${prefix}setting prefix <prefix here>\`\n` +
           `\n**Example**` +
-          `\n\`${prefix}settings prefix !!\`` +
-          `\n\`${prefix}settings prefix ?\``;
+          `\n\`${prefix}setting prefix !!\`` +
+          `\n\`${prefix}setting prefix ?\``;
         break;
       }
       case "auc":
