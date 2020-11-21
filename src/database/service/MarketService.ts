@@ -6,7 +6,7 @@ export class MarketService {
   public static async getMarket(
     options: {
       [key: string]: string | number;
-    } = {}
+    }[] = []
   ): Promise<{ card: UserCard; price: number }[]> {
     return await MarketFetch.fetchCardIdsInMarketplace(options);
   }
@@ -14,7 +14,7 @@ export class MarketService {
   public static async getMarketCount(
     options: {
       [key: string]: string | number;
-    } = {}
+    }[] = []
   ): Promise<number> {
     return await MarketFetch.fetchMarketplaceCardCount(options);
   }

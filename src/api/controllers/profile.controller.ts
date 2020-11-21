@@ -37,15 +37,15 @@ export class ProfileController {
   ): Promise<{ inventory: UserCard[] } | { errors: APIError[] }> {
     try {
       const profile = await PlayerService.getProfileByDiscordId(id);
-      const inventory = await PlayerService.getCardsByProfile(profile, {
-        limit: count,
-        page,
-        pack,
-        member,
-        serial,
-        stars,
-        forsale: forsale?.toString(),
-      });
+      const inventory = await PlayerService.getCardsByProfile(profile, [
+        { limit: count },
+        { page },
+        { pack },
+        { member },
+        { serial },
+        { stars },
+        { forsale: forsale?.toString() },
+      ]);
       return { inventory: inventory };
     } catch (e) {
       console.log(e.name + " " + e.message);

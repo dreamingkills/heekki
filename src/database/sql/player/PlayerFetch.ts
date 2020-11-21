@@ -54,7 +54,7 @@ export class PlayerFetch extends DBClass {
     discord_id: string,
     options: {
       [key: string]: string | number;
-    }
+    }[]
   ): Promise<UserCard[]> {
     let query = `SELECT 
                     card.id AS card_id,
@@ -92,17 +92,21 @@ export class PlayerFetch extends DBClass {
                       marketplace.card_id=legacy.id
                   WHERE legacy.owner_id=${DB.connection.escape(discord_id)}`;
 
-    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
+    const queryOptions = await OptionsParser.parseOptions(
+      "INVENTORY",
+      "legacy",
+      options
+    );
+    const limit = <number>options.filter((o) => o.limit)[0].limit;
+    const page = <number>options.filter((o) => o.page)[0].page;
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
       " ORDER BY legacy.is_favorite DESC, legacy.stars DESC, legacy.hearts DESC, legacy.id DESC" +
-      (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
-      (options?.page && options.limit
+      (limit ? ` LIMIT ${DB.connection.escape(limit)}` : ``) +
+      (page && limit
         ? ` OFFSET ${DB.connection.escape(
-            (isNaN(<number>options.page) ? 1 : <number>options.page) *
-              <number>options.limit -
-              <number>options.limit
+            (isNaN(page) ? 1 : page) * limit - limit
           )}`
         : ``);
 
@@ -114,7 +118,7 @@ export class PlayerFetch extends DBClass {
 
   public static async getLegacyCardCountByDiscordId(
     discord_id: string,
-    options: { [key: string]: string | number }
+    options: { [key: string]: string | number }[]
   ): Promise<number> {
     let query = `SELECT 
                   COUNT(*)
@@ -134,7 +138,11 @@ export class PlayerFetch extends DBClass {
                     marketplace.card_id=legacy.id
                 WHERE legacy.owner_id=${DB.connection.escape(discord_id)}`;
 
-    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
+    const queryOptions = await OptionsParser.parseOptions(
+      "INVENTORY",
+      "legacy",
+      options
+    );
     query +=
       (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
 
@@ -146,7 +154,7 @@ export class PlayerFetch extends DBClass {
     discord_id: string,
     options: {
       [key: string]: string | number;
-    }
+    }[]
   ): Promise<UserCard[]> {
     let query = `SELECT 
                     card.id AS card_id,
@@ -184,17 +192,21 @@ export class PlayerFetch extends DBClass {
                       marketplace.card_id=user_card.id
                   WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
-    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
+    const queryOptions = await OptionsParser.parseOptions(
+      "INVENTORY",
+      "user_card",
+      options
+    );
+    const limit = <number>options.filter((o) => o.limit)[0].limit;
+    const page = <number>options.filter((o) => o.page)[0].page;
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
       " ORDER BY user_card.is_favorite DESC, user_card.stars DESC, user_card.hearts DESC, user_card.id DESC" +
-      (options?.limit ? ` LIMIT ${DB.connection.escape(options.limit)}` : ``) +
-      (options?.page && options.limit
+      (limit ? ` LIMIT ${DB.connection.escape(limit)}` : ``) +
+      (page && limit
         ? ` OFFSET ${DB.connection.escape(
-            (isNaN(<number>options.page) ? 1 : <number>options.page) *
-              <number>options.limit -
-              <number>options.limit
+            (isNaN(page) ? 1 : page) * limit - limit
           )}`
         : ``);
 
@@ -237,7 +249,7 @@ export class PlayerFetch extends DBClass {
 
   public static async getCardCountByDiscordId(
     discord_id: string,
-    options: { [key: string]: string | number }
+    options: { [key: string]: string | number }[]
   ): Promise<number> {
     let query = `SELECT 
                   COUNT(*)
@@ -257,7 +269,12 @@ export class PlayerFetch extends DBClass {
                     marketplace.card_id=user_card.id
                 WHERE user_card.owner_id=${DB.connection.escape(discord_id)}`;
 
-    const queryOptions = await OptionsParser.parseOptions("INVENTORY", options);
+    const queryOptions = await OptionsParser.parseOptions(
+      "INVENTORY",
+      "user_card",
+      options
+    );
+
     query +=
       (queryOptions.length > 0 ? " AND" : "") + queryOptions.join(" AND");
 

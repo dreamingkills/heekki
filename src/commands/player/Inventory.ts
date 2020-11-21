@@ -29,13 +29,13 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     const eden = await PlayerService.getEden(executor);
     const optionsRaw = this.options.filter((v) => v.includes("="));
-    let options: { [key: string]: string } = {};
-    for (let option of optionsRaw) {
-      const name = option.split("=")[0];
-      const value = option.split("=")[1];
-      options[name.toLowerCase()] = value;
-    }
+    const options = optionsRaw.map((o) => {
+      const value: { [key: string]: string | number } = {};
+      value[o.split("=")[0]] = o.split("=")[1];
+      return value;
+    });
 
+    console.log(options);
     let profile: Profile;
     let user: User;
     if (msg.mentions.users.first()) {
@@ -49,7 +49,7 @@ export class Command extends BaseCommand {
     }
 
     let cardCount: number;
-    if (options.legacy) {
+    if (options.filter((o) => o.legacy)[0]?.legacy) {
       cardCount = await PlayerService.getLegacyCardCountByProfile(
         profile,
         options
@@ -57,10 +57,10 @@ export class Command extends BaseCommand {
     } else
       cardCount = await PlayerService.getCardCountByProfile(profile, options);
 
-    const pageLimit = Math.ceil(cardCount / 10);
-    const pageNotNaN = isNaN(parseInt(options.page))
-      ? 1
-      : parseInt(options.page);
+    const pageRaw = <string>options.filter((o) => o.page)[0]?.page;
+    const pageLimit =
+      Math.ceil(cardCount / 10) < 1 ? 1 : Math.ceil(cardCount / 10);
+    const pageNotNaN = isNaN(parseInt(pageRaw)) ? 1 : parseInt(pageRaw);
     const pageNotNegative = pageNotNaN < 1 ? 1 : pageNotNaN;
     let page = pageNotNegative > pageLimit ? pageLimit : pageNotNegative;
 
@@ -73,18 +73,18 @@ export class Command extends BaseCommand {
     }`;
 
     let cards: UserCard[];
-    if (options.legacy) {
-      cards = await PlayerService.getLegacyCardsByProfile(profile, {
+    if (options.filter((o) => o.legacy)[0]?.legacy) {
+      cards = await PlayerService.getLegacyCardsByProfile(profile, [
         ...options,
-        limit: 10,
-        page,
-      });
+        { limit: 10 },
+        { page },
+      ]);
     } else
-      cards = await PlayerService.getCardsByProfile(profile, {
+      cards = await PlayerService.getCardsByProfile(profile, [
         ...options,
-        limit: 10,
-        page,
-      });
+        { limit: 10 },
+        { page },
+      ]);
 
     const embed = new MessageEmbed()
       .setAuthor(
@@ -124,18 +124,11 @@ export class Command extends BaseCommand {
       if (r.emoji.name === "⏩" && page !== pageLimit) page = pageLimit;
 
       let newCards: UserCard[];
-      if (options.legacy) {
-        newCards = await PlayerService.getLegacyCardsByProfile(profile, {
-          ...options,
-          limit: 10,
-          page,
-        });
-      } else
-        newCards = await PlayerService.getCardsByProfile(profile, {
-          ...options,
-          limit: 10,
-          page,
-        });
+      newCards = await PlayerService.getCardsByProfile(profile, [
+        ...options,
+        { limit: 10 },
+        { page },
+      ]);
 
       await sent.edit(
         embed

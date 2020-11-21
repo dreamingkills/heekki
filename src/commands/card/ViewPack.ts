@@ -18,9 +18,11 @@ export class Command extends BaseCommand {
     const packName = this.options.join(" ");
     const pack = await ShopService.getPackByFuzzySearch(packName, prefix);
     const packCards = await CardService.getCardsByPack(pack);
-    const ownedByUser = await PlayerService.getCardsByProfile(executor, {
-      pack: pack.title,
-    });
+    const ownedByUser = await PlayerService.getCardsByProfile(executor, [
+      {
+        pack: pack.title,
+      },
+    ]);
 
     const length = packCards.length;
     let size,

@@ -56,12 +56,11 @@ export class Command extends BaseCommand {
     const prefix = this.bot.getPrefix(msg.guild!.id);
     const subcommand = this.options[0];
     const optionsRaw = this.options.filter((v) => v.includes("="));
-    let options: { [key: string]: string } = {};
-    for (let option of optionsRaw) {
-      const name = option.split("=")[0];
-      const value = option.split("=")[1];
-      options[name.toLowerCase()] = value;
-    }
+    const options = optionsRaw.map((o) => {
+      const value: { [key: string]: string | number } = {};
+      value[o.split("=")[0]] = o.split("=")[1];
+      return value;
+    });
 
     switch (subcommand) {
       case "sell": {
@@ -209,18 +208,17 @@ export class Command extends BaseCommand {
       }
       default: {
         if (msg.mentions.users.first()) {
-          options.owner = msg.mentions.users.first()!.id;
+          options.push({ owner: msg.mentions.users.first()!.id });
         }
-        const totalOnMarket = await MarketService.getMarketCount({
-          ...options,
-        });
-        const pageLimit = Math.ceil(totalOnMarket / 15);
-        const pageRaw = isNaN(parseInt(options.page))
-          ? 1
-          : parseInt(options.page);
-        let page = pageRaw > pageLimit ? pageLimit : pageRaw;
+        const cardCount = await MarketService.getMarketCount([...options]);
+        const pageRaw = <string>options.filter((o) => o.page)[0]?.page;
+        const pageLimit =
+          Math.ceil(cardCount / 12) < 1 ? 1 : Math.ceil(cardCount / 12);
+        const pageNotNaN = isNaN(parseInt(pageRaw)) ? 1 : parseInt(pageRaw);
+        const pageNotNegative = pageNotNaN < 1 ? 1 : pageNotNaN;
+        let page = pageNotNegative > pageLimit ? pageLimit : pageNotNegative;
 
-        const ff = await MarketService.getMarket({ ...options, page });
+        const ff = await MarketService.getMarket([...options, { page }]);
         const sent = await msg.channel.send(
           await this.renderMarket(ff, page, pageLimit, msg.author, prefix)
         );
@@ -252,11 +250,10 @@ export class Command extends BaseCommand {
           if (r.emoji.name === "⏩" && page !== pageLimit) page = pageLimit;
           if (r.emoji.name === "delete") return await sent.delete();
 
-          const newCards = await MarketService.getMarket({
+          const newCards = await MarketService.getMarket([
             ...options,
-            limit: 15,
-            page: page,
-          });
+            { page },
+          ]);
           await sent.edit(
             await this.renderMarket(
               newCards,

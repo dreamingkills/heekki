@@ -4,9 +4,11 @@ import { UserCard } from "../../../structures/player/UserCard";
 import { OptionsParser } from "../OptionsParser";
 
 export class MarketFetch extends DBClass {
-  public static async fetchCardIdsInMarketplace(options: {
-    [key: string]: string | number;
-  }): Promise<{ card: UserCard; price: number }[]> {
+  public static async fetchCardIdsInMarketplace(
+    options: {
+      [key: string]: string | number;
+    }[]
+  ): Promise<{ card: UserCard; price: number }[]> {
     let query = `SELECT 
                   card.id AS card_id,
                   card.blurb,
@@ -39,15 +41,15 @@ export class MarketFetch extends DBClass {
                   shop ON shop.pack_id=pack.id`;
     const queryOptions = await OptionsParser.parseOptions(
       "MARKETPLACE",
+      "user_card",
       options
     );
+    const page = <number>options.filter((o) => o.page)[0].page;
 
     query +=
       (queryOptions.length > 0 ? " WHERE" : "") +
       queryOptions.join(" AND") +
-      ` ORDER BY marketplace.id DESC LIMIT 9 OFFSET ${
-        (<number>options?.page || 1) * 9 - 9
-      };`;
+      ` ORDER BY marketplace.id DESC LIMIT 9 OFFSET ${(page || 1) * 9 - 9};`;
 
     let forSale = (await DB.query(query)) as UserCardInterface[];
     return forSale.map((c) => {
@@ -55,9 +57,11 @@ export class MarketFetch extends DBClass {
     });
   }
 
-  public static async fetchMarketplaceCardCount(options: {
-    [key: string]: string | number;
-  }): Promise<number> {
+  public static async fetchMarketplaceCardCount(
+    options: {
+      [key: string]: string | number;
+    }[]
+  ): Promise<number> {
     let query = `SELECT 
                   COUNT(*)
                 FROM
@@ -72,6 +76,7 @@ export class MarketFetch extends DBClass {
                   shop ON shop.pack_id=pack.id`;
     const queryOptions = await OptionsParser.parseOptions(
       "MARKETPLACE",
+      "user_card",
       options
     );
 

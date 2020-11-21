@@ -1,4 +1,4 @@
-import {
+/*import {
   Message,
   MessageEmbed,
   MessageReaction,
@@ -105,3 +105,4 @@ export class Command extends BaseCommand {
     });
   }
 }
+*/
