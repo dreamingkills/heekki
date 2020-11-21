@@ -74,14 +74,16 @@ export class Command extends BaseCommand {
                 } *(${newProfile.coins.toLocaleString()} total)*`
               )
               .setColor(`#FFAACC`);
-            await m.react(this.config.discord.emoji.check.id);
+
+            if (this.permissions.ADD_REACTIONS)
+              await m.react(this.config.discord.emoji.check.id);
 
             await StatsService.jumbleComplete(executor, true);
             await sent.edit(successEmbed);
             collector.stop("correct");
-            return;
           } else {
-            await m.react(this.config.discord.emoji.cross.id);
+            if (this.permissions.ADD_REACTIONS)
+              await m.react(this.config.discord.emoji.cross.id);
           }
         }
       }
@@ -111,13 +113,11 @@ export class Command extends BaseCommand {
             await msg.channel.send(failedEmbed);
           }
         }
-      } catch (_) {
+      } catch {
       } finally {
         ConcurrencyService.unsetConcurrency(msg.author.id);
-        return;
       }
     });
-    return;
   }
 
   private jumble(term: string): string {

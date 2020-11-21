@@ -48,6 +48,14 @@ export class CommandManager {
   }
 
   async handle(msg: Message, cfg: typeof config, bot: Bot): Promise<void> {
+    let cmd = this.getCommandByName(
+      msg.content.toLowerCase(),
+      bot.getPrefix(msg.guild?.id)
+    );
+    if (!cmd) return;
+
+    if (!msg.guild?.member(msg.client.user!)?.hasPermission("SEND_MESSAGES"))
+      return;
     if (this.cooldown.has(msg.author.id)) {
       if (!this.warned.has(msg.author.id)) {
         this.warned.add(msg.author.id);
@@ -57,13 +65,6 @@ export class CommandManager {
       }
       return;
     }
-    let cmd = this.getCommandByName(
-      msg.content.toLowerCase(),
-      bot.getPrefix(msg.guild?.id)
-    );
-    if (!cmd) return;
-    if (!msg.guild?.member(msg.client.user!)?.hasPermission("SEND_MESSAGES"))
-      return;
 
     if (cmd.users && cmd.users[0] !== msg.author.id) {
       await msg.channel.send(
