@@ -9,7 +9,7 @@ import { UserCard } from "../../structures/player/UserCard";
 import { MarketService } from "../../database/service/MarketService";
 
 export class Command extends BaseCommand {
-  names: string[] = ["eden"];
+  names: string[] = ["eden", "e"];
   private memberNames: string[] = [
     "HeeJin",
     "HyunJin",

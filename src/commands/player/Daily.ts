@@ -5,7 +5,7 @@ import { Profile } from "../../structures/player/Profile";
 import * as error from "../../structures/Error";
 
 export class Command extends BaseCommand {
-  names: string[] = ["daily"];
+  names: string[] = ["daily", "d"];
   async exec(msg: Message, executor: Profile) {
     const interval = 10;
     const last = executor.lastDaily;
