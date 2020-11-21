@@ -125,7 +125,7 @@ export class Command extends BaseCommand {
         );
         break;
       }
-      default: {
+      case "cash": {
         const richestUsers = await PlayerService.getRichestUsers();
         const totalCoins = await StatsService.getNumberOfCoins();
         for (let profile of richestUsers) {
@@ -148,23 +148,25 @@ export class Command extends BaseCommand {
         );
         break;
       }
-      /*default: {
-        const topXp = await PlayerService.getTopXp();
-        const totalXp = await StatsService.getNumberOfXp();
-        for (let profile of topXp) {
-          const user = msg.client.users.cache.get(profile.discord_id);
-          description += `${topXp.indexOf(profile) + 1}) **${
-            user?.username || "Unknown User"
-          }** (${profile.xp.toLocaleString()} XP)\n`;
-        }
+      default: {
+        const prefix = this.bot.getPrefix(msg.guild!.id);
         embed.setAuthor(
-          `XP Leaderboard | ${msg.author.tag}`,
+          `Leaderboards | ${msg.author.tag}`,
           msg.author.displayAvatarURL()
         );
-        embed.setFooter(
-          `There are ${totalXp.toLocaleString()} total experience points.`
-        );
-      }*/
+        description =
+          `${this.config.discord.emoji.cross.full} Please specify a leaderboard to look at.\n` +
+          `\n**Available Leaderboards**` +
+          `\n\`\`\`` +
+          `\n${prefix}top trivia` +
+          `\n${prefix}top jumble` +
+          `\n${prefix}top memory` +
+          `\n${prefix}top cash` +
+          `\n${prefix}top hearts` +
+          `\n${prefix}top cards` +
+          `\n\`\`\``;
+        break;
+      }
     }
     embed.setDescription(description);
     embed.setColor(`#FFAACC`);
