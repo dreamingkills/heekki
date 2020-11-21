@@ -54,7 +54,7 @@ export class Command extends BaseCommand {
       eden["Olivia Hye"],
     ] as (UserCard | null)[];
 
-    const subcommand = this.options[0]?.toLowerCase();
+    const subcommand = this.options[0]?.toLowerCase().trim();
     if (subcommand === "collect") {
       if (eden.cash === 0) throw new error.NoCashInEdenError();
       await PlayerService.clearEdenCash(executor);

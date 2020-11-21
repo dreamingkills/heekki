@@ -10,16 +10,16 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     const subcommand = this.options[0]?.toLowerCase();
     if (subcommand === "give") {
-      const amount = parseInt(this.options[1]);
-      if (isNaN(amount) || amount < 1) throw new error.NotANumberError();
-      if (executor.shards < amount) throw new error.NotEnoughShardsError();
-
       const user = msg.mentions.users.first();
       if (!user) throw new error.NoMentionedUserError();
       const receiver = await PlayerService.getProfileByDiscordId(user.id);
 
+      const amount = parseInt(this.options.filter((o) => o !== `${user}`)[1]);
+      if (isNaN(amount) || amount < 1) throw new error.NotANumberError();
+      if (executor.shards < amount) throw new error.NotEnoughShardsError();
+
       const confirm = await msg.channel.send(
-        `:warning: Really give ${this.config.discord.emoji.shard.full} **${amount}** to **${user.tag}`
+        `:warning: Really give ${this.config.discord.emoji.shard.full} **${amount}** to **${user.tag}**?`
       );
       await confirm.react(this.config.discord.emoji.check.id);
 
