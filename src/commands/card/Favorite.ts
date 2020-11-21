@@ -21,8 +21,8 @@ export class Command extends BaseCommand {
 
     const pre = !card.isFavorite ? "Favorited" : "Unfavorited";
     const post = !card.isFavorite
-      ? "You are no longer able to trade, sell, or forfeit that card."
-      : "You are now able to trade, sell, and forfeit that card.";
+      ? "You are no longer able to trade or sell that card."
+      : "You are now able to trade and sell that card.";
     await msg.channel.send(
       `${this.config.discord.emoji.check.full} ${pre} **${card.abbreviation}#${card.serialNumber}**!\n${post}`
     );
