@@ -9,6 +9,28 @@ export class Command extends BaseCommand {
     let embed = new MessageEmbed();
     let description = "";
     switch (this.options[0]?.toLowerCase()) {
+      case "trivia": {
+        const topTrivias = await PlayerService.getTopTrivias();
+        for (let trivia of topTrivias) {
+          let user;
+          try {
+            user = (await msg.client.users.fetch(trivia.discord_id)).username;
+          } catch (e) {
+            user = "Unknown User";
+          }
+          const count = (await StatsService.getUserTrivias(trivia)).filter(
+            (j) => j.correct
+          );
+          description += `${
+            topTrivias.indexOf(trivia) + 1
+          }) **${user}** (${count.length.toLocaleString()} trivia)\n`;
+          embed.setAuthor(
+            `Trivia Leaderboard | ${msg.author.tag}`,
+            msg.author.displayAvatarURL()
+          );
+        }
+        break;
+      }
       case "jumble": {
         const topJumblers = await PlayerService.getTopJumblers();
         for (let jumbler of topJumblers) {

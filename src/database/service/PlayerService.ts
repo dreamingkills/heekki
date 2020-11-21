@@ -309,6 +309,9 @@ export class PlayerService {
   public static async getTopMemories(limit: number = 15): Promise<Profile[]> {
     return await PlayerFetch.getTopMemories(limit);
   }
+  public static async getTopTrivias(limit: number = 15): Promise<Profile[]> {
+    return await PlayerFetch.getTopTrivias(limit);
+  }
 
   public static async toggleRestriction(profile: Profile): Promise<Profile> {
     if (profile.restricted) {

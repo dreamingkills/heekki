@@ -328,6 +328,13 @@ export class PlayerFetch extends DBClass {
     )) as ProfileInterface[];
     return query.map((p) => new Profile(p));
   }
+  public static async getTopTrivias(limit: number): Promise<Profile[]> {
+    const query = (await DB.query(
+      `SELECT user_profile.*, COUNT(*) as count FROM trivia LEFT JOIN user_profile ON trivia.discord_id=user_profile.discord_id WHERE trivia.correct=true GROUP BY discord_id ORDER BY count DESC LIMIT ?;`,
+      [limit]
+    )) as ProfileInterface[];
+    return query.map((p) => new Profile(p));
+  }
 
   public static async getTopCollectors(
     limit: number
@@ -338,16 +345,6 @@ export class PlayerFetch extends DBClass {
     )) as ProfileInterface[];
     return query.map((p) => {
       return { profile: new Profile(p) };
-    });
-  }
-
-  public static async getTopXp(limit: number): Promise<Profile[]> {
-    const query = (await DB.query(
-      `SELECT * FROM user_profile ORDER BY xp DESC LIMIT ?;`,
-      [limit]
-    )) as ProfileInterface[];
-    return query.map((p) => {
-      return new Profile(p);
     });
   }
 
