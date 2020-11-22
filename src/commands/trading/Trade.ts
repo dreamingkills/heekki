@@ -201,7 +201,7 @@ export class Command extends BaseCommand {
               }
             } catch (e) {
               await msg.channel.send(
-                `${this.config.discord.emoji.cross.full} ${e.message}`
+                `${this.bot.config.discord.emoji.cross.full} ${e.message}`
               );
             }
           }
@@ -213,7 +213,7 @@ export class Command extends BaseCommand {
       if (reason === "time") {
         await sent.edit(
           panel.setDescription(
-            `${this.config.discord.emoji.cross.full} This trade has expired.`
+            `${this.bot.config.discord.emoji.cross.full} This trade has expired.`
           )
         );
         this.currentlyTrading.delete(msg.author.id);
@@ -232,13 +232,13 @@ export class Command extends BaseCommand {
                 })
                 .join("") +
               `\n\`\`\`` +
-              `\nPlease review the trade and confirm it by clicking the ${this.config.discord.emoji.check.full} reaction.`
+              `\nPlease review the trade and confirm it by clicking the ${this.bot.config.discord.emoji.check.full} reaction.`
           )
         );
-        await sent.react(this.config.discord.emoji.check.id);
+        await sent.react(this.bot.config.discord.emoji.check.id);
 
         const rxnFilter = (r: MessageReaction, u: User) =>
-          r.emoji.id === this.config.discord.emoji.check.id &&
+          r.emoji.id === this.bot.config.discord.emoji.check.id &&
           (u.id === msg.author.id || u.id === tradeeUser.id);
         const conf = sent.createReactionCollector(rxnFilter, { time: 15000 });
         let [senderConfirmed, tradeeConfirmed] = [false, false];
@@ -255,7 +255,7 @@ export class Command extends BaseCommand {
             await StatsService.tradeComplete(executor, tradee);
             await sent.edit(
               panel.setDescription(
-                `${this.config.discord.emoji.check.full} Trade completed!`
+                `${this.bot.config.discord.emoji.check.full} Trade completed!`
               )
             );
             this.currentlyTrading.delete(msg.author.id);
@@ -269,7 +269,7 @@ export class Command extends BaseCommand {
           this.currentlyTrading.delete(tradeeUser.id);
           await sent.edit(
             panel.setDescription(
-              `${this.config.discord.emoji.cross.full} This trade has expired.`
+              `${this.bot.config.discord.emoji.cross.full} This trade has expired.`
             )
           );
           if (this.permissions.MANAGE_MESSAGES) sent.reactions.removeAll();

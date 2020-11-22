@@ -27,7 +27,7 @@ export class Command extends BaseCommand {
     await CardService.transferCardToProfile(executor, targetCard);
     await PlayerService.setLastOrphanClaim(executor, now);
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **30 minutes**.`
+      `${this.bot.config.discord.emoji.check.full} You claimed **${targetCard.abbreviation}#${targetCard.serialNumber}**!\nYou will not be able to claim another card for **30 minutes**.`
     );
   }
 }

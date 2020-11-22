@@ -24,7 +24,7 @@ export class Command extends BaseCommand {
 
     if (cards.length === 0) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You didn't enter any valid cards.`
+        `${this.bot.config.discord.emoji.cross.full} You didn't enter any valid cards.`
       );
       return;
     }
@@ -49,18 +49,18 @@ export class Command extends BaseCommand {
 
     if (invalidMessage)
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} ${
+        `${this.bot.config.discord.emoji.cross.full} ${
           validCards.length === 0 ? "All" : "Some"
         } of the cards you specified were invalid:` + invalidMessage
       );
     if (validCards.length === 0) return;
     let conf = await msg.channel.send(
-      `:warning: Really forfeit **${validCards.length}** cards?\nThis action is **irreversible**. React to this message with ${this.config.discord.emoji.check.full} to confirm.`
+      `:warning: Really forfeit **${validCards.length}** cards?\nThis action is **irreversible**. React to this message with ${this.bot.config.discord.emoji.check.full} to confirm.`
     );
-    await conf.react(this.config.discord.emoji.check.id);
+    await conf.react(this.bot.config.discord.emoji.check.id);
     let filter = (reaction: MessageReaction, user: User) => {
       return (
-        reaction.emoji.id == this.config.discord.emoji.check.id &&
+        reaction.emoji.id == this.bot.config.discord.emoji.check.id &&
         user.id == msg.author.id
       );
     };
@@ -73,14 +73,14 @@ export class Command extends BaseCommand {
       await CardService.transferCards("0", validCards);
 
       await conf.edit(
-        `${this.config.discord.emoji.check.full} You forfeited **${validCards.length}** cards.`
+        `${this.bot.config.discord.emoji.check.full} You forfeited **${validCards.length}** cards.`
       );
       collector.stop();
     });
     collector.on("end", async (_, reason) => {
       if (reason === "time") {
         await conf.edit(
-          `${this.config.discord.emoji.cross.full} You did not react in time, so the forfeiture has been cancelled.`
+          `${this.bot.config.discord.emoji.cross.full} You did not react in time, so the forfeiture has been cancelled.`
         );
       }
       if (this.permissions.MANAGE_MESSAGES) await conf.reactions.removeAll();

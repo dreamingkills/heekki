@@ -8,7 +8,7 @@ export class Command extends BaseCommand {
     const auction = AuctionService.getAuction();
     if (!auction) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} There isn't an active auction.`
+        `${this.bot.config.discord.emoji.cross.full} There isn't an active auction.`
       );
       return;
     }
@@ -16,7 +16,7 @@ export class Command extends BaseCommand {
     const currentBid = AuctionService.getTopBid();
     await msg.channel.send(
       `${
-        this.config.discord.emoji.check.full
+        this.bot.config.discord.emoji.check.full
       } The current auction is: ${auction}\n${
         currentBid
           ? `The current bid is: **${currentBid.bid.toLocaleString()}** by <@${

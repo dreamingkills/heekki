@@ -23,8 +23,12 @@ export class CommandManager {
     for (let file of files) {
       let current = require(file);
       if (current.Command) {
-        let cmd = new current.Command();
+        let cmd = new current.Command() as BaseCommand;
         if (cmd.disabled) continue;
+        cmd.description = cmd.description.replace(
+          /\$EMOJI_CASH\$/g,
+          config.discord.emoji.cash.full
+        );
         this.commands.push(cmd);
       }
     }
@@ -89,7 +93,7 @@ export class CommandManager {
 
       let err;
 
-      await cmd.run(msg, profile, cfg, bot).catch(async (e) => {
+      await cmd.run(msg, profile, bot).catch(async (e) => {
         err = e;
         if (e.isClientFacing) {
           const errorEmbed = new MessageEmbed()

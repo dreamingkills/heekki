@@ -19,12 +19,12 @@ export class Command extends BaseCommand {
       if (executor.shards < amount) throw new error.NotEnoughShardsError();
 
       const confirm = await msg.channel.send(
-        `:warning: Really give ${this.config.discord.emoji.shard.full} **${amount}** to **${user.tag}**?`
+        `:warning: Really give ${this.bot.config.discord.emoji.shard.full} **${amount}** to **${user.tag}**?`
       );
-      await confirm.react(this.config.discord.emoji.check.id);
+      await confirm.react(this.bot.config.discord.emoji.check.id);
 
       const filter = (reaction: MessageReaction, user: User) =>
-        reaction.emoji.id === this.config.discord.emoji.check.id &&
+        reaction.emoji.id === this.bot.config.discord.emoji.check.id &&
         user === msg.author;
       const collector = confirm.createReactionCollector(filter, {
         max: 1,
@@ -35,14 +35,14 @@ export class Command extends BaseCommand {
         await PlayerService.addShardsToProfile(receiver, amount);
 
         await confirm.edit(
-          `${this.config.discord.emoji.check.full} Sent ${this.config.discord.emoji.shard.full} **${amount}** to **${user.tag}**.`
+          `${this.bot.config.discord.emoji.check.full} Sent ${this.bot.config.discord.emoji.shard.full} **${amount}** to **${user.tag}**.`
         );
         return;
       });
       collector.on("end", async (_, reason) => {
         if (reason === "time") {
           await confirm.edit(
-            `${this.config.discord.emoji.cross.full} Your transaction was cancelled.`
+            `${this.bot.config.discord.emoji.cross.full} Your transaction was cancelled.`
           );
         }
         return;
@@ -78,15 +78,15 @@ export class Command extends BaseCommand {
         `:warning: Really upgrade **${CardService.cardToReference(
           card
         )}** with ${
-          this.config.discord.emoji.shard.full
+          this.bot.config.discord.emoji.shard.full
         } **${adjustedAmount.toLocaleString()}** *(${(
           adjustedAmount * CardService.heartsPerShard
         ).toLocaleString()} hearts)*?`
       );
-      await confirm.react(this.config.discord.emoji.check.id);
+      await confirm.react(this.bot.config.discord.emoji.check.id);
 
       const filter = (reaction: MessageReaction, user: User) =>
-        reaction.emoji.id === this.config.discord.emoji.check.id &&
+        reaction.emoji.id === this.bot.config.discord.emoji.check.id &&
         user === msg.author;
       const collector = confirm.createReactionCollector(filter, {
         max: 1,
@@ -101,8 +101,8 @@ export class Command extends BaseCommand {
 
         await CardService.updateCardCache(newCard);
         await confirm.edit(
-          `${this.config.discord.emoji.check.full} Used ${
-            this.config.discord.emoji.shard.full
+          `${this.bot.config.discord.emoji.check.full} Used ${
+            this.bot.config.discord.emoji.shard.full
           } **${adjustedAmount.toLocaleString()}** on **${CardService.cardToReference(
             card
           )}**.`
@@ -112,7 +112,7 @@ export class Command extends BaseCommand {
       collector.on("end", async (_, reason) => {
         if (reason === "time") {
           await confirm.edit(
-            `${this.config.discord.emoji.cross.full} Your transaction was cancelled.`
+            `${this.bot.config.discord.emoji.cross.full} Your transaction was cancelled.`
           );
         }
         return;
@@ -125,7 +125,7 @@ export class Command extends BaseCommand {
       .setAuthor(`Shards | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         `${
-          this.config.discord.emoji.shard.full
+          this.bot.config.discord.emoji.shard.full
         } You have **${executor.shards.toLocaleString()}** shards.\n` +
           `\n**Subcommands**` +
           `\n\`\`\`` +

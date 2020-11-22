@@ -33,7 +33,7 @@ export class Command extends BaseCommand {
       )
       .setDescription(
         `${card.blurb != "" ? `*"${card.blurb}"*` : ``}\n${
-          this.config.discord.emoji.hearts.full
+          this.bot.config.discord.emoji.hearts.full
         } **${card.hearts}**\n⭐ **${card.stars}**`
       )
       .setColor("#FFAACC")
@@ -43,10 +43,10 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send({ embed: embed, files: [image] });
 
     if (this.permissions.MANAGE_MESSAGES) {
-      await sent.react(this.config.discord.emoji.delete.id);
+      await sent.react(this.bot.config.discord.emoji.delete.id);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>
-          reaction.emoji.id === this.config.discord.emoji.delete.id &&
+          reaction.emoji.id === this.bot.config.discord.emoji.delete.id &&
           user.id === msg.author.id
       );
       collector.on("collect", async () => await sent.delete());

@@ -20,7 +20,7 @@ export class Command extends BaseCommand {
 
     if (friends.length === 0) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You can't send hearts because you have no friends!`
+        `${this.bot.config.discord.emoji.cross.full} You can't send hearts because you have no friends!`
       );
       return;
     }
@@ -29,7 +29,7 @@ export class Command extends BaseCommand {
     await PlayerService.setLastHeartSend(executor, now);
 
     await msg.channel.send(
-      `${this.config.discord.emoji.hearts.full} You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
+      `${this.bot.config.discord.emoji.hearts.full} You've sent hearts to **${friends.length}** friends!` //\n+ **${xp}** XP`
     );
     return;
   }

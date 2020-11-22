@@ -18,8 +18,8 @@ export class Command extends BaseCommand {
       const { forSale } = await MarketService.cardIsOnMarketplace(c);
       const level = CardService.calculateLevel(c);
       desc += `__**${c.abbreviation}#${c.serialNumber}**__ - ${c.member} ${
-        (c.isFavorite ? `${this.config.discord.emoji.hearts.full}` : "") +
-        (forSale ? `${this.config.discord.emoji.cash.full}` : "") +
+        (c.isFavorite ? `${this.bot.config.discord.emoji.hearts.full}` : "") +
+        (forSale ? `${this.bot.config.discord.emoji.cash.full}` : "") +
         (CardService.cardInEden(c, eden) ? ":park:" : "")
       }\nLevel **${level}** / ${":star:".repeat(c.stars)}\n`;
     }
@@ -65,7 +65,7 @@ export class Command extends BaseCommand {
     let page = pageNotNegative > pageLimit ? pageLimit : pageNotNegative;
 
     const desc = `${
-      this.config.discord.emoji.cards.full
+      this.bot.config.discord.emoji.cards.full
     } I found **${cardCount}** card${cardCount == 1 ? "" : "s"}${
       optionsRaw[0] ? " matching this search" : ""
     }!\n${optionsRaw[0] ? "```" : ""}${optionsRaw.join("\n")}${
@@ -98,7 +98,7 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(embed);
     if (pageLimit > 2) await sent.react(`⏪`);
     if (pageLimit > 1) await sent.react(`◀️`);
-    await sent.react(this.config.discord.emoji.delete.id);
+    await sent.react(this.bot.config.discord.emoji.delete.id);
     if (pageLimit > 1) await sent.react(`▶️`);
     if (pageLimit > 2) await sent.react(`⏩`);
 

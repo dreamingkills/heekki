@@ -39,12 +39,12 @@ export class Command extends BaseCommand {
       `${broken ? `:confused: **Your daily streak has been reset.**` : ``}` +
       `${!broken ? `:gift: You claimed your daily reward!` : ``}` +
       `\n**+ ${
-        this.config.discord.emoji.shard.full
+        this.bot.config.discord.emoji.shard.full
       } ${shards.toLocaleString()}** *(${
         milestone ? `${shards - 3} bonus, ` : ``
       }${newProfile.shards.toLocaleString()} total)*` +
       `\n**+ ${
-        this.config.discord.emoji.cash.full
+        this.bot.config.discord.emoji.cash.full
       } 100** *(${newProfile.coins.toLocaleString()} total)*`;
     const embed = new MessageEmbed()
       .setAuthor(

@@ -56,7 +56,9 @@ export class Command extends BaseCommand {
         ["card", "shards", "cash"],
         [10, 20, 1000]
       );
-      embed.setDescription(`${this.config.discord.emoji.check.full} ${text}`);
+      embed.setDescription(
+        `${this.bot.config.discord.emoji.check.full} ${text}`
+      );
 
       if (reward === "card") {
         const cardType = await CardService.getRandomCard();
@@ -74,7 +76,9 @@ export class Command extends BaseCommand {
           true
         );
 
-        embed.description += `\n**+ ${this.config.discord.emoji.cards.full} ${
+        embed.description += `\n**+ ${
+          this.bot.config.discord.emoji.cards.full
+        } ${
           newCard.abbreviation + `#` + newCard.serialNumber
         }** — ${`:star:`.repeat(newCard.stars)}`;
       } else if (reward === "shards") {
@@ -85,7 +89,7 @@ export class Command extends BaseCommand {
         );
 
         embed.description += `\n**+ ${
-          this.config.discord.emoji.shard.full
+          this.bot.config.discord.emoji.shard.full
         }${profit}** *(${newProfile.shards.toLocaleString()} total)*`;
       } else if (reward === "cash") {
         const profit = Math.floor(chance.integer({ min: 35, max: 55 }));
@@ -95,11 +99,13 @@ export class Command extends BaseCommand {
         );
 
         embed.description += `\n**+ ${
-          this.config.discord.emoji.cash.full
+          this.bot.config.discord.emoji.cash.full
         } ${profit}** *(${newProfile.coins.toLocaleString()} total)*`;
       }
     } else {
-      embed.setDescription(`${this.config.discord.emoji.cross.full} ${text}`);
+      embed.setDescription(
+        `${this.bot.config.discord.emoji.cross.full} ${text}`
+      );
     }
 
     const now = Date.now();

@@ -19,7 +19,7 @@ export class Command extends BaseCommand {
 
     AuctionService.setAuction(auction);
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} Set the current auction to: ${auction}`
+      `${this.bot.config.discord.emoji.check.full} Set the current auction to: ${auction}`
     );
   }
 }

@@ -155,7 +155,7 @@ export class Command extends BaseCommand {
           msg.author.displayAvatarURL()
         );
         description =
-          `${this.config.discord.emoji.cross.full} Please specify a leaderboard to look at.\n` +
+          `${this.bot.config.discord.emoji.cross.full} Please specify a leaderboard to look at.\n` +
           `\n**Available Leaderboards**` +
           `\n\`\`\`` +
           `\n${prefix}top trivia` +

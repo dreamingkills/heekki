@@ -46,10 +46,10 @@ export class Command extends BaseCommand {
       .setDescription(
         `${
           newLevel > cardLevel
-            ? `${this.config.discord.emoji.chart.full} **LEVEL UP!** ${cardLevel} ~~-->~~ ${newLevel}\n`
+            ? `${this.bot.config.discord.emoji.chart.full} **LEVEL UP!** ${cardLevel} ~~-->~~ ${newLevel}\n`
             : ``
         } Upgraded **${newCard.abbreviation}#${newCard.serialNumber}** with ${
-          this.config.discord.emoji.hearts.full
+          this.bot.config.discord.emoji.hearts.full
         } **${adjustedAmount.toLocaleString()}** *(${newCard.hearts.toLocaleString()} total)*`
       )
       .setFooter(`You now have ${newProfile.hearts.toLocaleString()} hearts.`)

@@ -8,7 +8,7 @@ export class Command extends BaseCommand {
     const description = this.options.join(" ");
     if (description.length < 30) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} Please describe your issue in at least 30 characters.`
+        `${this.bot.config.discord.emoji.cross.full} Please describe your issue in at least 30 characters.`
       );
       return;
     }
@@ -33,7 +33,7 @@ export class Command extends BaseCommand {
     const successEmbed = new MessageEmbed()
       .setAuthor(`Ticket Submitted | ${msg.author.tag}`)
       .setDescription(
-        `${this.config.discord.emoji.check.full} I've submitted your ticket for review by the developer.\n**Please do not submit another ticket about the same subject.**`
+        `${this.bot.config.discord.emoji.check.full} I've submitted your ticket for review by the developer.\n**Please do not submit another ticket about the same subject.**`
       )
       .setColor(`#FFAACC`);
     await msg.channel.send(successEmbed);

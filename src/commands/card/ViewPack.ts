@@ -10,7 +10,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (!this.options[0]) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} Please specify a pack to view.`
+        `${this.bot.config.discord.emoji.cross.full} Please specify a pack to view.`
       );
       return;
     }
@@ -54,8 +54,8 @@ export class Command extends BaseCommand {
             .length;
           return `${
             owned > 0
-              ? this.config.discord.emoji.cards.full
-              : this.config.discord.emoji.cardsDark.full
+              ? this.bot.config.discord.emoji.cards.full
+              : this.bot.config.discord.emoji.cardsDark.full
           } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
@@ -68,8 +68,8 @@ export class Command extends BaseCommand {
             .length;
           return `${
             owned > 0
-              ? this.config.discord.emoji.cards.full
-              : this.config.discord.emoji.cardsDark.full
+              ? this.bot.config.discord.emoji.cards.full
+              : this.bot.config.discord.emoji.cardsDark.full
           } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
@@ -82,8 +82,8 @@ export class Command extends BaseCommand {
             .length;
           return `${
             owned > 0
-              ? this.config.discord.emoji.cards.full
-              : this.config.discord.emoji.cardsDark.full
+              ? this.bot.config.discord.emoji.cards.full
+              : this.bot.config.discord.emoji.cardsDark.full
           } **${c.member}** (${c.abbreviation})\nOwned: **${owned}**`;
         }),
         true
@@ -91,7 +91,7 @@ export class Command extends BaseCommand {
 
     embed.setDescription(
       `${pack.flavorText ? `*"${pack.flavorText}"*` : ``}\n${
-        this.config.discord.emoji.cards.full
+        this.bot.config.discord.emoji.cards.full
       } There ${packCards.length > 1 ? "are" : "is"} **${
         packCards.length
       }** card${packCards.length > 1 ? "s" : ""} in the **${

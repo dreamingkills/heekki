@@ -23,7 +23,7 @@ export class Command extends BaseCommand {
 
     if (cards.length === 0) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You didn't enter any valid cards.`
+        `${this.bot.config.discord.emoji.cross.full} You didn't enter any valid cards.`
       );
       return;
     }
@@ -50,11 +50,11 @@ export class Command extends BaseCommand {
         `Owner: **${owner}**\n**${pack.title}**\n${card.member}\n:star: **${
           card.stars
         }**\n${
-          this.config.discord.emoji.hearts.full
+          this.bot.config.discord.emoji.hearts.full
         } **${card.hearts.toLocaleString()}**\n${
           isInMarketplace.forSale
             ? `${
-                this.config.discord.emoji.cash.full
+                this.bot.config.discord.emoji.cash.full
               } For Sale: **${isInMarketplace.price.toLocaleString()}**`
             : ""
         }`,
@@ -64,10 +64,10 @@ export class Command extends BaseCommand {
 
     const sent = await msg.channel.send(embed);
     if (this.permissions.MANAGE_MESSAGES) {
-      await sent.react(this.config.discord.emoji.delete.id);
+      await sent.react(this.bot.config.discord.emoji.delete.id);
       const collector = sent.createReactionCollector(
         (reaction: MessageReaction, user: User) =>
-          reaction.emoji.id === this.config.discord.emoji.delete.id &&
+          reaction.emoji.id === this.bot.config.discord.emoji.delete.id &&
           user.id === msg.author.id
       );
       collector.on("collect", async () => await sent.delete());

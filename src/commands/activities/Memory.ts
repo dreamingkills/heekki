@@ -26,7 +26,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You're already playing a minigame!`
+        `${this.bot.config.discord.emoji.cross.full} You're already playing a minigame!`
       );
       return;
     }
@@ -106,8 +106,10 @@ export class Command extends BaseCommand {
             await sent.edit(
               embed
                 .setDescription(
-                  `${this.config.discord.emoji.check.full} **Correct!**\n**+ ${
-                    this.config.discord.emoji.cash.full
+                  `${
+                    this.bot.config.discord.emoji.check.full
+                  } **Correct!**\n**+ ${
+                    this.bot.config.discord.emoji.cash.full
                   } 4** *(${newProfile.coins.toLocaleString()} total)*`
                 )
                 .setFooter(``)

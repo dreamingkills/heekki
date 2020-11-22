@@ -36,9 +36,9 @@ export class Command extends BaseCommand {
       .setColor(`#FFAACC`)
       .setDescription(
         `${
-          this.config.discord.emoji.check.full
+          this.bot.config.discord.emoji.check.full
         } Prestiged **${`${newCard.abbreviation}#${newCard.serialNumber}`}** for ${
-          this.config.discord.emoji.shard.full
+          this.bot.config.discord.emoji.shard.full
         } **${requirement}**.` +
           `\n**+ ${`${newCard.abbreviation}#${newCard.serialNumber}`}** — ${":star:".repeat(
             newCard.stars

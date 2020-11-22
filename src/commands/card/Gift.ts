@@ -21,7 +21,7 @@ export class Command extends BaseCommand {
     );
     if (cardList.length < 1) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You haven't specified any cards!`
+        `${this.bot.config.discord.emoji.cross.full} You haven't specified any cards!`
       );
       return;
     }
@@ -29,13 +29,13 @@ export class Command extends BaseCommand {
     const mention = msg.mentions.users.first();
     if (!mention) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} Please mention a user.`
+        `${this.bot.config.discord.emoji.cross.full} Please mention a user.`
       );
       return;
     }
     if (mention.id === msg.author.id) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You can't gift cards to yourself!`
+        `${this.bot.config.discord.emoji.cross.full} You can't gift cards to yourself!`
       );
       return;
     }
@@ -68,7 +68,7 @@ export class Command extends BaseCommand {
 
     if (invalidMessage)
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} ${
+        `${this.bot.config.discord.emoji.cross.full} ${
           validCards.length === 0 ? "All" : "Some"
         } of the cards you specified were invalid:` + invalidMessage
       );
@@ -77,7 +77,7 @@ export class Command extends BaseCommand {
       `:warning: Really gift **${validCards.length}** card(s) to **${
         mention.tag
       }**?\nThis action is **irreversible**! React with ${
-        this.config.discord.emoji.check.full
+        this.bot.config.discord.emoji.check.full
       } to confirm.\n${validCards
         .map((v) => {
           return `- ${v.abbreviation}#${v.serialNumber}`;
@@ -85,10 +85,10 @@ export class Command extends BaseCommand {
         .join("\n")}`
     );
 
-    await confirmation.react(this.config.discord.emoji.check.id);
+    await confirmation.react(this.bot.config.discord.emoji.check.id);
     const filter = (reaction: MessageReaction, user: User) => {
       return (
-        reaction.emoji.id === this.config.discord.emoji.check.id &&
+        reaction.emoji.id === this.bot.config.discord.emoji.check.id &&
         user.id == msg.author.id
       );
     };
@@ -100,13 +100,13 @@ export class Command extends BaseCommand {
     reactions.on("collect", async () => {
       await CardService.transferCards(profile.discord_id, validCards);
       await confirmation.edit(
-        `${this.config.discord.emoji.check.full} Gifted **${validCards.length}** cards to **${mention.tag}**!`
+        `${this.bot.config.discord.emoji.check.full} Gifted **${validCards.length}** cards to **${mention.tag}**!`
       );
     });
     reactions.on("end", async (_, reason: string) => {
       if (reason !== "limit") {
         await confirmation.edit(
-          `${this.config.discord.emoji.cross.full} You didn't react in time!`
+          `${this.bot.config.discord.emoji.cross.full} You didn't react in time!`
         );
         if (this.permissions.MANAGE_MESSAGES)
           confirmation.reactions.removeAll();

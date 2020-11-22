@@ -12,20 +12,20 @@ export class Command extends BaseCommand {
     const packName = this.options.join(" ");
     if (!packName) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} Please enter a pack to purchase from.`
+        `${this.bot.config.discord.emoji.cross.full} Please enter a pack to purchase from.`
       );
       return;
     }
     const pack = await ShopService.getPackByName(packName, prefix);
     if (!pack.active) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} That pack isn't available for purchase.`
+        `${this.bot.config.discord.emoji.cross.full} That pack isn't available for purchase.`
       );
       return;
     }
     if (pack.price > executor.coins) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You don't have enough cash to buy that.`
+        `${this.bot.config.discord.emoji.cross.full} You don't have enough cash to buy that.`
       );
       return;
     }
@@ -54,7 +54,7 @@ export class Command extends BaseCommand {
       .setAuthor(`Pack | ${msg.author.tag}`, msg.author.displayAvatarURL())
       .setDescription(
         `You rolled ${`**${pack.title}** and pulled **${newCard.member}**`}!\n**+ ${
-          this.config.discord.emoji.cards.full
+          this.bot.config.discord.emoji.cards.full
         } ${newCard.abbreviation}#${newCard.serialNumber}** — ${"⭐".repeat(
           newCard.stars
         )}`

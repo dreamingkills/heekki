@@ -8,12 +8,15 @@ import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends BaseCommand {
   names: string[] = ["jumble", "j"];
+  description: string =
+    `**Jumble** is a minigame where the objective is to unscramble a random word.` +
+    `\nYou have 15 seconds, and are rewarded $EMOJI_CASH$ **2** for guessing correctly.`;
 
   async exec(msg: Message, executor: Profile) {
     const isMulti = this.options[0]?.toLowerCase() === "multi";
     if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You're already playing a minigame!`
+        `${this.bot.config.discord.emoji.cross.full} You're already playing a minigame!`
       );
       return;
     }
@@ -67,8 +70,10 @@ export class Command extends BaseCommand {
                 msg.author.displayAvatarURL()
               )
               .setDescription(
-                `${this.config.discord.emoji.check.full} **Correct!**\n**+ ${
-                  this.config.discord.emoji.cash.full
+                `${
+                  this.bot.config.discord.emoji.check.full
+                } **Correct!**\n**+ ${
+                  this.bot.config.discord.emoji.cash.full
                 } 2**${
                   isMulti ? ` to <@${winner.discord_id}>` : ``
                 } *(${newProfile.coins.toLocaleString()} total)*`
@@ -76,14 +81,14 @@ export class Command extends BaseCommand {
               .setColor(`#FFAACC`);
 
             if (this.permissions.ADD_REACTIONS)
-              await m.react(this.config.discord.emoji.check.id);
+              await m.react(this.bot.config.discord.emoji.check.id);
 
             await StatsService.jumbleComplete(executor, true);
             await sent.edit(successEmbed);
             collector.stop("correct");
           } else {
             if (this.permissions.ADD_REACTIONS)
-              await m.react(this.config.discord.emoji.cross.id);
+              await m.react(this.bot.config.discord.emoji.cross.id);
           }
         }
       }

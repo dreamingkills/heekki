@@ -16,7 +16,7 @@ export class Command extends BaseCommand {
 
     await CardService.updateCardCache(card);
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} Successfully re-cached **${card.abbreviation}#${card.serialNumber}**.`
+      `${this.bot.config.discord.emoji.check.full} Successfully re-cached **${card.abbreviation}#${card.serialNumber}**.`
     );
     return;
   }

@@ -1,10 +1,10 @@
 import { Message } from "discord.js";
 import { Profile } from "../player/Profile";
-import config from "../../../config.json";
 import { Bot } from "../client/Bot";
 
 export interface Command {
   names: string[];
+  description: string;
 
   exec(msg: Message, executor: Profile): Promise<void>;
 
@@ -15,6 +15,7 @@ export interface Command {
 
 export abstract class BaseCommand implements Command {
   names: string[] = [];
+  description: string = "No information provided.";
 
   disabled: boolean = false;
   roles?: string[];
@@ -28,18 +29,11 @@ export abstract class BaseCommand implements Command {
     USE_EXTERNAL_EMOJI: boolean;
   };
   flags: { [key: string]: string } = {};
-  config!: typeof config;
   bot!: Bot;
 
   abstract exec(msg: Message, executor: Profile): Promise<void>;
 
-  public async run(
-    msg: Message,
-    executor: Profile,
-    cfg: typeof config,
-    bot: Bot
-  ): Promise<void> {
-    this.config = cfg;
+  public async run(msg: Message, executor: Profile, bot: Bot): Promise<void> {
     this.bot = bot;
 
     this.options = msg.content

@@ -23,8 +23,7 @@ export class Command extends BaseCommand {
     } else {
       bid = baseBid;
     }
-    if (bid > executor.coins)
-      throw new error.NotEnoughCoinsError();
+    if (bid > executor.coins) throw new error.NotEnoughCoinsError();
 
     const currentBid = AuctionService.getTopBid();
     if (currentBid && currentBid.bid + 100 > bid)
@@ -32,8 +31,8 @@ export class Command extends BaseCommand {
 
     AuctionService.setBid(executor, bid);
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} Bid ${
-        this.config.discord.emoji.cash.full
+      `${this.bot.config.discord.emoji.check.full} Bid ${
+        this.bot.config.discord.emoji.cash.full
       } **${bid.toLocaleString()}** on ${currentAuction}!`
     );
   }

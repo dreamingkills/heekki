@@ -13,7 +13,7 @@ export class Command extends BaseCommand {
 
     if (!rawSettingName) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} Please specify a setting to modify!`
+        `${this.bot.config.discord.emoji.cross.full} Please specify a setting to modify!`
       );
       return;
     }
@@ -25,7 +25,7 @@ export class Command extends BaseCommand {
     if (!settingName) {
       await msg.channel.send(
         `${
-          this.config.discord.emoji.cross.full
+          this.bot.config.discord.emoji.cross.full
         } That setting wasn't found! The available settings are: ${Object.values(
           Settings
         )
@@ -59,7 +59,7 @@ export class Command extends BaseCommand {
         );
 
         await msg.channel.send(
-          `${this.config.discord.emoji.check.full} Updated \`${settingName}\` from ${existingSetting.value} to \`${settingValue}\`.`
+          `${this.bot.config.discord.emoji.check.full} Updated \`${settingName}\` from ${existingSetting.value} to \`${settingValue}\`.`
         );
       } else {
         let setting = await SettingService.createSetting(
@@ -69,7 +69,7 @@ export class Command extends BaseCommand {
         );
 
         await msg.channel.send(
-          `${this.config.discord.emoji.check.full} Set \`${setting.name}\` as \`${setting.value}\`.`
+          `${this.bot.config.discord.emoji.check.full} Set \`${setting.name}\` as \`${setting.value}\`.`
         );
       }
 

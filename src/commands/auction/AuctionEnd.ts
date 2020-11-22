@@ -10,7 +10,7 @@ export class Command extends BaseCommand {
     const currentAuction = AuctionService.getAuction();
     if (!currentAuction) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} There isn't an auction going on.`
+        `${this.bot.config.discord.emoji.cross.full} There isn't an auction going on.`
       );
       return;
     }
@@ -18,15 +18,15 @@ export class Command extends BaseCommand {
     const topBid = AuctionService.getTopBid();
     if (!topBid) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} No-one bid, so no-one wins.`
+        `${this.bot.config.discord.emoji.cross.full} No-one bid, so no-one wins.`
       );
     } else {
       await PlayerService.removeCoinsFromProfile(topBid.profile, topBid.bid);
       await msg.channel.send(
-        `${this.config.discord.emoji.check.full} <@${
+        `${this.bot.config.discord.emoji.check.full} <@${
           topBid.profile.discord_id
         }> has won the auction for ${currentAuction} at ${
-          this.config.discord.emoji.cash.full
+          this.bot.config.discord.emoji.cash.full
         } **${topBid.bid.toLocaleString()}**!`
       );
     }

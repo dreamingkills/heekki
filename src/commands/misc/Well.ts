@@ -18,13 +18,13 @@ export class Command extends BaseCommand {
         if (amount > executor.coins) throw new error.NotEnoughCoinsError();
 
         const confirmation = await msg.channel.send(
-          `:warning: Really throw **${amount}** ${this.config.discord.emoji.cash.full} in the well?\nThis action is **irreversible**! React with ${this.config.discord.emoji.check.full} to confirm.`
+          `:warning: Really throw **${amount}** ${this.bot.config.discord.emoji.cash.full} in the well?\nThis action is **irreversible**! React with ${this.bot.config.discord.emoji.check.full} to confirm.`
         );
 
-        confirmation.react(this.config.discord.emoji.check.id);
+        confirmation.react(this.bot.config.discord.emoji.check.id);
         const filter = (reaction: MessageReaction, user: User) => {
           return (
-            reaction.emoji.id === this.config.discord.emoji.check.id &&
+            reaction.emoji.id === this.bot.config.discord.emoji.check.id &&
             user.id == msg.author.id
           );
         };
@@ -37,13 +37,13 @@ export class Command extends BaseCommand {
           await PlayerService.addToWell(executor, amount);
           await PlayerService.removeCoinsFromProfile(executor, amount);
           await confirmation.edit(
-            `${this.config.discord.emoji.check.full} Threw **${amount}** ${this.config.discord.emoji.cash.full} in the well.`
+            `${this.bot.config.discord.emoji.check.full} Threw **${amount}** ${this.bot.config.discord.emoji.cash.full} in the well.`
           );
         });
         reactions.on("end", async (_, reason: string) => {
           if (reason !== "limit") {
             await confirmation.edit(
-              `${this.config.discord.emoji.cross.full} You didn't react in time.`
+              `${this.bot.config.discord.emoji.cross.full} You didn't react in time.`
             );
             if (this.permissions.MANAGE_MESSAGES)
               await confirmation.reactions.removeAll();

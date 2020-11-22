@@ -10,8 +10,8 @@ export class Command extends BaseCommand {
     const rendered = [];
     for (let pack of packs) {
       rendered.push({
-        name: `${this.config.discord.emoji.cards.full} ${pack.title}`,
-        value: `${this.config.discord.emoji.cash.full} **${pack.price}**\n\`${prefix}bp ${pack.keyword}\``,
+        name: `${this.bot.config.discord.emoji.cards.full} ${pack.title}`,
+        value: `${this.bot.config.discord.emoji.cash.full} **${pack.price}**\n\`${prefix}bp ${pack.keyword}\``,
         inline: true,
       });
     }
@@ -48,13 +48,13 @@ export class Command extends BaseCommand {
         msg.author.displayAvatarURL()
       )
       .setDescription(
-        `You have ${this.config.discord.emoji.cash.full} **${executor.coins}**.`
+        `You have ${this.bot.config.discord.emoji.cash.full} **${executor.coins}**.`
       );
     const sent = await msg.channel.send(embed);
 
     if (pageLimit > 2) await sent.react(`⏪`);
     if (pageLimit > 1) await sent.react(`◀️`);
-    await sent.react(this.config.discord.emoji.delete.id);
+    await sent.react(this.bot.config.discord.emoji.delete.id);
     if (pageLimit > 1) await sent.react(`▶️`);
     if (pageLimit > 2) await sent.react(`⏩`);
 
@@ -88,7 +88,7 @@ export class Command extends BaseCommand {
             msg.author.displayAvatarURL()
           )
           .setDescription(
-            `You have ${this.config.discord.emoji.cash.full} **${executor.coins}**.`
+            `You have ${this.bot.config.discord.emoji.cash.full} **${executor.coins}**.`
           )
       );
       await r.users.remove(msg.author);

@@ -8,7 +8,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message) {
     AuctionService.clearAuction();
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} Cleared AuctionService.`
+      `${this.bot.config.discord.emoji.check.full} Cleared AuctionService.`
     );
   }
 }

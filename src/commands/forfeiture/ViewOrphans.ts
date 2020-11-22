@@ -58,7 +58,7 @@ export class Command extends BaseCommand {
     const sent = await msg.channel.send(embed);
     if (pageLimit > 2) await sent.react(`⏪`);
     if (pageLimit > 1) await sent.react(`◀️`);
-    await sent.react(this.config.discord.emoji.delete.id);
+    await sent.react(this.bot.config.discord.emoji.delete.id);
     if (pageLimit > 1) await sent.react(`▶️`);
     if (pageLimit > 2) await sent.react(`⏩`);
 

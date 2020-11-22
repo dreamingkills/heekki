@@ -12,7 +12,7 @@ export class Command extends BaseCommand {
     );
 
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} Your description was updated to:\n\`${user.new}\``
+      `${this.bot.config.discord.emoji.check.full} Your description was updated to:\n\`${user.new}\``
     );
   }
 }

@@ -3,12 +3,14 @@ import { ConcurrencyService } from "../../helpers/Concurrency";
 import { BaseCommand } from "../../structures/command/Command";
 
 export class Command extends BaseCommand {
-  names: string[] = ["$flush"];
-  users: string[] = ["197186779843919877"];
+  names: string[] = ["$flush", "$fl"];
+  description: string =
+    "Globally resets command concurrency (jumble, memory, and trivia).";
+  users: string[] = ["197186779843919877", "267794154459889664"];
   async exec(msg: Message) {
     ConcurrencyService.flushConcurrency();
     await msg.channel.send(
-      `${this.config.discord.emoji.check.full} Flushed successfully.`
+      `${this.bot.config.discord.emoji.check.full} Flushed successfully.`
     );
   }
 }

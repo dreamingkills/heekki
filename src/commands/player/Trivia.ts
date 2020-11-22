@@ -13,7 +13,7 @@ export class Command extends BaseCommand {
   async exec(msg: Message, executor: Profile) {
     if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
-        `${this.config.discord.emoji.cross.full} You're already playing a minigame!`
+        `${this.bot.config.discord.emoji.cross.full} You're already playing a minigame!`
       );
       return;
     }
@@ -40,17 +40,17 @@ export class Command extends BaseCommand {
 
           collect.stop("correct");
           if (this.permissions.ADD_REACTIONS)
-            await msg.react(this.config.discord.emoji.check.id);
-        } else await m.react(this.config.discord.emoji.cross.id);
+            await msg.react(this.bot.config.discord.emoji.check.id);
+        } else await m.react(this.bot.config.discord.emoji.cross.id);
       }
     });
     collect.on("end", async (collected, reason) => {
       ConcurrencyService.unsetConcurrency(msg.author.id);
 
       if (reason != "correct") {
-        await msg.react(this.config.discord.emoji.cross.id);
+        await msg.react(this.bot.config.discord.emoji.cross.id);
         await triviaMessage.edit(
-          `${this.config.discord.emoji.cross.full} You didn't get the answer in time. :confused:`
+          `${this.bot.config.discord.emoji.cross.full} You didn't get the answer in time. :confused:`
         );
       }
       if (this.permissions.MANAGE_MESSAGES) await channel.bulkDelete(collected);

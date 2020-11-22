@@ -66,8 +66,8 @@ export class Command extends BaseCommand {
       const embed = new MessageEmbed()
         .setAuthor(`Eden | ${msg.author.tag}`, msg.author.displayAvatarURL())
         .setDescription(
-          `${this.config.discord.emoji.check.full} Collected ${
-            this.config.discord.emoji.cash.full
+          `${this.bot.config.discord.emoji.check.full} Collected ${
+            this.bot.config.discord.emoji.cash.full
           } **${eden.cash.toLocaleString()}** from Eden.`
         )
         .setFooter(`You now have ${newProfile.coins.toLocaleString()} cash.`)
@@ -113,7 +113,7 @@ export class Command extends BaseCommand {
       const embed = new MessageEmbed()
         .setAuthor(`Eden | ${msg.author.tag}`, msg.author.displayAvatarURL())
         .setDescription(
-          `${this.config.discord.emoji.check.full} Sent ${
+          `${this.bot.config.discord.emoji.check.full} Sent ${
             this.emojis[card.member]
           } **${`${card.abbreviation}#${card.serialNumber}`}** to Eden.`
         )
@@ -182,7 +182,7 @@ export class Command extends BaseCommand {
     const numberOfMembers = members.filter((m) => m).length;
     let desc =
       `:woman_astronaut: **Members**: \`${numberOfMembers}/12\`` +
-      `\n${this.config.discord.emoji.cash.full} **Collected**: \`${eden.cash}/${eden.cap}\` (${eden.hourlyRate}/h)`;
+      `\n${this.bot.config.discord.emoji.cash.full} **Collected**: \`${eden.cash}/${eden.cap}\` (${eden.hourlyRate}/h)`;
 
     if (eden.multiplierEnds > Date.now()) {
       const now = moment(Date.now());
