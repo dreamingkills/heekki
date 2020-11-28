@@ -5,6 +5,7 @@ import { Bot } from "../client/Bot";
 export interface Command {
   names: string[];
   description: string;
+  subcommands: string[];
 
   exec(msg: Message, executor: Profile): Promise<void>;
 
@@ -16,6 +17,7 @@ export interface Command {
 export abstract class BaseCommand implements Command {
   names: string[] = [];
   description: string = "No information provided.";
+  subcommands: string[] = [];
 
   disabled: boolean = false;
   roles?: string[];

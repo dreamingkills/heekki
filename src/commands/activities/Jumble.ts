@@ -7,13 +7,13 @@ import { ConcurrencyService } from "../../helpers/Concurrency";
 import { StatsService } from "../../database/service/StatsService";
 
 export class Command extends BaseCommand {
-  names: string[] = ["jumble", "j"];
-  description: string =
+  names = ["jumble", "j"];
+  description =
     `**Jumble** is a minigame where the objective is to unscramble a random word.` +
     `\nYou have 15 seconds, and are rewarded $EMOJI_CASH$ **2** for guessing correctly.`;
+  subcommands = ["multi"];
 
   async exec(msg: Message, executor: Profile) {
-    const isMulti = this.options[0]?.toLowerCase() === "multi";
     if (ConcurrencyService.checkConcurrency(msg.author.id)) {
       await msg.channel.send(
         `${this.bot.config.discord.emoji.cross.full} You're already playing a minigame!`
@@ -26,6 +26,7 @@ export class Command extends BaseCommand {
       jumble.terms[Math.floor(Math.random() * jumble.terms.length)];
     const jumbled = this.jumble(random);
 
+    const isMulti = this.options[0]?.toLowerCase() === "multi";
     const embed = new MessageEmbed()
       .setAuthor(
         `Jumble${isMulti ? ` Multi` : ``} | ${msg.author.tag}`,

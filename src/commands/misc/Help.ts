@@ -6,7 +6,7 @@ export class Command extends BaseCommand {
   names: string[] = ["help", "docs"];
   description: string = "omo";
   async exec(msg: Message): Promise<void> {
-    const query = this.options.join(" ").toLowerCase();
+    const query = this.options.join(" ")?.toLowerCase();
     const prefix = this.bot.getPrefix(msg.guild!.id);
 
     if (!query) {
@@ -14,10 +14,6 @@ export class Command extends BaseCommand {
         .setAuthor(`Help | ${msg.author.tag}`, msg.author.displayAvatarURL())
         .setDescription(
           `\nHeekki can be a complex bot, so we've created a help center to help reduce confusion and avoid having to go to external websites or servers.\n` +
-            `\n**Popular Topics**` +
-            `\n\`\`\`` +
-            `oogz` +
-            `\n\`\`\`` +
             `\nYou can use \`${prefix}help <command>\` for info about a command.` +
             `\nYou can use \`${prefix}help commands\` to see a command list.\n` +
             `\n:scientist: **Official Heekki Server**` +
@@ -29,10 +25,29 @@ export class Command extends BaseCommand {
       return;
     }
 
-    const commandList = this.bot.cmdMan.commands;
+    const commandList = this.bot.cmdMan.commands
+      .filter((c) => !c.users)
+      .sort((a, b) => (a.names[0] > b.names[0] ? 1 : -1));
     const command = commandList.filter((cmd) => {
       return cmd.names.indexOf(query) > -1;
     })[0];
+    if (query === "commands") {
+      const embed = new MessageEmbed()
+        .setAuthor(
+          `Help - Commands | ${msg.author.tag}`,
+          msg.author.displayAvatarURL()
+        )
+        .setDescription(
+          `${commandList
+            .map((c) => {
+              return `\`${c.names[0]}\``;
+            })
+            .join(", ")}`
+        )
+        .setColor(`#FFAACC`);
+      await msg.channel.send(embed);
+      return;
+    }
     if (command) {
       let description = `${command.description}\n`;
 
@@ -48,6 +63,10 @@ export class Command extends BaseCommand {
           whitelist.push(user.tag || "Unknown User");
         }
         description += `\n**Whitelisted Users**: ${whitelist.join(", ")}`;
+      }
+
+      if (command.subcommands) {
+        description;
       }
 
       const embed = new MessageEmbed()
