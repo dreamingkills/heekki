@@ -97,8 +97,8 @@ export class PlayerFetch extends DBClass {
       "legacy",
       options
     );
-    const limit = <number>options.filter((o) => o.limit)[0].limit;
-    const page = <number>options.filter((o) => o.page)[0].page;
+    const limit = <number>options.filter((o) => o?.limit)[0]?.limit || 10;
+    const page = <number>options.filter((o) => o?.page)[0]?.page || 1;
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
@@ -197,8 +197,8 @@ export class PlayerFetch extends DBClass {
       "user_card",
       options
     );
-    const limit = <number>options.filter((o) => o.limit)[0].limit;
-    const page = <number>options.filter((o) => o.page)[0].page;
+    const limit = <number>options.filter((o) => o?.limit)[0]?.limit || 10;
+    const page = <number>options.filter((o) => o?.page)[0]?.page || 1;
     query +=
       (queryOptions.length > 0 ? " AND" : "") +
       queryOptions.join(" AND") +
