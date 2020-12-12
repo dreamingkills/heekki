@@ -195,7 +195,7 @@ export class CardService {
       await this.generateText(
         ctx,
         { ...imageData.heartText },
-        this.commafyNumber(card.hearts)
+        this.commafyNumber(card.hearts) + (card.packId === 16 ? ` hearts` : ``)
       );
     }
 
