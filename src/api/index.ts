@@ -1,4 +1,4 @@
-import { ApplicationConfig, ApiTestApplication } from "./application";
+/*import { ApplicationConfig, ApiTestApplication } from "./application";
 import * as botconfig from "../../config.json";
 
 export * from "./application";
@@ -37,3 +37,4 @@ if (require.main === module) {
     process.exit(1);
   });
 }
+*/
